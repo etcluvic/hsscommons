@@ -651,6 +651,10 @@
 		text-align: right;
 		color: #999;
 	}
+	
+	#pub-editor  table td input:focus {
+		background-color: transparent;
+	}
 
 /* New publication
 --------------------------------------------- */

@@ -784,7 +784,9 @@ class Doi extends Obj
 			$doi = $this->runCurl($url, $input);
 		}
 
-		if (($status == 'public') && ($sendXml == true))
+		$sendXml = 0; //overiding this value - we don't need to submit XML using EZ API 
+		// Are we sending extended data?
+		if ($sendXml == true && $doi)
 		{
 			$xml = $this->buildXml();
 
