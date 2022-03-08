@@ -4,6 +4,12 @@
  * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
  * @license    http://opensource.org/licenses/MIT MIT
  */
+/**
+ * Modified by CANARIE Inc. for the HSSCommons Project.
+ * 
+ * Summary of changes: Minor customization
+ * Changes Duplicated by Ansh Thayil.
+ */
 
 namespace Components\Publications\Models;
 
@@ -222,7 +228,11 @@ class Doi extends Obj
 		$this->set('doi', $pub->version->doi);
 		$this->set('title', htmlspecialchars($pub->version->title));
 		$this->set('version', htmlspecialchars($pub->version->version_label));
-		$this->set('abstract', htmlspecialchars($pub->version->abstract));
+		// Modified by CANARIE Inc. Duplicated by Ansh. Beginning
+		// Changed the description to be called abstract, abstract to be called subject
+		$this->set('abstract', htmlspecialchars($pub->version->description));
+		$this->set('subject', htmlspecialchars($pub->version->abstract));
+		// Modified by CANARIE Inc. End
 		$this->set('url', $this->_configs->livesite . DS . 'publications'. DS . $pub->id . DS . $pub->version->version_number);
 
 		// Set dates
@@ -330,6 +340,10 @@ class Doi extends Obj
 		$this->set('url', '');
 		$this->set('title', '');
 		$this->set('abstract', '');
+		// Modified by CANARIE Inc. Duplicated by Ansh. Beginning
+		// Add reset for subject
+		$this->set('subject', '');
+		// Modified by CANARIE Inc. End
 		$this->set('license', '');
 		$this->set('version', '');
 		$this->set('relatedDoi', '');
@@ -438,10 +452,27 @@ class Doi extends Obj
 		{
 			$xmlfile.= '<version>' . $this->get('version') . '</version>';
 		}
+		// Modified by CANARIE Inc. Duplicated By Ansh. Beginning
+		// Changed the format of rightslist and added the subject
 		if ($this->get('license'))
 		{
-			$xmlfile.='<rightsList><rights>' . htmlspecialchars($this->get('license')) . '</rights></rightsList>';
+
+			$xmlfile.='<rightsList>';
+			$xmlfile.='     <rights>' . htmlspecialchars($this->get('license')) . '</rights>';
+			$xmlfile.='</rightsList>';
 		}
+		// Add subjects
+		if ($this->get('subject'))
+		{
+			$xmlfile .='<subjects>';
+				$subjects = explode(",", $this->get('subject'));
+				foreach ($subjects as $subject)
+				{
+					$xmlfile .='    <subject>' . trim($subject) . '</subject>';
+				 }
+				 $xmlfile .='</subjects>';
+		}
+		// Modified by CANARIE Inc. End
 		$xmlfile .='<descriptions>
 			<description descriptionType="Abstract">';
 		$xmlfile.= stripslashes(htmlspecialchars($this->get('abstract')));
@@ -737,7 +768,12 @@ class Doi extends Obj
 
 		if ($success === 201 || $success === 200)
 		{
-			$out = explode('/', $response);
+			// Modified by CANARIE Inc. Duplicated by Ansh. Beginning
+			// Changed how to process the response
+			$out = explode('_', $response);
+			$doiStr = reset($resArray);
+			$out = explode('/'. $doiStr);
+			// Modified by CANARIE Ince. End
 			$handle = trim(end($out));
 			if ($handle)
 			{
