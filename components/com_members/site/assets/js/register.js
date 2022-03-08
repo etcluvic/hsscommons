@@ -1,8 +1,7 @@
 /**
- * @package     hubzero-cms
- * @file        components/com_register/register.js
- * @copyright   Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license     http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 if (!HUB) {
@@ -56,6 +55,27 @@ HUB.Register = {
 				usernameStatus.addClass('notok');
 			}
 		});
+	},
+
+	checkPassword: function(password, rules, username) {
+		$.ajax({
+			url: "/api/members/checkpass",
+			type: "POST",
+			data: {
+				"password1": password,
+				username
+			},
+			dataType: "json",
+			cache: false,
+			success: function(json) {
+				if (json.html.length > 0 && password !== '') {
+					rules.html(json.html);
+				} else {
+					// Probably deleted password, so reset classes
+					rules.find('li').switchClass('error passed', 'empty', 200);
+				}
+			}
+		});
 	}
 }
 
@@ -104,22 +124,7 @@ jQuery(document).ready(function($){
 
 	if (passwd.length > 0 && passrule.length > 0) {
 		passwd.on('keyup', function(){
-			// Create an ajax call to check the potential password
-			$.ajax({
-				url: "/api/members/checkpass",
-				type: "POST",
-				data: {"password1": passwd.val()},
-				dataType: "json",
-				cache: false,
-				success: function(json) {
-					if (json.html.length > 0 && passwd.val() !== '') {
-						passrule.html(json.html);
-					} else {
-						// Probably deleted password, so reset classes
-						passrule.find('li').switchClass('error passed', 'empty', 200);
-					}
-				}
-			});
+			HUB.Register.checkPassword(passwd.val(), passrule, userlogin.val())
 		});
 	}
 

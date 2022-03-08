@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Models\Attachment;
@@ -409,7 +385,7 @@ class File extends Base
 			$file = new \Components\Projects\Models\File(trim($fpath));
 
 			// Get file icon
-			$icon  = '<img src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+			$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
 
 			// Serve as bundle
 			$html .= '<li>';
@@ -450,7 +426,7 @@ class File extends Base
 				$title = $attach->title ? $attach->title : $configs->title;
 				$title = $title ? $title : basename($attach->path);
 				$pop   = Lang::txt('Download') . ' ' . $title;
-				$icon  = '<img src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+				$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
@@ -581,6 +557,30 @@ class File extends Base
 					$url = Route::url('index.php?option=com_publications&id=' . $pub->id . '&task=serve&v=' . $pub->version_number . '&render=archive');
 					$label .= ' ' . Lang::txt('Bundle');
 					$title = $pub->title . ' ' . Lang::txt('Bundle');
+
+					$path = $pub->path('base', true) . DS . $pub->_curationModel->getBundleName();
+
+					if ($path && file_exists($path))
+					{
+						$size = filesize($path);
+						$label .= ' (' . \Hubzero\Utility\Number::formatBytes($size) . ')';
+						$title .= ' (' . \Hubzero\Utility\Number::formatBytes($size) . ')';
+
+						// Convert to MB
+						$size = (($size / 1024) / 1024);
+
+						// Is sFTP enabled and is the file over the threshold?
+						if ($pub->config()->get('sftppath') && $size >= intval($pub->config()->get('sftpsize', 5000)))
+						{
+							$uri = \Hubzero\Utility\Uri::getInstance();
+							$uri->setScheme('ftp');
+							//$uri->setUser('guest');
+							//$uri->setPass('guest');
+							$uri->setPath($pub->_curationModel->getBundleName(true));
+
+							$url = $uri->toString();
+						}
+					}
 
 					$show = new \stdClass;
 					$show->href = Route::url('index.php?option=com_publications&id=' . $pub->id . '&task=serve&v=' . $pub->version_number . '&render=showcontents');
@@ -992,12 +992,41 @@ class File extends Base
 
 					// Create file objects
 					$conFile = Entity::fromPath($identifier, $connection->adapter());
+					$dirParts = explode(DS, $identifier);
 
+					// We need the pretty directory that the file is stored in
+					// This is important mostly to translate between remote filesystems and local
+					$subdir = array_slice($dirParts, 0, -1);
+					$subdir = implode(DS, $subdir);
+
+					// Remote file
 					if (!$conFile->isLocal())
 					{
 						// Create a temp file and write to it
-						$tempFile = Manager::getTempPath($conFile->getName());
-						Manager::copy($conFile, $tempFile);
+						$tempFile = Manager::getTempPath($conFile->getFilename());
+						$tempFile->write($conFile->read());
+
+						// Rebuild identifier
+						// We need to make sure the filename and directory are human readable at this point
+						$id = array();
+						if (count($dirParts) > 0)
+						{
+							for ($p = 0; $p < count($dirParts) - 1; $p++)
+							{
+								// For some adapters that store files in a flat structure we need to actually
+								// query each entity for its human readable name
+								$tempParent = Entity::fromPath($dirParts[$p], $connection->adapter());
+								if ($tempParent)
+								{
+									$id[] = $tempParent->getDisplayName();
+								}
+							}
+							// Use a human readable subdir
+							$subdir = implode(DS, $id);
+							// Add the filename for a full path
+							$id[] = $conFile->getFilename();
+						}
+						$identifier = implode(DS, $id);
 					}
 					else
 					{
@@ -1006,7 +1035,7 @@ class File extends Base
 
 					// Insert the file into the repo
 					$result = $pub->_project->repo()->insert([
-						'subdir'   => $conFile->getParent(),
+						'subdir'   => $subdir,
 						'dataPath' => $tempFile->getAbsolutePath(),
 						'update'   => false
 					]);
@@ -1020,7 +1049,6 @@ class File extends Base
 
 			$a++;
 			$ordering = $i + 1;
-
 			if ($this->addAttachment($identifier, $pub, $configs, User::get('id'), $elementId, $element, $ordering))
 			{
 				$i++;

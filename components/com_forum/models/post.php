@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Forum\Models;
@@ -143,14 +119,14 @@ class Post extends Relational
 			if (!isset($data['id']) || !$data['id'])
 			{
 				$id = self::all()
-					->whereEquals('thread', $data['thread'])
+					//->whereEquals('thread', $data['thread'])
 					->whereEquals('created_by', $data['created_by'])
 					->whereEquals('comment', $data['comment'])
 					->whereEquals('state', self::STATE_PUBLISHED)
 					//->where('created', '>', Date::of('now')->subtract('1 hour')->toSql())
 					//->whereEquals('category_id', $data['category_id'])
-					//->whereEquals('scope', $data['category_id'])
-					//->whereEquals('scope_id', $data['scope_id'])
+					->whereEquals('scope', $data['scope'])
+					->whereEquals('scope_id', $data['scope_id'])
 					->row()
 					->get('id');
 
@@ -240,7 +216,7 @@ class Post extends Relational
 	 */
 	public function automaticModified($data)
 	{
-		return (isset($data['id']) && $data['id'] ? Date::of('now')->toSql() : '0000-00-00 00:00:00');
+		return (isset($data['id']) && $data['id'] ? Date::of('now')->toSql() : null);
 	}
 
 	/**
@@ -374,6 +350,7 @@ class Post extends Relational
 		if (!$this->get('thread') && !$this->get('parent'))
 		{
 			$this->set('thread', $this->get('id'));
+			$this->save();
 		}
 
 		return self::all()
@@ -478,12 +455,20 @@ class Post extends Relational
 				{
 					throw new \InvalidArgumentException(Lang::txt('Invalid scope of "%s"', $scope));
 				}
-				include_once($path);
+				include_once $path;
 			}
 
 			$this->adapter = new $cls($this->get('scope_id'));
 
 			// Set some needed info
+
+			// If no thread ID and no parent ID
+			if (!$this->get('thread') && !$this->get('parent'))
+			{
+				// We have to assume thi is the thread starting post but
+				// the thread ID somehow didn't get set.
+				$this->set('thread', $this->get('id'));
+			}
 			$this->adapter->set('thread', $this->get('thread'));
 			$this->adapter->set('parent', $this->get('parent'));
 			$this->adapter->set('post', $this->get('id'));
@@ -832,7 +817,8 @@ class Post extends Relational
 			->select($user->getTableName() . '.name')
 			->join($user->getTableName(), $user->getTableName() . '.id', $this->getTableName() . '.created_by', 'left')
 			->whereEquals('thread', $this->get('thread'))
-			->group('created_by');
+			->group('created_by')
+			->group('anonymous');
 	}
 
 	/**

@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -120,7 +96,7 @@ $link = rtrim(Request::base(), '/') . '/' . ltrim(Route::url($this->question->li
 							</tr>
 							<tr>
 								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right">Creator:</th>
-								<td style="text-align: left; padding: 0 0.5em;" width="100%" align="left"><?php echo $this->question->get('anonymous') ? Lang::txt('COM_ANSWERS_ANONYMOUS') : $this->escape(stripslashes($this->question->creator->get('name'))); ?></td>
+								<td style="text-align: left; padding: 0 0.5em;" width="100%" align="left"><?php echo $this->question->get('anonymous') ? Lang::txt('JANONYMOUS') : $this->escape(stripslashes($this->question->creator->get('name'))); ?></td>
 							</tr>
 							<tr>
 								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right">Status:</th>
@@ -165,15 +141,3 @@ $link = rtrim(Request::base(), '/') . '/' . ltrim(Route::url($this->question->li
 		</tbody>
 	</table>
 	<!-- End Spacer -->
-
-	<!-- Start Footer -->
-	<table class="tbl-footer" width="100%" cellpadding="0" cellspacing="0" border="0">
-		<tbody>
-			<tr>
-				<td align="left" valign="bottom">
-					<span><?php echo Config::get('sitename'); ?> sent this email because you were added to the list of recipients on <a href="<?php echo $link; ?>">question #<?php echo $this->question->get('id'); ?></a>. Visit our <a href="<?php echo Request::base(); ?>/legal/privacy">Privacy Policy</a> and <a href="<?php echo Request::base(); ?>/support">Support Center</a> if you have any questions.</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<!-- End Footer -->

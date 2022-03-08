@@ -1,8 +1,7 @@
 /**
- * @package     hubzero-cms
- * @file        components/com_publications/site/assets/css/publications.css
- * @copyright   Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license     http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 /*
@@ -11,7 +10,7 @@
 	-- -- -- -- -- -- --
 */
 
-	.com_publications .aside  {
+	/*.com_publications .aside  {
 		border: none;
 	}
 	.com_publications .aside li {
@@ -27,10 +26,10 @@
 	}
 	.com_publications .aside li a:hover {
 		color: #000;
-	}
+	}*/
 
 /* Item listing */
-	.com_publications .container .container-block {
+	/*.com_publications .container .container-block {
 		margin: 0;
 		padding: 0;
 	}
@@ -52,7 +51,7 @@
 	}
 	.com_publications .filter-options {
 		width: 60%;
-	}
+	}*/
 
 /* Publication category icons */
 	.com_publications div.extracontent li a:before {

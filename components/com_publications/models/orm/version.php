@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Kevin Wojkovich <kevinw@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Models\Orm;
@@ -169,6 +144,16 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 			$data['modified_by'] = User::get('id');
 		}
 		return $data['modified_by'];
+	}
+
+	/**
+	 * Establish relationship to project
+	 *
+	 * @return  object
+	 */
+	public function project()
+	{
+		return $this->publication->project;
 	}
 
 	/**
@@ -509,7 +494,7 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 	 */
 	protected function _date($key, $as='')
 	{
-		if ($this->get($key) == '0000-00-00 00:00:00')
+		if (!$this->get($key) || $this->get($key) == '0000-00-00 00:00:00')
 		{
 			return '';
 		}
@@ -556,6 +541,65 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 	}
 
 	/**
+	 * Check if this entry has an image
+	 *
+	 * @param   string   $type  The type of image
+	 * @return  boolean
+	 */
+	public function hasImage($type = 'thumb')
+	{
+		// Build publication path
+		$path = $this->filespace();
+
+		if ($type == 'thumb')
+		{
+			$source = $path . DS . 'thumb.gif';
+
+			// Check for default image
+			if (!is_file($source))
+			{
+				$source = false;
+			}
+		}
+		else
+		{
+			// Get master image
+			$source = $path . DS . 'master.png';
+
+			// Default image
+			if (!is_file($source))
+			{
+				// Grab first bigger image in gallery
+				if (is_dir($path . DS . 'gallery'))
+				{
+					$file_list = scandir($path . DS . 'gallery');
+
+					foreach ($file_list as $file)
+					{
+						if ($file != '.' && $file != '..' && exif_imagetype($path . DS . 'gallery' . DS . $file))
+						{
+							list($width, $height, $type, $attr) = getimagesize($path . DS . 'gallery' . DS . $file);
+
+							if ($width > 200)
+							{
+								$source = $path . DS . 'gallery' . DS . $file;
+								break;
+							}
+						}
+					}
+				}
+
+				if (!is_file($source))
+				{
+					$source = false;
+				}
+			}
+		}
+
+		return $source;
+	}
+
+	/**
 	 * Split metadata into parts
 	 *
 	 * @return  array
@@ -577,41 +621,153 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 		return $data;
 	}
 
-	/*
+	/**
 	 * Generate link to current active version
-	 * @return string
+	 *
+	 * @param   string  $type
+	 * @return  string
 	 */
-	public function link()
+	public function link($type = '')
 	{
-		$link = 'index.php?option=com_publications';
-		$link .= $this->publication->get('alias') ? '&alias=' . $this->publication->get('alias') : '&id=' . $this->publication->get('id');
-		$link .= '&v=' . $this->version_number;
+		$base  = 'index.php?option=com_publications';
+		$base .= $this->publication->get('alias') ? '&alias=' . $this->publication->get('alias') : '&id=' . $this->get('publication_id');
+
+		if (strpos($type, 'edit') !== false)
+		{
+			$base = $this->publication->project->isProvisioned()
+				? 'index.php?option=com_publications&task=submit'
+				: 'index.php?option=com_projects&alias=' . $this->publication->project->get('alias') . '&active=publications';
+		}
+
+		switch (strtolower($type))
+		{
+			case 'category':
+				$link = 'index.php?option=com_publications&category=' . $this->publication->category->url_alias;
+			break;
+
+			case 'thumb':
+				$link = 'index.php?option=com_publications&id=' . $this->get('publication_id') . '&v=' . $this->get('id') . '&media=Image:thumb';
+			break;
+
+			case 'masterimage':
+				$link = 'index.php?option=com_publications&id=' . $this->get('publication_id') . '&v=' . $this->get('id') . '&media=Image:master';
+			break;
+
+			case 'serve':
+				$link = $base . '&task=serve' . '&v=' . $this->get('version_number');
+			break;
+
+			case 'data':
+				$link = $base . '&task=serve' . '&vid=' . $this->get('id');
+			break;
+
+			case 'citation':
+				$link = $base . '&task=citation' . '&v=' . $this->get('version_number');
+			break;
+
+			case 'curate':
+				$link = $base . '&controller=curation' . '&version=' . $this->get('version_number');
+			break;
+
+			case 'version':
+				$link = $base . '&v=' . $this->get('version_number');
+			break;
+
+			case 'versionid':
+				$link = $base . '&v=' . $this->get('id');
+			break;
+
+			case 'questions':
+			case 'versions':
+			case 'supportingdocs':
+			case 'reviews':
+			case 'wishlist':
+			case 'citations':
+				$link = $base . '&v=' . $this->get('version_number') . '&active=' . strtolower($type);
+			break;
+
+			case 'edit':
+				$link = $this->get('publication_id') ? $base . '&pid=' . $this->get('publication_id') : $base;
+			break;
+
+			case 'editversion':
+				$link = $base . '&pid=' . $this->get('publication_id') . '&version=' . $this->get('version_number');
+			break;
+
+			case 'editdev':
+				$link = $base . '&pid=' . $this->get('publication_id') . '&version=dev';
+			break;
+
+			case 'editdefault':
+				$link = $base . '&pid=' . $this->get('publication_id') . '&version=default';
+			break;
+
+			case 'editversionid':
+				$link = $base . '&pid=' . $this->get('publication_id') . '&vid=' . $this->get('id');
+			break;
+
+			case 'editbase':
+				$link = $base;
+			break;
+
+			case 'project':
+				$link = $this->publication->project->isProvisioned()
+					? 'index.php?option=com_publications&task=submit'
+					: 'index.php?option=com_projects&alias=' . $this->publication->project->get('alias');
+			break;
+
+			case 'permalink':
+			default:
+				$link = $base;
+			break;
+		}
+
 		return $link;
 	}
 
-	/*
+	/**
+	 * Get tag cloud
+	 *
+	 * @return  array
+	 */
+	public function tags()
+	{
+		include_once \Component::path('com_tags') . '/models/cloud.php';
+
+		$cloud = new \Components\Tags\Models\Cloud();
+
+		$filters = array(
+			'scope'    => 'publications',
+			'scope_id' => $this->id
+		);
+
+		return $cloud->tags('list', $filters);
+	}
+
+	/**
 	 * Namespace used for solr Search
-	 * @return string
+	 *
+	 * @return  string
 	 */
 	public static function searchNamespace()
 	{
-		$searchNamespace = 'publication';
-		return $searchNamespace;
+		return 'publication';
 	}
 
-	/*
+	/**
 	 * Generate solr search Id
-	 * @return string
+	 *
+	 * @return  string
 	 */
 	public function searchId()
 	{
-		$searchId = self::searchNamespace() . '-' . $this->publication->id;
-		return $searchId;
+		return self::searchNamespace() . '-' . $this->publication->id;
 	}
 
-	/*
+	/**
 	 * Generate search document for Solr
-	 * @return array
+	 *
+	 * @return  array
 	 */
 	public function searchResult()
 	{
@@ -634,7 +790,7 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 		$obj->url = rtrim(Request::root(), '/') . Route::urlForClient('site', $this->link());
 		$obj->doi = $this->get('doi');
 
-		$tags = $this->publication->tags();
+		$tags = $this->tags();
 		if (count($tags) > 0)
 		{
 			$obj->tags = array();
@@ -693,20 +849,26 @@ class Version extends Relational implements \Hubzero\Search\Searchable
 
 	/**
 	 * Get total number of records that will be indexed by Solr.
-	 * @return integer
+	 *
+	 * @return  integer
 	 */
 	public static function searchTotal()
 	{
-		$total = self::all()->total();
-		return $total;
+		return self::all()->total();
 	}
 
 	/**
 	 * Get records to be included in solr index
-	 * @return Hubzero\Database\Rows
+	 *
+	 * @param   integer  $limit
+	 * @param   integer  $offset
+	 * @return  object   Hubzero\Database\Rows
 	 */
 	public static function searchResults($limit, $offset = 0)
 	{
-		return self::all()->start($offset)->limit($limit)->rows();
+		return self::all()
+			->start($offset)
+			->limit($limit)
+			->rows();
 	}
 }

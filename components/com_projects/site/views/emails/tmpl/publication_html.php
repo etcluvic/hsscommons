@@ -1,31 +1,8 @@
 <?php
 /**
- * @package		HUBzero CMS
- * @author		Alissa Nedossekina <alisa@purdue.edu>
- * @copyright	Copyright 2005-2009 HUBzero Foundation, LLC.
- * @license		http://opensource.org/licenses/MIT MIT
- *
- * Copyright 2005-2009 HUBzero Foundation, LLC.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -66,7 +43,7 @@ if ($comment)
 // Project owner
 if ($this->project->isProvisioned())
 {
-	$owner = NULL;
+	$owner = null;
 }
 else
 {
@@ -183,15 +160,3 @@ else
 	</tbody>
 </table>
 <!-- End Spacer -->
-
-<!-- Start Footer -->
-<table class="tbl-footer" width="100%" cellpadding="0" cellspacing="0" border="0">
-	<tbody>
-		<tr>
-			<td align="left" valign="bottom">
-				<span><?php echo Config::get('sitename'); ?> sent this email because you were added to the list of recipients on <a href="<?php echo Request::base(); ?>"><?php echo Request::base(); ?></a>. Visit our <a href="<?php echo Request::base(); ?>/legal/privacy">Privacy Policy</a> and <a href="<?php echo Request::base(); ?>/support">Support Center</a> if you have any questions.</span>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<!-- End Footer -->

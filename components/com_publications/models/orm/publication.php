@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Kevin Wojkovich <kevinw@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Models\Orm;
@@ -46,6 +21,20 @@ require_once __DIR__ . DS . 'category.php';
 class Publication extends Relational
 {
 	/**
+	 * Database state constants
+	 *
+	 * These are defiend int he base Relational class:
+	 *     STATE_UNPUBLISHED = 0;
+	 *     STATE_PUBLISHED   = 1;
+	 *     STATE_DELETED     = 2;
+	 **/
+	const STATE_DRAFT       = 3;
+	const STATE_POSTED      = 4;  // Posted for review
+	const STATE_PENDING     = 5;  // Pending publishing
+	const STATE_ARCHIVED    = 6;
+	const STATE_WORKED      = 7;  // Pending author changes
+
+	/**
 	 * Fields and their validation criteria
 	 *
 	 * @var  array
@@ -53,8 +42,6 @@ class Publication extends Relational
 	protected $rules = array(
 		'title' => 'notempty'
 	);
-
-	public $activeVersion = null;
 
 	/**
 	 * Automatic fields to populate every time a row is created
@@ -65,6 +52,13 @@ class Publication extends Relational
 		'created',
 		'created_by'
 	);
+
+	/**
+	 * Active version
+	 *
+	 * @var  string
+	 */
+	public $activeVersion = null;
 
 	/**
 	 * Component configuration
@@ -140,6 +134,8 @@ class Publication extends Relational
 	 */
 	public function project()
 	{
+		require_once \Component::path('com_projects') . '/models/orm/project.php';
+
 		return $this->belongsToOne('Components\Projects\Models\Orm\Project', 'project_id');
 	}
 
@@ -206,31 +202,35 @@ class Publication extends Relational
 	}
 
 	/**
-	 * Build and return the url
+	 * Get tag cloud
 	 *
-	 * @param   string  $as
-	 * @return  string
+	 * @return  array
 	 */
 	public function tags()
 	{
+		include_once \Component::path('com_tags') . '/models/cloud.php';
+
 		$cloud = new \Components\Tags\Models\Cloud();
+
 		$filters = array(
-			'scope' => 'publications',
-			'scope_id' => $this->id
+			'scope'    => 'publications',
+			'scope_id' => $this->getActiveVersion()->id
 		);
+
 		return $cloud->tags('list', $filters);
 	}
 
 	/**
 	 * Get most recent version that is still marked as active
 	 * 
-	 * @return Components\Publications\Models\Orm\Version
+	 * @return  object  Components\Publications\Models\Orm\Version
 	 */
 	public function getActiveVersion()
 	{
 		if (empty($this->activeVersion))
 		{
 			$versions = $this->versions->sort('id', false);
+
 			foreach ($versions as $version)
 			{
 				if ($version->state == 1)
@@ -239,21 +239,23 @@ class Publication extends Relational
 					break;
 				}
 			}
+
 			if (empty($this->activeVersion))
 			{
 				$this->activeVersion = $versions->first();
 			}
 		}
+
 		return $this->activeVersion;
 	}
 
-	/*
+	/**
 	 * Generate link to current active version
-	 * @return string
+	 *
+	 * @return  string
 	 */
 	public function link()
 	{
 		return $this->getActiveVersion()->link();
 	}
-
 }

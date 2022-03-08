@@ -1,38 +1,19 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Shawn Rice <zooley@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
 defined('_HZEXEC_') or die();
 
+$this->baseURL = rtrim($this->baseURL, '/');
+
+$link = $this->baseURL . Route::urlForClient('site', 'index.php?option=' . $this->option . '&task=confirm&confirm=' . -$this->xprofile->get('activation') . '&email=' . urlencode($this->xprofile->get('email')));
+
+//$link = $this->baseURL . $link;
+$link = str_replace('/administrator', '', $link);
 ?>
 	<!-- Start Header -->
 	<table class="tbl-header" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -49,7 +30,7 @@ defined('_HZEXEC_') or die();
 					<span class="description"><?php echo Config::get('MetaDesc'); ?></span>
 				</td>
 				<td width="10%" align="right" valign="bottom" nowrap="nowrap" class="component">
-					Members
+					<?php echo Lang::txt('COM_MEMBERS'); ?>
 				</td>
 			</tr>
 		</tbody>
@@ -93,7 +74,7 @@ defined('_HZEXEC_') or die();
 		<tbody>
 			<tr>
 				<td style="font-weight: bold; border-bottom: 1px solid #c2e1e3; padding: 16px 30px; text-align: center; font-size: 1.5em; color: #e96c6c;" align="left">
-					Account Activation
+					<?php echo Lang::txt('COM_MEMBERS_REGISTER_EMAIL_CONFIRMATION'); ?>
 				</td>
 			</tr>
 		</tbody>
@@ -117,15 +98,15 @@ defined('_HZEXEC_') or die();
 					<table width="100%" style="border-collapse: collapse; font-size: 1em;" cellpadding="0" cellspacing="0" border="0">
 						<tbody>
 							<tr>
-								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right">Created:</th>
+								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right"><?php echo Lang::txt('COM_MEMBERS_EMAIL_CREATED'); ?>:</th>
 								<td style="text-align: left; padding: 0 0.5em;" width="100%" align="left"><?php echo $this->xprofile->get('registerDate'); ?> (UTC)</td>
 							</tr>
 							<tr>
-								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right">Name:</th>
+								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right"><?php echo Lang::txt('COM_MEMBERS_EMAIL_NAME'); ?>:</th>
 								<td style="text-align: left; padding: 0 0.5em;" width="100%" align="left"><?php echo $this->xprofile->get('name'); ?></td>
 							</tr>
 							<tr>
-								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right">Username:</th>
+								<th style="text-align: right; padding: 0 0.5em; font-weight: bold; white-space: nowrap;" align="right"><?php echo Lang::txt('COM_MEMBERS_EMAIL_USERNAME'); ?>:</th>
 								<td style="text-align: left; padding: 0 0.5em;" width="100%" align="left"><?php echo $this->xprofile->get('username'); ?></td>
 							</tr>
 						</tbody>
@@ -134,12 +115,12 @@ defined('_HZEXEC_') or die();
 						<tbody>
 							<tr>
 								<td style="text-align: left; padding: 1em 0.5em 0 0.5em;" align="left">
-									<p style="line-height: 1.6em; margin: 1em 0; padding: 0; text-align: left;">Thank you for creating an account on <?php echo $this->sitename; ?>! You must click the activation link to confirm your email address and activate your account. After clicking the link, you will be asked to login. Use the credentials you registered with this account and you're done!</p>
+									<p style="line-height: 1.6em; margin: 1em 0; padding: 0; text-align: left;"><?php echo Lang::txt('COM_MEMBERS_EMAIL_CONFIRM_MESSAGE', $this->sitename); ?></p>
 								</td>
 							</tr>
 							<tr>
 								<td style="text-align: left; padding: 0 0.5em;" align="left">
-									<p style="line-height: 1.6em; margin: 1em 0; padding: 0; text-align: left; font-size: 1.2em;"><a href="<?php echo $this->baseURL . Route::url('index.php?option=' . $this->option . '&task=confirm&confirm=' . -$this->xprofile->get('activation') . '&email=' . urlencode($this->xprofile->get('email'))); ?>"><?php echo $this->baseURL . Route::urlForClient('site', 'index.php?option=' . $this->option . '&task=confirm&confirm=' . -$this->xprofile->get('activation') . '&email=' . urlencode($this->xprofile->get('email'))); ?></a></p>
+									<p style="line-height: 1.6em; margin: 1em 0; padding: 0; text-align: left; font-size: 1.2em;"><a href="<?php echo $link; ?>"><?php echo $link; ?></a></p>
 								</td>
 							</tr>
 						</tbody>
@@ -158,15 +139,3 @@ defined('_HZEXEC_') or die();
 		</tbody>
 	</table>
 	<!-- End Spacer -->
-
-	<!-- Start Footer -->
-	<table class="tbl-footer" width="100%" cellpadding="0" cellspacing="0" border="0">
-		<tbody>
-			<tr>
-				<td align="left" valign="bottom">
-					<span><?php echo Config::get('sitename'); ?> sent this email because an account with this email address was registered on <a href="<?php echo $this->baseURL; ?>"><?php echo $this->baseURL; ?></a>. Visit our <a href="<?php echo $this->baseURL; ?>/legal/privacy">Privacy Policy</a> and <a href="<?php echo $this->baseURL; ?>/support">Support Center</a> if you have any questions.</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<!-- End Footer -->

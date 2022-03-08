@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Members\Models;
@@ -38,11 +14,11 @@ use Request;
 use Event;
 use Route;
 
-require_once(__DIR__ . DS . 'profile.php');
-require_once(__DIR__ . DS . 'tags.php');
-require_once(__DIR__ . DS . 'note.php');
-require_once(__DIR__ . DS . 'quota.php');
-require_once(__DIR__ . DS . 'host.php');
+require_once __DIR__ . DS . 'profile.php';
+require_once __DIR__ . DS . 'tags.php';
+require_once __DIR__ . DS . 'note.php';
+require_once __DIR__ . DS . 'quota.php';
+require_once __DIR__ . DS . 'host.php';
 
 /**
  * User model
@@ -574,7 +550,7 @@ class Member extends User implements \Hubzero\Search\Searchable
 			->start($offset)
 			->limit($limit)
 			->whereEquals('block', 0)
-			->whereEquals('activation', 1)
+			->where('activation', '>', 0)
 			->where('approved', '>', 0)
 			->rows();
 	}
@@ -588,7 +564,7 @@ class Member extends User implements \Hubzero\Search\Searchable
 	{
 		return self::all()
 			->whereEquals('block', 0)
-			->whereEquals('activation', 1)
+			->where('activation', '>', 0)
 			->where('approved', '>', 0)
 			->total();
 	}
@@ -633,7 +609,10 @@ class Member extends User implements \Hubzero\Search\Searchable
 		$obj->url = rtrim(Request::root(), '/') . Route::urlForClient('site', 'index.php?option=com_members' . '&id=' . $this->get('id'));
 
 		// @TODO: Add more fields to the SOLR core.
-		$fields = $this->profiles()->rows()->toObject();
+		$fields = $this->profiles()
+		  ->whereIn('profile_key', ['organization', 'bio'])
+		  ->rows()
+		  ->toObject();
 		$description = '';
 		foreach ($fields as $field)
 		{

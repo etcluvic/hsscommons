@@ -1,31 +1,8 @@
 <?php
 /**
- * @package		HUBzero CMS
- * @author		Alissa Nedossekina <alisa@purdue.edu>
- * @copyright	Copyright 2005-2009 HUBzero Foundation, LLC.
- * @license		http://opensource.org/licenses/MIT MIT
- *
- * Copyright 2005-2009 HUBzero Foundation, LLC.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -36,11 +13,10 @@ $blocks = $this->pub->_curationModel->_blocks;
 
 $history = $this->pub->_curationModel->getHistory();
 
-if (!$this->ajax)
-{
+if (!$this->ajax):
 	$this->css('curation.css')
 		->js('curation.js');
-}
+endif;
 ?>
 <div id="abox-content" class="history-wrap">
 	<h3><?php echo Lang::txt('COM_PUBLICATIONS_CURATION_HISTORY_VIEW'); ?></h3>
@@ -51,21 +27,23 @@ if (!$this->ajax)
 				<?php echo \Hubzero\Utility\Str::truncate($this->pub->title, 65); ?> | <?php echo Lang::txt('COM_PUBLICATIONS_CURATION_VERSION') . ' ' . $this->pub->version_label; ?>
 			</p>
 		</div>
-		<?php if ($history) { ?>
-			<h5><?php echo Lang::txt('COM_PUBLICATIONS_CURATION_HISTORY_EVENTS'); ?></h5>
+		<?php if ($history): ?>
+			<h4><?php echo Lang::txt('COM_PUBLICATIONS_CURATION_HISTORY_EVENTS'); ?></h4>
 			<div class="history-blocks">
 				<?php
 				$i = 1;
-				foreach ($history as $event)
-				{
-					$author  = User::getInstance($event->created_by);
+				foreach ($history as $event):
 					$trClass = $i % 2 == 0 ? ' even' : ' odd';
 					$i++;
+
+					$author = User::getInstance($event->created_by);
+					$author = stripslashes($author->get('name'));
+					$author = $author ?: Lang::txt('JUNKNOWN');
 					?>
 					<div class="history-block <?php echo $trClass; ?> grid">
 						<div class="changelog-time col span3">
-							<?php echo Date::of($event->created)->toLocal('M d, Y H:iA'); ?>
-							<span class="block"><?php echo $this->escape(stripslashes($author->get('name'))); ?></span>
+							<time datetime="<?php echo Date::of($event->created)->format('Y-m-d\TH:i:s\Z'); ?>"><?php echo Date::of($event->created)->toLocal('M d, Y H:iA'); ?></time>
+							<span class="block"><?php echo $this->escape($author); ?></span>
 							<span class="block">(
 							<?php echo ($event->curator)
 								? Lang::txt('COM_PUBLICATIONS_CURATION_CURATOR')
@@ -73,19 +51,22 @@ if (!$this->ajax)
 							)</span>
 						</div>
 						<div class="changelog-text col span9 omega">
-							<?php echo $event->changelog; ?>
-							<?php if ($event->comment) { ?>
-								<p><?php echo Lang::txt('COM_PUBLICATIONS_CURATION_SUBMITTER_COMMENT') . ' <span class="italic">' . $event->comment . '</span>'; ?></p>
-							<?php } ?>
+							<div class="changelog-contents">
+								<?php echo $event->changelog; ?>
+							</div>
+							<?php if ($event->comment): ?>
+								<div class="changelog-comment">
+									<?php echo Lang::txt('COM_PUBLICATIONS_CURATION_SUBMITTER_COMMENT') . ' <span class="italic">' . $event->comment . '</span>'; ?>
+								</div>
+							<?php endif; ?>
 						</div>
-						<div class="clear"></div>
 					</div>
 					<?php
-				}
+				endforeach;
 				?>
 			</div>
-		<?php } else { ?>
+		<?php else: ?>
 			<p class="warning"><?php echo Lang::txt('COM_PUBLICATIONS_CURATION_HISTORY_NOTHING'); ?></p>
-		<?php } ?>
+		<?php endif; ?>
 	</div>
 </div>

@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Admin\Controllers;
@@ -69,6 +44,7 @@ class Items extends AdminController
 	{
 		// Incoming
 		$this->view->filters = array();
+		$this->view->filters['ignore_access'] = true;
 		$this->view->filters['limit']    = Request::getState(
 			$this->_option . '.publications.limit',
 			'limit',
@@ -534,6 +510,11 @@ class Items extends AdminController
 				if (preg_match("/" . $doiService->_configs->shoulder . "/", $model->version->doi))
 				{
 					$doiService->update($model->version->doi, true);
+
+					if ($doiService->getError())
+					{
+						$this->setError($doiService->getError());
+					}
 				}
 			}
 
@@ -626,6 +607,11 @@ class Items extends AdminController
 				if (preg_match("/" . $doiService->_configs->shoulder . "/", $model->version->get('doi')))
 				{
 					$doiService->update($model->version->get('doi'), true);
+
+					if ($doiService->getError())
+					{
+						$this->setError($doiService->getError());
+					}
 				}
 			}
 
@@ -703,7 +689,6 @@ class Items extends AdminController
 		$title          = trim(Request::getString('title', '', 'post'));
 		$title          = htmlspecialchars($title);
 		$abstract       = trim(Request::getString('abstract', '', 'post'));
-		$abstract       = htmlspecialchars(\Hubzero\Utility\Sanitize::clean($abstract));
 		$description    = trim(Request::getString('description', '', 'post'));
 		$release_notes  = stripslashes(trim(Request::getString('release_notes', '', 'post')));
 		$group_owner    = Request::getInt('group_owner', 0, 'post');
@@ -755,17 +740,29 @@ class Items extends AdminController
 					{
 						if ($f[0] == $tagname && end($f) == 1)
 						{
-							echo Helpers\Html::alert(Lang::txt('COM_PUBLICATIONS_REQUIRED_FIELD_CHECK', $f[1]));
-							exit();
+							Notify::error(Lang::txt('COM_PUBLICATIONS_REQUIRED_FIELD_CHECK', $f[1]));
+							return $this->cancelTask();
 						}
 					}
 				}
 			}
 		}
 
+		$db = \App::get('db');
+		$db->setQuery("select params
+		               from #__extensions
+		               where folder = 'projects' and element = 'publications'");
+		$result = $db->loadRow();
+		$params = isset($result[0]) ? json_decode($result[0]) : null;
+
+		if (!!$params && isset($params->new_pubs) && !$params->new_pubs)
+		{
+			$abstract = htmlspecialchars(\Hubzero\Utility\Sanitize::clean($abstract));
+		}
+
 		// Save incoming
 		$this->model->version->title        = $title;
-		$this->model->version->abstract     = \Hubzero\Utility\Str::truncate($abstract, 250);
+		$this->model->version->abstract     = \Hubzero\Utility\Str::truncate($abstract, 64000, ["html" => true]);
 		$this->model->version->description  = $description;
 		$this->model->version->metadata     = $metadata;
 		$this->model->version->release_notes= $release_notes;
@@ -790,10 +787,10 @@ class Items extends AdminController
 
 		$this->model->version->published_up   = $published_up
 							? Date::of($published_up, Config::get('offset'))->toSql()
-							: '0000-00-00 00:00:00';
+							: null;
 		$this->model->version->published_down = $published_down && trim($published_down) != 'Never'
 							? Date::of($published_down, Config::get('offset'))->toSql()
-							: '0000-00-00 00:00:00';
+							: null;
 
 		// Determine action (if status is flipped)
 		if ($this->model->version->state != $state)
@@ -825,6 +822,11 @@ class Items extends AdminController
 			if (preg_match("/" . $doiService->_configs->shoulder . "/", $this->model->version->doi))
 			{
 				$doiService->update($this->model->version->doi, true);
+
+				if ($doiService->getError())
+				{
+					$this->setError($doiService->getError());
+				}
 			}
 		}
 
@@ -833,7 +835,7 @@ class Items extends AdminController
 
 		// Save the tags
 		$rt = new Helpers\Tags($this->database);
-		$rt->tag_object(User::get('id'), $id, $tags, 1, true);
+		$rt->tag_object(User::get('id'), $this->model->version->id, $tags, 1, true);
 
 		// Email config
 		$pubtitle = \Hubzero\Utility\Str::truncate($this->model->version->title, 100);
@@ -855,7 +857,7 @@ class Items extends AdminController
 				case 'publish':
 				case 'republish':
 					// Unset the published_down timestamp if publishing
-					$this->model->version->published_down = '0000-00-00 00:00:00';
+					$this->model->version->published_down = null;
 
 					$activity = $action == 'publish'
 						? Lang::txt('COM_PUBLICATIONS_ACTIVITY_ADMIN_PUBLISHED')
@@ -872,8 +874,17 @@ class Items extends AdminController
 						if ($this->model->version->doi
 							&& preg_match("/" . $doiService->_configs->shoulder . "/", $this->model->version->doi))
 						{
-							// Update
 							$doiService->update($this->model->version->doi, true);
+
+							if ($doiService->getError())
+							{
+								$this->setError($doiService->getError());
+								break;
+							}
+
+							// Register URL and DOI name for DataCite DOI service
+							$doiService->register(false, true, $this->model->version->doi);
+
 							if ($doiService->getError())
 							{
 								$this->setError($doiService->getError());
@@ -881,8 +892,8 @@ class Items extends AdminController
 						}
 						elseif ($requireDoi)
 						{
-							// Register
-							$doi = $doiService->register(true);
+							// Register metadata
+							$doi = $doiService->register(true, false, null, true);
 
 							if (!$doi)
 							{
@@ -894,6 +905,14 @@ class Items extends AdminController
 							else
 							{
 								$this->model->version->doi = $doi;
+							}
+
+							// Register the DOI name and URL to complete the DataCite DOI registration.
+							$doiService->register(false, true, $doi);
+
+							if ($doiService->getError())
+							{
+								$this->setError($doiService->getError());
 							}
 						}
 					}
@@ -925,10 +944,11 @@ class Items extends AdminController
 						}
 
 						// Run mkAIP if no grace period set or passed
-						if (!$this->getError() && $this->model->version->doi
-							&& $allowArchive == true && (!$this->model->version->archived
-							|| $this->model->version->archived == '0000-00-00 00:00:00')
-							&& Helpers\Utilities::mkAip($this->model->version))
+						if (!$this->getError()
+						 && $this->model->version->doi
+						 && $allowArchive == true
+						 && (!$this->model->version->archived || $this->model->version->archived == '0000-00-00 00:00:00')
+						 && Helpers\Utilities::mkAip($this->model->version))
 						{
 							$this->model->version->archived = Date::toSql();
 						}
@@ -993,7 +1013,7 @@ class Items extends AdminController
 				{
 					$this->model->_curationModel->removeSymLink();
 				}
-				elseif ($action == 'republish' || $action == 'publish')
+				elseif (($action == 'republish' || $action == 'publish') && !$this->model->isEmbargoed())
 				{
 					$this->model->_curationModel->createSymLink();
 				}
@@ -1582,6 +1602,9 @@ class Items extends AdminController
 		// Produce archival package
 		if (!$pub->_curationModel->package(true))
 		{
+			// Create symlink
+			$pub->_curationModel->createSymLink();
+
 			// Checkin the resource
 			$pub->publication->checkin();
 

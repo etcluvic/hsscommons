@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Projects\Models;
@@ -48,6 +24,7 @@ use Hubzero\Base\Model;
 use Components\Projects\Tables;
 use Hubzero\Base\ItemList;
 use Component;
+use Route;
 use Date;
 use Lang;
 use User;
@@ -60,36 +37,35 @@ class Project extends Model
 	/**
 	 * Table class name
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	protected $_tbl_name = '\\Components\\Projects\\Tables\\Project';
 
 	/**
 	 * Model context
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	protected $_context = 'com_projects.project.about';
 
 	/**
 	 * Registry
 	 *
-	 * @var object
+	 * @var  object
 	 */
 	protected $_config = null;
 
 	/**
 	 * Authorized
 	 *
-	 * @var mixed
+	 * @var  mixed
 	 */
 	private $_authorized = false;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   mixed    $oid       ID (int) or alias (string)
-	 *
+	 * @param   mixed  $oid  ID (int) or alias (string)
 	 * @return  void
 	 */
 	public function __construct($oid = null)
@@ -110,15 +86,42 @@ class Project extends Model
 			}
 		}
 
-		$this->params = new \Hubzero\Config\Registry($this->_tbl->get('params'));
+		$paramsRegistry = new \Hubzero\Config\Registry($this->_tbl->get('params'));
 
+		if (empty($paramsRegistry->toArray()))
+		{
+			$parsedParams = $this->_getParsedParams();
+			$paramsRegistry = new \Hubzero\Config\Registry($parsedParams);
+		}
+
+		$this->params = $paramsRegistry;
+	}
+
+	protected function _getParsedParams()
+	{
+		$parsedParams = [];
+		$splitParams = explode("\n", $this->_tbl->get('params'));
+
+		foreach ($splitParams as $param)
+		{
+			if (empty($param))
+			{
+				continue;
+			}
+			$pair = explode('=', $param);
+			$key = $pair[0];
+			$value = $pair[1];
+			$parsedParams[$key] = $value;
+		}
+
+		return $parsedParams;
 	}
 
 	/**
 	 * Returns a reference to an article model
 	 *
-	 * @param      mixed $oid Article ID or alias
-	 * @return     object KbModelArticle
+	 * @param   mixed  $oid  ID or alias
+	 * @return  object
 	 */
 	static function &getInstance($oid=null)
 	{
@@ -153,7 +156,7 @@ class Project extends Model
 	/**
 	 * Reload project
 	 *
-	 * @return   void
+	 * @return  void
 	 */
 	public function reloadProject()
 	{
@@ -163,8 +166,8 @@ class Project extends Model
 	/**
 	 * Get project object
 	 *
-	 * @param      string $as What data to return
-	 * @return     string
+	 * @param   boolean  $reload
+	 * @return  object
 	 */
 	public function project($reload = false)
 	{
@@ -179,8 +182,7 @@ class Project extends Model
 	/**
 	 * Get project local repo
 	 *
-	 * @param      string $as What data to return
-	 * @return     string
+	 * @return  object
 	 */
 	public function repo()
 	{
@@ -196,8 +198,8 @@ class Project extends Model
 	/**
 	 * Return a formatted created timestamp
 	 *
-	 * @param      string $as What data to return
-	 * @return     string
+	 * @param   string  $as  What data to return
+	 * @return  string
 	 */
 	public function created($as='')
 	{
@@ -207,8 +209,8 @@ class Project extends Model
 	/**
 	 * Return a formatted modified timestamp
 	 *
-	 * @param      string $as What data to return
-	 * @return     string
+	 * @param   string  $as  What data to return
+	 * @return  string
 	 */
 	public function modified($as='')
 	{
@@ -218,9 +220,9 @@ class Project extends Model
 	/**
 	 * Return a formatted timestamp
 	 *
-	 * @param      string $key Field to return
-	 * @param      string $as  What data to return
-	 * @return     string
+	 * @param   string  $key  Field to return
+	 * @param   string  $as   What data to return
+	 * @return  string
 	 */
 	protected function _date($key, $as='')
 	{
@@ -256,7 +258,8 @@ class Project extends Model
 	/**
 	 * Get project member
 	 *
-	 * @return     Components\Projects\Tables\Owner
+	 * @param   boolean  $refresh
+	 * @return  object
 	 */
 	public function member($reload = false)
 	{
@@ -280,7 +283,7 @@ class Project extends Model
 	/**
 	 * Check if the member is confirmed
 	 *
-	 * @return     array
+	 * @return  boolean
 	 */
 	public function isMemberConfirmed()
 	{
@@ -294,9 +297,20 @@ class Project extends Model
 	}
 
 	/**
+	 * Check if the project is private
+	 *
+	 * @return  boolean
+	 */
+	public function isPrivate()
+	{
+		//return ($this->get('private') == 1);
+		return ($this->get('access') == 5);
+	}
+
+	/**
 	 * Check if the project is public
 	 *
-	 * @return     array
+	 * @return  boolean
 	 */
 	public function isPublic()
 	{
@@ -304,7 +318,8 @@ class Project extends Model
 		{
 			return false;
 		}
-		if ($this->get('private') == 1)
+
+		if ($this->isPrivate())
 		{
 			return false;
 		}
@@ -312,23 +327,47 @@ class Project extends Model
 		return true;
 	}
 
+	/**
+	 * Check if the project is open
+	 *
+	 * @return  boolean
+	 */
+	public function isOpen()
+	{
+		if (!$this->exists())
+		{
+			return false;
+		}
+
+		if ($this->get('private') != -1)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Allow membership requests?
+	 *
+	 * @return  boolean
+	 */
 	public function allowMembershipRequest()
 	{
-		if ($this->isPublic())
+		/*if ($this->isPublic())
 		{
-			$allowMembership = $this->params->get('allow_membershiprequest');
-			if ($allowMembership == 1)
+			if ($this->params->get('allow_membershiprequest') == 1)
 			{
 				return true;
 			}
-		}
-		return false;
+		}*/
+		return ($this->params->get('allow_membershiprequest') == 1);
 	}
 
 	/**
 	 * Check if the project is active
 	 *
-	 * @return     array
+	 * @return  boolean
 	 */
 	public function isActive()
 	{
@@ -337,9 +376,7 @@ class Project extends Model
 			return false;
 		}
 
-		$setupComplete = $this->config()->get('confirm_step') ? 3 : 2;
-
-		if ($this->get('state') == 1 && $this->get('setup_stage') >= $setupComplete)
+		if ($this->get('state') == 1 && !$this->inSetup())
 		{
 			return true;
 		}
@@ -364,7 +401,7 @@ class Project extends Model
 	/**
 	 * Is project deleted?
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function isDeleted()
 	{
@@ -378,7 +415,7 @@ class Project extends Model
 	/**
 	 * Is project provisioned?
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function isProvisioned()
 	{
@@ -392,7 +429,7 @@ class Project extends Model
 	/**
 	 * Get publication of a provisioned project
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function getPublication()
 	{
@@ -411,7 +448,7 @@ class Project extends Model
 	/**
 	 * Get provisioned project
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function loadProvisioned($pid = null)
 	{
@@ -428,7 +465,7 @@ class Project extends Model
 	/**
 	 * Is project pending approval?
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function isPending()
 	{
@@ -442,7 +479,7 @@ class Project extends Model
 	/**
 	 * Is project suspended?
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function isInactive()
 	{
@@ -456,7 +493,7 @@ class Project extends Model
 	/**
 	 * Is project in setup?
 	 *
-	 * @return     boolean
+	 * @return  boolean
 	 */
 	public function inSetup()
 	{
@@ -472,16 +509,34 @@ class Project extends Model
 	/**
 	 * Authorize current user
 	 *
-	 * @param      mixed $idx Index value
-	 * @return     array
+	 * @param   boolean  $reviewer
+	 * @return  void
 	 */
 	private function _authorize($reviewer = false)
 	{
 		$this->_authorized = true;
 
-		// NOT logged in
-		if (User::isGuest())
+		if (in_array($this->get('access'), User::getAuthorisedViewLevels())
+		 && ($this->isActive() || $this->isArchived()))
 		{
+			$this->params->set('access-view-project', true);
+		}
+
+		// NOT logged in
+		/*if (User::isGuest())
+		{
+			if (in_array($this->get('access'), User::getAuthorisedViewLevels())
+			 && ($this->isActive() || $this->isArchived()))
+			{
+				$this->params->set('access-view-project', true);
+				$this->params->set('access-readonly-project', true);
+
+				if ($this->isArchived())
+				{
+					$this->params->set('access-member-project', true);
+				}
+			}
+
 			// If the project is active and public
 			if ($this->isPublic() && $this->isActive())
 			{
@@ -489,14 +544,15 @@ class Project extends Model
 				$this->params->set('access-view-project', true);
 			}
 			// If an open project
-			if ($this->get('private') < 0 && ($this->isActive() || $this->isArchived()))
+			//if ($this->get('private') < 0 && ($this->isActive() || $this->isArchived()))
+			if ($this->get('access') == 1 && ($this->isActive() || $this->isArchived()))
 			{
 				// Allow read-only mode for everything
 				$this->params->set('access-member-project', true);
 				$this->params->set('access-readonly-project', true);
 			}
 			return;
-		}
+		}*/
 
 		// Check reviewer access?
 		if ($reviewer)
@@ -538,6 +594,11 @@ class Project extends Model
 					if ($group && $cn == $group->get('cn'))
 					{
 						$authorized = true;
+
+						$this->params->set('access-view-project', true);
+						$this->params->set('access-member-project', true);
+						$this->params->set('access-readonly-project', true);
+						break;
 					}
 				}
 			}
@@ -558,10 +619,11 @@ class Project extends Model
 				foreach ($cg as $c)
 				{
 					$group = \Hubzero\User\Group::getInstance($c);
+
 					if ($group)
 					{
-						if ($group->is_member_of('members', User::get('id')) ||
-							$group->is_member_of('managers', User::get('id')))
+						if ($group->is_member_of('members', User::get('id'))
+						 || $group->is_member_of('managers', User::get('id')))
 						{
 							$this->params->set('access-create-project', true);
 						}
@@ -598,13 +660,8 @@ class Project extends Model
 		$member = $this->member();
 		if (empty($member) || $member->get('status') != 1)
 		{
-			if ($this->isPublic() && $this->isActive())
-			{
-				// Allow public view access
-				$this->params->set('access-view-project', true);
-			}
 			// If an open project
-			if ($this->get('private') < 0)
+			if ($this->isOpen())
 			{
 				// Allow read-only mode for everything
 				$this->params->set('access-member-project', true);
@@ -616,7 +673,8 @@ class Project extends Model
 			$this->params->set('access-view-project', true);
 			$this->params->set('access-member-project', true); // internal project view
 
-			if ($this->isArchived() || $this->get('private') < 0)
+			//if ($this->isArchived() || $this->get('private') < 0)
+			if ($this->isArchived())// || $this->get('access') == 1)
 			{
 				// Read-only
 				$this->params->set('access-readonly-project', true);
@@ -656,8 +714,8 @@ class Project extends Model
 	/**
 	 * Check a user's authorization
 	 *
-	 * @param      string $action Action to check
-	 * @return     boolean True if authorized, false if not
+	 * @param   string   $action  Action to check
+	 * @return  boolean  True if authorized, false if not
 	 */
 	public function access($action = 'view')
 	{
@@ -671,8 +729,8 @@ class Project extends Model
 	/**
 	 * Check a reviewer's authorization
 	 *
-	 * @param      string $action Action to check
-	 * @return     boolean True if authorized, false if not
+	 * @param   string   $action  Action to check
+	 * @return  boolean  True if authorized, false if not
 	 */
 	public function reviewerAccess($reviewer = false)
 	{
@@ -692,7 +750,8 @@ class Project extends Model
 	 * it will return that property value. Otherwise,
 	 * it returns the entire User object
 	 *
-	 * @return     mixed
+	 * @param   string  $property
+	 * @return  mixed
 	 */
 	public function owner($property=null)
 	{
@@ -714,7 +773,8 @@ class Project extends Model
 	 * it will return that property value. Otherwise,
 	 * it returns the entire User object
 	 *
-	 * @return     mixed
+	 * @param   string  $property
+	 * @return  mixed
 	 */
 	public function creator($property=null)
 	{
@@ -736,7 +796,8 @@ class Project extends Model
 	 * it will return that property value. Otherwise,
 	 * it returns the entire Group object
 	 *
-	 * @return     mixed
+	 * @param   string  $property
+	 * @return  mixed
 	 */
 	public function groupOwner($property=null)
 	{
@@ -764,9 +825,9 @@ class Project extends Model
 	 * clean  - parses content and then strips tags
 	 * raw    - as is, no parsing
 	 *
-	 * @param      string  $as      Format to return content in [parsed, clean, raw]
-	 * @param      integer $shorten Number of characters to shorten text to
-	 * @return     mixed String or Integer
+	 * @param   string   $as       Format to return content in [parsed, clean, raw]
+	 * @param   integer  $shorten  Number of characters to shorten text to
+	 * @return  mixed    String or Integer
 	 */
 	public function about($as='parsed', $shorten=0)
 	{
@@ -827,8 +888,8 @@ class Project extends Model
 	 * Get a configuration value
 	 * If no key is passed, it returns the configuration object
 	 *
-	 * @param      string $key Config property to retrieve
-	 * @return     mixed
+	 * @param   string  $key  Config property to retrieve
+	 * @return  mixed
 	 */
 	public function config($key=null)
 	{
@@ -846,8 +907,8 @@ class Project extends Model
 	/**
 	 * Store changes to this database entry
 	 *
-	 * @param     boolean $check Perform data validation check?
-	 * @return    boolean False if error, True on success
+	 * @param   boolean  $check  Perform data validation check?
+	 * @return  boolean  False if error, True on success
 	 */
 	public function store($check=true)
 	{
@@ -863,8 +924,8 @@ class Project extends Model
 	/**
 	 * Check alias name
 	 *
-	 * @param     string $name Alias name
-	 * @return    boolean False if error, True on success
+	 * @param   string   $name  Alias name
+	 * @return  boolean  False if error, True on success
 	 */
 	public function check($name = '', $pid = 0, $ajax = 0)
 	{
@@ -922,8 +983,8 @@ class Project extends Model
 		{
 			// Verify name uniqueness
 			if (!$this->_tbl->checkUniqueName($name, $pid)
-				|| in_array($name, $reserved) ||
-				in_array($name, $tasks))
+			 || in_array($name, $reserved)
+			 || in_array($name, $tasks))
 			{
 				$this->setError(Lang::txt('COM_PROJECTS_ERROR_NAME_NOT_UNIQUE'));
 			}
@@ -939,10 +1000,9 @@ class Project extends Model
 	/**
 	 * Get group property
 	 *
-	 * @param      object 	$groups
-	 * @param      string 	$get
-	 *
-	 * @return     array
+	 * @param   object  $groups
+	 * @param   string  $get
+	 * @return  array
 	 */
 	public function getGroupProperty($groups, $get = 'cn')
 	{
@@ -963,10 +1023,9 @@ class Project extends Model
 	/**
 	 * Save param
 	 *
-	 * @param      string 	$param
-	 * @param      string 	$value
-	 *
-	 * @return     void
+	 * @param   string  $param
+	 * @param   string  $value
+	 * @return  void
 	 */
 	public function saveParam($param = '', $value = '')
 	{
@@ -976,9 +1035,8 @@ class Project extends Model
 	/**
 	 * Get params
 	 *
-	 * @param      boolean 	$refresh
-	 *
-	 * @return     void
+	 * @param   boolean  $refresh
+	 * @return  object
 	 */
 	public function getParams($refresh = true)
 	{
@@ -988,6 +1046,7 @@ class Project extends Model
 	/**
 	 * Get a count of new activity
 	 *
+	 * @param   boolean  $refresh
 	 * @return  integer
 	 */
 	public function newCount($refresh = false)
@@ -997,7 +1056,9 @@ class Project extends Model
 			$this->_newCount = \Hubzero\Activity\Recipient::all()
 				->whereEquals('scope', 'project')
 				->whereEquals('scope_id', $this->get('id'))
-				->whereEquals('viewed', '0000-00-00 00:00:00')
+				->where('viewed', 'IS', null, 'and', 1)
+					->orWhereEquals('viewed', '0000-00-00 00:00:00', 1)
+					->resetDepth()
 				->whereEquals('state', 1)
 				->total();
 		}
@@ -1008,6 +1069,8 @@ class Project extends Model
 	/**
 	 * Get project team
 	 *
+	 * @param   array    $filters
+	 * @param   boolean  $refresh
 	 * @return  object
 	 */
 	public function team($filters = array(), $refresh = false)
@@ -1190,7 +1253,10 @@ class Project extends Model
 					$action = 'cancelled';
 					break;
 
+				case 'posted a to do item':
 				case 'posted a to-do item':
+				case 'checked off a to do item':
+				case 'checked off a to-do item':
 					$scope = 'project.todo';
 					break;
 
@@ -1198,6 +1264,7 @@ class Project extends Model
 					$scope = 'project.comment';
 					break;
 
+				case 'commented on a to do item':
 				case 'commented on a to-do item':
 					$scope = 'project.todo.comment';
 					break;
@@ -1222,19 +1289,19 @@ class Project extends Model
 					{
 						$action = 'uploaded';
 						$scope = 'project.file';
-						$refid = $this->get('id');
+						$scope_id = $this->get('id');
 					}
 					if (substr($activity, 0, strlen('updated file')) == 'updated file')
 					{
 						$action = 'updated';
 						$scope = 'project.file';
-						$refid = $this->get('id');
+						$scope_id = $this->get('id');
 					}
 					if (substr($activity, 0, strlen('restored deleted file')) == 'restored deleted file')
 					{
 						$action = 'updated';
 						$scope = 'project.file';
-						$refid = $this->get('id');
+						$scope_id = $this->get('id');
 					}
 					if (substr($activity, 0, strlen('created database')) == 'created database')
 					{
@@ -1348,7 +1415,9 @@ class Project extends Model
 					'class'       => $class,
 					'underline'   => $underline,
 					'commentable' => $commentable,
-					'admin'       => $admin
+					'admin'       => $admin,
+					'referenceid' => $refid,
+					'projectid'   => $this->get('id')
 				)
 			]);
 

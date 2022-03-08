@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Models;
@@ -141,9 +116,11 @@ class Curation extends Obj
 	 */
 	var $_message = null;
 
+	var $readmeFileName = 'hubREADME.txt';
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param   string  $manifest        Publication manifest
 	 * @param   string  $masterManifest  Master type manifest
 	 * @return  void
@@ -316,8 +293,8 @@ class Curation extends Obj
 	}
 
 	/**
-	 * Returns the Blocks of this curation flow 
-	 * 
+	 * Returns the Blocks of this curation flow
+	 *
 	 * @return  void
 	 */
 	public function getBlockSchema()
@@ -1206,7 +1183,6 @@ class Curation extends Obj
 
 		// Get blocks model
 		$blocksModel = new Blocks($this->_db);
-
 		// Save data
 		$blocksModel->saveBlock($this->_blockname, $this->_block, $this->_blockorder, $this->_pub, $actor, $elementId);
 
@@ -1593,7 +1569,9 @@ class Curation extends Obj
 		if ($status->updated && isset($reviewStatus->updated_by) && $reviewStatus->updated_by)
 		{
 			$profile = User::getInstance($reviewStatus->updated_by);
-			$by = ' ' . Lang::txt('COM_PUBLICATIONS_CURATION_BY') . ' ' . $profile->get('name');
+			$name = $profile->get('name');
+			$name = $name ?: Lang::txt('JUNKNOWN');
+			$by = ' ' . Lang::txt('COM_PUBLICATIONS_CURATION_BY', $name);
 
 			if ($status->status != 3)
 			{
@@ -1622,7 +1600,7 @@ class Curation extends Obj
 		if ($viewer == 'curator')
 		{
 			?>
-			<span class="edit-notice">[<a href="#">edit</a>]</span>
+			<span class="edit-notice">[<a href="#"><?php echo Lang::txt('JACTION_EDIT'); ?></a>]</span>
 			<?php
 		}
 
@@ -2024,6 +2002,7 @@ class Curation extends Obj
 		$second   = $this->getElements(2);
 		$gallery  = $this->getElements(3);
 		$elements = array_merge($prime, $second, $gallery);
+		Lang::load('com_publications', Component::path('com_publications') . '/site');
 
 		// Do we have items to package?
 		if (!$elements)
@@ -2072,7 +2051,7 @@ class Curation extends Obj
 		}
 		$contents .= '<li>';
 		$contents .= '<span class="item-icon">' . \Components\Projects\Models\File::drawIcon('txt') . '</span>';
-		$contents .= '<span class="item-title">README.txt</span>';
+		$contents .= "<span class=\"item-title\">$this->readmeFileName</span>";
 		$contents .= '</li>';
 		$contents .= '</ul>';
 
@@ -2087,7 +2066,7 @@ class Curation extends Obj
 	 * @param	boolean	$includeVersionNum
 	 * @return  mixed  False on error, string on success
 	 */
-	public function getBundleName($includeVersionNum = false)
+	public function getBundleName($symLinkName = false)
 	{
 		if (empty($this->_pub))
 		{
@@ -2102,13 +2081,12 @@ class Curation extends Obj
 		}
 		else
 		{
-			$bundleName = Lang::txt('Publication') . '_' . $this->_pub->id;
-			if ($includeVersionNum)
+			$bundleName = 'Publication' . '_' . $this->_pub->id;
+			if ($symLinkName)
 			{
 				$bundleName .= '_' . $this->_pub->version->get('version_number');
 			}
 		}
-
 		return $bundleName . '.zip';
 	}
 
@@ -2158,15 +2136,20 @@ class Curation extends Obj
 	public function createSymLink()
 	{
 		$tarname = $this->getBundleName();
-		$tarpath = $this->_pub->path('base', true) . DS . $tarname;
+		$tarpath = $this->_pub->path('relative') . DS . $tarname;
 		$symLink = $this->_symLinkPath();
+		if ($symLink !== false)
+		{
+			chdir(dirname($symLink));
+		}
+
 		if (empty($this->_pub) || $symLink == false || !is_file($tarpath))
 		{
 			return false;
 		}
 		if (!is_file($symLink))
 		{
-			if (!symlink($tarpath, $symLink))
+			if (!link($tarpath, $symLink))
 			{
 				return false;
 			}
@@ -2186,7 +2169,11 @@ class Curation extends Obj
 		{
 			return false;
 		}
-		unlink($symLink);
+
+		if (is_file($symLink))
+		{
+			unlink($symLink);
+		}
 		return true;
 	}
 
@@ -2229,7 +2216,7 @@ class Curation extends Obj
 		$tarname    = $this->getBundleName();
 		$tarpath    = $this->_pub->path('base', true) . DS . $tarname;
 		$licFile    = $this->_pub->path('base', true) . DS . 'LICENSE.txt';
-		$readmeFile = $this->_pub->path('base', true) . DS . 'README.txt';
+		$readmeFile = $this->_pub->path('base', true) . DS . $this->readmeFileName;
 
 		// If we're NOT overwriting and the file already exists
 		// then we're done!

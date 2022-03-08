@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Shawn Rice <zooley@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -82,7 +57,7 @@ $this->css($css);
 				<span style="font-size: 0.85em; color: #666; -webkit-text-size-adjust: none;"><?php echo $this->config->get('MetaDesc'); ?></span>
 			</td>
 			<td width="10%" nowrap="nowrap" align="right" valign="bottom" style="border-left: 1px solid #e1e1e1; font-size: 1.2em; color: #999; padding: 0 0 5px 10px; text-align: right; vertical-align: bottom;">
-				Members
+				<?php echo Lang::txt('COM_MEMBERS'); ?>
 			</td>
 		</tr>
 	</tbody>
@@ -140,26 +115,12 @@ $this->css($css);
 	</tbody>
 </table>
 
-<!-- Start Header -->
-<table width="100%" cellpadding="2" cellspacing="3" border="0" style="border-collapse: collapse; border-top: 2px solid #e1e1e1;">
+<!-- Start Spacer -->
+<table class="tbl-spacer" width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tbody>
 		<tr>
-			<td align="left" valign="bottom" style="line-height: 1; padding: 5px 0 0 0; ">
-				<span style="font-size: 0.85em; color: #666; -webkit-text-size-adjust: none;">
-					<?php echo Lang::txt('COM_MEMBERS_CREDENTIALS_EMAIL_WHY_NOTFIED', $this->config->get('sitename'), $this->baseUrl, $this->baseUrl); ?>
-				</span>
-			</td>
+			<td height="30"></td>
 		</tr>
 	</tbody>
 </table>
-<!-- End Header -->
-
-<!-- Start Footer Spacer -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-	<tbody>
-		<tr style="border-collapse: collapse;">
-			<td height="30" style="border-collapse: collapse; color: #fff !important;"><div style="height: 30px !important; visibility: hidden;">----</div></td>
-		</tr>
-	</tbody>
-</table>
-<!-- End Footer Spacer -->
+<!-- End Spacer -->

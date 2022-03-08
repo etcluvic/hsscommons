@@ -1,39 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Helpers;
@@ -355,23 +324,12 @@ class Html
 		$formatter->setTemplate($template);
 
 		$html  = '<p>' . Lang::txt('COM_PUBLICATIONS_CITATION_INSTRUCTIONS') . '</p>' . "\n";
-		// Modified by CANARIE Inc. Beginning
-		// Reorganized the displaying of citations results
-        $html .= '<ul class="citations results">' . "\n";
-        if ($citations)
-        {
-        	$html .= "\t" . '<li>' . "\n";
-        	$html .= $citations;
-            $html .= "\t" . '</li>' . "\n";
-        }
-        // Modified by CANARIE Inc. End
+		$html .= $citations;
 		if ($cite)
 		{
-			// Modified by CANARIE Inc. Beginning
-			// Moved the citation results out
+			$html .= '<ul class="citations results">' . "\n";
 			$html .= "\t" . '<li>' . "\n";
-			// Modified by CANARIE Inc. End
-			
+
 			$formatted = $formatter->formatCitation($cite, false, true, $cconfig);
 
 			// The following line was meant to remove quote marks from around the title
@@ -400,15 +358,9 @@ class Html
 				$html .= "\t\t" . '</p>'."\n";
 			}
 			$html .= "\t" . '</li>' . "\n";
-			// Modified by CANARIE Inc. Beginning
-			// Moved the close ul line out
-			// Modified by CANARIE Inc. End
+			$html .= '</ul>' . "\n";
 		}
 
-		// Modified by CANARIE Inc. Beginning
-		// Moved the close ul line out
-		$html .= '</ul>' . "\n";
-		// Modified by CANARIE Inc. End
 		return $html;
 	}
 
@@ -1138,7 +1090,7 @@ class Html
 			{
 				$path = DS . $base . DS . \Hubzero\Utility\Str::pad($row->id);
 				// For simple reporting, we only count the current version's raw content size
-				// This does not count the bundle or previous versions of each publication	
+				// This does not count the bundle or previous versions of each publication
 				if ($simple)
 				{
 					if (!($row instanceof \Components\Publications\Models\Publication))
@@ -1300,14 +1252,4 @@ class Html
 		return true;
 	}
 
-	/**
-	 * Display an alert message
-	 *
-	 * @param   string  $msg
-	 * @return  string
-	 */
-	public static function alert($msg)
-	{
-		return "<script type=\"text/javascript\"> alert('" . $msg . "'); window.history.go(-1); </script>\n";
-	}
 }

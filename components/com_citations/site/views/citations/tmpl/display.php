@@ -1,39 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Shawn Rice <zooley@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -117,15 +86,14 @@ $yearlystats = $this->yearlystats;
 $cls = 'even';
 $tot = 0;
 $rows = array();
-foreach ($yearlystats as $year=>$amt)
+foreach ($yearlystats as $year => $amt)
 {
 	$cls = ($cls == 'even') ? 'odd' : 'even';
 
 	$tr  = "\t\t".'<tr class="'.$cls.'">'."\n";
 	$tr .= "\t\t\t".'<th class="textual-data">'.$year.'</th>'."\n";
-	//  Modified by CANARIE Inc. Beginning
-	//  Removed two lines of code for affiliate and non-affiliate
-	//  Modified by CANARIE Inc. End
+	$tr .= "\t\t\t".'<td class="numerical-data">'.$amt['affiliate'].'</td>'."\n";
+	$tr .= "\t\t\t".'<td class="numerical-data">'.$amt['non-affiliate'].'</td>'."\n";
 	$tr .= "\t\t\t".'<td class="numerical-data highlight">'.(intval($amt['affiliate']) + intval($amt['non-affiliate'])).'</td>'."\n";
 	$tr .= "\t\t".'</tr>'."\n";
 
@@ -139,37 +107,30 @@ $html .= "\t".'<caption>'.Lang::txt('COM_CITATIONS_TABLE_METRICS_YEAR').'</capti
 $html .= "\t".'<thead>'."\n";
 $html .= "\t\t".'<tr>'."\n";
 $html .= "\t\t\t".'<th scope="col" class="textual-data">'.Lang::txt('COM_CITATIONS_YEAR').'</th>'."\n";
-//  Modified by CANARIE Inc. Beginning
-//  Removed two lines of code for affiliate and non-affiliate
-//  Modified by CANARIE Inc. End
+$html .= "\t\t\t".'<th scope="col" class="numerical-data"><sup><a href="#fn-1">1</a></sup> '.Lang::txt('COM_CITATIONS_AFFILIATED').'</th>'."\n";
+$html .= "\t\t\t".'<th scope="col" class="numerical-data"><sup><a href="#fn-1">1</a></sup> '.Lang::txt('COM_CITATIONS_NONAFFILIATED').'</th>'."\n";
 $html .= "\t\t\t".'<th scope="col" class="numerical-data">'.Lang::txt('COM_CITATIONS_TOTAL').'</th>'."\n";
 $html .= "\t\t".'</tr>'."\n";
 $html .= "\t".'</thead>'."\n";
 $html .= "\t".'<tbody>'."\n";
-$html .= implode('',$rows);
+$html .= implode('', $rows);
 $html .= "\t".'</tbody>'."\n";
 $html .= "\t".'<tfoot>'."\n";
 $html .= "\t\t".'<tr class="summary">'."\n";
-//  Modified by CANARIE Inc. Beginning
-//  Changed the displaying format
-$html .= "\t\t\t".'<th>'.Lang::txt('COM_CITATIONS_TOTAL').'</th>'."\n";
-//  Modified by CANARIE Inc. End
+$html .= "\t\t\t".'<th class="numerical-data" colspan="3">'.Lang::txt('COM_CITATIONS_TOTAL').'</th>'."\n";
 $html .= "\t\t\t".'<td class="numerical-data highlight">'.$tot.'</td>'."\n";
 $html .= "\t\t".'</tr>'."\n";
 $html .= "\t".'</tfoot>'."\n";
 $html .= '</table>'."\n";
-//  Modified by CANARIE Inc. Beginning
-//  Removed three lines of code for footnotes
-//  Modified by CANARIE Inc. End
 
 $typestats = $this->typestats;
 $cls = 'even';
 $rows = array();
 $j = 0;
 $data_arr = array();
-$data_arr['text'] = null;
-$data_arr['hits'] = null;
-foreach ($typestats as $type=>$stat)
+$data_arr['text'] = array();
+$data_arr['hits'] = array();
+foreach ($typestats as $type => $stat)
 {
 	$data_arr['text'][$j] = trim($type);
 	$data_arr['hits'][$j] = $stat;
@@ -184,46 +145,64 @@ $tabcnt = 0;
 $colorx = 0;
 $maxval = 0;
 
-array_multisort( $data_arr['hits'], SORT_NUMERIC, SORT_DESC, $data_arr['text']);
+array_multisort($data_arr['hits'], SORT_NUMERIC, SORT_DESC, $data_arr['text']);
 
 foreach ($data_arr['hits'] as $hits)
 {
-	if ($maxval < $hits) {
+	if ($maxval < $hits)
+	{
 		$maxval = $hits;
 	}
 }
-$sumval = array_sum( $data_arr['hits']);
+$sumval = array_sum($data_arr['hits']);
 
 for ($i=0, $n=count($data_arr['text']); $i < $n; $i++)
 {
 	$text =& $data_arr['text'][$i];
 	$hits =& $data_arr['hits'][$i];
-	if ($maxval > 0 && $sumval > 0) {
-		$width = ceil( $hits*$polls_graphwidth/$maxval);
-		$percent = round( 100*$hits/$sumval, 1);
-	} else {
+	if ($maxval > 0 && $sumval > 0)
+	{
+		$width = ceil($hits*$polls_graphwidth/$maxval);
+		$percent = round(100*$hits/$sumval, 1);
+	}
+	else
+	{
 		$width = 0;
 		$percent = 0;
 	}
-	$tdclass='';
-	if ($polls_barcolor==0) {
-		if ($colorx < $polls_maxcolors) {
+
+	$tdclass = '';
+
+	if ($polls_barcolor==0)
+	{
+		if ($colorx < $polls_maxcolors)
+		{
 			$colorx = ++$colorx;
-		} else {
+		}
+		else
+		{
 			$colorx = 1;
 		}
-		$tdclass = 'color'.$colorx;
-	} else {
-		$tdclass = 'color'.$polls_barcolor;
+		$tdclass = 'color' . $colorx;
+	}
+	else
+	{
+		$tdclass = 'color' . $polls_barcolor;
 	}
 
 	$cls = ($cls == 'even') ? 'odd' : 'even';
+
+	$this->css('
+		.graph .bar' . $i . ' {
+			width: '.$percent.'%;
+		}
+	');
 
 	$tr  = "\t\t".'<tr class="'.$cls.'">'."\n";
 	$tr .= "\t\t\t".'<th class="textual-data">'.$text.'</th>'."\n";
 	$tr .= "\t\t\t".'<td class="numerical-data">'."\n";
 	$tr .= "\t\t\t\t".'<div class="graph">'."\n";
-	$tr .= "\t\t\t\t\t".'<strong class="bar '.$tdclass.'" style="width: '.$percent.'%;"><span>'.$percent.'%</span></strong>'."\n";
+	$tr .= "\t\t\t\t\t".'<strong class="bar bar' . $i . ' '.$tdclass.'" title="'.$percent.'%"><span>'.$percent.'%</span></strong>'."\n";
 	$tr .= "\t\t\t\t".'</div>'."\n";
 	$tr .= "\t\t\t".'</td>'."\n";
 	$tr .= "\t\t\t".'<td class="numerical-data">'.$hits.'</td>'."\n";
@@ -244,7 +223,7 @@ $html .= "\t\t\t".'<th scope="col" class="numerical-data">'.Lang::txt('COM_CITAT
 $html .= "\t\t".'</tr>'."\n";
 $html .= "\t".'</thead>'."\n";
 $html .= "\t".'<tbody>'."\n";
-$html .= implode('',$rows);
+$html .= implode('', $rows);
 $html .= "\t".'</tbody>'."\n";
 $html .= "\t".'<tfoot>'."\n";
 $html .= "\t\t".'<tr class="summary">'."\n";
@@ -254,6 +233,9 @@ $html .= "\t\t\t".'<td class="numerical-data">'.$sumval.'</td>'."\n";
 $html .= "\t\t".'</tr>'."\n";
 $html .= "\t".'</tfoot>'."\n";
 $html .= '</table>'."\n";
+$html .= '<div class="footnotes"><hr />
+	<ol><li id="fn-1">'.Lang::txt('COM_CITATIONS_METRICS_FOOTNOTE').'</li></ol>
+	</div>'."\n";
 
 echo $html;
 

@@ -1,38 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -50,7 +20,7 @@ $this->css('introduction.css', 'system')
 		<div class="col span8">
 			<h3><?php echo Lang::txt('COM_FEEDBACK_HAVE_SOMETHING_TO_SAY'); ?></h3>
 			<p><?php echo Lang::txt('COM_FEEDBACK_INTRO', Config::get('sitename')); ?></p>
-		</div><!-- / .subject -->
+		</div>
 		<div class="col span4 omega">
 			<h3><?php echo Lang::txt('COM_FEEDBACK_PARTICIPATE'); ?></h3>
 			<ul>
@@ -58,7 +28,7 @@ $this->css('introduction.css', 'system')
 				<li><a href="<?php echo Route::url('index.php?option=com_forum'); ?>"><?php echo Lang::txt('COM_FEEDBACK_LINK_FORUM'); ?></a></li>
 				<li><a href="<?php echo Route::url('index.php?option=com_groups'); ?>"><?php echo Lang::txt('COM_FEEDBACK_LINK_GROUPS'); ?></a></li>
 			</ul>
-		</div><!-- / .aside -->
+		</div>
 	</div>
 </section><!-- / #introduction.section -->
 
@@ -84,14 +54,17 @@ $this->css('introduction.css', 'system')
 					</div>
 				</div><!-- / .col span6 omega -->
 			</div><!-- / .grid -->
-			<!--  Modified by CANARIE Inc. Beginning -->
-			<!--  changed from "xpoll" to "poll" -->
-			<?php if ($this->wishlist || $this->poll) { ?>
-			<!--  Modified by CANARIE Inc. End -->
+			<?php if ($this->wishlist || $this->xpoll) { ?>
 				<div class="grid">
-					<!--  Modified by CANARIE Inc. Beginning -->
-					<!--  Removed the whole div for wishlist -->
-					<!--  Modified by CANARIE Inc. End -->
+					<div class="col span6">
+					<?php if ($this->wishlist) { ?>
+						<div class="wish">
+							<h3><a href="<?php echo Route::url('index.php?option=com_wishlist'); ?>"><?php echo Lang::txt('COM_FEEDBACK_WISHLIST_HEADER'); ?></a></h3>
+							<p><?php echo Lang::txt('COM_FEEDBACK_WISHLIST_DESCRIPTION'); ?></p>
+							<p><a class="more btn" href="<?php echo Route::url('index.php?option=com_wishlist'); ?>"><?php echo Lang::txt('COM_FEEDBACK_WISHLIST_BUTTON'); ?></a></p>
+						</div>
+					<?php } ?>
+					</div><!-- / .col span6 -->
 					<div class="col span6 omega">
 					<?php if ($this->poll) { ?>
 						<div class="poll">

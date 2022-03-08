@@ -1,38 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -72,13 +42,14 @@ $sortdir = $this->filters['sort_Dir'] == 'DESC' ? 'ASC' : 'DESC';
 </header>
 
 <section class="main section">
-	<div class="section-inner">
+	<div class="section-inner hz-layout-with-aside">
 		<div class="subject">
 			<form method="get" action="<?php echo Route::url('index.php?option=' . $this->option); ?>">
 
 				<div class="container data-entry">
 					<input class="entry-search-submit" type="submit" value="<?php echo Lang::txt('COM_ANSWERS_SEARCH'); ?>" />
 					<fieldset class="entry-search">
+						<legend><?php echo Lang::txt('COM_ANSWERS_SEARCH'); ?></legend>
 						<label for="entry-search-field"><?php echo Lang::txt('COM_ANSWERS_SEARCH_LABEL'); ?></label>
 						<input type="text" name="q" id="entry-search-field" value="<?php echo $this->escape($this->filters['search']); ?>" placeholder="<?php echo Lang::txt('COM_ANSWERS_SEARCH_PLACEHOLDER'); ?>" />
 						<input type="hidden" name="option" value="<?php echo $this->option; ?>" />
@@ -191,7 +162,7 @@ $sortdir = $this->filters['sort_Dir'] == 'DESC' ? 'ASC' : 'DESC';
 					foreach ($this->results as $row)
 					{
 						// author name
-						$name = Lang::txt('COM_ANSWERS_ANONYMOUS');
+						$name = Lang::txt('JANONYMOUS');
 						if (!$row->get('anonymous'))
 						{
 							$name = $this->escape(stripslashes($row->creator->get('name', $name)));
@@ -298,9 +269,14 @@ $sortdir = $this->filters['sort_Dir'] == 'DESC' ? 'ASC' : 'DESC';
 					<?php echo Lang::txt('COM_ANSWERS_GET_STARTED_HELP', Route::url('index.php?option=com_help&component=answers&page=index')); ?>
 				</p>
 			</div><!-- / .container -->
-			<!--  Modified by CANARIE Inc. Beginning -->
-			<!--  Removed points related content -->
-			<!--  Modified by CANARIE Inc. End -->
+			<?php if ($this->config->get('banking')) { ?>
+				<div class="container">
+					<h3><?php echo Lang::txt('COM_ANSWERS_EARN_POINTS'); ?></h3>
+					<p>
+						<?php echo Lang::txt('COM_ANSWERS_START_EARNING_POINTS'); ?> <a href="<?php echo $this->config->get('infolink'); ?>"><?php echo Lang::txt('COM_ANSWERS_LEARN_MORE'); ?></a>.
+					</p>
+				</div><!-- / .container -->
+			<?php } ?>
 		</aside><!-- / .aside -->
 	</div><!-- / .section-inner -->
 </section><!-- / .main section -->

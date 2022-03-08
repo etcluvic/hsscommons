@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -46,38 +22,25 @@ if ($canDo->get('core.create'))
 }
 if ($canDo->get('core.delete'))
 {
-	Toolbar::deleteList();
+	Toolbar::deleteList('COM_ANSWERS_CONFIRM_DELETE');
 }
 Toolbar::spacer();
 Toolbar::help('questions');
 
 ?>
-<script type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-	}
-	// do field validation
-	submitform( pressbutton );
-}
-</script>
-
 <form action="<?php echo Route::url('index.php?option=' . $this->option . '&controller=' . $this->controller); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="grid">
 			<div class="col span6">
 				<label for="filter_search"><?php echo Lang::txt('JSEARCH_FILTER'); ?>:</label>
-				<input type="text" name="search" id="filter_search" value="<?php echo $this->escape($this->filters['search']); ?>" placeholder="<?php echo Lang::txt('COM_ANSWERS_FILTER_SEARCH_PLACEHOLDER'); ?>" />
+				<input type="text" name="search" id="filter_search" class="filter" value="<?php echo $this->escape($this->filters['search']); ?>" placeholder="<?php echo Lang::txt('COM_ANSWERS_FILTER_SEARCH_PLACEHOLDER'); ?>" />
 
 				<input type="submit" value="<?php echo Lang::txt('COM_ANSWERS_GO'); ?>" />
-				<button type="button" onclick="$('#filter_search').val('');this.form.submit();"><?php echo Lang::txt('JSEARCH_FILTER_CLEAR'); ?></button>
+				<button type="button" class="filter-clear"><?php echo Lang::txt('JSEARCH_FILTER_CLEAR'); ?></button>
 			</div>
 			<div class="col span6 rtl">
 				<label for="filter-state"><?php echo Lang::txt('COM_ANSWERS_FILTER_BY'); ?></label>
-				<select name="state" id="filter-state" onchange="document.adminForm.submit();">
+				<select name="state" id="filter-state" class="filter filter-submit">
 					<option value="0"<?php if ($this->filters['state'] == 0) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_ANSWERS_FILTER_BY_OPEN'); ?></option>
 					<option value="1"<?php if ($this->filters['state'] == 1) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_ANSWERS_FILTER_BY_CLOSED'); ?></option>
 					<option value="-1"<?php if ($this->filters['state'] == -1) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_ANSWERS_FILTER_BY_ALL'); ?></option>
@@ -89,7 +52,7 @@ function submitbutton(pressbutton)
 	<table class="adminlist">
 		<thead>
 			<tr>
-				<th scope="col"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo $this->rows->count(); ?>);" /></th>
+				<th scope="col"><input type="checkbox" name="toggle" value="" class="checkbox-toggle toggle-all" /></th>
 				<th scope="col" class="priority-4"><?php echo Html::grid('sort', 'COM_ANSWERS_COL_ID', 'id', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
 				<th scope="col"><?php echo Html::grid('sort', 'COM_ANSWERS_COL_SUBJECT', 'subject', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
 				<th scope="col" class="priority-2"><?php echo Html::grid('sort', 'COM_ANSWERS_COL_STATE', 'state', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
@@ -135,7 +98,7 @@ function submitbutton(pressbutton)
 			?>
 			<tr class="<?php echo "row$k"; ?>">
 				<td>
-					<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->get('id'); ?>" onclick="isChecked(this.checked, this);" />
+					<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->get('id'); ?>" class="checkbox-toggle" />
 				</td>
 				<td class="priority-4">
 					<?php echo $row->get('id'); ?>
@@ -197,8 +160,8 @@ function submitbutton(pressbutton)
 	<input type="hidden" name="controller" value="<?php echo $this->controller; ?>" />
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-	<input type="hidden" name="filter_order" value="<?php echo $this->filters['sort']; ?>" />
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->filters['sort_Dir']; ?>" />
+	<input type="hidden" name="filter_order" value="<?php echo $this->escape($this->filters['sort']); ?>" />
+	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->escape($this->filters['sort_Dir']); ?>" />
 
 	<?php echo Html::input('token'); ?>
 </form>

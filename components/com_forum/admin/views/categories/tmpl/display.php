@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -57,25 +33,13 @@ if ($canDo->get('core.delete'))
 Toolbar::spacer();
 Toolbar::help('categories');
 ?>
-<script type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.adminForm;
-	if (pressbutton == 'cancel') {
-		submitform( pressbutton );
-		return;
-	}
-	// do field validation
-	submitform( pressbutton );
-}
-</script>
 
 <form action="<?php echo Route::url('index.php?option=' . $this->option . '&controller=' . $this->controller); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="grid">
 			<div class="col span6">
 				<label for="scopeinfo"><?php echo Lang::txt('COM_FORUM_FILTER_SCOPE'); ?>:</label>
-				<select name="scopeinfo" id="scopeinfo" style="max-width: 20em;" onchange="document.adminForm.submit();">
+				<select name="scopeinfo" id="scopeinfo" class="filter filter-submit">
 					<option value=""<?php if ($this->filters['scopeinfo'] == '') { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_FORUM_FILTER_SCOPE_SELECT'); ?></option>
 					<option value="site:0"<?php if ($this->filters['scopeinfo'] == 'site:0') { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_FORUM_NONE'); ?></option>
 					<?php
@@ -115,7 +79,7 @@ function submitbutton(pressbutton)
 
 				<?php if ($this->filters['scopeinfo']) { ?>
 					<label for="field-section_id"><?php echo Lang::txt('COM_FORUM_FILTER_SECTION'); ?>:</label>
-					<select name="section_id" id="field-section_id" onchange="document.adminForm.submit( );">
+					<select name="section_id" id="field-section_id" class="filter filter-submit">
 						<option value="-1"><?php echo Lang::txt('COM_FORUM_FILTER_SECTION_SELECT'); ?></option>
 						<?php
 						foreach ($this->sections as $section)
@@ -132,7 +96,7 @@ function submitbutton(pressbutton)
 			</div>
 			<div class="col span6 align-right">
 				<label for="filter-state"><?php echo Lang::txt('COM_FORUM_FIELD_STATE'); ?>:</label>
-				<select name="state" id="filter-state" onchange="this.form.submit();">
+				<select name="state" id="filter-state" class="filter filter-submit">
 					<option value="-1"<?php if ($this->filters['state'] == '-1') { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_FORUM_ALL_STATES'); ?></option>
 					<option value="0"<?php if ($this->filters['state'] === 0) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('JUNPUBLISHED'); ?></option>
 					<option value="1"<?php if ($this->filters['state'] === 1) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('JPUBLISHED'); ?></option>
@@ -140,7 +104,7 @@ function submitbutton(pressbutton)
 				</select>
 
 				<label for="filter-access"><?php echo Lang::txt('JFIELD_ACCESS_LABEL'); ?>:</label>
-				<select name="access" id="filter-access" onchange="this.form.submit()">
+				<select name="access" id="filter-access" class="filter filter-submit">
 					<option value="-1"><?php echo Lang::txt('JOPTION_SELECT_ACCESS');?></option>
 					<?php echo Html::select('options', Html::access('assetgroups'), 'value', 'text', $this->filters['access']); ?>
 				</select>
@@ -151,7 +115,7 @@ function submitbutton(pressbutton)
 	<table class="adminlist">
 		<thead>
 			<tr>
-				<th scope="col"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo $this->rows->count(); ?>);" /></th>
+				<th scope="col"><input type="checkbox" name="toggle" value="" class="checkbox-toggle toggle-all" /></th>
 				<th scope="col" class="priority-5"><?php echo Html::grid('sort', 'COM_FORUM_COL_ID', 'id', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
 				<th scope="col"><?php echo Html::grid('sort', 'COM_FORUM_COL_TITLE', 'title', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
 				<th scope="col" class="priority-2"><?php echo Html::grid('sort', 'COM_FORUM_COL_STATE', 'state', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
@@ -197,11 +161,6 @@ function submitbutton(pressbutton)
 
 				switch ($row->access)
 				{
-					case 1:
-						$color_access = 'public';
-						$task_access  = '1';
-						$row->groupname = Lang::txt('COM_FORUM_ACCESS_PUBLIC');
-						break;
 					case 2:
 						$color_access = 'registered';
 						$task_access  = '2';
@@ -219,8 +178,14 @@ function submitbutton(pressbutton)
 						break;
 					case 5:
 						$color_access = 'private';
-						$task_access  = '0';
+						$task_access  = '5';
 						$row->groupname = Lang::txt('COM_FORUM_ACCESS_PRIVATE');
+						break;
+					case 1:
+					default:
+						$color_access = 'public';
+						$task_access  = '1';
+						$row->groupname = Lang::txt('COM_FORUM_ACCESS_PUBLIC');
 						break;
 				}
 
@@ -229,7 +194,7 @@ function submitbutton(pressbutton)
 				?>
 				<tr class="<?php echo "row$k" . ($row->state == 2 ? ' archived' : ''); ?>">
 					<td>
-						<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->id; ?>" onclick="isChecked(this.checked, this);" />
+						<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->id; ?>" class="checkbox-toggle" />
 					</td>
 					<td class="priority-5">
 						<?php echo $row->id; ?>

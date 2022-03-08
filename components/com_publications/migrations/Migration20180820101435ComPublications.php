@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
 
 use Hubzero\Content\Migration\Base;
 use \Components\Publications\Models\Publication;
@@ -104,6 +109,8 @@ class Migration20180820101435ComPublications extends Base
 			$doi = str_replace('.', '_', $doi);
 			$doi = str_replace('/', '_', $doi);
 			$bundleName = $doi;
+			// Set link to the same name as bundle if it is using DOI
+			$bundleWithVersion = $doi;
 		}
 
 		$tarname = $bundleName . '.zip';
@@ -151,6 +158,8 @@ class Migration20180820101435ComPublications extends Base
 			$doi = str_replace('.', '_', $doi);
 			$doi = str_replace('/', '_', $doi);
 			$bundleName = $doi;
+			// Set link to the same name as bundle if it is using DOI
+			$bundleWithVersion = $doi;
 		}
 
 		$tarname = $bundleWithVersion . '.zip';

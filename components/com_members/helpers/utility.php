@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Nicholas J. Kisseberth <nkissebe@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Members\Helpers;
@@ -41,8 +16,8 @@ class Utility
 	/**
 	 * Validate organization type
 	 *
-	 * @param      string $org
-	 * @return     boolean 1 = valid, 0 = invalid
+	 * @param   string   $org
+	 * @return  boolean
 	 */
 	public static function validateOrgType($org)
 	{
@@ -59,9 +34,9 @@ class Utility
 	/**
 	 * Check validity of login
 	 *
-	 * @param      string $login                      - login name to check
-	 * @param      bool   $allowNumericFirstCharacter - whether or not to allow first character as number (used for grandfathered accounts)
-	 * @return     integer Return
+	 * @param   string  $login                       Login name to check
+	 * @param   bool    $allowNumericFirstCharacter  Whether or not to allow first character as number (used for grandfathered accounts)
+	 * @return  integer
 	 */
 	public static function validlogin($login, $allowNumericFirstCharacter=false)
 	{
@@ -71,39 +46,39 @@ class Utility
 		{
 			if (self::is_positiveint($login))
 			{
-				return(0);
+				return 0;
 			}
 			else
 			{
-				return(1);
+				return 1;
 			}
 		}
 		else
 		{
-			return(0);
+			return 0;
 		}
 	}
 
 	/**
 	 * Check if an integer is positive
 	 *
-	 * @param      integer $x
-	 * @return     boolean 1 = valid, 0 = invalid
+	 * @param   integer  $x
+	 * @return  boolean
 	 */
 	public static function is_positiveint($x)
 	{
 		if (is_numeric($x) && intval($x) == $x && $x >= 0)
 		{
-			return(true);
+			return true;
 		}
-		return(false);
+		return false;
 	}
 
 	/**
 	 * Validate a password
 	 *
-	 * @param      unknown $password
-	 * @return     boolean 1 = valid, 0 = invalid
+	 * @param   string  $password
+	 * @return  boolean
 	 */
 	public static function validpassword($password)
 	{
@@ -117,8 +92,8 @@ class Utility
 	/**
 	 * Validate an email address
 	 *
-	 * @param      unknown $email
-	 * @return     boolean 1 = valid, 0 = invalid
+	 * @param   string  $email
+	 * @return  boolean
 	 */
 	public static function validemail($email)
 	{
@@ -132,54 +107,54 @@ class Utility
 	/**
 	 * Validate a URL
 	 *
-	 * @param      string $url
-	 * @return     integer 1 = valid, 0 = invalid
+	 * @param   string  $url
+	 * @return  integer
 	 */
 	public static function validurl($url)
 	{
 		$ptrn = '/([a-z0-9_\-]{1,5}:\/\/)?(([a-z0-9_\-]{1,}):([a-z0-9_\-]{1,})\@)?((www\.)|([a-z0-9_\-]{1,}\.)+)?([a-z0-9_\-]{2,})(\.[a-z]{2,4})(\/([a-z0-9_\-]{1,}\/)+)?([a-z0-9_\-]{1,})?(\.[a-z]{2,})?(\?)?(((\&)?[a-z0-9_\-]{1,}(\=[a-z0-9_\-]{1,})?)+)?/';
 		if (preg_match($ptrn, $url))
 		{
-			return(1);
+			return 1;
 		}
-		return(0);
+		return 0;
 	}
 
 	/**
 	 * Validate a phone number
 	 *
-	 * @param      string $phone
-	 * @return     integer 1 = valid, 0 = invalid
+	 * @param   string  $phone
+	 * @return  integer
 	 */
 	public static function validphone($phone)
 	{
 		if (preg_match("/^[\ \#\*\+\:\,\.0-9-]*$/", $phone))
 		{
-			return(1);
+			return 1;
 		}
-		return(0);
+		return 0;
 	}
 
 	/**
 	 * Validate text
 	 *
-	 * @param      string $text Text to validate
-	 * @return     integer 1 = valid, 0 = invalid
+	 * @param   string   $text  Text to validate
+	 * @return  integer
 	 */
 	public static function validtext($text)
 	{
 		if (!strchr($text, "	"))
 		{
-			return(1);
+			return 1;
 		}
-		return(0);
+		return 0;
 	}
 
 	/**
 	 * Validate name
 	 *
-	 * @param      string $name the name to validate
-	 * @return     integer 1 = valid, 0 = invalid
+	 * @param   string   $name  the name to validate
+	 * @return  integer  1 = valid, 0 = invalid
 	 */
 	public static function validname($name)
 	{
@@ -187,44 +162,42 @@ class Utility
 		// ':' can mess up ldap entries
 		if (preg_match("/^[^:\p{C}]*$/u", $name))
 		{
-			return(1);
+			return 1;
 		}
-		return(0);
+		return 0;
 	}
 
 	/**
 	 * Validate ORCID
 	 *
-	 * @param      string $orcid ORCID
-	 * @return     integer 1 = valid, 0 = invalid
+	 * @param   string   $orcid  ORCID
+	 * @return  integer  1 = valid, 0 = invalid
 	 */
 	public static function validorcid($orcid)
 	{
 		if (preg_match("/^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}$/", $orcid))
 		{
-			return(1);
+			return 1;
 		}
-		return(0);
+		return 0;
 	}
 
 	/**
-	 * Short description for 'genemailconfirm'
+	 * Generate a confirmation number
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     integer Return description (if any) ...
+	 * @return  integer
 	 */
 	public static function genemailconfirm()
 	{
-		return(-rand(1, pow(2, 31)-1)); // php5 in debian etch returns negative values if i don't subtract 1 from this max
+		return (-rand(1, pow(2, 31)-1)); // php5 in debian etch returns negative values if i don't subtract 1 from this max
 	}
 
 	/**
-	 * sendConfirmEmail 
+	 * Send a confirmation email to a user
 	 * 
-	 * @static
-	 * @access public
-	 * @return void
+	 * @param   object  $user
+	 * @param   object  $xregistration
+	 * @return  bool
 	 */
 	public static function sendConfirmEmail($user, $xregistration)
 	{
@@ -266,19 +239,15 @@ class Utility
 			// @FIXME: LOG ERROR SOMEWHERE
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+
+		return true;
 	}
 
 	/**
-	 * Short description for 'userpassgen'
+	 * Generate a random password
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @param      integer $length Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param   integer  $length  Length of the password
+	 * @return  string
 	 */
 	public static function userpassgen($length = 8)
 	{
@@ -293,14 +262,14 @@ class Utility
 			$genpass = $genpass . $tmp;
 			$i++;
 		}
-		return($genpass);
+		return $genpass;
 	}
 
 	/**
 	 * Check to see if the email confirmation code is still an active code
 	 *
-	 * @param      $code - (int) email confirmation code
-	 * @return     bool
+	 * @param   integer  $code  email confirmation code
+	 * @return  bool
 	 */
 	public static function isActiveCode($code)
 	{

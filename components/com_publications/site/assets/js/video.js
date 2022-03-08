@@ -1,8 +1,13 @@
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
 //--------------------------------------------------------------------------
 //
 //	Video Plugin
 //
-//	Author: 	Christopher Smoak
 //	Version: 	1.0
 //	Required: 	jQuery	
 //
@@ -222,25 +227,22 @@ HUB.Video = {
 	
 	toggleControls: function()
 	{
-		$jQ("#video-container").live({
-			mouseenter: function(e) {
+		$jQ('body')
+			.on('mouseenter', "#video-container", function(e) {
 				if(!$jQ('#video-toolbar').is(":visible") ) {
 					$jQ('#video-toolbar').fadeIn('slow');
 				}
-			},
-			mouseleave: function(e)
-			{
+			})
+			.on('mouseleave', "#video-container", function(e) {
 				$jQ("#video-toolbar").stop(true).fadeOut("slow", function() {
 					$jQ(this).css('opacity', '');
 				});
-			},
-			mousemove: function(e) 
-			{
+			})
+			.on('mousemove', "#video-container", function(e) {
 				if(!$jQ('#video-toolbar').is(":visible") ) {
 					$jQ('#video-toolbar').fadeIn('slow');
 				}
-			}
-		});
+			});
 	},
 	
 	//-----
@@ -469,7 +471,7 @@ HUB.Video = {
 			}
 			
 			
-			$jQ("#subtitle-picker ul a").live("click", function(e) {
+			$jQ("#subtitle-picker ul a").on("click", function(e) {
 				track = this.rel;
 				
 				if(track != "") {

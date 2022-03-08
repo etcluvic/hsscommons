@@ -1,31 +1,8 @@
 <?php
 /**
- * @package		HUBzero CMS
- * @author      Alissa Nedossekina <alisa@purdue.edu>
- * @copyright	Copyright 2005-2009 HUBzero Foundation, LLC.
- * @license		http://opensource.org/licenses/MIT MIT
- *
- * Copyright 2005-2009 HUBzero Foundation, LLC.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Models\Block;
@@ -154,23 +131,7 @@ class Citations extends Base
 		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'files', 'selector');
 		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'selector');
 
-		if (!isset($pub->_citations))
-		{
-			// Get citations for this publication
-			$cc = \Components\Citations\Models\Citation::all();
-
-			$a = \Components\Citations\Models\Association::blank()->getTableName();
-			$c = $cc->getTableName();
-
-			$pub->_citations = $cc
-				->join($a, $a . '.cid', $c . '.id', 'inner')
-				->whereEquals($c . '.published', 1)
-				->whereEquals($a . '.tbl', 'publication')
-				->whereEquals($a . '.oid', $pub->id)
-				->order($c . '.affiliated', 'asc')
-				->order($c . '.year', 'desc')
-				->rows();
-		}
+		$pub->getCitations();
 
 		$view->pub      = $pub;
 		$view->manifest = $this->_manifest;
@@ -216,23 +177,7 @@ class Citations extends Base
 			return false;
 		}
 
-		if (!isset($pub->_citations))
-		{
-			// Get citations for this publication
-			$cc = \Components\Citations\Models\Citation::all();
-
-			$a = \Components\Citations\Models\Association::blank()->getTableName();
-			$c = $cc->getTableName();
-
-			$pub->_citations = $cc
-				->join($a, $a . '.cid', $c . '.id', 'inner')
-				->whereEquals($c . '.published', 1)
-				->whereEquals($a . '.tbl', 'publication')
-				->whereEquals($a . '.oid', $pub->id)
-				->order($c . '.affiliated', 'asc')
-				->order($c . '.year', 'desc')
-				->rows();
-		}
+		$pub->getCitations();
 
 		// Incoming
 		$url = Request::getString('citation-doi', '');
@@ -248,7 +193,7 @@ class Citations extends Base
 
 		// Plugin params
 		$plugin_params = array(
-			$pub->id,
+			$pub->version->id,
 			$doi,
 			$citationFormat,
 			$actor,
@@ -372,7 +317,7 @@ class Citations extends Base
 
 		// Plugin params
 		$plugin_params = array(
-			$pub->id,
+			$pub->version->id,
 			$cid,
 			true
 		);
@@ -418,23 +363,7 @@ class Citations extends Base
 	{
 		$status = new \Components\Publications\Models\Status();
 
-		if (!isset($pub->_citations))
-		{
-			// Get citations for this publication
-			$cc = \Components\Citations\Models\Citation::all();
-
-			$a = \Components\Citations\Models\Association::blank()->getTableName();
-			$c = $cc->getTableName();
-
-			$pub->_citations = $cc
-				->join($a, $a . '.cid', $c . '.id', 'inner')
-				->whereEquals($c . '.published', 1)
-				->whereEquals($a . '.tbl', 'publication')
-				->whereEquals($a . '.oid', $pub->id)
-				->order($c . '.affiliated', 'asc')
-				->order($c . '.year', 'desc')
-				->rows();
-		}
+		$pub->getCitations();
 
 		// Required?
 		$required = $manifest->params->required;

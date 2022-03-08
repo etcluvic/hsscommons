@@ -1,13 +1,10 @@
 /**
- * @package     hubzero-cms
- * @file        components/com_publications/site/assets/js/publications.js
- * @copyright   Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license     http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 jQuery(document).ready(function($){
-	$('.entries-filters label').hide();
-
 	$('.entries-filters select').on('change', function(e){
 		$(this).closest('form').submit();
 	});

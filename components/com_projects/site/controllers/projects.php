@@ -1,39 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Added a condtional check to avoid null error
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Projects\Site\Controllers;
@@ -57,8 +26,8 @@ use App;
 
 require_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'orm' . DS . 'description.php';
 require_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'orm' . DS . 'description' . DS . 'field.php';
+require_once dirname(dirname(__DIR__)) . '/models/orm/owner.php';
 require_once dirname(dirname(__DIR__)) . '/helpers/accessHelper.php';
-require_once Component::path('com_projects') . '/models/orm/owner.php';
 
 /**
  * Primary component controller
@@ -138,7 +107,7 @@ class Projects extends Base
 	 */
 	public function requestAccessTask()
 	{
-		Request::checkToken('get');
+		//Request::checkToken('get');
 		if (!$this->model->allowMembershipRequest())
 		{
 			App::abort(404, 'Invalid request');
@@ -146,24 +115,28 @@ class Projects extends Base
 
 		$project = Request::getString('alias');
 		$task = $this->_task;
-		$return = Route::url('index.php?option=com_projects&alias=' . $project, false);
+		$return = Route::url('index.php?option=com_projects&task=requestaccess&alias=' . $project . '&' . Session::getFormToken() . '=1', false);
 		if (User::isGuest())
 		{
 			$redirectUrl = Route::url('index.php?option=com_users&view=login&return=' . base64_encode($return), false);
 			App::redirect($redirectUrl);
 		}
 
-		if (!$this->model->member())
+		$existingMember = $this->model->member();
+
+		if (!$existingMember || $existingMember->status == 2)
 		{
 			if ($this->model->exists())
 			{
 				$userId = User::getInstance()->get('id');
-				$member = \Components\Projects\Models\Orm\Owner::blank();
+				$memberId = $existingMember ? $existingMember->id : null;
+				$member = \Components\Projects\Models\Orm\Owner::oneOrNew($memberId);
 				$member->set('projectid', $this->model->get('id'));
 				$member->set('userid', $userId);
 				$member->set('status', 3);
 				$currentTime = Date::of()->toSql();
 				$member->set('added', $currentTime);
+
 				if ($member->save())
 				{
 					$managers = \Components\Projects\Models\Orm\Owner::getProjectManagers($this->model->get('id'));
@@ -313,7 +286,7 @@ class Projects extends Base
 		$this->view->filters = array();
 		$this->view->filters['limit'] = Request::getInt(
 			'limit',
-			intval($this->config->get('limit', 25)),
+			intval(\Config::get('list_limit', 25)),
 			'request'
 		);
 		$this->view->filters['start']    = Request::getInt('limitstart', 0, 'get');
@@ -322,6 +295,11 @@ class Projects extends Base
 		$this->view->filters['sortdir']  = strtoupper(Request::getWord('sortdir', 'ASC'));
 		$this->view->filters['reviewer'] = $reviewer;
 		$this->view->filters['filterby'] = Request::getWord('filterby', 'all');
+
+		if (User::isGuest() || (!User::authorise('core.manage', $this->_option) && !$this->model->reviewerAccess($reviewer)))
+		{
+			$this->view->filters['active'] = true;
+		}
 
 		if (!in_array($this->view->filters['sortby'], array('title', 'id', 'myprojects', 'owner', 'created', 'type', 'role', 'privacy', 'status', 'grant_status')))
 		{
@@ -480,9 +458,8 @@ class Projects extends Base
 
 		// Determine layout to load
 		$layout = ($this->model->access('member') || AccessHelper::allowPublicAccess($subdir)) ? 'internal' : 'external';
-		$layout = $this->model->access('member')
-				&& $preview && $this->model->isPublic()
-				? 'external' : $layout;
+		//$layout = $this->model->access('member') && $preview && $this->model->isPublic() ? 'external' : $layout;
+		$layout = $this->model->access('member') && $preview ? 'external' : $layout;
 
 		// Is this a provisioned project?
 		if ($this->model->isProvisioned())
@@ -541,7 +518,7 @@ class Projects extends Base
 			}
 			elseif ($match && $this->model->_tblOwner->load($match))
 			{
-				if (User::get('email') == $email)
+				if (strtolower(User::get('email')) == strtolower($email))
 				{
 					// Confirm user
 					$this->model->_tblOwner->status = 1;
@@ -576,7 +553,10 @@ class Projects extends Base
 		}
 
 		// Private project
-		if (!$this->model->isPublic() && $layout != 'invited' && !AccessHelper::allowPublicAccess($subdir))
+		//if (!$this->model->isPublic() && $layout != 'invited' && !AccessHelper::allowPublicAccess($subdir))
+		if (!in_array($this->model->get('access'), User::getAuthorisedViewLevels())
+		 && $layout != 'invited'
+		 && !AccessHelper::allowPublicAccess($subdir))
 		{
 			// Login required
 			if (User::isGuest())
@@ -812,14 +792,7 @@ class Projects extends Base
 		{
 			$this->view->setLayout('provisioned');
 			$this->view->model = $this->model;
-			
-			// Modified by CANARIE Inc. Beginning
-			// Added a condtion check to avoid null error
-        	if (!isset($this->model->_tblOwner))
-            {
-	        	$this->model->member();
-            }
-			// Modified by CANARIE Inc. Beginning
+
 			$this->view->team  = $this->model->_tblOwner->getOwnerNames($this->model->get('alias'));
 
 			// Output HTML

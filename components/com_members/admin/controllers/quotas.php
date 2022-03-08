@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Members\Admin\Controllers;
@@ -186,7 +162,7 @@ class Quotas extends AdminController
 			}
 		}
 
-		$classes = Html::select('genericlist', $options, 'fields[class_id]', '', 'value', 'text', $selected, 'class_id', false, false);
+		$classes = Html::select('genericlist', $options, 'fields[class_id]', 'data-href="' . Route::url('index.php?option=' . $this->_option . '&controller=quotas&task=getClassValues&class_id=', false) . '"', 'value', 'text', $selected, 'class_id', false, false);
 
 		$du = $this->getQuotaUsageTask('array', $row->get('id'));
 
@@ -261,39 +237,62 @@ class Quotas extends AdminController
 	}
 
 	/**
-	 * Restore member to default quota class
+	 * Sync selected user quotas to system-side (Linux host)
 	 *
 	 * @return  void
 	 */
-	public function restoreDefaultTask()
+	public function syncQuotasToSystemTask()
 	{
-		// Check for request forgeries
-		Request::checkToken();
-
-		// Incoming
-		$ids = Request::getArray('id', array());
-		$ids = (!is_array($ids) ? array($ids) : $ids);
-
-		// Do we have any IDs?
-		if (!empty($ids))
 		{
-			if (!Quota::setDefaultClass($ids))
-			{
-				Notify::error(Lang::txt('COM_MEMBERS_QUOTA_MISSING_DEFAULT_CLASS'));
-			}
-			else
-			{
-				Notify::success(Lang::txt('COM_MEMBERS_QUOTA_SET_TO_DEFAULT'));
-			}
-		}
-		else // no rows were selected
-		{
-			// Output message and redirect
-			Notify::warning(Lang::txt('COM_MEMBERS_QUOTA_DELETE_NO_ROWS'));
-		}
+			// Check for request forgeries
+			Request::checkToken();
 
-		// Redirect
-		$this->cancelTask();
+			// Incoming
+			$ids = Request::getArray('id', array());
+			$ids = (!is_array($ids) ? array($ids) : $ids);
+			$i = 0;
+
+			// Do we have any IDs?
+			if (!empty($ids))
+			{
+				// Loop through each ID and delete the necessary items
+				foreach ($ids as $id)
+				{
+					$id = intval($id);
+
+					$quota_data = Quota::all()
+						->whereEquals('user_id', $id)
+						->row();
+
+					$quota_data->set('user_id', $quota_data->get('user_id'));
+					$quota_data->set('class_id', $quota_data->get('class_id'));
+					$quota_data->set('soft_blocks', $quota_data->get('soft_blocks'));
+					$quota_data->set('hard_blocks', $quota_data->get('hard_blocks'));
+					$quota_data->set('soft_files', $quota_data->get('soft_files'));
+					$quota_data->set('hard_files', $quota_data->get('hard_files'));
+					$quota_data->save();
+
+					if ($i == 100)
+					{
+						Notify::error(Lang::txt('Sync limit exceeded. Please select less than 100 users.'));
+						return $this->cancelTask();
+					}
+
+					$i++;
+
+				}
+			}
+			else // no rows were selected
+			{
+				// Output message and redirect
+				Notify::warning(Lang::txt('No Quotas Synced'));
+				return $this->cancelTask();
+			}
+
+			// Output messsage and redirect
+			Notify::success(Lang::txt('Quotas Successfully Synced to System'));
+			return $this->cancelTask();
+		}
 	}
 
 	/* ------------- */

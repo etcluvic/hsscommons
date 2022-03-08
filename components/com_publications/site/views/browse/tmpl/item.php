@@ -1,45 +1,16 @@
 <?php
 /**
- * @package		HUBzero CMS
- * @author		Alissa Nedossekina <alisa@purdue.edu>
- * @copyright	Copyright 2005-2009 HUBzero Foundation, LLC.
- * @license		http://opensource.org/licenses/MIT MIT
- *
- * Copyright 2005-2009 HUBzero Foundation, LLC.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
 defined('_HZEXEC_') or die();
 
 $cls = array('publication');
-switch ($this->line->get('master_access'))
-{
+
+switch ($this->line->get('master_access')):
 	case 1:
 		$cls[] = 'registered';
 		break;
@@ -53,54 +24,62 @@ switch ($this->line->get('master_access'))
 	default:
 		$cls[] = 'public';
 		break;
-}
+endswitch;
 
 $info = array();
-if ($this->thedate)
-{
+if ($this->thedate):
 	$info[] = $this->thedate;
-}
-if (($this->line->category && !intval($this->filters['category'])))
-{
+endif;
+
+if (($this->line->category && !intval($this->filters['category']))):
 	$info[] = $this->line->cat_name;
-}
-if ($this->authors && $this->params->get('show_authors'))
-{
-	$info[] = Lang::txt('COM_PUBLICATIONS_CONTRIBUTORS') . ': ' . \Components\Publications\Helpers\Html::showContributors( $this->authors, false, true );
-}
-if ($this->line->doi)
-{
+endif;
+
+if ($this->authors && $this->params->get('show_authors')):
+	$info[] = Lang::txt('COM_PUBLICATIONS_CONTRIBUTORS') . ': ' . \Components\Publications\Helpers\Html::showContributors($this->authors, false, true);
+endif;
+
+if ($this->line->doi):
 	$info[] = 'doi:' . $this->line->doi;
-}
+endif;
 
 $moreClasses = '';
-if (!$this->line->hasImage())
-{
+if (!$this->line->hasImage()):
 	$moreClasses = ' generic';
-}
+endif;
 
+$extras = Event::trigger('publications.onPublicationsList', array($this->line));
 ?>
 <li class="<?php echo implode(' ', $cls); ?>">
-	<div class="pub-thumb<?php echo $moreClasses; ?>"><img src="<?php echo Route::url($this->line->link('thumb')); ?>" alt="" /></div>
+	<div class="pub-thumb<?php echo $moreClasses; ?>">
+		<img src="<?php echo Route::url($this->line->link('thumb')); ?>" alt="<?php echo $this->escape($this->line->title); ?>" />
+	</div>
 	<div class="pub-details">
-		<p class="title"><a href="<?php echo Route::url($this->line->link()); ?>"><?php echo $this->escape($this->line->title); ?></a></p>
+		<p class="title">
+			<a href="<?php echo Route::url($this->line->link()); ?>"><?php echo $this->escape($this->line->title); ?></a>
+		</p>
+
+		<?php if (!empty($extras)): ?>
+			<?php echo implode("\n", $extras); ?>
+		<?php endif; ?>
 
 		<?php
-		if ($this->params->get('show_ranking') && $this->config->get('show_ranking'))
-		{
+		if ($this->params->get('show_ranking') && $this->config->get('show_ranking')):
 			$ranking = round($this->line->get('master_ranking'), 1);
 
 			$r = (10 * $ranking);
-			if (intval($r) < 10)
-			{
-				$r = '0' . $r;
-			}
+
+			$this->css('
+				#rank-' . $this->line->get('id') . ' {
+					width: ' . $r . '%;
+				}
+			');
 			?>
 			<div class="metadata">
 				<dl class="rankinfo">
 					<dt class="ranking">
 						<span class="rank">
-							<span class="rank-<?php echo $r; ?>" style="width: <?php echo $r; ?>%;"><?php echo Lang::txt('COM_PUBLICATIONS_THIS_HAS'); ?></span>
+							<span class="rank-<?php echo $r; ?>" id="rank-<?php echo $this->line->get('id'); ?>"><?php echo Lang::txt('COM_PUBLICATIONS_THIS_HAS'); ?></span>
 						</span><?php echo number_format($ranking, 1) . ' ' . Lang::txt('COM_PUBLICATIONS_RANKING'); ?>
 					</dt>
 					<dd>
@@ -110,11 +89,8 @@ if (!$this->line->hasImage())
 				</dl>
 			</div>
 			<?php
-		}
-		elseif ($this->params->get('show_rating') && $this->config->get('show_rating'))
-		{
-			switch ($this->line->get('master_rating'))
-			{
+		elseif ($this->params->get('show_rating') && $this->config->get('show_rating')):
+			switch ($this->line->get('master_rating')):
 				case 0.5:
 					$class = ' half-stars';
 					break;
@@ -149,35 +125,35 @@ if (!$this->line->hasImage())
 				default:
 					$class = ' no-stars';
 					break;
-			}
+			endswitch;
 
-			if ($this->line->get('master_rating') > 5)
-			{
+			if ($this->line->get('master_rating') > 5):
 				$class = ' five-stars';
-			}
+			endif;
 			?>
 			<div class="metadata">
 				<p class="rating"><span title="<?php echo Lang::txt('COM_PUBLICATIONS_OUT_OF_5_STARS', $this->line->get('master_rating')); ?>" class="avgrating<?php echo $class; ?>"><span><?php echo Lang::txt('COM_PUBLICATIONS_OUT_OF_5_STARS', $this->line->get('master_rating')); ?></span>&nbsp;</span></p>
 			</div>
 			<?php
-		}
+		endif;
 		?>
 
-		<p class="details"><?php echo implode(' <span class="separator">|</span> ', $info); ?></p>
-		<?php
-		$content = '';
-		if ($this->line->get('abstract'))
-		{
-			$content = $this->line->get('abstract');
-		}
-		// Modified by CANARIE Inc. Beginning
-		// Changed to always check description
-		if ($this->line->get('description'))
-		// Modified by CANARIE Inc. End
-		{
-			$content = $this->line->get('description');
-		}
-		echo \Hubzero\Utility\Str::truncate(stripslashes($content), 300);
-		?>
+		<p class="details">
+			<?php echo implode(' <span class="separator">|</span> ', $info); ?>
+		</p>
+
+		<p class="result-description">
+			<?php
+			$content = '';
+
+			if ($this->line->get('abstract')):
+				$content = $this->line->get('abstract');
+			elseif ($this->line->get('description')):
+				$content = $this->line->get('description');
+			endif;
+
+			echo \Hubzero\Utility\Str::truncate(stripslashes($content), 300);
+			?>
+		</p>
 	</div>
 </li>

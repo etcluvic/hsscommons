@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 namespace Components\Publications\Site\Controllers;
@@ -38,6 +13,14 @@ use Components\Publications\Models;
 use Components\Publications\Helpers;
 use stdClass;
 use Exception;
+use Document;
+use Pathway;
+use Request;
+use Notify;
+use Route;
+use Lang;
+use User;
+use App;
 
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'publication.php';
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'curation.php';
@@ -138,20 +121,17 @@ class Curation extends SiteController
 		// Set the pathway
 		$this->_buildPathway();
 
-		//push the stylesheet to the view
-		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications');
+		// push the stylesheet to the view
+		$this->view->css('curation.css', 'plg_projects_publications');
 
-		foreach ($this->getErrors() as $error)
-		{
-			$this->view->setError($error);
-		}
-
-		$this->view->option     = $this->_option;
-		$this->view->database   = $this->database;
-		$this->view->config     = $this->config;
-		$this->view->title      = $this->_title;
-		$this->view->authorized = $authorized;
-		$this->view->display();
+		$this->view
+			->set('option', $this->_option)
+			->set('database', $this->database)
+			->set('config', $this->config)
+			->set('title', $this->_title)
+			->set('authorized', $authorized)
+			->setErrors($this->getErrors())
+			->display();
 	}
 
 	/**
@@ -191,7 +171,7 @@ class Curation extends SiteController
 		{
 			Pathway::append(
 				$this->_pub->title,
-				'index.php?option=' . $this->_option . '&controller=' . $this->_controller .  '&task=view' . '&id=' . $this->_pub->id
+				'index.php?option=' . $this->_option . '&controller=' . $this->_controller .  '&task=view&id=' . $this->_pub->id
 			);
 		}
 	}
@@ -213,11 +193,6 @@ class Curation extends SiteController
 			throw new Exception(Lang::txt('COM_PUBLICATIONS_RESOURCE_NOT_FOUND'), 404);
 		}
 
-		foreach ($this->getErrors() as $error)
-		{
-			$this->view->setError($error);
-		}
-
 		// Load publication model
 		$this->_pub = new \Components\Publications\Models\Publication($pid, $version, $vid);
 
@@ -230,10 +205,10 @@ class Curation extends SiteController
 		// We can only view pending publications
 		if ($this->_pub->state != 5)
 		{
+			Notify::warning(Lang::txt('COM_PUBLICATIONS_CURATION_PUB_WRONG_STATUS'));
+
 			App::redirect(
-				Route::url('index.php?option=' . $this->_option . '&controller=curation'),
-				Lang::txt('COM_PUBLICATIONS_CURATION_PUB_WRONG_STATUS'),
-				'error'
+				Route::url('index.php?option=' . $this->_option . '&controller=curation', false)
 			);
 			return;
 		}
@@ -251,10 +226,6 @@ class Curation extends SiteController
 			throw new Exception(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UNAUTHORIZED'), 403);
 		}
 
-		//push the stylesheet to the view
-		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications');
-		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'curation.css');
-
 		// Get curation model
 		$this->_pub->setCuration();
 
@@ -262,7 +233,7 @@ class Curation extends SiteController
 		$this->_pub->reviewedItems = $this->_pub->_curationModel->getReviewedItems($this->_pub->version_id);
 
 		// Get last history record (from author)
-		$this->view->history = $this->_pub->_curationModel->getLastHistoryRecord();
+		$history = $this->_pub->_curationModel->getLastHistoryRecord();
 
 		// Set page title
 		$this->_buildTitle();
@@ -270,10 +241,13 @@ class Curation extends SiteController
 		// Set the pathway
 		$this->_buildPathway();
 
-		$this->view->pub    = $this->_pub;
-		$this->view->title  = $this->_title;
-		$this->view->option = $this->_option;
-		$this->view->display();
+		$this->view
+			->set('history', $history)
+			->set('pub', $this->_pub)
+			->set('title', $this->_title)
+			->set('option', $this->_option)
+			->setErrors($this->getErrors())
+			->display();
 	}
 
 	/**
@@ -301,10 +275,12 @@ class Curation extends SiteController
 		{
 			if ($ajax)
 			{
-				$this->view = new \Hubzero\Component\View(array('name'=>'error', 'layout' =>'restricted'));
-				$this->view->error  = Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_LOAD');
-				$this->view->title = $this->title;
-				$this->view->display();
+				$this->view
+					->set('title', $this->title)
+					->setError(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_LOAD'))
+					->setName('error')
+					->setLayout('default')
+					->display();
 				return;
 			}
 
@@ -316,10 +292,12 @@ class Curation extends SiteController
 		{
 			if ($ajax)
 			{
-				$this->view = new \Hubzero\Component\View(array('name'=>'error', 'layout' =>'restricted'));
-				$this->view->error  = Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UNAUTHORIZED');
-				$this->view->title = $this->title;
-				$this->view->display();
+				$this->view
+					->set('title', $this->title)
+					->setError(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UNAUTHORIZED'))
+					->setName('error')
+					->setLayout('default')
+					->display();
 				return;
 			}
 
@@ -338,14 +316,15 @@ class Curation extends SiteController
 			$this->_buildPathway();
 
 			// Add plugin style
-			\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'curation.css');
+			$this->view->css('curation.css', 'plg_projects_publications');
 		}
 
-		$this->view->pub    = $this->_pub;
-		$this->view->title  = $this->_title;
-		$this->view->option = $this->_option;
-		$this->view->ajax   = $ajax;
-		$this->view->display();
+		$this->view
+			->set('pub', $this->_pub)
+			->set('title', $this->_title)
+			->set('option', $this->_option)
+			->set('ajax', $ajax)
+			->display();
 	}
 
 	/**
@@ -369,10 +348,12 @@ class Curation extends SiteController
 		{
 			if ($ajax)
 			{
-				$this->view = new \Hubzero\Component\View(array('name' => 'error', 'layout' => 'restricted'));
-				$this->view->error  = Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_LOAD');
-				$this->view->title = $this->title;
-				$this->view->display();
+				$this->view
+					->set('title', $this->title)
+					->setError(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_LOAD'))
+					->setName('error')
+					->setLayout('default')
+					->display();
 				return;
 			}
 
@@ -383,10 +364,12 @@ class Curation extends SiteController
 		{
 			if ($ajax)
 			{
-				$this->view = new \Hubzero\Component\View(array('name' => 'error', 'layout' => 'restricted'));
-				$this->view->error  = Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UNAUTHORIZED');
-				$this->view->title = $this->title;
-				$this->view->display();
+				$this->view
+					->set('title', $this->title)
+					->setError(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UNAUTHORIZED'))
+					->setName('error')
+					->setLayout('default')
+					->display();
 				return;
 			}
 
@@ -475,27 +458,31 @@ class Curation extends SiteController
 				$this->_buildPathway();
 
 				// Add plugin style
-				\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'curation.css');
+				$this->view->css('curation.css', 'plg_projects_publications');
 			}
-			$this->view->pub    = $this->_pub;
-			$this->view->title  = $this->_title;
-			$this->view->option = $this->_option;
-			$this->view->ajax   = $ajax;
-			$this->view->display();
+
+			$this->view
+				->set('pub', $this->_pub)
+				->set('title', $this->_title)
+				->set('option', $this->_option)
+				->set('ajax', $ajax)
+				->display();
 			return;
 		}
 
-		$message = $this->getError() ? $this->getError() : Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_ASSIGNED');
-		$class   = $this->getError() ? 'error' : 'success';
+		if ($err = $this->getError())
+		{
+			Notify::error($err);
+		}
+		else
+		{
+			Notify::success(Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_ASSIGNED'));
+		}
 
 		// Redirect to main listing
 		App::redirect(
-			Route::url('index.php?option=' . $this->_option . '&controller=curation'),
-			$message,
-			$class
+			Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller, false)
 		);
-
-		return;
 	}
 
 	/**
@@ -565,9 +552,23 @@ class Curation extends SiteController
 
 		// Get DOI service
 		$doiService = new \Components\Publications\Models\Doi($this->_pub);
+
 		if ($this->_pub->version->doi)
 		{
 			$doiService->update($this->_pub->version->doi, true);
+
+			if ($doiService->getError())
+			{
+				throw new Exception(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_UPDATE_METADATA') . ' ' . $doiService->getError(), 403);
+			}
+
+			// Register URL and DOI name for DataCite DOI service
+			$doiService->register(false, true, $this->_pub->version->doi);
+
+			if ($doiService->getError())
+			{
+				throw new Exception(Lang::txt('COM_PUBLICATIONS_CURATION_ERROR_REGISTER_URL') . ' ' . $doiService->getError(), 403);
+			}
 		}
 
 		// Mark as curated
@@ -576,17 +577,19 @@ class Curation extends SiteController
 		// On after status change
 		$this->onAfterStatusChange();
 
-		$message = $this->getError() ? $this->getError() : Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_APPROVED');
-		$class   = $this->getError() ? 'error' : 'success';
+		if ($err = $this->getError())
+		{
+			Notify::error($err);
+		}
+		else
+		{
+			Notify::success(Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_APPROVED'));
+		}
 
 		// Redirect to main listing
 		App::redirect(
-			Route::url('index.php?option=' . $this->_option . '&controller=curation'),
-			$message,
-			$class
+			Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller, false)
 		);
-
-		return;
 	}
 
 	/**
@@ -637,13 +640,12 @@ class Curation extends SiteController
 		// On after status change
 		$this->onAfterStatusChange();
 
+		Notify::success(Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_KICKBACK'));
+
 		// Redirect to main listing
 		App::redirect(
-			Route::url('index.php?option=' . $this->_option . '&controller=curation'),
-			Lang::txt('COM_PUBLICATIONS_CURATION_SUCCESS_KICKBACK')
+			Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller, false)
 		);
-
-		return;
 	}
 
 	/**
@@ -675,6 +677,7 @@ class Curation extends SiteController
 			));
 			return;
 		}
+
 		if ($action == 'fail' && !$review)
 		{
 			echo json_encode(array(
@@ -733,7 +736,6 @@ class Curation extends SiteController
 				'error'   => $this->getError(),
 				'notice'  => $notice
 			));
-			return;
 		}
 		else
 		{
@@ -742,7 +744,6 @@ class Curation extends SiteController
 				'error'   => Lang::txt('There was a problem saving curation item'),
 				'notice'  => ''
 			));
-			return;
 		}
 	}
 
@@ -767,7 +768,7 @@ class Curation extends SiteController
 		$pubtitle = \Hubzero\Utility\Str::truncate($pub->title, 100);
 
 		// Create SFTP accessible symlink for package
-		if ($status == 1)
+		if ($status == 1 && !$this->_pub->isEmbargoed())
 		{
 			$pub->_curationModel->createSymLink();
 		}
@@ -795,16 +796,12 @@ class Curation extends SiteController
 		$sef     = 'publications' . DS . $pub->id . DS . $pub->version_number;
 		$link    = rtrim(Request::base(), DS) . DS . trim(Route::url($pub->link('version')), DS);
 		$manage  = rtrim(Request::base(), DS) . DS . trim(Route::url($pub->link('editversion')), DS);
-		$message = $status == 1 ? Lang::txt('COM_PUBLICATIONS_CURATION_EMAIL_CURATOR_APPROVED') : Lang::txt('COM_PUBLICATIONS_CURATION_EMAIL_CURATOR_KICKED_BACK');
+		$message = $status == 1 ? Lang::txt('COM_PUBLICATIONS_CURATION_EMAIL_CURATOR_APPROVED', $link) : Lang::txt('COM_PUBLICATIONS_CURATION_EMAIL_CURATOR_KICKED_BACK');
 
 		if ($status != 1)
 		{
 			$message .= "\n" . "\n";
 			$message .= Lang::txt('COM_PUBLICATIONS_CURATION_TAKE_ACTION') . ' ' . $manage;
-		}
-		else
-		{
-			$message .= ' ' . $link;
 		}
 
 		$pubtitle = \Hubzero\Utility\Str::truncate($pub->title, 100);
@@ -843,8 +840,6 @@ class Curation extends SiteController
 			$message,
 			true
 		);
-
-		return;
 	}
 
 	/**
@@ -864,7 +859,7 @@ class Curation extends SiteController
 
 		$authorized = false;
 
-		// Check if they're a site admin (from Joomla)
+		// Check if they're a site admin
 		if (User::authorize($this->_option, 'manage'))
 		{
 			$authorized = 'admin';
@@ -915,10 +910,10 @@ class Curation extends SiteController
 	{
 		$rtrn = Request::getString('REQUEST_URI', Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&task=' . $this->_task), 'server');
 
+		Notify::warning($this->_msg);
+
 		App::redirect(
-			Route::url('index.php?option=com_users&view=login&return=' . base64_encode($rtrn)),
-			$this->_msg,
-			'warning'
+			Route::url('index.php?option=com_users&view=login&return=' . base64_encode($rtrn), false)
 		);
 	}
 }

@@ -1,38 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -44,6 +14,7 @@ $text = ($this->task == 'edit' ? Lang::txt('JACTION_EDIT') : Lang::txt('JACTION_
 Toolbar::title(Lang::txt('COM_PUBLICATIONS_LICENSE') . ': ' . $text, 'publications');
 if ($canDo->get('core.edit'))
 {
+	Toolbar::apply();
 	Toolbar::save();
 }
 Toolbar::cancel();
@@ -51,13 +22,6 @@ Toolbar::cancel();
 $text = preg_replace("/\r\n/", "\r", trim($this->row->text));
 
 ?>
-<script type="text/javascript">
-function submitbutton(pressbutton)
-{
-	submitform( pressbutton );
-	return;
-}
-</script>
 
 <form action="<?php echo Route::url('index.php?option=' . $this->option . '&controller=licenses'); ?>" method="post" id="item-form" name="adminForm">
 	<div class="grid">
@@ -93,10 +57,8 @@ function submitbutton(pressbutton)
 					<input type="text" name="fields[icon]" id="field-icon" value="<?php echo $this->escape($this->row->icon); ?>" />
 					<span class="hint"><?php echo Lang::txt('COM_PUBLICATIONS_FIELD_ICON_HINT'); ?></span>
 				</div>
-				
-				<!-- Modified by CANARIE Inc. Beginning -->
-				<!-- Removed the input for ordering -->
-				<!-- Modified by CANARIE Inc. End -->
+
+				<input type="hidden" name="fields[ordering]" value="<?php echo $this->row->ordering; ?>" />
 				<input type="hidden" name="fields[id]" value="<?php echo $this->row->id; ?>" />
 				<input type="hidden" name="option" value="<?php echo $this->option; ?>" />
 				<input type="hidden" name="controller" value="<?php echo $this->controller; ?>" />
@@ -110,14 +72,11 @@ function submitbutton(pressbutton)
 						<th><?php echo Lang::txt('COM_PUBLICATIONS_FIELD_ID'); ?></th>
 						<td><?php echo $this->row->id; ?></td>
 					</tr>
-					<!-- Modified by CANARIE Inc. Beginning -->
-					<!-- Moved the COM_PUBLICATIONS_FIELD_DEFAULT inside the condition -->
-				<?php if ($this->row->id) { ?>
 					<tr>
 						<th><?php echo Lang::txt('COM_PUBLICATIONS_FIELD_DEFAULT'); ?></th>
-						<td><?php echo $this->row->main == 1 ? Lang::txt('COM_PUBLICATIONS_LICENSE_YES') : Lang::txt('COM_PUBLICATIONS_LICENSE_NO') ; ?></td>
+						<td><?php echo $this->row->isMain() ? Lang::txt('COM_PUBLICATIONS_LICENSE_YES') : Lang::txt('COM_PUBLICATIONS_LICENSE_NO'); ?></td>
 					</tr>
-					<!-- Modified by CANARIE Inc. End -->
+				<?php if ($this->row->id) { ?>
 					<tr>
 						<th><?php echo Lang::txt('COM_PUBLICATIONS_FIELD_ORDERING'); ?></th>
 						<td><?php echo $this->row->ordering; ?></td>

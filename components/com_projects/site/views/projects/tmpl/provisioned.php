@@ -1,38 +1,8 @@
 <?php
 /**
- * @package		HUBzero CMS
- * @author		Alissa Nedossekina <alisa@purdue.edu>
- * @copyright	Copyright 2005-2009 HUBzero Foundation, LLC.
- * @license		http://opensource.org/licenses/MIT MIT
- *
- * Copyright 2005-2009 HUBzero Foundation, LLC.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
-
-/**
- * Modified by CANARIE Inc. for the HSSCommons project.
- *
- * Summary of changes: Minor customization.
- *
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -47,18 +17,12 @@ $this->css()
 	->js('setup');
 
 ?>
-<!--  Modified by CANARIE Inc. Beginning -->
-<!--  Moved the content-header here for better formatting-->
-<header id="content-header">
-        <h2><?php echo $this->title; ?></h2>
-</header>
-<!--  Modified by CANARIE Inc. End -->
-
 <div id="project-wrap">
 	<section class="main section">
-		<!--  Modified by CANARIE Inc. Beginning -->
-		<!--  Moved the content-header outside of "project-wrap" -->
-		<!--  Modified by CANARIE Inc. End -->
+		<header id="content-header">
+			<h2><?php echo $this->title; ?></h2>
+		</header>
+
 		<h3 class="prov-header"><a href="<?php echo $route; ?>"><?php echo ucfirst(Lang::txt('COM_PROJECTS_PUBLICATIONS_MY_SUBMISSIONS')); ?></a> &raquo; <a href="<?php echo $url; ?>"> "<?php echo \Hubzero\Utility\Str::truncate($this->pub->title, 65); ?>"</a> &raquo; <?php echo Lang::txt('COM_PROJECTS_PROVISIONED_PROJECT'); ?></h3>
 
 		<?php
@@ -127,7 +91,7 @@ $this->css()
 								</label>
 								<p class="submitarea">
 									<input type="submit" id="b-continue" class="btn btn-primary active" value="<?php echo Lang::txt('COM_PROJECTS_ACTIVATE_CREATE_A_PROJECT'); ?>" />
-									<span class="btn btncancel"><a href="<?php echo $url; ?>"><?php echo Lang::txt('COM_PROJECTS_CANCEL'); ?></a></span>
+									<span class="btn btncancel"><a href="<?php echo $url; ?>"><?php echo Lang::txt(JCANCEL); ?></a></span>
 								</p>
 							</fieldset>
 						</form>

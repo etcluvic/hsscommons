@@ -1,32 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -45,7 +21,7 @@ if ($group)
 $groupSynced = ($group && $this->project->get('sync_group'));
 
 Toolbar::title(Lang::txt('COM_PROJECTS') . ': ' . Lang::txt('COM_PROJECTS_TEAM'), 'projects');
-Toolbar::appendButton('Popup', 'new', 'COM_PROJECTS_TEAM_NEW', 'index.php?option=' . $this->option . '&controller=' . $this->controller . '&tmpl=component&task=new&project=' . $this->filters['project'], 570, 170);
+Toolbar::appendButton('Popup', 'new', 'COM_PROJECTS_TEAM_NEW', Route::url('index.php?option=' . $this->option . '&controller=' . $this->controller . '&tmpl=component&task=new&project=' . $this->filters['project']), 570, 170);
 Toolbar::spacer();
 Toolbar::deleteList('COM_PROJECTS_TEAM_DELETE', 'delete');
 Toolbar::spacer();
@@ -55,18 +31,6 @@ Html::behavior('tooltip');
 
 $this->css();
 ?>
-<script type="text/javascript">
-function submitbutton(pressbutton)
-{
-	var form = document.getElementById('adminForm');
-	if (pressbutton == 'cancel') {
-		submitform(pressbutton);
-		return;
-	}
-	// do field validation
-	submitform(pressbutton);
-}
-</script>
 
 <form action="<?php echo Route::url('index.php?option=' . $this->option . '&controller=' . $this->controller); ?>" method="post" name="adminForm" id="adminForm">
 	<?php if ($groupSynced) { ?>
@@ -87,7 +51,7 @@ function submitbutton(pressbutton)
 			</tr>
 			<tr>
 				<?php //if (!$groupSynced) { ?>
-					<th scope="col"><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->rows); ?>);" /></th>
+					<th scope="col"><input type="checkbox" name="toggle" value="" class="checkbox-toggle toggle-all" /></th>
 				<?php //} ?>
 				<th scope="col" class="priority-4"><?php echo Html::grid('sort', 'COM_PROJECTS_TEAM_USERID', 'uidNumber', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
 				<th scope="col"><?php echo Html::grid('sort', 'COM_PROJECTS_TEAM_NAME', 'name', @$this->filters['sort_Dir'], @$this->filters['sort']); ?></th>
@@ -147,7 +111,7 @@ function submitbutton(pressbutton)
 						<?php if ($disabled) { ?>
 							<!-- <input type="hidden" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->id; ?>" /> -->
 						<?php } else { ?>
-							<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->id; ?>" onclick="isChecked(this.checked);" />
+							<input type="checkbox" name="id[]" id="cb<?php echo $i; ?>" value="<?php echo $row->id; ?>" class="checkbox-toggle" />
 						<?php } ?>
 					</td>
 				<?php //} ?>
@@ -176,7 +140,7 @@ function submitbutton(pressbutton)
 					<?php if ($creator) { ?>
 						<span class="prominent"><?php echo Lang::txt('COM_PROJECTS_TEAM_OWNER') . ' / ' . $this->escape($role); ?></span>
 					<?php } else { ?>
-						<select name="role[<?php echo $row->userid; ?>]" onchange="Joomla.submitbutton('update');">
+						<select name="role[<?php echo $row->userid; ?>]" onchange="Hubzero.submitbutton('update');">
 							<option value="1"<?php if ($row->role == \Components\Projects\Models\Orm\Owner::ROLE_MANAGER) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_PROJECTS_TEAM_LABEL_OWNER'); ?></option>
 							<option value="0"<?php if ($row->role == \Components\Projects\Models\Orm\Owner::ROLE_INVITEE || !$row->role) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_PROJECTS_TEAM_LABEL_COLLABORATOR'); ?></option>
 							<option value="5"<?php if ($row->role == \Components\Projects\Models\Orm\Owner::ROLE_REVIEWER) { echo ' selected="selected"'; } ?>><?php echo Lang::txt('COM_PROJECTS_TEAM_LABEL_REVIEWER'); ?></option>
@@ -198,7 +162,7 @@ function submitbutton(pressbutton)
 				</td>
 				<td>
 					<?php echo $row->groupdesc ? \Hubzero\Utility\Str::truncate($row->groupdesc, 30) : ''; ?>
-					<span class="block mini short prominent"><?php echo ($row->groupname ? $row->groupname : Lang::txt('COM_PROJECTS_NONE')); ?></span>
+					<span class="block mini short prominent"><?php echo ($row->groupname) ? $row->groupname : Lang::txt('COM_PROJECTS_NONE'); ?></span>
 				</td>
 				<?php /*if (!$groupSynced) { ?>
 					<td>
@@ -240,7 +204,7 @@ function submitbutton(pressbutton)
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
 
-	<input type="hidden" name="filter_order" value="<?php echo $this->filters['sortby']; ?>" />
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->filters['sortdir']; ?>" />
+	<input type="hidden" name="filter_order" value="<?php echo $this->escape($this->filters['sortby']); ?>" />
+	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->escape($this->filters['sortdir']); ?>" />
 	<?php echo Html::input('token'); ?>
 </form>
