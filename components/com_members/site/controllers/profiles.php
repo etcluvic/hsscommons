@@ -1507,9 +1507,14 @@ class Profiles extends SiteController
 		if ($name && !empty($name))
 		{
 			$member->set('givenName', trim($name['first']));
-			$member->set('middleName', trim($name['middle']));
+			$middle = '';
+			if( trim($name['middle']) && strpos( trim($name['first']), trim($name['middle']) ) === FALSE )
+			{
+				$middle = trim($name['middle']);
+			}
+			$member->set('middleName', $middle);
 			$member->set('surname', trim($name['last']));
-
+			
 			$name = implode(' ', $name);
 			$name = preg_replace('/\s+/', ' ', $name);
 
