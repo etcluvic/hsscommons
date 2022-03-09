@@ -324,12 +324,11 @@ foreach ($this->fields as $field)
 							{
 								$cls .= ($cls) ? ' me' : 'me';
 							}
-
+							
 							// User name
 							if (!$row->get('surname'))
 							{
 								$bits = explode(' ', $row->get('name'));
-
 								$row->set('surname', array_pop($bits));
 								if (count($bits) >= 1)
 								{
@@ -346,7 +345,10 @@ foreach ($this->fields as $field)
 							{
 								$name .= ($row->get('surname')) ? ', ' : '';
 								$name .= stripslashes($row->get('givenName'));
-								$name .= ($row->get('middleName')) ? ' ' . stripslashes($row->get('middleName')) : '';
+								if($row->get('middleName') && strpos($name, $row->get('middleName')) === false)
+								{
+									$name .= ($row->get('middleName')) ? ' ' . stripslashes($row->get('middleName')) : '';
+								}
 							}
 							if (!trim($name))
 							{
