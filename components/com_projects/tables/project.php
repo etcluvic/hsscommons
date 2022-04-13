@@ -164,39 +164,24 @@ class Project extends Table
 			}
 			else
 			{
-				$access = array();
-				if (!\User::isGuest())
-				{
-					$access[] = 2;
-				}
-
 				if ($filterby == 'archived')
 				{
-					$access[] = 1;
-					$access[] = 4;
-
-					//$query .= " WHERE p.state = 3 AND p.private <= 0 ";
-					$query .= " WHERE p.state = 3 AND p.access IN (" . implode(',', $access) . ")";
+					$query .= " WHERE p.state = 3 AND p.private <= 0 ";
 				}
 				else
 				{
 					if ($filterby == 'public')
 					{
-						//$privacy = " AND p.private = 0 ";
-						$access = array(4);
+						$privacy = " AND p.private = 0 ";
 					}
 					else if ($filterby == 'open')
 					{
-						//$privacy = " AND p.private < 0 ";
-						$access[] = 1;
+						$privacy = " AND p.private < 0 ";
 					}
 					else
 					{
-						//$privacy = " AND p.private <= 0 ";
-						$access[] = 1;
-						$access[] = 4;
+						$privacy = " AND p.private <= 0 ";
 					}
-					$privacy = " AND p.access IN (" . implode(',', $access) . ")";
 
 					$query .= $uid
 							? " WHERE ((p.state = 1 " . $privacy . ")
@@ -237,30 +222,7 @@ class Project extends Table
 
 		if (isset($filters['private']) && $filters['private'] >= 0)
 		{
-			switch ($filters['private'])
-			{
-				case 0:
-					$filters['access'] = 4;
-				break;
-
-				case 1:
-					$filters['access'] = 5;
-				break;
-
-				case -1:
-					$filters['access'] = 1;
-				break;
-			}
-			//$query .= " AND p.private = " . $filters['private'];
-		}
-
-		if (isset($filters['access']) && !empty($filters['access']))
-		{
-			if (!is_array($filters['access']))
-			{
-				$filters['access'] = array($filters['access']);
-			}
-			$query .= " AND p.access IN (" . implode(',', $filters['access']) . ")";
+			$query .= " AND p.private = " . $filters['private'];
 		}
 
 		// Exclude
@@ -351,8 +313,7 @@ class Project extends Table
 					break;
 
 				case 'privacy':
-					//$sort .= 'p.private ' . $sortdir . ' ';
-					$sort .= 'p.access ' . $sortdir . ' ';
+					$sort .= 'p.private ' . $sortdir . ' ';
 					break;
 
 				case 'status':
