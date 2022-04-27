@@ -119,7 +119,7 @@ tooltip: true,
 				    <?php if (strpos($stat->project_title, "pub-") === 0) {?>
                     	<span class="block mini faded"><?php echo Lang::txt('PLG_MEMBERS_IMPACT_PUBLISHED') . ' ' . Date::of($stat->published_up)->toLocal(Lang::txt('DATE_FORMAT_HZ1')) . ' ' . Lang::txt('PLG_MEMBERS_IMPACT_IN') . ' ' . $stat->cat_name; ?> </span>
                     <?php } else {?>
-                    	<span class="block mini faded"><?php echo Lang::txt('PLG_MEMBERS_IMPACT_PUBLISHED') . ' ' . Date::of($stat->published_up)->toLocal(Lang::txt('DATE_FORMAT_HZ1')) . ' ' . Lang::txt('PLG_MEMBERS_IMPACT_IN') . ' ' . $stat->cat_name; ?> <span> | <?php echo Lang::txt('PLG_MEMBERS_IMPACT_FROM_PROJECT'); ?> <a href="<?php echo Route::url('index.php?option=com_projects&task=view&alias=' . $stat->project_alias); ?>"><?php echo \Hubzero\Utility\String::truncate($stat->project_title, 65); ?></a></span></span>
+                    	<span class="block mini faded"><?php echo Lang::txt('PLG_MEMBERS_IMPACT_PUBLISHED') . ' ' . Date::of($stat->published_up)->toLocal(Lang::txt('DATE_FORMAT_HZ1')) . ' ' . Lang::txt('PLG_MEMBERS_IMPACT_IN') . ' ' . $stat->cat_name; ?> <span> | <?php echo Lang::txt('PLG_MEMBERS_IMPACT_FROM_PROJECT'); ?> <a href="<?php echo Route::url('index.php?option=com_projects&task=view&alias=' . $stat->project_alias); ?>"><?php echo \Hubzero\Utility\Str::truncate($stat->project_title, 65); ?></a></span></span>
                     <?php }?>
 					<!--  Modified by CANARIE Inc. End -->
 				</td></tr>
