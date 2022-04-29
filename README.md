@@ -2,7 +2,7 @@
 
 This repository contains code modified for the HSSCommons project by CANARIE. It acts as an overlay to the [HUBzero CMS](https://github.com/hubzero/hubzero-cms) code to customize HUBzero for use by HSSCommons.****
 
-The HSSCommons git repository consists of two main branches: `test` and `prod`.
+The HSSCommons git repository consists of two main branches: `test` and `h2.2.22`.
 
 The `test` branch is associated with the [test instance of the HSSCommons site](https://test.hsscommons.ca).
 
@@ -23,9 +23,9 @@ This code should be placed in the /app folder of the HUBzero CMS. It is currentl
 9. Check if the changes happened as expected on the test instance.
 10. Debug any issues by following this same process to update the code.
 
-Once the feature has been fully debugged and confirmed to be working as expected, the changes from the `test` branch can be merged with the `prod` branch.
+Once the feature has been fully debugged and confirmed to be working as expected, the changes from the `test` branch can be merged with the `h2.2.22` branch.
 
-To have the prod instance reflect the changes in the `prod` branch, we need to create a ticket with UVic Systems.
+To have the h2.2.22 instance reflect the changes in the `h2.2.22` branch, we need to create a ticket with UVic Systems.
 
 # Licence
 
