@@ -1,33 +1,8 @@
 <?php
 /**
- * HUBzero CMS
- *
- * Copyright 2005-2015 HUBzero Foundation, LLC.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * HUBzero is a registered trademark of Purdue University.
- *
- * @package   hubzero-cms
- * @author    Alissa Nedossekina <alisa@purdue.edu>
- * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
  */
 
 // No direct access
@@ -101,14 +76,12 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 	 */
 	public function &onProjectCount($model)
 	{
+		$counts = array('publications' => 0);
+
 		// Get this area details
 		$this->_area = $this->onProjectAreas();
 
-		if (empty($this->_area) || !$model->exists())
-		{
-			return $counts['publications'] = 0;
-		}
-		else
+		if (!empty($this->_area) && $model->exists())
 		{
 			$database = App::get('db');
 
@@ -121,8 +94,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			$filters['dev']           = 1;
 
 			$counts['publications'] = $pub_model->entries('count', $filters);
-			return $counts;
 		}
+
+		return $counts;
 	}
 
 	/**
@@ -425,6 +399,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			)
 		);
 
+
 		// Instantiate a publication object
 		$view->pub = new \Components\Publications\Models\Publication();
 
@@ -443,6 +418,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Get used space
 		$view->dirsize = \Components\Publications\Helpers\Html::getDiskUsage($allRows, false);
 		$view->params  = $this->model->params;
+		$view->new_pubs = $this->params->get('new_pubs');
 		$view->quota   = $view->params->get('pubQuota')
 						? $view->params->get('pubQuota')
 						: \Components\Projects\Helpers\Html::convertSize(floatval($this->model->config()->get('pubQuota', '1')), 'GB', 'b');
@@ -456,10 +432,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// Get messages	and errors
 		$view->msg = $this->_msg;
-		if ($this->getError())
-		{
-			$view->setError($this->getError());
-		}
+		$view->setErrors($this->getErrors());
+
 		return $view->loadTemplate();
 	}
 
@@ -552,10 +526,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// Get messages	and errors
 		$view->msg = $this->_msg;
-		if ($this->getError())
-		{
-			$view->setError($this->getError());
-		}
+		$view->setErrors($this->getErrors());
+
 		return $view->loadTemplate();
 	}
 
@@ -2016,7 +1988,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Error loading publication record
 		if (!$pub->exists())
 		{
-			\Notify::message(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_NOT_FOUND'), 'error', 'projects');
+			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_NOT_FOUND'), 'projects');
 			App::redirect(Route::url($pub->link('editbase')));
 			return;
 		}
@@ -2024,7 +1996,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Agreement to terms is required
 		if ($confirm && !$agree)
 		{
-			\Notify::message(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'error', 'projects');
+			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
 			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
 			return;
 		}
@@ -2032,7 +2004,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Check against quota
 		if ($this->_overQuota())
 		{
-			\Notify::message(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_NO_DISK_SPACE'), 'error', 'projects');
+			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_NO_DISK_SPACE'), 'projects');
 			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
 			return;
 		}
@@ -2051,7 +2023,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Make sure the publication belongs to the project
 		if (!$pub->belongsToProject($this->model->get('id')))
 		{
-			Notify::message(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_PROJECT_ASSOC'), 'error', 'projects');
+			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_PROJECT_ASSOC'), 'projects');
 			App::redirect(Route::url($this->model->link('publications')));
 			return;
 		}
@@ -2105,7 +2077,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_ERROR_CONTACT_INFO_MISSING'));
 			}
 
-			$db = \App::get('db');
+			$db = App::get('db');
 
 			foreach ($contact as $key)
 			{
@@ -2147,9 +2119,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// On error
 		if ($this->getError())
 		{
-			\Notify::message($this->getError(), 'error', 'projects');
+			Notify::error($this->getError(), 'projects');
+
 			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
-			return;
 		}
 
 		// Determine state
@@ -2215,24 +2187,71 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$pub->version->set('modified', Date::toSql());
 		$pub->version->set('modified_by', $this->_uid);
 
+		// Get DOI service
+		$doiService = new \Components\Publications\Models\Doi($pub);
+
 		// Issue DOI
 		if ($requireDoi > 0 && $this->_task == 'publish' && !$pub->version->doi)
 		{
-			// Get DOI service
-			$doiService = new \Components\Publications\Models\Doi($pub);
 			$extended = $state == 5 ? false : true;
-			$doi = $doiService->register($extended, ($state == 5 ? 'reserved' : 'public'));
+			$status   = $state == 5 ? 'reserved' : 'public';
+
+			$doi = $doiService->register(true, false, null, $extended, $status);
 
 			// Store DOI
 			if ($doi)
 			{
 				$pub->version->set('doi', $doi);
 			}
-
-			// Can't proceed without a valid DOI
-			if (!$doi || $doiService->getError())
+			else
 			{
-				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_DOI') . ' ' . $doiService->getError());
+				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_REGISTER_DOI') . ' ' . $doiService->getError());
+				$doiErr = true;
+			}
+		}
+
+		// When dataset is automatically approved.
+		if (!$review && ($autoApprove || $this->_pubconfig->get('autoapprove') == 1) && $pub->version->get('doi'))
+		{
+			// Update DOI metadata
+			$doiService->update($pub->version->get('doi'), true);
+
+			if ($doiService->getError())
+			{
+				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_UPDATE_DOI') . ' ' . $doiService->getError());
+				$doiErr = true;
+			}
+			else
+			{
+				// Register DOI name and target URL for DataCite DOI
+				$doiService->register(false, true, $pub->version->get('doi'));
+
+				if ($doiService->getError())
+				{
+					$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_REGISTER_NAME_URL') . ' ' . $doiService->getError());
+					$doiErr = true;
+				}
+			}
+		}
+
+		if ($this->_task == 'revert' && $pub->version->doi && $originalStatus == 1)
+		{
+			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_PUBLISHED_TO_DRAFTREADY);
+
+			if ($doiService->getError())
+			{
+				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_UNREGISTER_DOI') . ' ' . $doiService->getError());
+				$doiErr = true;
+			}
+		}
+
+		if ($this->_task == 'publish' && $pub->version->doi && $originalStatus == 4)
+		{
+			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_DRAFTREADY_TO_PUBLISHED);
+
+			if ($doiService->getError())
+			{
+				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_UNREGISTER_DOI') . ' ' . $doiService->getError());
 				$doiErr = true;
 			}
 		}
@@ -2252,7 +2271,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			if (!$pub->version->store())
 			{
 				throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_FAILED'), 403);
-				return;
 			}
 
 			// Remove main flag from previous default version
@@ -2432,7 +2450,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			$pub->_curationModel->package(true);
 		}
 
-		if ($pub->version->get('state') == 1)
+		if ($pub->version->get('state') == 1 && !$pub->isEmbargoed())
 		{
 			$pub->_curationModel->createSymLink();
 		}
@@ -2511,7 +2529,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		if (!$this->model->access('content'))
 		{
 			throw new Exception(Lang::txt('ALERTNOTAUTH'), 403);
-			return;
 		}
 
 		// Load publication model
@@ -2520,7 +2537,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		if (!$pub->exists() || !$pub->belongsToProject($this->model->get('id')))
 		{
 			throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_VERSION_NOT_FOUND'), 404);
-			return;
 		}
 
 		// Save version ID
@@ -2565,7 +2581,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					if (!$pub->version->store())
 					{
 						throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_UNPUBLISH_FAILED'), 403);
-						return;
 					}
 					else
 					{
@@ -2593,7 +2608,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					if (!$pub->version->delete())
 					{
 						throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_DELETE_DRAFT_FAILED'), 403);
-						return;
 					}
 
 					// Delete authors
@@ -2702,10 +2716,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 			// Get messages	and errors
 			$view->msg = $this->_msg;
-			if ($this->getError())
-			{
-				$view->setError($this->getError());
-			}
+			$view->setErrors($this->getErrors());
+
 			return $view->loadTemplate();
 		}
 
@@ -2773,10 +2785,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// Get messages	and errors
 		$view->msg = $this->_msg;
-		if ($this->getError())
-		{
-			$view->setError($this->getError());
-		}
+		$view->setErrors($this->getErrors());
+
 		return $view->loadTemplate();
 	}
 
@@ -2858,7 +2868,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 	/**
 	 * Prep file directory (provisioned project)
 	 *
-	 * @param      boolean		$force
+	 * @param      boolean  $force
 	 * @return     boolean
 	 */
 	protected function _prepDir($force = true)
@@ -3017,7 +3027,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		{
 			// Throw error
 			throw new Exception(Lang::txt('COM_PROJECTS_ERROR_ACTION_NOT_AUTHORIZED'), 403);
-			return;
 		}
 
 		// Get referenced path
@@ -3032,7 +3041,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		{
 			// Throw error
 			throw new Exception(Lang::txt('COM_PROJECTS_FILE_NOT_FOUND'), 404);
-			return;
 		}
 
 		// Initiate a new content server and serve up the file
@@ -3047,11 +3055,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			// Should only get here on error
 			throw new Exception(Lang::txt('COM_PUBLICATIONS_SERVER_ERROR'), 404);
 		}
-		else
-		{
-			exit;
-		}
 
-		return;
+		exit;
 	}
 }
