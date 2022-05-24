@@ -8,6 +8,9 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
+$this->css()
+     ->js();
+
 $isReviewer = (isset($this->filters['reviewer']) && in_array($this->filters['reviewer'], array('sponsored', 'sensitive')));
 
 $src = Route::url($this->row->picture('master'));

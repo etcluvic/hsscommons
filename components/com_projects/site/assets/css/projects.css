@@ -150,7 +150,6 @@
 	}
 	.project-card img {
 		height: 100%;
-		max-height: 100px;
 	}
 	.project-card .project-identity {
 		display: block;
@@ -2128,7 +2127,7 @@
 		margin-top: 5em;
 	}
 	.file-type {
-		height: 0.5em;
+		height: 1.2em;
 	}
 
 /* Overwrites to system styles
