@@ -8,9 +8,6 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
-$this->css()
-     ->js();
-
 $isReviewer = (isset($this->filters['reviewer']) && in_array($this->filters['reviewer'], array('sponsored', 'sensitive')));
 
 $src = Route::url($this->row->picture('master'));
@@ -24,7 +21,7 @@ $role = $this->row->access('readonly') && !$this->row->isArchived()
 	: $role;
 ?>
 <div class="project-card" id="project-<?php echo $this->row->get('id'); ?>">
-	<div class="project-contents">
+	<div class="project-contents th_image">
 		<?php if ((!$this->row->inSetup() && $this->row->access('view'))
 				|| ($this->row->inSetup() && $this->row->access('owner'))): ?>
 			<a class="project-identity" href="<?php echo Route::url($this->row->link()); ?>">
