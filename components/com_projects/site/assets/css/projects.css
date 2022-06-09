@@ -62,14 +62,14 @@
 /* Browse Projects - project thumbnail
 --------------------------------------------- */
 	.th_image {
-		width: 25px;
+		width: 250px;
 	}
 	td.th_image {
 		width: auto;
 	}
 	.th_image img {
-		width: 25px;
-		height: 25px;
+		width: 250px;
+		height: 250px;
 	}
 	.th_image img:hover,
 	.th_image a:hover,
