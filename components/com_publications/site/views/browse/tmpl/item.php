@@ -48,6 +48,8 @@ if (!$this->line->hasImage()):
 	$moreClasses = ' generic';
 endif;
 
+$title = html_entity_decode($this->line->title);
+
 $extras = Event::trigger('publications.onPublicationsList', array($this->line));
 ?>
 <li class="<?php echo implode(' ', $cls); ?>">
@@ -56,7 +58,7 @@ $extras = Event::trigger('publications.onPublicationsList', array($this->line));
 	</div>
 	<div class="pub-details">
 		<p class="title">
-			<a href="<?php echo Route::url($this->line->link()); ?>"><?php echo $this->escape($this->line->title); ?></a>
+			<a href="<?php echo Route::url($this->line->link()); ?>"><?php echo $this->escape($title); ?></a>
 		</p>
 
 		<?php if (!empty($extras)): ?>
