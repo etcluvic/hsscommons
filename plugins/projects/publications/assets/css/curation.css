@@ -288,7 +288,7 @@
 	}
 	.item-image img {
 		max-width: 70px;
-		max-height: 50px;
+		max-height: 100px;
 	}
 	.item-order {
 		width: 25px;
