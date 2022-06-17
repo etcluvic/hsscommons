@@ -288,6 +288,7 @@
 	}
 	.item-image img {
 		max-width: 70px;
+		max-height: 50px;
 	}
 	.item-order {
 		width: 25px;
