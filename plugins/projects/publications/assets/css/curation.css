@@ -310,6 +310,7 @@
 	.item-title img {
 		float: left;
 		margin-right: 0.3em;
+		max-height: 50px;
 	}
 	.citation-formatted p {
 		font-size: 85%;
