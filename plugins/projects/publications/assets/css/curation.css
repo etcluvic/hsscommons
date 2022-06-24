@@ -313,6 +313,12 @@
 		max-height: 50px;
 		max-width: 150px;
 	}
+
+	.item-icon img {
+		max-height: 50px;
+		max-width: 150px;
+	}
+
 	.citation-formatted p {
 		font-size: 85%;
 		font-style: italic;
