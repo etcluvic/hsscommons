@@ -13,14 +13,15 @@ This code should be placed in the /app folder of the HUBzero CMS. It is currentl
 # Contributing to HSSCommons
 
 1. Open a terminal session and clone the `test` branch using `git clone -b test https://github.com/etcluvic/hsscommons.git`
-2. Make any changes to the `test` branch as follows. 
-3. Edit the files as required. Use `git add <file name>` to stage these changes.
-4. Use `git commit -m '<commit message>'` to commit your changes.
-5. Use `git push --set-upstream origin test` to push your commits to the remote repo.
-6. Once the feature has been fully debugged and confirmed to be working as expected, the changes from the `test` branch can be merged with the `h2.2.22` branch.
-7. Open a browser window with the URL of the HSSCommons git repo. Click on pull requests and create a new one.
-8. Compare the changes between the `test` branch and the `h2.2.22` branch. The changes you just pushed on the `test` branch should be highlighted. Verify the changes and create the pull request. Make sure to write a descriptive comment.
-9. Verify that there are no conflicts, proceed an merge the request. Do not delete the `test` branch when asked if you want to delete it.
+2. Run a `git pull` to update your local repository with any changes that any other collaborators have made.
+3. Make any changes to the `test` branch as follows. 
+4. Edit the files as required. Use `git add <file name>` to stage these changes.
+5. Use `git commit -m '<commit message>'` to commit your changes.
+6. Use `git push --set-upstream origin test` to push your commits to the remote repo.
+7. Once the feature has been fully debugged and confirmed to be working as expected, the changes from the `test` branch can be merged with the `h2.2.22` branch.
+8. Open a browser window with the URL of the HSSCommons git repo. Click on pull requests and create a new one.
+9. Compare the changes between the `test` branch and the `h2.2.22` branch. The changes you just pushed on the `test` branch should be highlighted. Verify the changes and create the pull request. Make sure to write a descriptive comment.
+10. Verify that there are no conflicts, proceed an merge the request. Do not delete the `test` branch when asked if you want to delete it.
 
 To have the h2.2.22 instance reflect the changes in the `h2.2.22` branch, we need to create a ticket with UVic Systems.
 
