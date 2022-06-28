@@ -288,6 +288,7 @@
 	}
 	.item-image img {
 		max-width: 70px;
+		max-height: 100px;
 	}
 	.item-order {
 		width: 25px;
@@ -309,7 +310,15 @@
 	.item-title img {
 		float: left;
 		margin-right: 0.3em;
+		max-height: 50px;
+		max-width: 150px;
 	}
+
+	.item-icon img {
+		max-height: 50px;
+		max-width: 150px;
+	}
+
 	.citation-formatted p {
 		font-size: 85%;
 		font-style: italic;
