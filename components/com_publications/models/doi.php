@@ -424,7 +424,7 @@ class Doi extends Obj
 		}
 		$xmlfile.='</creators>';
 		$xmlfile.='<titles>
-			<title>' . $this->get('title') . '</title>
+			<title>' . html_entity_decode($this->get('title')) . '</title>
 		</titles>
 		<publisher>' . $this->get('publisher') . '</publisher>
 		<publicationYear>' . $this->get('pubYear') . '</publicationYear>';
