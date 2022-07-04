@@ -25,6 +25,15 @@ This code should be placed in the /app folder of the HUBzero CMS. It is currentl
 
 To have the h2.2.22 instance reflect the changes in the `h2.2.22` branch, we need to create a ticket with UVic Systems.
 
+# Adding files from hubzero-cms
+
+As mentioned above the code in this repository acts as an overlay to the [Hubzero CMS](https://github.com/hubzero/hubzero-cms) code. To make new customizations to files that exist in the hubzero-cms core but not in this repository follow the following steps.
+
+1. Clone the hubzero-cms repo somewhere on your system using `git clone -b 2.2.22 https://github.com/hubzero/hubzero-cms.git` (only needs to be done once)
+2. Copy the directory you want to modify from the hubzero-cms to the hsscommons local repo on your system. Ensure to maintain the directory structure as much as possible. For example if the folder exists in `hubzero-cms/core/plugins/publications/` then the copied folder should go to `hsscommons/plugins/publications`
+3. `git add, commit and push` the files that have just been copied over.
+4. Make any modifications to the copied files.
+
 # Licence
 
 This code maintains the [MIT](http://opensource.org/licenses/MIT) licence of the original files.
