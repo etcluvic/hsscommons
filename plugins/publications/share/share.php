@@ -163,6 +163,10 @@ class plgPublicationsShare extends \Hubzero\Plugin\Plugin
 			case 'pinterest':
 				$link = 'https://pinterest.com/pin/create/button/?url=' . $url . '&media=' . $mediaUrl . '&description=' . $title . ': ' . $description;
 				break;
+			
+			case 'email':
+				$link = 'mailto:?subject=' . $title .'&body=' . $url;
+				break;
 		}
 
 		if ($link)
