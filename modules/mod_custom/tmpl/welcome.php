@@ -20,10 +20,10 @@ if ($params->get('backgroundimage'))
 <div class="custom<?php echo $moduleclass_sfx ?>">
 	<?php echo $module->content; ?>
     <?php if (!User::isGuest()): ?>
-        <p></p>
+        <div></div>
     <?php else: ?>
-        <div class="welcome">
-            <a href="/register" class="btn">Sign Up for a free account today!</a>
+        <div align="centre" id="welcome">
+            <a href="/register" class="btn"><?php echo Lang::txt('MOD_REGISTER') ?></a>
         </div>
     <?php endif; ?>
 </div>
