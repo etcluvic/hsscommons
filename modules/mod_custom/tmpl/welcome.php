@@ -22,7 +22,7 @@ if ($params->get('backgroundimage'))
     <?php if (!User::isGuest()): ?>
         <p></p>
     <?php else: ?>
-        <div class="welcome">
+        <div class="welcome-button">
             <a href="/register" class="btn">Sign Up for a free account today!</a>
         </div>
     <?php endif; ?>
