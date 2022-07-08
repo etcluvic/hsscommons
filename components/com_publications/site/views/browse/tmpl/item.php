@@ -40,7 +40,7 @@ if ($this->authors && $this->params->get('show_authors')):
 endif;
 
 if ($this->line->doi):
-	$info[] = 'doi:' . $this->line->doi;
+	$info[] = 'https://doi.org/' . $this->line->doi;
 endif;
 
 $moreClasses = '';

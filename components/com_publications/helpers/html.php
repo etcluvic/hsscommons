@@ -441,7 +441,7 @@ class Html
 		// Show DOI if available
 		if ($publication->version->get('doi'))
 		{
-			$text .= "\t\t" . '<span class="doi">' . 'doi:' . $publication->version->get('doi');
+			$text .= "\t\t" . '<span class="doi">' . 'https://doi.org/' . $publication->version->get('doi');
 			$text .= ' - <span><a href="' . Route::url($publication->link() . '&active=about') . '#citethis">' . Lang::txt('cite this') . '</a></span></span>' . "\n";
 		}
 
