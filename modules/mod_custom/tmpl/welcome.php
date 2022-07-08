@@ -22,7 +22,7 @@ if ($params->get('backgroundimage'))
     <?php if (!User::isGuest()): ?>
         <div></div>
     <?php else: ?>
-        <div align="centre" id="welcome">
+        <div align="centre" id="welcome-button">
             <a href="/register" class="btn"><?php echo Lang::txt('MOD_REGISTER') ?></a>
         </div>
     <?php endif; ?>

@@ -116,12 +116,21 @@
 		max-width: 27em;
 		color: #fff;
 		position: relative;
-		margin: 90px auto;
+		margin: 30px auto;
 		padding: 30px 0;
 		text-align: center;
 		font-size: 20px;
-		// don't draw the line
-		//border-top: 1px solid rgba(255, 255, 255, 0.2);
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+	}
+	#welcome-button {
+		max-width: 27em;
+		color: #fff;
+		position: relative;
+		margin: 0px auto;
+		padding: 30px 0;
+		text-align: center;
+		font-size: 20px;
+		border: 1px solid rgb(255, 255, 255);
 	}
 	#welcome h2 {
 		margin: 0;
@@ -159,6 +168,10 @@
 	#welcome a:hover {
 		color: #fff;
 		border-bottom: 1px solid #fff;
+	}
+	#welcome-button a:hover {
+		color: #fff;
+		border: 1px solid #fff;
 	}
 
 /* Freatured items */
