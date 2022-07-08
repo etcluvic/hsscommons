@@ -70,7 +70,7 @@ class Helper extends Module
 
 		//Get the admin configured settings
 		$filters = array(
-			'limit'      => 1,
+			'limit'      => (int)trim($this->params->get('top_number')), 
 			'start'      => 0,
 			'sortby'     => 'random',
 			//'access'     => 'public',
