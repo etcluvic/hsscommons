@@ -168,9 +168,16 @@
 		color: #fff;
 		border-bottom: 2px solid #fff;
 	}
-	#welcome-button a:hover , a:visited{
+	#welcome-button a, #welcome-button a:link {
+		color: #fff;
+		font-weight: 500;
+		border: 2px solid #fff;
+		background: #627796;
+	}
+	#welcome-button a:hover {
 		color: #fff;
 		border: 2px solid #fff;
+		background: #000
 	}
 
 /* Freatured items */
