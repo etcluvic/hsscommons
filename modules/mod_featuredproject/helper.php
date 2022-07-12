@@ -5,15 +5,15 @@
  * @license    http://opensource.org/licenses/MIT MIT
  */
 
-namespace Modules\Featuredresource;
+namespace Modules\Featuredproject;
 
-use Components\Resources\Models\Entry;
+use Components\Projects\Models\Entry;
 use Hubzero\Module\Module;
 use Component;
 use User;
 
 /**
- * Module class for displaying a random featured resource
+ * Module class for displaying a random featured project
  */
 class Helper extends Module
 {
@@ -31,7 +31,7 @@ class Helper extends Module
 	 */
 	public function run()
 	{
-		include_once Component::path('com_resources') . DS . 'models' . DS . 'entry.php';
+		include_once Component::path('com_projects') . DS . 'models' . DS . 'entry.php';
 
 		$database = \App::get('db');
 
@@ -66,9 +66,9 @@ class Helper extends Module
 		// Did we get any results?
 		if ($row->get('id'))
 		{
-			$config = Component::params('com_resources');
+			$config = Component::params('com_projects');
 
-			// Resource
+			// Project
 			$id = $row->id;
 
 			$path = $row->filespace();
@@ -79,7 +79,7 @@ class Helper extends Module
 
 				$tv = new \Components\Tools\Tables\Version($database);
 
-				$versionid = $tv->getVersionIdFromResource($id, 'current');
+				$versionid = $tv->getVersionIdFromProject($id, 'current');
 
 				$picture = $this->getToolImage($path, $versionid);
 			}
@@ -127,9 +127,9 @@ class Helper extends Module
 	}
 
 	/**
-	 * Get a resource image
+	 * Get a project image
 	 *
-	 * @param   string  $path  Path to get resource image from
+	 * @param   string  $path  Path to get project image from
 	 * @return  string
 	 */
 	private function getImage($path)
