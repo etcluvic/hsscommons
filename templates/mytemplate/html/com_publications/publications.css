@@ -1255,6 +1255,10 @@
 		width: 25%;
 		color: rgba(255, 255, 255, 0.7);
 	}
+	.contrib-options a, .contrib-options a:active, .contrib-options a:visited {
+		color: #fff;
+		font-weight: bold;
+	}
 
 /* Result message */
 	.status-msg {
