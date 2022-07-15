@@ -1,13 +1,46 @@
 <?php
 /**
- * @package    hubzero-cms
- * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
- * @license    http://opensource.org/licenses/MIT MIT
+ * HUBzero CMS
+ *
+ * Copyright 2005-2015 HUBzero Foundation, LLC.
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * HUBzero is a registered trademark of Purdue University.
+ *
+ * @package   hubzero-cms
+ * @author    Shawn Rice <zooley@purdue.edu>
+ * @copyright Copyright 2005-2015 HUBzero Foundation, LLC.
+ * @license   http://opensource.org/licenses/MIT MIT
+ */
+
+/**
+ * 
+ * Modified by CANARIE Inc. for the HSSCommons project.
+ *
+ * Summary of changes: Written by CANARIE Inc. Based on HUBzero's Module of mod_featuredresource, with implicit permission under original MIT licence.
+ *
  */
 
 namespace Modules\Featuredproject;
 
-use Components\Projects\Models\Entry;
 use Hubzero\Module\Module;
 use Component;
 use User;
@@ -31,7 +64,7 @@ class Helper extends Module
 	 */
 	public function run()
 	{
-		include_once Component::path('com_projects') . DS . 'models' . DS . 'entry.php';
+		include_once(Component::path('com_projects') . DS . 'tables' . DS . 'project.php');
 
 		$database = \App::get('db');
 
@@ -39,73 +72,38 @@ class Helper extends Module
 		$filters = array(
 			'limit'      => 1,
 			'start'      => 0,
-			'type'       => trim($this->params->get('type')),
-			'sortby'     => 'random',
-			'minranking' => trim($this->params->get('minranking')),
-			'tag'        => trim($this->params->get('tag')),
+			'sortby'     => 'RAND()',
 			'access'     => 'public',
-			'published'  => 1,
-			'standalone' => 1,
-			// Only published tools
-			'toolState'  => 7
+			//Change made by Ansh Thayil
+			// 'filterby'   => 'public'
 		);
 
-		$rows = Entry::allWithFilters($filters)
-			->limit(1000)
-			->rows()
-			->fieldsByKey('id');
+		$row = null;
 
-		$id = array_rand($rows);
+		// No - so we need to randomly choose one
+		// Initiate a project object
+		$rr = new \Components\Projects\Tables\Project($database);
 
-		$row = Entry::oneOrNew((isset($rows[$id]) ? $rows[$id] : 0));
+		// Get records
+		$rows = $rr->getRecords($filters, false);
+		if (count($rows) > 0)
+		{
+			$row = $rows[0];
+		}
 
 		$this->cls = trim($this->params->get('moduleclass_sfx'));
-		$this->txt_length = trim($this->params->get('txt_length'));
-		$this->thumb = '';
 
 		// Did we get any results?
-		if ($row->get('id'))
+		if ($row)
 		{
 			$config = Component::params('com_projects');
 
-			// Project
-			$id = $row->id;
+			$this->id = $row->id;
 
-			$path = $row->filespace();
-
-			if ($row->isTool())
-			{
-				include_once Component::path('com_tools') . DS . 'tables' . DS . 'version.php';
-
-				$tv = new \Components\Tools\Tables\Version($database);
-
-				$versionid = $tv->getVersionIdFromProject($id, 'current');
-
-				$picture = $this->getToolImage($path, $versionid);
-			}
-			else
-			{
-				$picture = $this->getImage($path);
-			}
-
-			$thumb = $path . DS . $picture;
-
-			if (!is_file(PATH_APP . $thumb))
-			{
-				$thumb = DS . trim($config->get('defaultpic'));
-			}
-
-			$row->typetitle = trim(stripslashes($row->typetitle));
-			if (substr($row->typetitle, -1, 1) == 's' && substr($row->typetitle, -3, 3) != 'ies')
-			{
-				$row->typetitle = substr($row->typetitle, 0, strlen($row->typetitle) - 1);
-			}
-
-			$this->id    = $id;
-			$this->thumb = $thumb;
+			$this->thumb = DS . trim($config->get('defaultpic'));
 		}
 
-		$this->row = $row;
+		$this->row   = $row;
 
 		require $this->getLayoutPath();
 	}
@@ -174,25 +172,5 @@ class Helper extends Module
 		}
 	}
 
-	/**
-	 * Get a screenshot of a tool
-	 *
-	 * @param   string   $path       Path to look for screenshots in
-	 * @param   integer  $versionid  Tool version
-	 * @return  string
-	 */
-	private function getToolImage($path, $versionid=0)
-	{
-		// Get contribtool parameters
-		$tconfig = Component::params('com_tools');
-		$allowversions = $tconfig->get('screenshot_edit');
-
-		if ($versionid && $allowversions)
-		{
-			// Add version directory
-			//$path .= DS.$versionid;
-		}
-
-		return $this->getImage($path);
-	}
 }
+
