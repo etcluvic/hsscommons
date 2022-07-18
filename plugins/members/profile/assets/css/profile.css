@@ -296,7 +296,7 @@
 		line-height:8px;
 		font-weight:bold;
 		text-transform:uppercase;
-		color:#777;
+		color:#EEE;
 		text-align: left;
 	}
 	#member-profile-completeness #meter {
@@ -324,9 +324,9 @@
 		-o-transition: all 0.5s linear;
 		-ms-transition: all 0.5s linear;
 		transition: all 0.5s linear;
-		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-		filter: alpha(opacity=70);
-		opacity:0.7;
+		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+		filter: alpha(opacity=80);
+		opacity:0.8;
 		border-radius:3px;
 		width: 0%;
 	}
@@ -335,7 +335,7 @@
 		position:absolute;
 		top:0;
 		right:0;
-		color:#444;
+		color:#fff;
 	}
 	#member-profile-completeness #completeness-info {
 		display:block;
