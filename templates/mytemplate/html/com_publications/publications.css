@@ -39,7 +39,10 @@
 	.com_publications #content-header .metadata .shareinfo a {
 		color: #666;
 	}
-	.com_publications #content-header .span8 a,
+	.com_publications #content-header .span8 a {
+		color: #fff;
+		font-weight: bold;
+	}
 	.com_publications #content-header .span4 p a,
 	.com_publications #content-header .aside a {
 		color: #fff;
@@ -302,7 +305,7 @@
 	#authorslist p {
 		line-height: 1.4em;
 		margin: 0.5em 0;
-		color: #000;
+		color: rgba(255, 255, 255, 0.75);
 	}
 	#authorslist {
 		padding-right: 3em;
@@ -311,7 +314,7 @@
 		font-size: 70%;
 	}
 	#authorslist p.orgs {
-		color: #000;
+		color: rgba(255, 255, 255, 0.75);
 		font-style: italic;
 	}
 
