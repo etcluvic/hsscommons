@@ -39,7 +39,10 @@
 	.com_publications #content-header .metadata .shareinfo a {
 		color: #666;
 	}
-	.com_publications #content-header .span8 a,
+	.com_publications #content-header .span8 a {
+		color: #fff;
+		font-weight: bold;
+	}
 	.com_publications #content-header .span4 p a,
 	.com_publications #content-header .aside a {
 		color: #fff;
@@ -302,7 +305,7 @@
 	#authorslist p {
 		line-height: 1.4em;
 		margin: 0.5em 0;
-		color: #000;
+		color: rgba(255, 255, 255, 0.75);
 	}
 	#authorslist {
 		padding-right: 3em;
@@ -311,7 +314,7 @@
 		font-size: 70%;
 	}
 	#authorslist p.orgs {
-		color: #000;
+		color: rgba(255, 255, 255, 0.75);
 		font-style: italic;
 	}
 
@@ -373,6 +376,12 @@
 		padding-left: 0.5em;
 		background: #f1fdf0;
 	}
+	p.curversion a, p.curversion a:link {
+		color: #3289c7 !important;
+	}
+	p.curversion a:visited {
+		color: #3289c7 !important;
+	}
 	p.doi {
 		font-size: 85%;
 		color: #666666;
@@ -402,6 +411,7 @@
 	.metaplaceholder p {
 		margin: 0;
 		padding: 0;
+		color: #333;
 	}
 	.guide {
 		background: url("/core/components/com_publications/site/assets/img/compass.gif") 0 0 no-repeat;
@@ -530,6 +540,7 @@
 	#abox-content img {
 		max-width: 100%;
 		max-height: 50px;
+		margin: 10px;
 	}
 	div.sample {
 		list-style: none;
@@ -760,11 +771,11 @@
 		margin: 0 !important;
 		color: #ccc;
 	}
-	.rankinfo dd a { 
+	.rankinfo dd a {
 		color: #7EBEFD;
 		border-bottom: 1px solid #B8CFE7;
 	}
-	.rankinfo dd a:hover { 
+	.rankinfo dd a:hover {
 		color: #FDC07E;
 		border-bottom: 1px solid #E07A14;
 	}
@@ -777,7 +788,7 @@
 		margin: 0;
 		padding: 0;
 		text-transform: uppercase;
-		text-align: right; 
+		text-align: right;
 		letter-spacing: 1px;
 		font-size: 85%;
 		line-height: 1em;
@@ -799,7 +810,7 @@
 		overflow: hidden;
 		position: relative;
 	}
-	.rank span { 
+	.rank span {
 		display: block;
 		margin: 0;
 		padding: 0;
@@ -832,7 +843,7 @@
 		font-size: 90%;
 		margin: 0;
 	}
-	.rankinfo tbody { 
+	.rankinfo tbody {
 		border: none;
 	}
 	.rankinfo tbody td,
@@ -853,11 +864,11 @@
 		border-bottom: 1px solid #444;
 	}
 	.rankinfo tbody th,
-	.rankinfo tbody td { 
+	.rankinfo tbody td {
 		color: #ccc;
 	}
 	.rankinfo tfoot td,
-	.rankinfo tfoot td { 
+	.rankinfo tfoot td {
 		color: #aaa;
 		border-top: 2px solid #777;
 		border-bottom: none;
@@ -1052,7 +1063,7 @@
 	}
 	.infopage {
 		width: 75%;
-		margin: 2em 0; 
+		margin: 2em 0;
 		border: 1px solid #cccccc;
 		-webkit-border-radius: 10px;
 		-moz-border-radius: 10px;
@@ -1246,7 +1257,11 @@
 		margin-top: -5em;
 		margin-right: 1em;
 		width: 25%;
-		color: #999;
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.contrib-options a, .contrib-options a:active, .contrib-options a:visited {
+		color: #fff;
+		font-weight: bold;
 	}
 
 /* Result message */
@@ -1651,7 +1666,7 @@
 		padding-left: 3em;
 	}
 
-/* New 
+/* New
 	.com_publications .grid {
 		border: none !important;
 	}*/

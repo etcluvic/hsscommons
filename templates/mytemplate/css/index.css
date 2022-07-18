@@ -4,7 +4,7 @@
  * Summary of changes: Minor customization.
  *
  */
- 
+
 .hide-text {
   font: 0/0 a;
   color: transparent;
@@ -2363,7 +2363,7 @@ header.content-header ul li,
   padding: 30px;
 }
 #footer #ancillary a:before {
-  content: "#";
+  content: "\0203A";
   color: rgba(0, 0, 0, 0.2);
   margin-right: 0.5em;
 }

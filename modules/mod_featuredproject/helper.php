@@ -72,10 +72,10 @@ class Helper extends Module
 		$filters = array(
 			'limit'      => 1,
 			'start'      => 0,
-			'sortby'     => 'random',
-			//'access'     => 'public',
+			'sort'     => 'RAND()',
+			'access'     => 'public',
 			//Change made by Ansh Thayil
-			'filterby'   => 'public'
+			// 'filterby'   => 'public'
 		);
 
 		$row = null;
