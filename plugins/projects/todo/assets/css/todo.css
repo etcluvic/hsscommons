@@ -461,7 +461,7 @@
 	.todo-due {
 		font-size: 75%;
 		padding: 0 0.5em;
-		height: 15px;
+		height: 2em;
 		color: #FFF;
 		display: block;
 		margin-top: 0.5em;
@@ -634,7 +634,7 @@
 		color: #000;
 	}
 	.tips {
-		color: #b1b1b1;
+		color: #666;
 		font-size: 85%;
 		margin-top: -0.1em;
 		float: left;
