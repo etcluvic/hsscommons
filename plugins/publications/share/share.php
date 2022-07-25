@@ -65,7 +65,7 @@ class plgPublicationsShare extends \Hubzero\Plugin\Plugin
 
 		$mediaUrl = Request::base() . trim($sef, '/') . '/' . $publication->version_id . '/Image:master';
 
-		$url = "https://doi.org/" .$publication->doi
+		$url = "https://doi.org/" .$publication->version->doi;
 
 		// Incoming action
 		$sharewith = Request::getString('sharewith', '');
