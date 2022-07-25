@@ -65,6 +65,8 @@ class plgPublicationsShare extends \Hubzero\Plugin\Plugin
 
 		$mediaUrl = Request::base() . trim($sef, '/') . '/' . $publication->version_id . '/Image:master';
 
+		$url = "https://doi.org/" .$publication->doi
+
 		// Incoming action
 		$sharewith = Request::getString('sharewith', '');
 
@@ -141,7 +143,7 @@ class plgPublicationsShare extends \Hubzero\Plugin\Plugin
 				break;
 
 			case 'twitter':
-				$link = 'http://twitter.com/intent/tweet?text=' . urlencode(Lang::txt('PLG_PUBLICATION_SHARE_VIEWING', Config::get('sitename'), stripslashes($publication->title))) . '&url=' . $url;
+				$link = 'http://twitter.com/intent/tweet?text=' . urlencode(Lang::txt('PLG_PUBLICATION_SHARE_VIEWING', stripslashes($publication->title))) . '&url=' . $url;
 				break;
 
 			case 'google':
