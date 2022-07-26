@@ -73,9 +73,9 @@ class Helper extends Module
 			'limit'      => 1,
 			'start'      => 0,
 			'sortby'     => 'random',
-			'access'     => 'public',
+			// 'access'     => 'public',
 			//Change made by Ansh Thayil
-			// 'filterby'   => 'public'
+			'filterby'   => 'public'
 		);
 
 		$row = null;
