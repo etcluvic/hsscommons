@@ -75,7 +75,7 @@ class Helper extends Module
 			'sortby'     => 'random',
 			// 'access'     => 'public',
 			//Change made by Ansh Thayil
-			'filterby'   => 'public'
+			'filterby'   => 'active'
 		);
 
 		$row = null;
