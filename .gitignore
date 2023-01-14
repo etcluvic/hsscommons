@@ -6,3 +6,12 @@ migrations/
 /config/
 loglog.txt
 .DS_Store
+bootstrap/administrator/
+bootstrap/api/*
+bootstrap/cli/*
+bootstrap/index.html
+bootstrap/site/index.html
+bootstrap/site/language/index.html
+bootstrap/site/language/overrides/index.html
+index.php
+language/
