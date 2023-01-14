@@ -3103,7 +3103,7 @@ section.section {
   *margin-left: .3em;
 }
 /* Buttons on posts at /members/1001/collections/posts */
-.post .actions .btn {
+.post.file .actions .btn {
   font-size: 0.8em;
 }
 .btn:first-child {
