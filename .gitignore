@@ -6,3 +6,7 @@ migrations/
 /config/
 loglog.txt
 .DS_Store
+
+# Generic and auto-generated files
+index.html
+/index.php
