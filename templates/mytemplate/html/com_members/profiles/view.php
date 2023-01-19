@@ -299,27 +299,5 @@ if (!$no_html) {
 		</div><!-- /#page_main -->
 	</div> <!-- //#page_container -->
 </div><!-- /.innerwrap -->
-<script type="text/JavaScript">
-	console.log("Hello from Javascript");
-	console.log(/^https?:\/\/.+$/.test('archie.example.org'));
-	const profileURLInput = document.querySelector("input#profile_url");
-	const profileURLForm = profileURLInput.closest('form');
-	const profileURLSubmitBtn = profileURLForm.querySelector('input[type="submit"]');
-	if (!(/^https?:\/\/.+$/.test(profileURLInput.value))) {
-		profileURLSubmitBtn.disabled = true;
-	}
-	profileURLInput.addEventListener("keyup", function(e) {
-		console.log("Profile URL is changing");
-		const profileURL = profileURLInput.value;
-		if (/^https?:\/\/.+$/.test(profileURL)) {
-			profileURLSubmitBtn.disabled = false;
-		} else {
-			profileURLSubmitBtn.disabled = true;
-		}
-	})
-
-	const profileURLDiv = profileURLInput.closest('div');
-	profileURLDiv.insertAdjacentHTML('beforeend', '<p>This field has to be an URL which either starts with <strong>http://</strong> or <strong>https://</strong></p>')
-</script>
 <?php
 }
