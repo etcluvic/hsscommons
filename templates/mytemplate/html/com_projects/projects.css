@@ -1846,3 +1846,32 @@
 	.content-feed .side-content {
 		margin-top: 5em;
 	}
+	/* Edit Author Information dialog box at /projects/<project_name>/publications/<publication_version_id>/authors/continue/... */
+	.author-edit label {
+		display: block;
+	}
+	.author-edit label:nth-child(2) span{
+		width: 100px;
+		margin-left: -100px;
+	}
+	.author-edit label:nth-child(2) span {
+		display: inline-block;
+		margin-top: 30px;
+	}
+	.author-edit label:nth-child(2) input {
+		display: inline-block;
+		margin-left: -5px;
+	}
+	.author-edit label[for=organization] span,
+	.author-edit label[for=organization] input {
+		display: inline-block;
+		margin-top: 40px;
+	}
+	.author-edit p.hint {
+		padding-top: 5em;
+	}
+	.author-edit label[for=credit] span,
+	.author-edit label[for=credit] input {
+		display: inline-block;
+		margin-top: -20px;
+	}
