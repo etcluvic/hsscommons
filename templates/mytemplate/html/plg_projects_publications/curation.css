@@ -1251,6 +1251,7 @@
 		background: #ecf7f8;
 	}
 
+/* Fix visiblity of "delete" buttons on edit authors page when adding/editing publications */
 	#author-list .ui-sortable-handle {
 		overflow-x: visible !important;
 		min-height: 90px !important;
