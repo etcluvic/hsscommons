@@ -173,7 +173,7 @@ HUB.Members.Profile = {
 		})
 
 		const profileURLDiv = profileURLInput.closest('div');
-		profileURLDiv.append('<p>This field has to be an URL which either starts with <strong>http://</strong> or <strong>https://</strong></p>');
+		profileURLDiv.append('<p>This field has to be a URL that starts with <strong>http://</strong> or <strong>https://</strong></p>');
 	},
 
 	editSubmitForm: function( submit_button )
