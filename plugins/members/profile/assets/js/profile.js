@@ -48,6 +48,9 @@ HUB.Members.Profile = {
 		//profile address section
 		HUB.Members.Profile.addresses();
 		HUB.Members.Profile.locateMe();
+		
+		// Prevent users from entering an invalid websiteURL on member profile page. URL at '/members/id/profile'
+		HUB.Members.Profile.editUserProfileWebsiteInteraction();
 	},
 
 	//-------------------------------------------------------------
@@ -152,6 +155,27 @@ HUB.Members.Profile = {
 
 	//-------------------------------------------------------------
 
+	// Prevent users from entering an invalid websiteURL on member profile page. URL at '/members/id/profile'
+	editUserProfileWebsiteInteraction: function () {
+		const profileURLInput = $("input#profile_url");
+		const profileURLForm = profileURLInput.closest('form');
+		const profileURLSubmitBtn = profileURLForm.find('input[type="submit"]');
+		if (!(/^https?:\/\/.+$/.test(profileURLInput.val()))) {
+			profileURLSubmitBtn.attr('disabled', true);
+		}
+		profileURLInput.on("keyup", function(e) {
+			const profileURL = profileURLInput.val();
+			if (/^https?:\/\/.+$/.test(profileURL)) {
+				profileURLSubmitBtn.attr('disabled', false);
+			} else {
+				profileURLSubmitBtn.attr('disabled', true);
+			}
+		})
+
+		const profileURLDiv = profileURLInput.closest('div');
+		profileURLDiv.append('<p>This field has to be a URL that starts with <strong>http://</strong> or <strong>https://</strong></p>');
+	},
+
 	editSubmitForm: function( submit_button )
 	{
 		var $ = this.jQuery;
@@ -190,6 +214,8 @@ HUB.Members.Profile = {
 						break;
 						default:
 							HUB.Members.Profile.editReloadSections();
+							// console.log('This is called');
+							// HUB.Members.Profile.editUserProfileWebsiteInteraction();
 					}
 				}
 				else if(returned.loggedout)
@@ -328,6 +354,9 @@ HUB.Members.Profile = {
 				var new_completeness = $("#profile-page-content #member-profile-completeness #meter-percent").attr("data-percent");
 				$("#page_options #meter-percent").width( new_completeness + "%" );
 				$("#page_options #meter-percent").attr("data-percent", new_completeness);
+				
+				// Prevent users from entering an invalid websiteURL on member profile page. URL at '/members/id/profile'
+				HUB.Members.Profile.editUserProfileWebsiteInteraction();
 			});
 		}
 		else

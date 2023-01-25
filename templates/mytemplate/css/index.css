@@ -3102,6 +3102,10 @@ section.section {
   background-clip: padding-box;
   *margin-left: .3em;
 }
+/* Buttons on posts at /members/1001/collections/posts */
+.post.file .actions .btn {
+  font-size: 0.8em;
+}
 .btn:first-child {
   *margin-left: 0;
 }
