@@ -26,21 +26,22 @@ This code should be placed in the /app folder of the HUBzero CMS. It is currentl
 Start by running the following:
 ```
 $ git clone -b test https://github.com/etcluvic/hsscommons.git  # Clone 'test' branch                                                       
-$ git checkout -b i43-new-feature   # Create a new branch, named after an issue number and description
+$ git checkout -b i43-new-feature                               # Create a new branch, named after  
+                                                                # an issue number and description
 ```
 You can start making changes to the code. After finishing making changes:
 ```
-$ git add <file name>   # State changes for each file
+$ git add <file name>               # State changes for each file
 $ git commit -m '<commit message>'  # commit your changes
 ```
 There are two cases that can happen here.
 
 **Case 1**: If there are changes in the `test` branch from when you pulled the branch, run:
 ```
-$ git checkout test   # Switch back to 'test' branch
-$ git pull origin test    # Pull the latest changes on 'test'
-$ git checkout i43-new-feature  # Switch back to your feature branch
-$ git merge test    # Merge the new changes in 'test' branch into your feature branch
+$ git checkout test                 # Switch back to 'test' branch
+$ git pull origin test              # Pull the latest changes on 'test'
+$ git checkout i43-new-feature      # Switch back to your feature branch
+$ git merge test                    # Merge the new changes in 'test' branch into your feature branch
 $ git push origin i43-new-feature   # Push your changes to the feature branch on the remote server
 ```
 
@@ -62,7 +63,7 @@ If you think your branch is ready to merge, create a Pull Request as follow:
 
 To continue working on the next feature, simply repeat the process above, start with running:
 ```
-$ git checkout -b i44-next-new-feature                              # Create a new branch for the next new feature
+$ git checkout -b i44-next-new-feature  # Create a new branch for the next new feature
 ```
 
 The work process can be described in the chart below:
