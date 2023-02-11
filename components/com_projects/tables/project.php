@@ -117,6 +117,10 @@ class Project extends Table
 			elseif ($filterby == 'active')
 			{
 				$query .= " AND p.state NOT IN (2, 3) ";
+			} 
+			elseif ($filterby == 'activeandpublic')
+			{
+				$query .= " AND (p.state NOT IN (2, 3) AND p.private = 0) ";
 			}
 			else
 			{
