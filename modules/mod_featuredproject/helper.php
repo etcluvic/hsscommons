@@ -72,7 +72,7 @@ class Helper extends Module
 		$filters = array(
 			'limit'    => 'all',
 			'start'    => 0,
-			'filterby'   => 'public'
+			'filterby'   => 'activeandpublic'
 		);
 
 		$row = null;
