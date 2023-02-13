@@ -1846,6 +1846,7 @@
 	.content-feed .side-content {
 		margin-top: 5em;
 	}
+
 	/* Edit Author Information dialog box at /projects/<project_name>/publications/<publication_version_id>/authors/continue/... */
 	.author-edit label {
 		display: block;
@@ -1874,4 +1875,81 @@
 	.author-edit label[for=credit] input {
 		display: inline-block;
 		margin-top: -20px;
+	}
+
+	/* Make projects on My Projects and Public Projects pages display side by side and responsive */
+	.section.myprojects .projects-container,
+	#browseForm .projects-container {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+	
+	.section.myprojects .projects-container .project-card,
+	#browseForm .projects-container .project-card {
+		margin: 30px 20px 0px 20px;
+	}
+
+	.section.myprojects .projects-container .project-card .th_image,
+	#browseForm .projects-container .project-card .th_image {
+		width: 200px;
+	}
+
+	.section.myprojects .projects-container .project-card .th_image img,
+	#browseForm .projects-container .project-card .th_image img {
+		width: 200px;
+		height: 200px;
+	}
+
+	@media screen and (min-width: 600px) {
+		.section.myprojects .projects-container .project-card .th_image,
+		#browseForm .projects-container .project-card .th_image {
+			width: 250px;
+		}
+
+		.section.myprojects .projects-container .project-card .th_image img,
+		#browseForm .projects-container .project-card .th_image img {
+			width: 250px;
+			height: 250px;
+		}
+	}
+
+	@media screen and (min-width: 776px) {
+		.section.myprojects .projects-container .project-card .th_image,
+		#browseForm .projects-container .project-card .th_image {
+			width: 300px;
+		}
+
+		.section.myprojects .projects-container .project-card .th_image img,
+		#browseForm .projects-container .project-card .th_image img {
+			width: 300px;
+			height: 300px;
+		}
+	}
+
+	@media screen and (min-width: 900px) {
+		.section.myprojects .projects-container .project-card .th_image,
+		#browseForm .projects-container .project-card .th_image {
+			width: 200px;
+		}
+
+		.section.myprojects .projects-container .project-card .th_image img,
+		#browseForm .projects-container .project-card .th_image img {
+			width: 200px;
+			height: 200px;
+		}
+	}
+
+	@media screen and (min-width: 1200px) {
+		.section.myprojects .projects-container .project-card .th_image,
+		#browseForm .projects-container .project-card .th_image {
+			width: 300px;
+		}
+
+		.section.myprojects .projects-container .project-card .th_image img,
+		#browseForm .projects-container .project-card .th_image img {
+			width: 300px;
+			height: 300px;
+		}
 	}
