@@ -70,12 +70,9 @@ class Helper extends Module
 
 		//Get the admin configured settings
 		$filters = array(
-			'limit'      => 1,
-			'start'      => 0,
-			'sortby'     => 'random',
-			'access'     => 'public',
-			//Change made by Ansh Thayil
-			// 'filterby'   => 'public'
+			'limit'    => 'all',
+			'start'    => 0,
+			'filterby'   => 'activeandpublic'
 		);
 
 		$row = null;
@@ -85,10 +82,11 @@ class Helper extends Module
 		$rr = new \Components\Projects\Tables\Project($database);
 
 		// Get records
-		$rows = $rr->getRecords($filters, false);
+		$rows = $rr->getRecords($filters, 'admin', 0, 0);
 		if (count($rows) > 0)
 		{
-			$row = $rows[0];
+			$random_keys=array_rand($rows,1);
+			$row = $rows[$random_keys];
 		}
 
 		$this->cls = trim($this->params->get('moduleclass_sfx'));

@@ -149,7 +149,7 @@ Document::setTitle(Lang::txt('COM_KB'));
 											</a>
 										</li>
 									<?php } ?>
-									<?php if ($row->articles()->count() > 3) : ?>
+									<?php if ($row->articles()->whereEquals('state', 1)->whereIn('access', User::getAuthorisedViewLevels())->rows()->count() > 3) : ?>
 										<li class="icon-file"><a href="<?php echo Route::url($row->link()); ?>">More...</a></li>
 									<?php endif; ?>
 									</ul>
