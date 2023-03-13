@@ -1265,3 +1265,7 @@
 		right: 0px !important;
 		padding: 0px;
 	}
+/* Fix file icon size when users editing content for publications */
+#abox-content .content-selector .file-selector img {
+	width: 50px;
+} 
