@@ -52,7 +52,7 @@ $this->css('jobs', 'com_jobs');
 				<?php } ?>
 
 		<?php if (!$this->editpref) { ?>
-				<span class="includeme">
+				<span class="includeme" style="white-space: nowrap;">
 					<a href="<?php echo Route::url($this->member->link() . '&active=resume&action=activate' . '&on=' . ($this->js->active && $this->file ? 0 : 1)); ?>">
 				<?php if ($this->js->active && $this->file) { ?>
 					[-] <?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_HIDE'); ?>
@@ -66,37 +66,37 @@ $this->css('jobs', 'com_jobs');
 
 			<form id="prefsForm" method="post" action="<?php echo Route::url($this->member->link() . '&active=resume'); ?>">
 				<fieldset>
-					<legend>
+					<legend style="display: none;">
 						<?php echo $this->editpref==1 ? Lang::txt('PLG_MEMBERS_RESUME_ACTION_INCLUDE_WITH_INFO') :  Lang::txt('PLG_MEMBERS_RESUME_ACTION_EDIT_PREFS'); ?>
 					</legend>
 
-					<label class="spacious">
+					<label class="spacious" style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_PERSONAL_TAGLINE'); ?>
 						<span class="selectgroup">
 							<textarea name="tagline" id="tagline-men" rows="6" cols="35"><?php echo stripslashes($this->js->tagline); ?></textarea>
 							<span class="counter"><span id="counter_number_tagline"></span> <?php echo Lang::txt('PLG_MEMBERS_RESUME_CHARS_LEFT'); ?></span>
 						</span>
 					</label>
-					<label class="spacious">
+					<label class="spacious" style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_LOOKING_FOR'); ?>
 						<span class="selectgroup">
 							<textarea name="lookingfor" id="lookingfor-men" rows="6" cols="35"><?php echo stripslashes($this->js->lookingfor); ?></textarea>
 							<span class="counter"><span id="counter_number_lookingfor"></span> <?php echo Lang::txt('PLG_MEMBERS_RESUME_CHARS_LEFT'); ?></span>
 						</span>
 					</label>
-					<label>
+					<label style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_WEBSITE');?>
 						<span class="selectgroup">
 							<input type="text" class="inputtxt" maxlength="190" name="url" value="<?php echo ($this->js->url ? $this->js->url : $this->member->get('url')); ?>" placeholder="http://" />
 						</span>
 					</label>
-					<label>
+					<label style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_LINKEDIN'); ?>
 						<span class="selectgroup">
 							<input type="text" class="inputtxt" maxlength="190" name="linkedin" value="<?php echo $this->js->linkedin; ?>" placeholder="http://" />
 						</span>
 					</label>
-					<label class="cats">
+					<label class="cats" style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_POSITION_SOUGHT'); ?>:
 					</label>
 
@@ -110,7 +110,7 @@ $this->css('jobs', 'com_jobs');
 					$cats[0] = Lang::txt('PLG_MEMBERS_RESUME_CATEGORY_ANY');
 					?>
 
-					<div class="selectgroup catssel">
+					<div class="selectgroup catssel" style="display: none;">
 						<label>
 							<select name="sought_type" id="sought_type">
 								<?php
