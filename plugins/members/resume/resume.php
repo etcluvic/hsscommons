@@ -88,13 +88,18 @@ class plgMembersResume extends \Hubzero\Plugin\Plugin
 		$areas = array();
 
 		// if this is the logged in user show them
-		if ($user->get('id') == $member->get('id') || $this->isEmployer($user, $member))
-		{
-			$areas['resume'] = Lang::txt('PLG_MEMBERS_RESUME');
-			$areas['icon'] = 'f016';
-			$areas['icon-class'] = 'icon-file';
-			$areas['menu'] = $this->params->get('display_tab', 1);
-		}
+		// NOTE: Comment this out as we want everyone to see members' CVs, not employers only
+		// if ($user->get('id') == $member->get('id') || $this->isEmployer($user, $member))
+		// {
+		// 	$areas['resume'] = Lang::txt('PLG_MEMBERS_RESUME');
+		// 	$areas['icon'] = 'f016';
+		// 	$areas['icon-class'] = 'icon-file';
+		// 	$areas['menu'] = $this->params->get('display_tab', 1);
+		// }
+		$areas['resume'] = Lang::txt('PLG_MEMBERS_RESUME');
+		$areas['icon'] = 'f016';
+		$areas['icon-class'] = 'icon-file';
+		$areas['menu'] = $this->params->get('display_tab', 1);
 
 		return $areas;
 	}
