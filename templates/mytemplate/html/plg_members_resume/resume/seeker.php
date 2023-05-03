@@ -72,18 +72,18 @@ $resume = is_file(PATH_APP . $path . DS . $this->seeker->filename) ? $path . DS 
 			<?php if ($this->seeker->countryresident) { ?>
 				, <span class="wherefrom"><?php echo $this->escape($this->seeker->countryresident); ?></span>
 			<?php } ?>
-			<?php if ($this->seeker->tagline) { ?>
+			<!-- <?php if ($this->seeker->tagline) { ?>
 				<blockquote>
 					<?php echo stripslashes($this->seeker->tagline); ?>
 				</blockquote>
-			<?php } ?>
+			<?php } ?> -->
 		</div>
 	</div>
 
 	<?php if ($this->seeker->mine) { ?>
-		<span class="editbt">
+		<!-- <span class="editbt">
 			<a href="<?php echo Route::url('index.php?option=' . $this->option . '&id=' . $this->seeker->uid . '&active=resume&action=editprefs'); ?>" title="<?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_EDIT_MY_PROFILE'); ?>">&nbsp;</a>
-		</span>
+		</span> -->
 	<?php } else if ($this->emp or $this->admin) { ?>
 		<span id="o<?php echo $this->seeker->uid; ?>">
 			<a href="<?php echo Route::url('index.php?option=com_jobs&oid=' . $this->seeker->uid . '&task=shortlist'); ?>" class="favvit" title="<?php echo isset($this->seeker->shortlisted) && $this->seeker->shortlisted ? Lang::txt('PLG_MEMBERS_RESUME_ACTION_REMOVE_FROM_SHORTLIST') : Lang::txt('PLG_MEMBERS_RESUME_ACTION_ADD_TO_SHORTLIST'); ?>">
@@ -99,7 +99,7 @@ $resume = is_file(PATH_APP . $path . DS . $this->seeker->filename) ? $path . DS 
 				<?php echo ucfirst(Lang::txt('PLG_MEMBERS_RESUME_RESUME')); ?>
 			</a>
 			<span class="mini"><?php echo Lang::txt('PLG_MEMBERS_RESUME_LAST_UPDATE'); ?>: <?php echo plgMembersResume::nicetime($this->seeker->created); ?></span>
-			<?php if ($this->seeker->url) {
+			<!-- <?php if ($this->seeker->url) {
 				$url = (strpos($this->seeker->url, "http://") === false && strpos($this->seeker->url, "https://") === false) ? "http://" . $this->seeker->url : $this->seeker->url;
 				?>
 				<span class="mini"> | </span>
@@ -112,7 +112,7 @@ $resume = is_file(PATH_APP . $path . DS . $this->seeker->filename) ? $path . DS 
 				<span class="mini">
 					<a href="<?php echo $this->seeker->linkedin; ?>" class="linkedin" rel="external" title="<?php echo Lang::txt('PLG_MEMBERS_RESUME_MEMBER_LINKEDIN'); ?>"><?php echo Lang::txt('PLG_MEMBERS_RESUME_LINKEDIN'); ?></a>
 				</span>
-			<?php } ?>
+			<?php } ?> -->
 		<?php } else { ?>
 			<span class="unavail"><?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_DOWNLOAD'); ?></span>
 		<?php } ?>
