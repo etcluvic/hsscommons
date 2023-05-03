@@ -59,7 +59,7 @@ $this->css('jobs', 'com_jobs');
 				<?php } else if ($this->file) { ?>
 					[+] <?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_INCLUDE'); ?>
 				<?php } ?>
-					</a>.
+					</a>
 				</span>
 		<?php } else { ?>
 			</p>
@@ -72,7 +72,7 @@ $this->css('jobs', 'com_jobs');
 
 					<label class="spacious" style="display: none;">
 						<?php echo Lang::txt('PLG_MEMBERS_RESUME_PERSONAL_TAGLINE'); ?>
-						<span class="selectgroup">
+						<span class="selectgroup" style="display: none;">
 							<textarea name="tagline" id="tagline-men" rows="6" cols="35"><?php echo stripslashes($this->js->tagline); ?></textarea>
 							<span class="counter"><span id="counter_number_tagline"></span> <?php echo Lang::txt('PLG_MEMBERS_RESUME_CHARS_LEFT'); ?></span>
 						</span>
