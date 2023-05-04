@@ -36,7 +36,7 @@ defined('_HZEXEC_') or die();
 $this->css('jobs', 'com_jobs');
 ?>
 
-<section class="main section <?php echo $this->nocache ?>">
+<section class="main section">
 	<div class="subject">
 		<?php if ($this->getError()) { ?>
 		<p class="error"><?php echo implode('<br />', $this->getErrors()); ?></p>
@@ -241,6 +241,7 @@ $this->css('jobs', 'com_jobs');
 									? Lang::txt('PLG_MEMBERS_RESUME_ACTION_UPLOAD_NEW_RESUME') . ' <span>(' . Lang::txt('PLG_MEMBERS_RESUME_WILL_BE_REPLACED') . ')</span>' . "\n"
 									:  Lang::txt('PLG_MEMBERS_RESUME_ACTION_UPLOAD_A_RESUME') . "\n"; ?>
 					</legend>
+					<p><?php echo Lang::txt('PLG_MEMBERS_RESUME_UPLOAD_NOTE')?></p>
 					<div>
 						<label>
 							<?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_ATTACH_FILE'); ?>
