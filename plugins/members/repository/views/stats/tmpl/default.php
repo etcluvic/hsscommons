@@ -73,7 +73,7 @@ function getStatus($status = null)
 <?php if ($this->pubstats) {
 ?>
 
-	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?> <a href="/publications/submit">Upload one </a> right now!</h2>
+	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
 	<table>
 		<thead>
 		<tr>
@@ -109,7 +109,7 @@ function getStatus($status = null)
 	<?php } ?>
 	</table>
 <?php } else { ?>
-	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?></p>
+	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> right now!</p>
 <?php } ?>
 
 </div>
