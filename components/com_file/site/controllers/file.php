@@ -8,14 +8,13 @@ use Request;
 use User;
 use Lang;
   
-class File extends SiteController  
-{  
+class File extends SiteController
+{
+	// Directory path to store files
+	public $path = 'users' . DS . 'uploads';
+
     public function uploadTask()
     {
-        // $view = $this->view;
-        // $view->fileName = "Uploaded file successfully";
-        // $this->displayTask();
-
         // Check if they're logged in
 		if (User::isGuest())
 		{
@@ -34,7 +33,7 @@ class File extends SiteController
 		}
 
         // Build the file path
-		$path = 'users' . DS . 'uploads';
+		$path = $this->path;
 
         if (!is_dir($path))
 		{
@@ -106,15 +105,16 @@ class File extends SiteController
     {  
         $view = $this->view;
         
-        // Pass the view any data it may need  
-        $view->greeting = 'Hello, World!';
+        // Read all files in the directory
+		$path = $this->path;
+		$files = array_diff(scandir($path), array('.', '..'));
         
-          
         // Set any errors  
         $view->setErrors($this->getErrors());  
           
         // Output the HTML  
-        $view->setLayout('display')
+        $view->set('files', $files)
+			->setLayout('display')
             ->display();
     }
 }
