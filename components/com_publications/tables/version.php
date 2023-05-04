@@ -651,8 +651,8 @@ class Version extends Table
         	$query = " SELECT v.* ";
 	        $query.= " FROM $this->_tbl AS v ";
         	// $query.= " WHERE v.created_by = " . $this->_db->quote($uid);
-	        // $query.= " AND v.state != 2 ";
-			$query.= "WHERE v.state != 2 ";
+			$query.= " WHERE " . $this->_db->quote($uid) . " IN v.authors";
+	        $query.= " AND v.state != 2 ";
         	$query.= " ORDER BY " . $sortby;
 
 	        $this->_db->setQuery($query);
