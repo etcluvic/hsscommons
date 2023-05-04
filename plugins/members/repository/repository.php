@@ -200,7 +200,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		$view->pubstats = $pubLog->getRecords(array(
 			"sortby" => "title",		// Default
 			// "status" => array(0,1,3,4,5,6),
-			'author' => $uid
+			// 'author' => $uid
 		));
 
 		// Output HTML
