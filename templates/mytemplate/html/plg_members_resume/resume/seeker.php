@@ -118,4 +118,4 @@ $resume = is_file(PATH_APP . $path . DS . $this->seeker->filename) ? $path . DS 
 		<?php } ?>
 	</span>
 </div>
-<embed type="application/pdf" style="margin-top: 30px;" src="<?php echo $this->resumepath ?>" width="600" height="700">
+<embed type="application/pdf" style="margin-top: 30px; margin-bottom: 30px;" src="<?php echo $this->resumepath ?>" width="600" height="700">

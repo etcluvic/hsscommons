@@ -244,7 +244,7 @@ $this->css('jobs', 'com_jobs');
 					<div>
 						<label>
 							<?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_ATTACH_FILE'); ?>
-							<input type="file" name="uploadres" id="uploadres" />
+							<input type="file" name="uploadres" id="uploadres" accept=".pdf" />
 						</label>
 					</div>
 
