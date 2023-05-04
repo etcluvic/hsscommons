@@ -74,6 +74,9 @@ function getStatus($status = null)
 ?>
 
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
+	<div>
+		<a class="icon-add btn" href="/publications/submit">Add publications</a>
+	</div>
 	<table>
 		<thead>
 		<tr>
