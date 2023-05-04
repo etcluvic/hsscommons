@@ -119,8 +119,17 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		if (($user->get('id') == $member->get('id') && $this->params->get('show_repository', 0) == 1) || $this->params->get('show_repository', 0) == 2)
 		{
 			// Check if user has any publications
-	                $pubLog = new \Components\Publications\Tables\Version($this->_database);
-                	$this->_stats = $pubLog->getPubVersions($member->get('id'));
+			// $pubLog = new \Components\Publications\Tables\Version($this->_database);
+			// $this->_stats = $pubLog->getPubVersions($member->get('id'));
+			
+			$pubLog = new \Components\Publications\Tables\Publication($this->_database);
+			$this->_stats = $pubLog->getRecords(array(
+				"sortby" => "title",		// Default
+				"dev" => 1,
+				"status" => array(0,1,3,4,5,6),
+				"author" => $uid
+			));
+
 
 			$areas['repository'] = Lang::txt('PLG_MEMBERS_REPOSITORY_MENU_TITLE');
 			$areas['icon']   = 'f02d';
