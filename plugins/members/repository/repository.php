@@ -199,6 +199,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		$pubLog = new \Components\Publications\Tables\Publication($this->_database);
 		$view->pubstats = $pubLog->getRecords(array(
 			"sortby" => "title",		// Default
+			"dev" => 1,
 			"status" => array(0,1,3,4,5,6),
 			// 'author' => $uid
 		));
