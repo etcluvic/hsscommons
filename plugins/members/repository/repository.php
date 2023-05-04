@@ -193,8 +193,15 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		$view = $this->view('default', 'stats');
 
 		// Get pub stats for each publication
-		$pubLog = new \Components\Publications\Tables\Version($this->_database);
-		$view->pubstats = $this->_stats ? $this->_stats : $pubLog->getPubVersions($uid);
+		// $pubLog = new \Components\Publications\Tables\Version($this->_database);
+		// $view->pubstats = $this->_stats ? $this->_stats : $pubLog->getPubVersions($uid);
+
+		$pubLog = new \Components\Publications\Tables\Publication($this->_database);
+		$view->pubstats = $pubLog->getRecords(array(
+			"sortby" => "title",		// Default
+			"status" => array(0,1,3,4,5,6),
+			'author' => $uid
+		));
 
 		// Output HTML
 		$view->option    = $this->_option;
