@@ -122,7 +122,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 	                $pubLog = new \Components\Publications\Tables\Version($this->_database);
                 	$this->_stats = $pubLog->getPubVersions($member->get('id'));
 
-			$areas['repository'] = Lang::txt('PLG_MEMBERS_REPOSITORY');
+			$areas['repository'] = Lang::txt('PLG_MEMBERS_REPOSITORY_MENU_TITLE');
 			$areas['icon']   = 'f02d';
 		}
 
