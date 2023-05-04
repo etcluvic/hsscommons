@@ -133,8 +133,8 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 				$isArchive = (in_array($extension, array('zip', 'tar', 'gz'))) ? true : false;
 
 				// build paths
-				// $downloadPath = $baseURI . DS . 'File:' . $relFilePath;
-				$downloadPath = 'app' . DS . 'site' . DS . 'groups' . DS . $this->group->get('gidNumber') . DS . 'uploads' . DS . $file;
+				$downloadPath = $baseURI . DS . 'File:' . $relFilePath;
+				$viewPath = 'app' . DS . 'site' . DS . 'groups' . DS . $this->group->get('gidNumber') . DS . 'uploads' . DS . $file;
 				$movePath     = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=movefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
 				$renamePath   = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=renamefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
 				$extractPath  = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=extractfile&file=' . $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
@@ -154,7 +154,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 					<div class="title"><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PREVIEW'); ?></div>
 					<div class="preview">
 						<?php if ($isImage) : ?>
-							<img src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_groups/site/assets/img/loading.gif" data-src="<?php echo $downloadPath; ?>" />
+							<img src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_groups/site/assets/img/loading.gif" data-src="<?php echo $viewPath; ?>" />
 						<?php else : ?>
 							<p><strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PREVIEW_NOT_AVAILABLE'); ?></strong></p>
 						<?php endif; ?>
