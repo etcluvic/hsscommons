@@ -11,7 +11,7 @@ use Lang;
 class File extends SiteController
 {
 	// Directory path to store files
-	public $path = 'users' . DS . 'uploads';
+	public $path = 'user_files' . DS . 'uploads';
 
     public function uploadTask()
     {
