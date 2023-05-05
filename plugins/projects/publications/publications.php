@@ -200,7 +200,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'publication':
 			case 'continue':
 			case 'review':
-				return arr;
+				return $arr;
 				// $arr['html'] = $this->editDraft();
 				break;
 
