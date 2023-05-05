@@ -812,7 +812,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				// Call this function to instantiate _tblOwner property for $this->model
 				$this->model->member();
 				$pub->_curationModel->deleteItem($this->_uid, $element);
-				
+				$removed_owners = array();
 				// Remove members who aren't authors for standalone publication's project
 				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
 				{
@@ -822,10 +822,16 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					{
 						if (!in_array($owner->userid, $authors)) {
 							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
+							$removed_owners[] = $owner;
 						}
 					}
-					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 				}
+				\Components\Publications\Helpers\Html::notify(
+					$pub,
+					$removed_owners,
+					"Message about a publication",
+					"Sorry, you have been removed from a publication!"
+				);
 				break;
 
 			case 'reorder':
