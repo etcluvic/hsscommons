@@ -808,6 +808,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				break;
 
 			case 'deleteitem':
+				$this->model->member();
 				$this->model->_tblOwner->removeOwners($this->model->get('id'), array($this->_uid));
 				$pub->_curationModel->deleteItem($this->_uid, $element);
 				break;
