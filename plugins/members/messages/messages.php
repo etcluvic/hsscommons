@@ -130,10 +130,10 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 					break;
 
 				case 'view':
-					echo "Viewing messages";
 					$body = $this->message($database, $option, $member, $mid);
 					break;
 				case 'sent':
+					echo "Sent a message";
 					$body = $this->sent($database, $option, $member);
 					break;
 				case 'settings':
