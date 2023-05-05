@@ -46,10 +46,11 @@ $this->css()
 
 <section id="contrib-section" class="section">
 	<?php 
-		if (isset($this->$errormsg)) {
+		$termserror = Request::getInt('termserror', 0);
+		if ($termserror) {
 	?>
 		<div id="status-msg" class="status-msg">
-			<p class="witherror"><?php echo $this->errormsg ?></p>
+			<p class="witherror"><?php echo Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED'); ?></p>
 		</div>
 	<?php } ?>
 	<?php echo $this->content; ?>
