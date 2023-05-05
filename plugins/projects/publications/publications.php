@@ -118,8 +118,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			'error'    => ''
 		);
 
-		return $arr;
-
 		// Get this area details
 		$this->_area = $this->onProjectAreas();
 
@@ -202,7 +200,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'publication':
 			case 'continue':
 			case 'review':
-				$arr['html'] = $this->editDraft();
+				return arr;
+				// $arr['html'] = $this->editDraft();
 				break;
 
 			case 'newversion':
