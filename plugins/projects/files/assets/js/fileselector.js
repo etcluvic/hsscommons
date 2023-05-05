@@ -75,11 +75,11 @@ HUB.ProjectFilesFileSelect = {
 				// Insert new data
 				target.next('.content-loader-slim').remove();
 				target.after(data);
-				console.log("Fetch successfully");
+
+				// Autoselect most recent uploaded files
 				for (var i=0; i < HUB.ProjectFilesFileSelect.mostRecentUploads.length; i++) {
 					$('li.type-file[data-path="' + HUB.ProjectFilesFileSelect.mostRecentUploads[i] + '"]').addClass('selectedfilter');
 				}
-				console.log(data);
 			},
 			error    : function ( jqXHR, textStatus, errorThrown ) {
 				// We're going to assume we get here because the user isn't authorized to the remote client
