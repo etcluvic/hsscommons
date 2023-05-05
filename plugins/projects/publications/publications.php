@@ -1999,7 +1999,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		if ($confirm && !$agree)
 		{
 			if ($task == 'submit') {
-				App::redirect(Route::url($pub->link('edit') . '&action=review' . 'termserror=1'));
+				App::redirect(Route::url($pub->link('edit') . '&action=review' . '&termserror=1', false));
 			} else {
 				// return $pub->project()->member()[0];
 				Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
