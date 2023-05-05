@@ -257,8 +257,9 @@ HUB.ProjectFilesFileSelect = {
 		});
 
 		// Upload
-		$(form).submit(function ( )
+		$(form).submit(function ( e )
 		{
+			e.preventDefault();
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
 			var selectedFiles = $(this).find('input#uploader')[0].files;
