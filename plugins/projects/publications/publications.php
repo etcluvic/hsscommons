@@ -820,8 +820,10 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					$owner_ids = '';
 					foreach ($owners as $k => $owner)
 					{
+						echo $owner->userid;
 						// $owner_ids .= $owner->userid . ', ';
 						if (!in_array($owner->userid, $authors)) {
+							echo "This is true";
 							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), $remove = true);
 						}
 					}
