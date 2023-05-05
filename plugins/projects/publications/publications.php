@@ -1305,6 +1305,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$version = Request::getString('version', 'default');
 		$block   = Request::getString('section', 'status');
 		$blockId = Request::getInt('step', 0);
+		$agree     = Request::getInt('agree', 0);
+		$confirm   = Request::getInt('confirm', 0);
 
 		// Provision draft
 		if (!$pid)
@@ -1348,6 +1350,14 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		{
 			Notify::message(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_PROJECT_ASSOC'), 'error', 'projects');
 			App::redirect(Route::url($this->model->link('publications')));
+			return;
+		}
+
+		// Agreement to terms is required
+		if ($confirm && !$agree)
+		{
+			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
+			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
 			return;
 		}
 
