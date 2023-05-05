@@ -741,6 +741,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$props   = Request::getString('p', '');
 		$parts   = explode('-', $props);
 
+		return "Hello, World!";
+
 		// Check permission
 		if ($this->model->exists() && !$this->model->access('content'))
 		{
