@@ -261,11 +261,12 @@ HUB.ProjectFilesFileSelect = {
 		{
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
-			var selectedFiles = $(this).find('input#uploader').files;
+			var selectedFiles = $(this).find('input#uploader')[0].files;
 			selectedFiles.forEach(file => {
 				HUB.ProjectFilesFileSelect.mostRecentUploads.push(file.name);
 			})
 			console.log(HUB.ProjectFilesFileSelect.mostRecentUploads);
+			return;
 
 			// Show loader
 			statusBox.css('opacity', '1.0');
