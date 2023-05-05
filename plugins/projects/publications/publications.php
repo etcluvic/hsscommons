@@ -2318,6 +2318,15 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// OnAfterPublish
 		$this->onAfterChangeState($pub, $originalStatus);
 
+		// Notify all authors after publishing a publication
+		$authors = $pub->authors($overwrite=true);
+		\Components\Publications\Helpers\Html::notify(
+			$pub,
+			$authors,
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_PUBLISH_SUB'),
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_PUBLISH_MSG')
+		);
+
 		// Redirect
 		$link = $pub->link('editversion');
 
