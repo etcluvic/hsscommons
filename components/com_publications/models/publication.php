@@ -760,7 +760,7 @@ class Publication extends Obj
 	 *
 	 * @return  mixed
 	 */
-	public function authors($get_uids = 0, $return_uid_array = false)
+	public function authors($get_uids = 0, $return_uid_array = false, $overwrite = false)
 	{
 		if (!isset($this->_tblAuthors))
 		{
@@ -774,6 +774,9 @@ class Publication extends Obj
 		{
 			$this->_authors   = $this->_tblAuthors->getAuthors($this->version->id, $get_uids, 1, $return_uid_array);
 			$this->_submitter = $this->_tblAuthors->getSubmitter($this->version->id, $this->version->created_by);
+		}
+		if ($overwrite) {
+			return $this->_tblAuthors->getAuthors($this->version->id, $get_uids, 1, $return_uid_array);
 		}
 
 		return $this->_authors;
