@@ -838,7 +838,6 @@ class Owner extends Table
 	 */
 	public function removeOwners($projectid = null, $users = array(), $byownerid = 0, $remove = 0, $status = 2, $all = 0)
 	{
-		echo "Calling removeOwners()";
 		if ($projectid === null)
 		{
 			return false;
@@ -852,7 +851,6 @@ class Owner extends Table
 			{
 				if ($remove == 1)
 				{
-					echo "Set remove to 1";
 					$query  = "DELETE FROM $this->_tbl WHERE projectid = " . $this->_db->quote($projectid);
 					$query .= !$byownerid ? " AND userid = " . $this->_db->quote($user) : " AND id = " . $this->_db->quote($user);
 				}
