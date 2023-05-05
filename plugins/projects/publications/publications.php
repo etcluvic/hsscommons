@@ -811,8 +811,10 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'deleteitem':
 				if ($aid) {
 					$this->model->member();
-					return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($aid));
-					$pub->_curationModel->deleteItem($aid, $element);
+					// return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($aid));
+					// $pub->_curationModel->deleteItem($aid, $element);
+					return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($this->_uid));
+					$pub->_curationModel->deleteItem($this->_uid, $element);
 				}
 				$this->model->member();
 				// return $this->model->_tblOwner->getOwnerId($this->model->get('id'));
