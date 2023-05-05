@@ -45,8 +45,12 @@ $this->css()
 ?>
 
 <section id="contrib-section" class="section">
-	<div id="status-msg" class="status-msg">
-		<p class="witherror">Need to agree terms of deposit</p>
-	</div>
+	<?php 
+		if ($this->$error) {
+	?>
+		<div id="status-msg" class="status-msg">
+			<p class="witherror"><?php echo $this->errormsg ?></p>
+		</div>
+	<?php } ?>
 	<?php echo $this->content; ?>
 </section><!-- / .section -->

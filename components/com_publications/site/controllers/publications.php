@@ -1210,21 +1210,7 @@ class Publications extends SiteController
 		$action  = $this->_task == 'start' ? 'start' : $action;
 		$ajax    = Request::getInt('ajax', 0);
 		$doiErr  = Request::getInt('doierr', 0);
-
-		$section = Request::getString('section', '');
-		$confirm   = Request::getInt('confirm', 0);
-		$agree     = Request::getInt('agree', 0);
-		$version   = Request::getString('version', 'dev');
-
-		// Load publication model
-		// $pub  = new \Components\Publications\Models\Publication($pid, $version);
-
-		// // if ($action != "save" && $section == "review" && !$agree) {
-		// if (($action != "review" && $action != "publish" && $action != 'apply')) {
-		// 	// App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree));
-		// 	$this->view->display();
-		// 	return;
-		// } 
+		$termserror = Request::getInt('termserror', 0);
 
 
 		// Redirect if publishing is turned off
@@ -1371,6 +1357,10 @@ class Publications extends SiteController
 		if ($error)
 		{
 			$this->view->setError($error);
+		}
+		if ($termserror) {
+			$this->error = true;
+			$this->errormsg = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
 		}
 		$this->view->display();
 
