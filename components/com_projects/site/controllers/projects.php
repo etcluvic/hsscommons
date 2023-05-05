@@ -733,10 +733,10 @@ class Projects extends Base
 		}
 
 		// Must be project creator
-		// if (!$this->model->access('owner'))
-		// {
-		// 	throw new Exception(Lang::txt('ALERTNOTAUTH'), 403);
-		// }
+		if (!$this->model->access('owner'))
+		{
+			throw new Exception(Lang::txt('ALERTNOTAUTH'), 403);
+		}
 
 		// Must be a provisioned project to be activated
 		if (!$this->model->isProvisioned())
