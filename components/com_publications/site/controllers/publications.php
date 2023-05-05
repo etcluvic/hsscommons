@@ -1359,7 +1359,6 @@ class Publications extends SiteController
 			$this->view->setError($error);
 		}
 		if ($termserror) {
-			$this->error = true;
 			$this->errormsg = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
 		}
 		$this->view->display();

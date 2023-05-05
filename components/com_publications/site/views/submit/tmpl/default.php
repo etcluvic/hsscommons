@@ -46,7 +46,7 @@ $this->css()
 
 <section id="contrib-section" class="section">
 	<?php 
-		if ($this->$error) {
+		if (isset($this->$errormsg)) {
 	?>
 		<div id="status-msg" class="status-msg">
 			<p class="witherror"><?php echo $this->errormsg ?></p>
