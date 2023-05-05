@@ -815,7 +815,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					$pub->_curationModel->deleteItem($aid, $element);
 				}
 				$this->model->member();
-				return $this->model->_tblOwner->getOwnerId($this->model->get('id'));
+				// return $this->model->_tblOwner->getOwnerId($this->model->get('id'));
 				return $this->model->_tblOwner->getOwnerNames($this->model->get('id'));
 				break;
 
