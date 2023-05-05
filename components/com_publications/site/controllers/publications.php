@@ -1221,9 +1221,10 @@ class Publications extends SiteController
 		// Load publication model
 		$pub  = new \Components\Publications\Models\Publication($pid, $version);
 
-		// if ($action == "save" && $section == "review" && !$agree) {
-		App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . 'review'));
-		// } 
+		// if ($action != "save" && $section == "review" && !$agree) {
+		if ($action != "review") {
+			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section));
+		} 
 
 
 		// Redirect if publishing is turned off
