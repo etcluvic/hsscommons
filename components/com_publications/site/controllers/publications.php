@@ -1203,6 +1203,7 @@ class Publications extends SiteController
 	 */
 	public function contributeTask()
 	{
+		echo $pid;
 		// Incoming
 		$pid     = Request::getInt('pid', 0);
 		$action  = Request::getString('action', '');
