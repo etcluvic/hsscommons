@@ -817,7 +817,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				if (strpos($this->model->get('id'), 'pub-') !== false) {
 					return "True";
 				} else {
-					return $this->model->get('id');
+					return $this->model->get('title');
 				}
 				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('id'), 'pub-') !== false)
 				{
