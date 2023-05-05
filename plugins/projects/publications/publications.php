@@ -813,6 +813,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				$this->model->member();
 				$pub->_curationModel->deleteItem($this->_uid, $element);
 				$removed_owners = array();
+				
 				// Remove members who aren't authors for standalone publication's project
 				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
 				{
@@ -826,11 +827,13 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 						}
 					}
 				}
+
+				// Email to notify removed authors
 				\Components\Publications\Helpers\Html::notify(
 					$pub,
 					$removed_owners,
-					"Message about a publication",
-					"Sorry, you have been removed from a publication!"
+					Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_SUB'),
+					Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_MSG')
 				);
 				break;
 
