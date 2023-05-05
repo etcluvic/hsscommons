@@ -45,9 +45,10 @@ $this->css()
 ?>
 
 <section id="contrib-section" class="section">
+	<p><?php echo $this->termserror; ?></p>
 	<?php 
-		$termserror = Request::getInt('termserror', 0);
-		if ($termserror) {
+		// $termserror = Request::getInt('termserror', 0);
+		if ($this->$termserror) {
 	?>
 		<div id="status-msg" class="status-msg">
 			<p class="witherror"><?php echo Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED'); ?></p>
