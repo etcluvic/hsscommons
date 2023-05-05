@@ -1218,6 +1218,9 @@ class Publications extends SiteController
 		$agree     = Request::getInt('agree', 0);
 		$version   = Request::getString('version', 'dev');
 
+		// Load publication model
+		$pub  = new \Components\Publications\Models\Publication($pid, $version);
+
 		// if ($action == "save" && $section == "review" && !$agree) {
 		App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . 'review'));
 		// } 
