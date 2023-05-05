@@ -55,6 +55,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 	 */
 	public function onMembers($user, $member, $option, $areas)
 	{
+		return "onMembers() is called";
 		$returnhtml = true;
 
 		$arr = array(
