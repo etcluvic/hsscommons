@@ -55,7 +55,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 	 */
 	public function onMembers($user, $member, $option, $areas)
 	{
-		return "onMembers() is called";
 		$returnhtml = true;
 
 		$arr = array(
@@ -79,6 +78,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// Are we returning HTML?
 		if ($returnhtml)
 		{
+			echo "Returning html";
 			$task = Request::getCmd('action', '');
 			if (!$task)
 			{
