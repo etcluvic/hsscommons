@@ -1219,14 +1219,14 @@ class Publications extends SiteController
 		$version   = Request::getString('version', 'dev');
 
 		// Load publication model
-		$pub  = new \Components\Publications\Models\Publication($pid, $version);
+		// $pub  = new \Components\Publications\Models\Publication($pid, $version);
 
-		// if ($action != "save" && $section == "review" && !$agree) {
-		if (($action != "review" && $action != "publish" && $action != 'apply')) {
-			// App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree));
-			$this->view->display();
-			return;
-		} 
+		// // if ($action != "save" && $section == "review" && !$agree) {
+		// if (($action != "review" && $action != "publish" && $action != 'apply')) {
+		// 	// App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree));
+		// 	$this->view->display();
+		// 	return;
+		// } 
 
 
 		// Redirect if publishing is turned off
