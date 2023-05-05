@@ -46,9 +46,8 @@ $this->css()
 
 <section id="contrib-section" class="section">
 	<?php 
+		// Notify users to check the "Terms of Deposit" box
 		$termserror = Request::getInt('termserror', 0);
-		// echo "<p></p>";
-		// if ($this->$termserror) {
 	?>
 		<p><?php echo $termserror; ?></p>
 		<div id="status-msg" class="status-msg">
