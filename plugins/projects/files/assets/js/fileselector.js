@@ -23,7 +23,7 @@ console.log("Using this file in /app/plugins");
 HUB.ProjectFilesFileSelect = {
 	jQuery  : jq,
 	fetched : [],
-	mostRecentUpload : "",
+	mostRecentUploads : [],
 
 	initialize: function () {
 		var $ = this.jQuery;
@@ -261,7 +261,11 @@ HUB.ProjectFilesFileSelect = {
 		{
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
-			console.log($(this)[0]);
+			var selectedFiles = $(this).find('input#uploader').files;
+			selectedFiles.forEach(file => {
+				HUB.ProjectFilesFileSelect.mostRecentUploads.push(file.name);
+			})
+			console.log(HUB.ProjectFilesFileSelect.mostRecentUploads);
 
 			// Show loader
 			statusBox.css('opacity', '1.0');
