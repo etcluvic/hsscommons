@@ -809,11 +809,13 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				break;
 
 			case 'deleteitem':
-				if ($aid) {
-					$this->model->member();
-					$this->model->_tblOwner->removeOwners($this->model->get('id'), array($aid));
-					$pub->_curationModel->deleteItem($aid, $element);
-				}
+				// if ($aid) {
+				// 	$this->model->member();
+				// 	$this->model->_tblOwner->removeOwners($this->model->get('id'), array($aid));
+				// 	$pub->_curationModel->deleteItem($aid, $element);
+				// }
+				$this->model->member();
+				return $this->model->_tblOwner->getOwnerNames($this->model->get('id'));
 				break;
 
 			case 'reorder':
