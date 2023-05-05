@@ -1281,7 +1281,7 @@ class Publications extends SiteController
 			if (!$project->exists())
 			{
 				App::redirect(
-					Route::url('index.php?option=' . $this->_option . '&task=submit', false)
+					Route::url('index.php?option=' . $this->_option . '&task=submit' . '&action=review', false)
 				);
 				return;
 			}

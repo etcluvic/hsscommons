@@ -167,10 +167,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			if ($action == 'publication')
 			{
 				$this->_task = 'publication';
-			} 
-			elseif ($action == 'publish') 
-			{
-				$this->_task = 'publish';
 			}
 			elseif (in_array($action, $ajax_tasks))
 			{
@@ -243,8 +239,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'skip':
 			case 'undispute':
 			case 'saveitem':
-				$arr['html'] = '<p>saveDraft is called</p>';
-				// $arr['html'] = $this->saveDraft();
+				$arr['html'] = $this->saveDraft();
 				break;
 
 			case 'orderup':
