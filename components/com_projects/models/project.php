@@ -687,7 +687,7 @@ class Project extends Model
 				case 1:
 					// Manager
 					$this->params->set('access-manager-project', true); // May edit project properties
-					$this->params->set('access-content-project', true); // May add/edit/delete all content
+					// $this->params->set('access-content-project', true); // May add/edit/delete all content
 
 					// Owner (principal user/creator)
 					if ($this->owner('id') == $member->userid)
