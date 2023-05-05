@@ -827,14 +827,16 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 						}
 					}
 				}
-
+				
 				// Email to notify removed authors
-				\Components\Publications\Helpers\Html::notify(
-					$pub,
-					$removed_owners,
-					Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_SUB'),
-					Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_MSG')
-				);
+				if (count($removed_owners) > 0) {
+					\Components\Publications\Helpers\Html::notify(
+						$pub,
+						$removed_owners,
+						Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_SUB'),
+						Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_MSG')
+					);
+				}
 				break;
 
 			case 'reorder':
