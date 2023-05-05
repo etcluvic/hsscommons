@@ -75,6 +75,11 @@ HUB.ProjectFilesFileSelect = {
 				// Insert new data
 				target.next('.content-loader-slim').remove();
 				target.after(data);
+				console.log("Fetch successfully");
+				for (var i=0; i < HUB.ProjectFilesFileSelect.mostRecentUploads.length; i++) {
+					$('li.type-file[data-path="' + HUB.ProjectFilesFileSelect.mostRecentUploads[i] + '"]').addClass('selectedfilter');
+				}
+				console.log(data);
 			},
 			error    : function ( jqXHR, textStatus, errorThrown ) {
 				// We're going to assume we get here because the user isn't authorized to the remote client
@@ -257,18 +262,14 @@ HUB.ProjectFilesFileSelect = {
 		});
 
 		// Upload
-		$(form).submit(function ( e )
+		$(form).submit(function ( )
 		{
-			e.preventDefault();
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
 			var selectedFiles = $(this).find('input#uploader')[0].files;
-			console.log(selectedFiles);
 			for (var i=0; i < selectedFiles.length; i++) {
 				HUB.ProjectFilesFileSelect.mostRecentUploads.push(selectedFiles[i].name);
 			}
-			console.log(HUB.ProjectFilesFileSelect.mostRecentUploads);
-			return;
 
 			// Show loader
 			statusBox.css('opacity', '1.0');
@@ -295,6 +296,7 @@ HUB.ProjectFilesFileSelect = {
 							if (response.error || response.error !== false)
 							{
 								error = response.error;
+								HUB.ProjectFilesFileSelect.mostRecentUploads = [];
 							}
 							else
 							{
@@ -304,6 +306,7 @@ HUB.ProjectFilesFileSelect = {
 						catch (e)
 						{
 							success = 0;
+							HUB.ProjectFilesFileSelect.mostRecentUploads = [];
 						}
 					}
 
