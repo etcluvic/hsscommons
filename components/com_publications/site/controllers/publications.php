@@ -1222,7 +1222,7 @@ class Publications extends SiteController
 		$pub  = new \Components\Publications\Models\Publication($pid, $version);
 
 		// if ($action != "save" && $section == "review" && !$agree) {
-		if (($action != "review" && $action != "publish" && $action != '')) {
+		if (($action != "review" && $action != "publish" && $action != 'apply')) {
 			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree));
 		} 
 
