@@ -226,7 +226,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'archive':
 			case 'revert':
 			case 'post':
-				return $arr;
 				$arr['html'] = $this->publishDraft();
 				break;
 
@@ -1989,6 +1988,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Error loading publication record
 		if (!$pub->exists())
 		{
+			return "<p>Publication does not exist</p>";
 			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_NOT_FOUND'), 'projects');
 			App::redirect(Route::url($pub->link('editbase')));
 			return;
