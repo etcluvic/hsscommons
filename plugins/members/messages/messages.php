@@ -78,7 +78,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// Are we returning HTML?
 		if ($returnhtml)
 		{
-			echo "Returning html";
 			$task = Request::getCmd('action', '');
 			if (!$task)
 			{
@@ -124,6 +123,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 					break;
 
 				case 'send':
+					echo "sending message";
 					$body = $this->send($database, $option, $member);
 					break;
 				case 'new':
