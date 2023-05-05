@@ -75,8 +75,10 @@ if ($this->folders)
 }
 
 ?>
-<script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/files/assets/js/fileselector.js"></script>
-<script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_projects/site/assets/js/projects.js"></script>
+<!-- <script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/files/assets/js/fileselector.js"></script>
+<script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_projects/site/assets/js/projects.js"></script> -->
+<script src="<?php echo rtrim(Request::base(true), '/'); ?>/app/plugins/projects/files/assets/js/fileselector.js"></script>
+<script src="<?php echo rtrim(Request::base(true), '/'); ?>/app/components/com_projects/site/assets/js/projects.js"></script>
 <div id="abox-content">
 	<h3>
 		<?php echo Lang::txt('PLG_PROJECTS_FILES_SELECTOR'); ?>
