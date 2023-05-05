@@ -822,7 +822,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					{
 						if (!in_array($owner->userid, $authors)) {
 							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
-							$removed_owners[] = $owner;
+							$removed_owners[] = $owner->userid;
 						}
 					}
 				}
