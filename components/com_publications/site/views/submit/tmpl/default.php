@@ -48,11 +48,11 @@ $this->css()
 	<?php 
 		// Notify users to check the "Terms of Deposit" box
 		$termserror = Request::getInt('termserror', 0);
+		if ($termserror) {
 	?>
-		<p><?php echo $termserror; ?></p>
 		<div id="status-msg" class="status-msg">
 			<p class="witherror"><?php echo Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED'); ?></p>
 		</div>
-	<?php ?>
+	<?php } ?>
 	<?php echo $this->content; ?>
 </section><!-- / .section -->

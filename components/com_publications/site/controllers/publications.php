@@ -1210,7 +1210,6 @@ class Publications extends SiteController
 		$action  = $this->_task == 'start' ? 'start' : $action;
 		$ajax    = Request::getInt('ajax', 0);
 		$doiErr  = Request::getInt('doierr', 0);
-		$termserror = Request::getInt('termserror', 0);
 
 
 		// Redirect if publishing is turned off
@@ -1233,13 +1232,6 @@ class Publications extends SiteController
 		));
 		$this->view->option = $this->_option;
 		$this->view->config = $this->config;
-
-		// Notify users to check the "Terms of Deposit" box
-		// $this->view->termserror = $termserror;
-		if ($termserror) {
-			// $this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
-			$this->view->setError(Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED'));
-		}
 
 		// Set page title
 		$this->_task_title = Lang::txt('COM_PUBLICATIONS_SUBMIT');
@@ -1364,9 +1356,6 @@ class Publications extends SiteController
 		if ($error)
 		{
 			$this->view->setError($error);
-		}
-		if ($termserror) {
-			$this->view->errormsg = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
 		}
 		$this->view->display();
 
