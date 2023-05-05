@@ -200,8 +200,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'publication':
 			case 'continue':
 			case 'review':
-				return $arr;
-				// $arr['html'] = $this->editDraft();
+				$arr['html'] = $this->editDraft();
 				break;
 
 			case 'newversion':
@@ -227,6 +226,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'archive':
 			case 'revert':
 			case 'post':
+				return $arr;
 				$arr['html'] = $this->publishDraft();
 				break;
 
