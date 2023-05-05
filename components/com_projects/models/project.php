@@ -705,7 +705,7 @@ class Project extends Model
 				case 3:
 				default:
 					// Collaborator/author
-					// $this->params->set('access-content-project', true);
+					$this->params->set('access-content-project', true);
 				break;
 			}
 		}
