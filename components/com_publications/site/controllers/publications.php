@@ -1235,9 +1235,10 @@ class Publications extends SiteController
 		$this->view->config = $this->config;
 
 		// Notify users to check the "Terms of Deposit" box
-		$this->view->termserror = $termserror;
+		// $this->view->termserror = $termserror;
 		if ($termserror) {
-			$this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
+			// $this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
+			$this->view->setError(Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED'));
 		}
 
 		// Set page title
