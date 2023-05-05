@@ -123,7 +123,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 					break;
 
 				case 'send':
-					echo "sending message";
 					$body = $this->send($database, $option, $member);
 					break;
 				case 'new':
@@ -131,6 +130,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 					break;
 
 				case 'view':
+					echo "Viewing messages";
 					$body = $this->message($database, $option, $member, $mid);
 					break;
 				case 'sent':
@@ -959,7 +959,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 	 */
 	public function send($database, $option, $member)
 	{
-		return "send() is called";
 		// Ensure the user is logged in
 		if (User::isGuest())
 		{
