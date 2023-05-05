@@ -18,6 +18,8 @@ if (!jq) {
 	var jq = $;
 }
 
+console.log("Using this file in /app/plugins");
+
 HUB.ProjectFilesFileSelect = {
 	jQuery  : jq,
 	fetched : [],
