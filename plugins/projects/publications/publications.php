@@ -2836,7 +2836,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$view->project = $this->model;
 		$view->choices = $choices;
 
-		return $view->loadTemplate();
+		// return $view->loadTemplate();
+		return "<p>Contribute is called</p>"
 	}
 
 	/**
