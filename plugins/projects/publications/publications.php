@@ -813,16 +813,20 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				$this->model->member();
 				$pub->_curationModel->deleteItem($this->_uid, $element);
 				
-				// Remove members who aren't authors for this publication's project
-				$authors = $pub->authors($overwrite=true);
-				$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
-				foreach ($owners as $k => $owner)
+				// Remove members who aren't authors for standalone publication's project
+				if (gettype($this->model->get('id')) == "string" && str_contains($this->model->get('id'), 'pub-'))
 				{
-					if (!in_array($owner->userid, $authors)) {
-						$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
+					echo "This is called";
+					$authors = $pub->authors($overwrite=true);
+					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
+					foreach ($owners as $k => $owner)
+					{
+						if (!in_array($owner->userid, $authors)) {
+							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
+						}
 					}
+					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 				}
-				$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 				break;
 
 			case 'reorder':
