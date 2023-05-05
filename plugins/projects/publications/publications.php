@@ -1996,7 +1996,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Agreement to terms is required
 		if ($confirm && !$agree)
 		{
-			return "<p>Agreement required</p>";
+			if (!$this->model->exists()) {
+				return "<p>Agreement required</p>";
+			}
 			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
 			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
 			return;
