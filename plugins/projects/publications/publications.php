@@ -814,14 +814,13 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				$pub->_curationModel->deleteItem($this->_uid, $element);
 				
 				// Remove members who aren't authors for standalone publication's project
-				if (strpos($this->model->get('id'), 'pub-') !== false) {
+				if (strpos($this->model->get('title'), 'pub-') === 0) {
 					return "True";
 				} else {
 					return $this->model->get('title');
 				}
-				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('id'), 'pub-') !== false)
+				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
 				{
-					echo "This is called";
 					$authors = $pub->authors($overwrite=true);
 					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 					foreach ($owners as $k => $owner)
