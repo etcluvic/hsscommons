@@ -1259,6 +1259,7 @@ class Publications extends SiteController
 		// Get project information
 		if ($pid)
 		{
+			return $pid;
 			$project->loadProvisioned($pid);
 
 			if (!$project->exists())
