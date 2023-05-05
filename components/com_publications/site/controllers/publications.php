@@ -1213,6 +1213,16 @@ class Publications extends SiteController
 		$ajax    = Request::getInt('ajax', 0);
 		$doiErr  = Request::getInt('doierr', 0);
 
+		$section = Request::getString('section', '');
+		$confirm   = Request::getInt('confirm', 0);
+		$agree     = Request::getInt('agree', 0);
+		$version   = Request::getString('version', 'dev');
+
+		if ($action == "save" && $section == "review" && !$agree) {
+			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action));
+		} 
+
+
 		// Redirect if publishing is turned off
 		if (!$this->_contributable)
 		{
