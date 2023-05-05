@@ -23,6 +23,7 @@ console.log("Using this file in /app/plugins");
 HUB.ProjectFilesFileSelect = {
 	jQuery  : jq,
 	fetched : [],
+	mostRecentUpload : "",
 
 	initialize: function () {
 		var $ = this.jQuery;
@@ -260,6 +261,7 @@ HUB.ProjectFilesFileSelect = {
 		{
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
+			console.log($(this)[0]);
 
 			// Show loader
 			statusBox.css('opacity', '1.0');
