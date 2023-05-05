@@ -1223,7 +1223,7 @@ class Publications extends SiteController
 
 		// if ($action != "save" && $section == "review" && !$agree) {
 		if (($action != "review" && $action != "publish" && $action != '')) {
-			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree));
+			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action . '&section=' . $section . '&agree=' . $agree . '&active=' . $active));
 		} 
 
 
