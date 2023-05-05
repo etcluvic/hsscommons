@@ -1259,7 +1259,6 @@ class Publications extends SiteController
 		// Get project information
 		if ($pid)
 		{
-			return $pid;
 			$project->loadProvisioned($pid);
 
 			if (!$project->exists())
@@ -1273,6 +1272,7 @@ class Publications extends SiteController
 			// Block unauthorized access
 			if (!$project->access('owner') && !$project->access('content'))
 			{
+				return "Hello, world!";
 				$this->_blockAccess();
 				return;
 			}
