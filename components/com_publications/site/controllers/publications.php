@@ -1270,7 +1270,7 @@ class Publications extends SiteController
 			}
 
 			// Block unauthorized access
-			if (!$project->access('owner') && !$project->access('content'))
+			if (!$project->access('owner') && !$project->access('member'))
 			{
 				return "Hello, world!";
 				$this->_blockAccess();
