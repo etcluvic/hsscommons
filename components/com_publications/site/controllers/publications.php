@@ -1218,9 +1218,9 @@ class Publications extends SiteController
 		$agree     = Request::getInt('agree', 0);
 		$version   = Request::getString('version', 'dev');
 
-		if ($action == "save" && $section == "review" && !$agree) {
-			App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . $action));
-		} 
+		// if ($action == "save" && $section == "review" && !$agree) {
+		App::redirect(Route::url($pub->link('edit') . '&version=' . $version . '&action=' . 'review'));
+		// } 
 
 
 		// Redirect if publishing is turned off
