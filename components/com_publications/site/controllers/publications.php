@@ -1318,7 +1318,12 @@ class Publications extends SiteController
 
 		$content = Event::trigger('projects.onProject', $plugin_params);
 		$this->view->content = (is_array($content) && isset($content[0]['html'])) ? $content[0]['html'] : '';
-
+		
+		// Notify users to check the "Terms of Deposit" box
+		if ($termserror) {
+			$this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
+		}
+		
 		if (isset($content[0]['msg']) && !empty($content[0]['msg']))
 		{
 			$this->setNotification($content[0]['msg']['message'], $content[0]['msg']['type']);
