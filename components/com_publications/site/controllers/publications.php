@@ -1234,6 +1234,12 @@ class Publications extends SiteController
 		$this->view->option = $this->_option;
 		$this->view->config = $this->config;
 
+		// Notify users to check the "Terms of Deposit" box
+		$this->view->termserror = $termserror;
+		if ($termserror) {
+			$this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
+		}
+
 		// Set page title
 		$this->_task_title = Lang::txt('COM_PUBLICATIONS_SUBMIT');
 		$this->_buildTitle();
@@ -1318,12 +1324,6 @@ class Publications extends SiteController
 
 		$content = Event::trigger('projects.onProject', $plugin_params);
 		$this->view->content = (is_array($content) && isset($content[0]['html'])) ? $content[0]['html'] : '';
-		
-		// Notify users to check the "Terms of Deposit" box
-		$this->view->termserror = $termserror;
-		if ($termserror) {
-			$this->view->error = Lang::txt('COM_PUBLICATIONS_REVIEW_AGREE_TERMS_REQUIRED');
-		}
 		
 		if (isset($content[0]['msg']) && !empty($content[0]['msg']))
 		{
