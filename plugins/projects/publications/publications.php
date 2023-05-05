@@ -809,35 +809,20 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				break;
 
 			case 'deleteitem':
-				if ($aid) {
-					$this->model->member();
-					// return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($aid));
-					// return $element;
-					// return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($this->_uid));
-					$pub->_curationModel->deleteItem($this->_uid, $element);
-					$authors = $pub->authors($overwrite=true);
-					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
-					$owner_ids = '';
-					foreach ($owners as $k => $owner)
-					{
-						echo $owner->userid;
-						// $owner_ids .= $owner->userid . ', ';
-						if (!in_array($owner->userid, $authors)) {
-							echo "This is true\n";
-							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
-						}
-					}
-					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
-					foreach ($owners as $k => $owner)
-					{
-						$owner_ids .= $owner->userid . ', ';
-					}
-					return $owner_ids;
-					// return implode(", ", $pub->authors($overwrite=true));
-				}
+				// Call this function to instantiate _tblOwner property for $this->model
 				$this->model->member();
-				// return $this->model->_tblOwner->getOwnerId($this->model->get('id'));
-				return $this->model->_tblOwner->getOwnerNames($this->model->get('id'));
+				$pub->_curationModel->deleteItem($this->_uid, $element);
+				
+				// Remove members who aren't authors for this publication's project
+				$authors = $pub->authors($overwrite=true);
+				$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
+				foreach ($owners as $k => $owner)
+				{
+					if (!in_array($owner->userid, $authors)) {
+						$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
+					}
+				}
+				$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 				break;
 
 			case 'reorder':
