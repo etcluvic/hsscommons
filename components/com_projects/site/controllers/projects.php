@@ -732,8 +732,8 @@ class Projects extends Base
 			throw new Exception(Lang::txt('COM_PROJECTS_PROJECT_NOT_FOUND'), 404);
 		}
 
-		// Must be project creator
-		if (!$this->model->access('owner'))
+		// Must be a project member
+		if (!$this->model->access('member'))
 		{
 			throw new Exception(Lang::txt('ALERTNOTAUTH'), 403);
 		}
