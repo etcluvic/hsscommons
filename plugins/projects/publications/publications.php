@@ -816,7 +816,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 					// return $this->model->_tblOwner->removeOwners($this->model->get('id'), array($this->_uid));
 					$pub->_curationModel->deleteItem($this->_uid, $element);
 					$authors = $pub->authors($overwrite=true);
-					$onwers = $this->model->_tblOwner->getOwners($this->model->get('id'));
+					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 					$owner_ids = '';
 					foreach ($owners as $k => $owner)
 					{
