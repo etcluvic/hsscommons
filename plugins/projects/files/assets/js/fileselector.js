@@ -262,9 +262,10 @@ HUB.ProjectFilesFileSelect = {
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
 			var selectedFiles = $(this).find('input#uploader')[0].files;
-			selectedFiles.forEach(file => {
-				HUB.ProjectFilesFileSelect.mostRecentUploads.push(file.name);
-			})
+			console.log(selectedFiles);
+			for (var i=0; i < selectedFiles.length; i++) {
+				HUB.ProjectFilesFileSelect.mostRecentUploads.push(selectedFiles[i].name);
+			}
 			console.log(HUB.ProjectFilesFileSelect.mostRecentUploads);
 			return;
 
