@@ -118,6 +118,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			'error'    => ''
 		);
 
+		return $arr;
+
 		// Get this area details
 		$this->_area = $this->onProjectAreas();
 
@@ -2836,8 +2838,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$view->project = $this->model;
 		$view->choices = $choices;
 
-		// return $view->loadTemplate();
-		return "<p>Contribute is called</p>";
+		return $view->loadTemplate();
 	}
 
 	/**
