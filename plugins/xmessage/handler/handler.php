@@ -276,7 +276,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 				}
 
 				\Hubzero\Log::info("methods var:");
-				\Hubzero\Log::info($methods);
+				\Hubzero\Log::info($methods->count());
 
 				// Do we have any methods?
 				if ($methods->count())
@@ -285,6 +285,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 					foreach ($methods as $method)
 					{
 						$action = strtolower($method->method);
+						\Hubzero\Log::info($action);
 						if ($action == 'internal')
 						{
 							if (!$recipient->save())
