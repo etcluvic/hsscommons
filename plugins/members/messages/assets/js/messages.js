@@ -91,14 +91,13 @@ jQuery(document).ready(function(jq){
 						return false;
 					}
 
-					// if (!message) {
-					// 	alert("You must enter a message.");
-					// 	return false;
-					// }
+					if (!message) {
+						alert("You must enter a message.");
+						return false;
+					}
 
 					$.post($(this).attr('action'),$(this).serialize(), function(data) {
 						$.fancybox.close();
-						console.log(data);
 					});
 				});
 			}

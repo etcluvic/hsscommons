@@ -1014,16 +1014,15 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$message = Request::getString('message', '');
 		$no_html = Request::getInt('no_html', 0);
 
-
-		// if (!$subject || !$message)
-		// {
-		// 	if (!$no_html)
-		// 	{
-		// 		Notify::error(Lang::txt('You must select a message recipient and enter a message.'));
-		// 		return App::redirect(Route::url($member->link() . '&active=messages&action=new', false));
-		// 	}
-		// 	return App::abort(500, Lang::txt('You must select a message recipient and enter a message.'));
-		// }
+		if (!$subject || !$message)
+		{
+			if (!$no_html)
+			{
+				Notify::error(Lang::txt('You must select a message recipient and enter a message.'));
+				return App::redirect(Route::url($member->link() . '&active=messages&action=new', false));
+			}
+			return App::abort(500, Lang::txt('You must select a message recipient and enter a message.'));
+		}
 
 		// Build the "from" data for the e-mail
 		$from = array();
@@ -1031,16 +1030,10 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['email'] = $member->get('email');
 
 		// Send the message
-		// $event_result = Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option));
 		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
-		// if (!$event_result)
 		{
-			return "This is called";
 			$this->setError(Lang::txt('PLG_MEMBERS_MESSAGES_ERROR_MSG_USER_FAILED'));
 		}
-
-		// return $event_result;
-		return "Sent message";
 
 		// Determine if we're returning HTML or not
 		// (if no - this is an AJAX call)
