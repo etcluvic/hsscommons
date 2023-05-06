@@ -772,7 +772,11 @@ $legacy = array(
 				<li class="<?php echo implode(' ', $cls); ?> section" id="input-section-<?php echo $this->escape($field->get('name')); ?>">
 					<div class="section-content">
 						<div class="key"><?php echo $field->get('label'); ?></div>
-						<div class="value"><?php echo (!empty($val)) ? (is_array($val) ? implode(', ', $val) : $val) : Lang::txt('PLG_MEMBERS_PROFILE_NOT_SET'); ?></div>
+						<?php if ($field->get('name') == 'orcid') {?>
+							<div class="value"><a href="<?php echo "https://orcid.org/" . $val; ?>"><?php echo $val; ?></a></div>
+						<?php } else { ?>
+							<div class="value"><?php echo (!empty($val)) ? (is_array($val) ? implode(', ', $val) : $val) : Lang::txt('PLG_MEMBERS_PROFILE_NOT_SET'); ?></div>
+						<?php } ?>
 						<br class="clear" />
 						<?php
 						if ($isUser)
