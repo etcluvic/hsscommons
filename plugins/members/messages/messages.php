@@ -1009,6 +1009,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 			}
 		}
 
+		\Hubzero\Log::info($email_users);
+
 		// Incoming message and subject
 		$subject = Request::getString('subject', Lang::txt('PLG_MEMBERS_MESSAGES_SUBJECT_MESSAGE'));
 		$message = Request::getString('message', '');

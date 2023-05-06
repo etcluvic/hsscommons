@@ -187,7 +187,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 		$xmessage->set('group_id', $group_id);
 		$xmessage->set('anonymous', (int)$anonymous);
 
-		\Hubzero\Log::info((string)$xmessage);
+		// \Hubzero\Log::info((string)$xmessage);
 
 		if (!$xmessage->save())
 		{
