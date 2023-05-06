@@ -205,6 +205,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 		if (count($to) > 0)
 		{
 			$mconfig = Component::params('com_members');
+			\Hubzero\Log::info($mconfig->get('user_messaging'));
 
 			// Get all the sender's groups
 			if ($mconfig->get('user_messaging', 1) == 1 && !$bypassGroupsCheck)
@@ -268,6 +269,8 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 						}
 					}
 				}
+
+				\Hubzero\Log::info("methods var" . (string)$methods);
 
 				// Do we have any methods?
 				if ($methods->count())
