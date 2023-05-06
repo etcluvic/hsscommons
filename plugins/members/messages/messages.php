@@ -1029,6 +1029,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['name']  = $member->get('name');
 		$from['email'] = $member->get('email');
 
+		\Hubzero\Utility\Debug::dump("Hello from message plugin");
+
 		// Send the message
 		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
 		{
