@@ -1,0 +1,42 @@
+h1,
+p {
+    margin: 0;
+}
+
+.super-group-content-wrap .product-form input,
+.super-group-content-wrap .product-form textarea {
+    display: block;
+    margin-top: 10px;
+}
+
+.create-btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.display-case {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.product-container {
+   padding: 20px;
+   width: 200px;
+   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+   border-radius: 10px;
+   margin-top: 10px;
+   margin-left: 10px;
+   border: rgb(226 232 240) 1px solid;
+}
+
+.product-title {
+    font-size: 30px;
+}
+
+.product-price {
+    font-size: 50px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
