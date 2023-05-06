@@ -266,7 +266,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 					if (!$bypassGroupsCheck)
 					{
 						$common = array_intersect($usersgroups, $profilesgroups);
-						\Hubzero\Log::info("commons var" . (string)$commons);
+						\Hubzero\Log::info("commons var" . $commons);
 						if (count($common) <= 0)
 						{
 							continue;
