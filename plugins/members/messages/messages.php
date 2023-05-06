@@ -1029,15 +1029,11 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['name']  = $member->get('name');
 		$from['email'] = $member->get('email');
 
-		return Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option));
-
 		// Send the message
 		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
 		{
 			$this->setError(Lang::txt('PLG_MEMBERS_MESSAGES_ERROR_MSG_USER_FAILED'));
 		}
-
-		return "Sent message successfully";
 
 		// Determine if we're returning HTML or not
 		// (if no - this is an AJAX call)
