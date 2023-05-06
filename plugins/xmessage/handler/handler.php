@@ -88,6 +88,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 	 */
 	public function onSendMessage($type, $subject, $message, $from=array(), $to=array(), $component='', $element=null, $description='', $group_id=0, $bypassGroupsCheck=false, $anonymous=0)
 	{
+		\Hubzero\Log::info("Hello from xmessage plugin");
 		// Do we have a message?
 		if (!$message)
 		{
