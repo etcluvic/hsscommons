@@ -773,7 +773,7 @@ $legacy = array(
 					<div class="section-content">
 						<div class="key"><?php echo $field->get('label'); ?></div>
 						<?php if ($field->get('name') == 'orcid') {?>
-							<div class="value"><a href="<?php echo "https://orcid.org/" . $val; ?>"><?php echo $val; ?></a></div>
+							<div class="value"><a href="<?php echo "https://orcid.org/" . $val; ?>" target="_blank"><?php echo $val; ?></a></div>
 						<?php } else { ?>
 							<div class="value"><?php echo (!empty($val)) ? (is_array($val) ? implode(', ', $val) : $val) : Lang::txt('PLG_MEMBERS_PROFILE_NOT_SET'); ?></div>
 						<?php } ?>
