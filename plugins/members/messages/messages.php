@@ -1029,6 +1029,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['name']  = $member->get('name');
 		$from['email'] = $member->get('email');
 
+		return $from['name'] . ': ' . $from['email'];
+
 		// Send the message
 		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
 		{
@@ -1039,7 +1041,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// (if no - this is an AJAX call)
 		if (!$no_html)
 		{
-			return "Enter !no_html block";
 			Notify::success(Lang::txt('You have successfully sent a message.'));
 			return App::redirect(Route::url($member->link() . '&active=messages&task=inbox', false));
 		}
