@@ -970,6 +970,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// Incoming array of users to message
 		$mbrs = array_map("trim", explode(',', Request::getString('mbrs', '', 'post')));
 
+		\Hubzero\Log::info($mbrs);
+
 		//array to hold members
 		$email_users = array();
 
