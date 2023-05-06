@@ -117,6 +117,8 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 			{
 				return false;
 			}
+			\Hubzero\Log::info($number_sent);
+			\Hubzero\Log::info($daily_limit);
 
 			// Next, we see if they've passed the time limit for sending consecutive messages
 			$filters['limit'] = 1;
