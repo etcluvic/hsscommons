@@ -96,9 +96,9 @@ jQuery(document).ready(function(jq){
 						return false;
 					}
 
-					$.post($(this).attr('action'),$(this).serialize(), function(data) {
-						$.fancybox.close();
-					});
+					// $.post($(this).attr('action'),$(this).serialize(), function(data) {
+					// 	$.fancybox.close();
+					// });
 				});
 			}
 		}
