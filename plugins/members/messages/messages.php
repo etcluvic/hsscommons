@@ -1029,10 +1029,11 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['name']  = $member->get('name');
 		$from['email'] = $member->get('email');
 
+		return Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option));
+
 		// Send the message
 		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
 		{
-			return "Failed to send the message";
 			$this->setError(Lang::txt('PLG_MEMBERS_MESSAGES_ERROR_MSG_USER_FAILED'));
 		}
 
