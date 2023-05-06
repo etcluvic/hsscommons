@@ -275,7 +275,8 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 					}
 				}
 
-				\Hubzero\Log::info("methods var" . (string)$methods);
+				\Hubzero\Log::info("methods var:");
+				\Hubzero\Log::info($methods);
 
 				// Do we have any methods?
 				if ($methods->count())
