@@ -88,7 +88,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 	 */
 	public function onSendMessage($type, $subject, $message, $from=array(), $to=array(), $component='', $element=null, $description='', $group_id=0, $bypassGroupsCheck=false, $anonymous=0)
 	{
-		\Hubzero\Log::info("Hello from xmessage plugin");
 		// Do we have a message?
 		if (!$message)
 		{
@@ -102,6 +101,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 
 		if ($type == 'member_message')
 		{
+			\Hubzero\Log::info("Got into member_message");
 			$time_limit  = intval($this->params->get('time_limit', 30));
 			$daily_limit = intval($this->params->get('daily_limit', 100));
 
