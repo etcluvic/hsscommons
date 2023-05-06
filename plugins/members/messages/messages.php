@@ -1038,7 +1038,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 			$this->setError(Lang::txt('PLG_MEMBERS_MESSAGES_ERROR_MSG_USER_FAILED'));
 		}
 
-		return $event_result;
+		// return $event_result;
+		return "Sent message";
 
 		// Determine if we're returning HTML or not
 		// (if no - this is an AJAX call)
