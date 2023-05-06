@@ -1014,6 +1014,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$message = Request::getString('message', '');
 		$no_html = Request::getInt('no_html', 0);
 
+		return "Got here";
+
 		if (!$subject || !$message)
 		{
 			if (!$no_html)
