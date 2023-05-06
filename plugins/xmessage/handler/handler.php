@@ -260,6 +260,8 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 							}
 						}
 					}
+					\Hubzero\Log::info($profilesgroups);
+					\Hubzero\Log::info($bypassGroupsCheck);
 					// Find the common groups
 					if (!$bypassGroupsCheck)
 					{
