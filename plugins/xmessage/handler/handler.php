@@ -88,6 +88,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 	 */
 	public function onSendMessage($type, $subject, $message, $from=array(), $to=array(), $component='', $element=null, $description='', $group_id=0, $bypassGroupsCheck=false, $anonymous=0)
 	{
+		return false;
 		// Do we have a message?
 		if (!$message)
 		{
@@ -104,7 +105,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 			$time_limit  = intval($this->params->get('time_limit', 30));
 			$daily_limit = intval($this->params->get('daily_limit', 100));
 
-			return "Calling onSendMessage from xmessage plugin";
+			// return "Calling onSendMessage from xmessage plugin";
 
 			// First, let's see if they've surpassed their daily limit for sending messages
 			$filters = array(
