@@ -958,7 +958,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 	 */
 	public function send($database, $option, $member)
 	{
-		return "send() is called";
 		// Ensure the user is logged in
 		if (User::isGuest())
 		{
@@ -1040,6 +1039,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// (if no - this is an AJAX call)
 		if (!$no_html)
 		{
+			return "Enter !no_html block";
 			Notify::success(Lang::txt('You have successfully sent a message.'));
 			return App::redirect(Route::url($member->link() . '&active=messages&task=inbox', false));
 		}
