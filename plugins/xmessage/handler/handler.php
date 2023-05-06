@@ -187,10 +187,14 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 		$xmessage->set('group_id', $group_id);
 		$xmessage->set('anonymous', (int)$anonymous);
 
+		\Hubzero\Log::info($xmessage);
+
 		if (!$xmessage->save())
 		{
 			return $xmessage->getError();
 		}
+
+		\Hubzero\Log::info("Still in this function");
 
 		if (is_array($message))
 		{
