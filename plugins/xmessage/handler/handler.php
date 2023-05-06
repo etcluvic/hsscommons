@@ -104,8 +104,7 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 			$time_limit  = intval($this->params->get('time_limit', 30));
 			$daily_limit = intval($this->params->get('daily_limit', 100));
 
-			print_r("Calling onSendMessage from xmessage plugin");
-			print_r($time_limit);
+			return "Calling onSendMessage from xmessage plugin";
 
 			// First, let's see if they've surpassed their daily limit for sending messages
 			$filters = array(
