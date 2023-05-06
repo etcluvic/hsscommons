@@ -97,7 +97,6 @@ jQuery(document).ready(function(jq){
 					}
 
 					$.post($(this).attr('action'),$(this).serialize(), function(data) {
-						console.log(data);
 						$.fancybox.close();
 					});
 				});
