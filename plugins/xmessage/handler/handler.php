@@ -101,7 +101,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 
 		if ($type == 'member_message')
 		{
-			\Hubzero\Log::info("Got into member_message");
 			$time_limit  = intval($this->params->get('time_limit', 30));
 			$daily_limit = intval($this->params->get('daily_limit', 100));
 
@@ -117,8 +116,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 			{
 				return false;
 			}
-			\Hubzero\Log::info($number_sent);
-			\Hubzero\Log::info($daily_limit);
 
 			// Next, we see if they've passed the time limit for sending consecutive messages
 			$filters['limit'] = 1;
@@ -187,14 +184,10 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 		$xmessage->set('group_id', $group_id);
 		$xmessage->set('anonymous', (int)$anonymous);
 
-		// \Hubzero\Log::info((string)$xmessage);
-
 		if (!$xmessage->save())
 		{
 			return $xmessage->getError();
 		}
-
-		\Hubzero\Log::info("Still in this function");
 
 		if (is_array($message))
 		{
@@ -205,7 +198,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 		if (count($to) > 0)
 		{
 			$mconfig = Component::params('com_members');
-			\Hubzero\Log::info($mconfig->get('user_messaging'));
 
 			// Get all the sender's groups
 			if ($mconfig->get('user_messaging', 1) == 1 && !$bypassGroupsCheck)
@@ -240,7 +232,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 				$methods = $notify->getRecords($uid, $type);
 
 				$user = User::getInstance($uid);
-				\Hubzero\Log::info($user->get('name'));
 				if (!is_object($user) || !$user->get('username'))
 				{
 					continue;
@@ -260,23 +251,16 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 							}
 						}
 					}
-					\Hubzero\Log::info($profilesgroups);
-					\Hubzero\Log::info($bypassGroupsCheck);
 					// Find the common groups
 					if (!$bypassGroupsCheck)
 					{
 						$common = array_intersect($usersgroups, $profilesgroups);
-						\Hubzero\Log::info("commons var:");
-						\Hubzero\Log::info($common);
 						if (count($common) <= 0)
 						{
 							continue;
 						}
 					}
 				}
-
-				\Hubzero\Log::info("methods var:");
-				\Hubzero\Log::info($methods->count());
 
 				// Do we have any methods?
 				if ($methods->count())
@@ -285,7 +269,6 @@ class plgXMessageHandler extends \Hubzero\Plugin\Plugin
 					foreach ($methods as $method)
 					{
 						$action = strtolower($method->method);
-						\Hubzero\Log::info($action);
 						if ($action == 'internal')
 						{
 							if (!$recipient->save())

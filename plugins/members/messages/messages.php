@@ -970,8 +970,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		// Incoming array of users to message
 		$mbrs = array_map("trim", explode(',', Request::getString('mbrs', '', 'post')));
 
-		\Hubzero\Log::info($mbrs);
-
 		//array to hold members
 		$email_users = array();
 
@@ -1011,8 +1009,6 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 			}
 		}
 
-		\Hubzero\Log::info($email_users);
-
 		// Incoming message and subject
 		$subject = Request::getString('subject', Lang::txt('PLG_MEMBERS_MESSAGES_SUBJECT_MESSAGE'));
 		$message = Request::getString('message', '');
@@ -1033,10 +1029,8 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 		$from['name']  = $member->get('name');
 		$from['email'] = $member->get('email');
 
-		\Hubzero\Log::info("Hello from message plugin");
-
 		// Send the message
-		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option, null, '', 0, true, 0)))
+		if (!Event::trigger('xmessage.onSendMessage', array('member_message', $subject, $message, $from, $email_users, $option)))
 		{
 			$this->setError(Lang::txt('PLG_MEMBERS_MESSAGES_ERROR_MSG_USER_FAILED'));
 		}
