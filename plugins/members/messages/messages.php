@@ -958,6 +958,7 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 	 */
 	public function send($database, $option, $member)
 	{
+		return "send() is called";
 		// Ensure the user is logged in
 		if (User::isGuest())
 		{
