@@ -73,11 +73,13 @@ class plgGroupsCommerce extends \Hubzero\Plugin\Plugin
         // return $view->loadTemplate();
         $active = Request::getCmd('active', '');
         $plugintask = Request::getString('plugintask', '');
-        echo $plugintask;
         
         switch($plugintask) {
-            case 'addproduct':
-                $arr['html'] = $this->addProduct();
+            case 'manageproduct':
+                $arr['html'] = $this->manageProduct();
+                break;
+            case 'deleteproduct':
+                $arr['html'] = $this->deleteProduct();
                 break;
             default:
                 $arr['html'] = $this->displayProducts();
@@ -112,8 +114,12 @@ class plgGroupsCommerce extends \Hubzero\Plugin\Plugin
     /**
      * Add a new product
      */
-    public function addProduct()
+    public function manageProduct()
     {
+        /* Params to handle GET request */
+        $productId = Request::getInt('id', '', 'get');
+
+        /* Params to handle POST request */
         $method = Request::getString('method', 'get', 'post');
         $id = Request::getInt('id', '', 'post');
         $title = Request::getString('title', '', 'post');
@@ -121,7 +127,6 @@ class plgGroupsCommerce extends \Hubzero\Plugin\Plugin
         $description = Request::getString('description', '', 'post');
 
         if ($method === 'post') {
-            echo "Saving a new product";
             $newProduct = $this->model->oneOrNew($id);
             $newProduct->set("title", $title);
             $newProduct->set("price", $price);
@@ -143,6 +148,17 @@ class plgGroupsCommerce extends \Hubzero\Plugin\Plugin
         ));
 
         $view->set('products', $this->model->getAll());
+        if ($productId) {
+            $product = $this->model->one($productId);
+            if ($product) {
+                $view->set('product', $product);
+            } else {
+                // $view->setError("Product not found id(" . $productId . ")");
+                return "<h1>Product not found (id: " . $productId . ")</h1>";
+            }
+        } else {
+            $view->set('product', null);
+        }
 
         // Set any errors  
         if ($this->getError())  
@@ -151,5 +167,23 @@ class plgGroupsCommerce extends \Hubzero\Plugin\Plugin
         }
 
         return $view->loadTemplate();
+    }
+
+    /**
+     * Delete a product
+     */
+    public function deleteProduct() {
+        $id = Request::getInt('id', '');
+        if (!$id) {
+            return "<h1>Need to provide an id to delete an item</h1>";
+        }
+
+        $product = $this->model->one($id);
+        if ($product) {
+            $product->destroy();
+            App::redirect(DS . "groups" . DS . $this->group->get('cn') . DS . 'commerce');
+        } else {
+            return "<h1>Product not found for deletion (id: " . $id . ")</h1>";
+        }
     }
 }

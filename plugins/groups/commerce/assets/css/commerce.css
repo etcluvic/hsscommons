@@ -1,4 +1,6 @@
 h1,
+h2,
+h3
 p {
     margin: 0;
 }
@@ -9,6 +11,81 @@ p {
     margin-top: 10px;
 }
 
+.page-container {
+    text-align: center;
+}
+
+/* Resuable components */
+.manage-btn {
+    text-decoration: none;
+    font-weight: 300;
+    color: rgb(148 163 184) !important;
+    border: none;
+    transition-duration: 0.25s;
+    margin-left: 3px;
+}
+
+.manage-btn:hover {
+    border: none;
+    color: rgb(203 213 225);
+}
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 40;
+    background-color: #000000;
+    opacity: 50%;
+}
+
+.modal {
+    background-color: #ffffff;
+    border-radius: 10px;
+    position: fixed;
+    width: fit-content;
+    min-width: 300px;
+    min-height: 150px;
+    height: fit-content;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 50;
+}
+
+.modal-title {
+    padding: 10px;
+    border-bottom: 1px solid rgb(226 232 240);
+}
+
+.modal-title * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.modal-body {
+    padding: 10px;
+}
+
+.modal-body * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.modal-btn {
+    cursor: pointer;
+}
+
+/* Resuable utilities */
+.d-none {
+    display: none;
+}
+
+/* Display page */
 .create-btn {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -39,4 +116,45 @@ p {
     font-weight: 700;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.product-container .menu {
+    width: fit-content;
+    margin-left: auto;
+    margin-bottom: 10px;
+}
+
+/* Manage page */
+form.product-form {
+    width: fit-content;
+    min-width: 300px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.product-form input,
+.product-form textarea {
+    width: 100%;
+}
+
+.product-form input[type="number"] {
+    padding: 5px 0 5px 5px;
+    background-color: rgb(243 244 246);
+    border: rgb(226 232 240) 1px solid;
+    max-width: 100%;
+}
+
+.btn-case {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn-case .btn {
+    width: 47.5%;
+}
+
+a.btn,
+div.btn {
+    margin-top: 10px;
 }
