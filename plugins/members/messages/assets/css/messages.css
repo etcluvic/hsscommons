@@ -294,3 +294,9 @@
 		border-bottom: 1px solid #efefef;
 		width: 590px
 	}
+	.hub-message .message-content {
+		max-width: 400px !important;
+		overflow-wrap: break-word;
+		padding-right: 100px;
+		padding-bottom: 30px;
+	}

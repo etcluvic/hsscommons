@@ -62,7 +62,7 @@ $this->css()
 			</tr>
 			<tr>
 				<th><?php echo Lang::txt('PLG_MEMBERS_MESSAGES_MESSAGE'); ?></th>
-				<td><?php echo $this->xmessage->message; ?></td>
+				<td class='message-content'><?php echo $this->xmessage->message; ?></td>
 			</tr>
 		</tbody>
 	</table>
