@@ -216,11 +216,12 @@ class plgMembersResume extends \Hubzero\Plugin\Plugin
 		}
 
 		// Jobs component needs to be enabled
-		if (!$this->config->get('component_enabled'))
-		{
-			$arr['html'] = '<p class="warning">' . Lang::txt('PLG_MEMBERS_RESUME_WARNING_DISABLED') . '</p>';
-			return $arr;
-		}
+		// NOTE: Temporarily enable Resume plugin without enabling com_jobs
+		// if (!$this->config->get('component_enabled'))
+		// {
+		// 	$arr['html'] = '<p class="warning">' . Lang::txt('PLG_MEMBERS_RESUME_WARNING_DISABLED') . '</p>';
+		// 	return $arr;
+		// }
 
 		// Get authorization
 		$emp = $this->isEmployer($user, $member);
