@@ -12,8 +12,8 @@ $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
 
-$abstract = $this->publication->abstract;
-$description = $this->publication->describe('parsed');
+$abstract = strip_tags($this->publication->abstract);
+$description = $this->publication->describe('clean');
 
 $this->publication->authors();
 $this->publication->attachments();
@@ -240,7 +240,7 @@ $schema = $metaElements->getSchema();
 // Show version notes
 if (($this->publication->params->get('show_notes')) && $this->publication->get('release_notes'))
 {
-	$notes = $this->publication->notes('parsed');
+	$notes = $this->publication->notes('clean');
 	?>
 	<h4><?php echo Lang::txt('COM_PUBLICATIONS_NOTES'); ?></h4>
 	<div class="pub-content">
