@@ -12,7 +12,7 @@ $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
 
-$abstract = strip_tags($this->publication->abstract);
+$abstract = $this->publication->abstract;
 $description = $this->publication->describe('clean');
 
 $this->publication->authors();
