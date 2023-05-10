@@ -151,12 +151,12 @@ $this->css()
 		</tbody>
 	</table>
 
-	<script>
+	<!-- <script>
 		const tableElements = document.querySelectorAll('table.tbl-header');
 		for (let i = 0; i < tableElements.length; i++) {
 			tableElements[i].innerText = tableElements[i].innerText.replace(/(&nbsp;)/, '');
 		}
-	</script>
+	</script> -->
 
 	<?php echo Html::input('token'); ?>
 </form>
