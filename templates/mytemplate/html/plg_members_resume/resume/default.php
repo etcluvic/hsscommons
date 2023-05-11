@@ -176,6 +176,7 @@ $this->css('jobs', 'com_jobs');
 				     ->set('option', $this->option)
 				     ->set('params', $this->params)
 				     ->set('list', 0)
+					 ->set('resumepath', 'app' . $this->path . DS . $this->resume->filename)
 				     ->display();
 			}
 		}
