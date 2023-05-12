@@ -19,7 +19,7 @@ $this->css();
             echo "<p>$file</p>";
         }?>
     </div>
-    <form action="<?php echo $base; ?>/index.php?option=<?php echo $this->option; ?>&amp;task=upload" method="post" enctype="multipart/form-data">
+    <form action="<?php echo $base; ?>/index.php?option=<?php echo $this->option; ?>&amp;task=upload&amp;tmpl=component" method="post" enctype="multipart/form-data">
         <p><input type="file" name="upload"></p>
         <p><input type="submit" class="btn" value="<?php echo Lang::txt('COM_FILE_UPLOAD'); ?>"></p>
         <?php echo Html::input('token'); ?>

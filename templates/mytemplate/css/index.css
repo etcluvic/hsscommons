@@ -2251,12 +2251,16 @@ header.content-header h2,
   width: 100%;
 }
 @media only screen and (min-width:50em) and (max-width:60em) {
+  header.content-header h2,
+  .com_content .content-header h2,
   #content-header h2 {
     width: 50%;
   }
 }
 
 @media only screen and (min-width:60em) {
+  header.content-header h2,
+  .com_content .content-header h2,
   #content-header h2 {
     width: 60%;
   }
