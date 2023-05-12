@@ -9,6 +9,7 @@
 defined('_HZEXEC_') or die();
 ?>
 
+<div style="color: #ffffff; padding: 0.8em 0.5em 0.8em 0; text-align: center; font-weight: 500;">Group id: <?php echo $this->group->get("gidNumber") ?></div>
 <ul <?php echo $this->classOrId; ?>>
 	<?php foreach ($this->sections as $k => $section) : ?>
 		<?php
