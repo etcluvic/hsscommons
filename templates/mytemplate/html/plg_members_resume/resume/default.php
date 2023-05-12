@@ -176,6 +176,7 @@ $this->css('jobs', 'com_jobs');
 				     ->set('option', $this->option)
 				     ->set('params', $this->params)
 				     ->set('list', 0)
+					 ->set('resumepath', 'app' . $this->path . DS . $this->resume->filename)
 				     ->display();
 			}
 		}
@@ -243,7 +244,7 @@ $this->css('jobs', 'com_jobs');
 					<div>
 						<label>
 							<?php echo Lang::txt('PLG_MEMBERS_RESUME_ACTION_ATTACH_FILE'); ?>
-							<input type="file" name="uploadres" id="uploadres" />
+							<input type="file" name="uploadres" id="uploadres" accept=".pdf" />
 						</label>
 					</div>
 
