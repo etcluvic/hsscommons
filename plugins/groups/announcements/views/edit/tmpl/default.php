@@ -50,7 +50,7 @@ $this->js()
 				</label>
 			</div>
 
-			<iframe src="/file?tmpl=component" style="width: 100%; height: 200px; border: 1px solid rgb(203 213 225); margin-top: 20px;"></iframe>
+			<!-- <iframe src="/file?tmpl=component" style="width: 100%; height: 200px; border: 1px solid rgb(203 213 225); margin-top: 20px;"></iframe> -->
 
 			<fieldset>
 				<legend><?php echo Lang::txt('PLG_GROUPS_ANNOUNCEMENTS_PUBLISH_WINDOW'); ?> <span class="optional"><?php echo Lang::txt('PLG_GROUPS_ANNOUNCEMENTS_OPTIONAL'); ?></span></legend>
