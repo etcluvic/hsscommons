@@ -14,6 +14,7 @@ $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
 $description = $this->publication->describe('parsed');
+Hubzero/Utility/Debug::dlog($description);
 
 $this->publication->authors();
 $this->publication->attachments();
