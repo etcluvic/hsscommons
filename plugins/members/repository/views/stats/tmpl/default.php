@@ -74,6 +74,9 @@ function getStatus($status = null)
 ?>
 
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
+	<div style="margin-bottom: 10px;">
+		<a class="icon-add btn" href="/publications/submit"><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ADD_BTN_TEXT'); ?></a>
+	</div>
 	<table>
 		<thead>
 		<tr>
@@ -109,7 +112,7 @@ function getStatus($status = null)
 	<?php } ?>
 	</table>
 <?php } else { ?>
-	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?></p>
+	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> right now!</p>
 <?php } ?>
 
 </div>

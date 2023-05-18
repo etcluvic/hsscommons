@@ -841,6 +841,7 @@
 	table#infotbl th p,
 	table#infotbl td p {
 		margin: 0;
+		margin-bottom: 15px;
 		padding: 0;
 	}
 
