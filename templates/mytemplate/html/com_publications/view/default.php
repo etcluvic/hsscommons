@@ -36,6 +36,7 @@ $this->css()
 $this->publication->authors();
 $this->publication->attachments();
 $this->publication->license();
+$this->description = preg_replace('/(<[^>]+) style\s?=\s?".*?"/i', '$1', $this->publication->description);
 
 // New launcher layout?
 if ($this->config->get('launcher_layout', 0))
@@ -70,7 +71,7 @@ else
 							</div>
 						<?php }	?>
 
-						<p class="ataglance"><?php echo strip_tags($this->publication->description ? \Hubzero\Utility\Str::truncate(stripslashes($this->publication->description), 250) : ''); ?></p>
+						<p class="ataglance"><?php echo $this->description ? \Hubzero\Utility\Str::truncate(stripslashes($this->publication->description), 250) : ''; ?></p>
 
 						<?php echo \Components\Publications\Helpers\Html::showSubInfo($this->publication); // Show published date and category ?>
 					</div><!-- / .overviewcontainer -->
