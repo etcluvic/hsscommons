@@ -14,7 +14,7 @@ $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
 $accessgroups = User::$accessgroups();
-for ($accessgroups as $accessgroup)
+foreach ($accessgroups as $accessgroup)
 {
 	Hubzero\Utility\Debug::debug_zval_dump($accessgroup);
 }
