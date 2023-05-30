@@ -13,6 +13,12 @@ $webpath = $this->config->get('webpath');
 $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
+$accessgroups = User::$accessgroups();
+for ($accessgroups as $accessgroup)
+{
+	Hubzero\Utility\Debug::debug_zval_dump($accessgroup);
+}
+
 $unsanitized_description = $this->publication->describe('parsed');
 $description = preg_replace('/(<[^>]+) style\s?=\s?".*?"/i', '$1', $unsanitized_description);
 
