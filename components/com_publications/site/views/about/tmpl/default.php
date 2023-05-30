@@ -13,7 +13,7 @@ $webpath = $this->config->get('webpath');
 $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
-$accessgroups = User::$accessgroups();
+$accessgroups = User::getInstance()->$accessgroups();
 foreach ($accessgroups as $accessgroup)
 {
 	Hubzero\Utility\Debug::debug_zval_dump($accessgroup);
