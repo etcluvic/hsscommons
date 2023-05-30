@@ -14,7 +14,7 @@ $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
 $unsanitized_description = $this->publication->describe('parsed');
-$description = preg_replace('(<[^>]+) style\s?=\s?".*?"/i', '$1', $unsanitized_description);
+$description = preg_replace('~(<[^>]+) style\s?=\s?".*?"~/i', '$1', $unsanitized_description);
 
 $this->publication->authors();
 $this->publication->attachments();
