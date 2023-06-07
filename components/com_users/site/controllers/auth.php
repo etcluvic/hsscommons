@@ -501,8 +501,10 @@ class Auth extends SiteController
 				$email = $user->get('email');
 				if ($email === $first_time_email) {
 					$intro_group = Group::getInstance("introgroup");
-					$intro_group->add("members", array($user->get('id')));
-					Session::set("first_time_email", null);
+					if ($intro_group) {
+						$intro_group->add("members", array($user->get('id')));
+						Session::set("first_time_email", null);
+					}
 				}
 			}
 
