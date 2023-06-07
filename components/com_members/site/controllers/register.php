@@ -1459,6 +1459,11 @@ class Register extends SiteController
 
 		if ($xprofile->get('id') != $user->get('id'))
 		{
+			// Redirect to member dashboard if email is already confirmed
+			if ($xprofile->get('id') === 0) {
+				App::redirect("/members/myaccount", "Email is already confirmed. No need to do it again!", "warning");
+			}
+
 			// Profile and logged in user does not match
 			$this->setError('login mismatch');
 
