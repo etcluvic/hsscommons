@@ -10,6 +10,7 @@ namespace Components\Users\Site\Controllers;
 use Hubzero\Component\SiteController;
 use Hubzero\Config\Registry;
 use Hubzero\Utility\Uri;
+use Components\Groups\Models\Orm\Group;
 use Exception;
 use Document;
 use Request;
@@ -489,8 +490,21 @@ class Auth extends SiteController
 		// Perform the log in.
 		if (true === $result)
 		{
+
 			// Success
 			User::setState('login.form.data', array());
+
+			// Add first time users into an introduction group
+			$first_time_email = Session::get("first_time_email", false);
+			if ($first_time_email) {
+				$user = User::getInstance();
+				$email = $user->get('email');
+				if ($email === $first_time_email) {
+					$intro_group = Group::getInstance("introgroup");
+					$intro_group->add("members", array($user->get('id')));
+					Session::set("first_time_email", null);
+				}
+			}
 
 			$return = User::getState('login.form.return');
 

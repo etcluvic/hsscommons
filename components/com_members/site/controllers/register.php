@@ -1432,7 +1432,7 @@ class Register extends SiteController
 				Request::setVar('email', $email);
 				Request::setVar('task', 'login');
 				Request::setVar('option', 'com_login');
-
+				
 				$authController->login();
 				// $authController->login() always redirects, should never make it here
 			}
@@ -1441,6 +1441,11 @@ class Register extends SiteController
 				// Didn't provide enough information, warn about it
 				// and let them log in to confirm their email address
 				$return = base64_encode(Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&task=' . $this->_task . '&confirm=' . $code . '&return=' . $return, false, true));
+				
+				// Set email of first time users in the session
+				$email = Request::getString('email', false);
+				Session::set("first_time_email", $email);
+
 				App::redirect(
 					Route::url('index.php?option=com_users&view=login&return=' . $return, false),
 					Lang::txt('Please login in to confirm your email address.'),
