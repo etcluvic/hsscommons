@@ -231,7 +231,13 @@ class Batchcreate extends AdminController
 
 		Log::info('No error found');
 		// return results to user
-		echo json_encode(array(
+		// echo json_encode(array(
+		// 	'result'  => 'success',
+		// 	'error'   => null,
+		// 	'records' => $outputData,
+		// 	'dryrun'  => $dryRun
+		// ));
+		return json_encode(array(
 			'result'  => 'success',
 			'error'   => null,
 			'records' => $outputData,
