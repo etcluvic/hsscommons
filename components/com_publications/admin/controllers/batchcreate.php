@@ -359,6 +359,7 @@ class Batchcreate extends AdminController
 						$i++;
 					}
 				}
+				Log::info('Data for primary file collected');
 
 				// Supporting docs
 				if ($node->supportingmaterials)
@@ -575,6 +576,8 @@ class Batchcreate extends AdminController
 		$attach->element_id = $element_id;
 		$attach->type       = 'file';
 
+		Log::info('Attachment is ready');
+
 		// Check if file exists
 		$filePath = $this->projectPath . DS . trim($file->path, DS);
 		$exists = $file->path && file_exists($filePath) ? true : false;
@@ -594,6 +597,7 @@ class Batchcreate extends AdminController
 		$type = $role == 1 ? 'primary' : 'supporting';
 		$type = $role == 3 ? 'gallery' : $type;
 
+		Log::info('Before constructing file record');
 		// Add file record
 		$fileRecord = array(
 			'type'        => $type,
