@@ -215,7 +215,6 @@ class Batchcreate extends AdminController
 		{
 			$outputData = $this->parse($dryRun);
 		}
-		Log::info('Finished parse');
 
 		// Parsing errors
 		if ($this->getError())
@@ -229,28 +228,13 @@ class Batchcreate extends AdminController
 			exit();
 		}
 
-		Log::info('No error found');
 		// return results to user
-		// echo json_encode(array(
-		// 	'result'  => 'success',
-		// 	'error'   => null,
-		// 	'records' => $outputData,
-		// 	'dryrun'  => $dryRun
-		// ));
-		return json_encode(array(
+		echo json_encode(array(
 			'result'  => 'success',
 			'error'   => null,
 			'records' => $outputData,
 			'dryrun'  => $dryRun
 		));
-		Log::info('Returned result to user');
-		Log::info(json_encode(array(
-			'result'  => 'success',
-			'error'   => null,
-			'records' => $outputData,
-			'dryrun'  => $dryRun
-		)));
-		// return;
 		exit();
 	}
 
@@ -317,8 +301,6 @@ class Batchcreate extends AdminController
 
 		// Parse data
 		$items = array();
-
-		Log::info('Before reading XML file');
 		while ($this->reader->read())
 		{
 			if ($this->reader->name === 'publication')
@@ -365,7 +347,6 @@ class Batchcreate extends AdminController
 
 				// Pick up files
 				$item['files'] = array();
-				Log::info('Reading files');
 				if ($node->content)
 				{
 					$i = 1;
@@ -375,12 +356,10 @@ class Batchcreate extends AdminController
 						$i++;
 					}
 				}
-				Log::info('Data for primary file collected');
 
 				// Supporting docs
 				if ($node->supportingmaterials)
 				{
-					Log::info('Reading supporting materials');
 					$i = 1;
 					foreach ($node->supportingmaterials->file as $file)
 					{
@@ -392,7 +371,6 @@ class Batchcreate extends AdminController
 				// Gallery
 				if ($node->gallery)
 				{
-					Log::info('Reading gallery files');
 					$i = 1;
 					foreach ($node->gallery->file as $file)
 					{
@@ -426,8 +404,6 @@ class Batchcreate extends AdminController
 					}
 				}
 
-				Log::info('Collected authors');
-
 				// Set general process error
 				if (count($item['errors']) > 0)
 				{
@@ -435,7 +411,6 @@ class Batchcreate extends AdminController
 				}
 
 				$items[] = $item;
-				Log::info('New item inserted');
 				$this->reader->next();
 			}
 		}
@@ -597,8 +572,6 @@ class Batchcreate extends AdminController
 		$attach->element_id = $element_id;
 		$attach->type       = 'file';
 
-		Log::info('Attachment is ready');
-
 		// Check if file exists
 		$filePath = $this->projectPath . DS . trim($file->path, DS);
 		$exists = $file->path && file_exists($filePath) ? true : false;
@@ -618,7 +591,6 @@ class Batchcreate extends AdminController
 		$type = $role == 1 ? 'primary' : 'supporting';
 		$type = $role == 3 ? 'gallery' : $type;
 
-		Log::info('Before constructing file record');
 		// Add file record
 		$fileRecord = array(
 			'type'        => $type,
@@ -645,11 +617,7 @@ class Batchcreate extends AdminController
 		$pid = $pub->id;
 
 		// Get latest Git hash
-		// $vcs_hash = $this->_git->gitLog($attachment->path, '', 'hash');
-		
-		// Generate a random string of size 20
-		// Change made by Archie as $this does not have an attribute "_git"
-		$vcs_hash = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(20/strlen($x)) )),1,20);;
+		$vcs_hash = $this->_git->gitLog($attachment->path, '', 'hash');
 
 		// Create attachment record
 		if ($this->curationModel || $fileRecord['type'] != 'gallery')
@@ -663,46 +631,45 @@ class Batchcreate extends AdminController
 		}
 
 		// Copy files to the right location
-		// Code disabled by Archie as this functionality is not needed and it's buggy (line "$configs = $fileAttach->getConfigs") atm
-		// if ($this->curationModel)
-		// {
-		// 	// Get attachment type model
-		// 	$attModel = new \Components\Publications\Models\Attachments($this->database);
-		// 	$fileAttach = $attModel->loadAttach('file');
+		if ($this->curationModel)
+		{
+			// Get attachment type model
+			$attModel = new Models\Attachments($this->database);
+			$fileAttach = $attModel->loadAttach('file');
 
-		// 	// Get element manifest
-		// 	$elements = $this->curationModel->getElements($attachment->role);
-		// 	if (!$elements)
-		// 	{
-		// 		return false;
-		// 	}
-		// 	$element = $elements[0];
+			// Get element manifest
+			$elements = $this->curationModel->getElements($attachment->role);
+			if (!$elements)
+			{
+				return false;
+			}
+			$element = $elements[0];
 
-		// 	// Set configs
-		// 	$configs  = $fileAttach->getConfigs(
-		// 		$element->manifest->params,
-		// 		$element->id,
-		// 		$pub,
-		// 		$element->block
-		// 	);
+			// Set configs
+			$configs  = $fileAttach->getConfigs(
+				$element->manifest->params,
+				$element->id,
+				$pub,
+				$element->block
+			);
 
-		// 	// Check if names is already used
-		// 	$suffix = $fileAttach->checkForDuplicate(
-		// 		$configs->path . DS . $attachment->path,
-		// 		$attachment,
-		// 		$configs
-		// 	);
+			// Check if names is already used
+			$suffix = $fileAttach->checkForDuplicate(
+				$configs->path . DS . $attachment->path,
+				$attachment,
+				$configs
+			);
 
-		// 	// Save params if applicable
-		// 	if ($suffix)
-		// 	{
-		// 		$pa = new \Components\Publications\Tables\Attachment($this->database);
-		// 		$pa->saveParam($attachment, 'suffix', $suffix);
-		// 	}
+			// Save params if applicable
+			if ($suffix)
+			{
+				$pa = new \Components\Publications\Tables\Attachment($this->database);
+				$pa->saveParam($attachment, 'suffix', $suffix);
+			}
 
-		// 	// Copy file into the right spot
-		// 	$fileAttach->publishAttachment($attachment, $pub, $configs);
-		// }
+			// Copy file into the right spot
+			$fileAttach->publishAttachment($attachment, $pub, $configs);
+		}
 	}
 
 	/**
