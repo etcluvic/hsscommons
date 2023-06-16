@@ -238,7 +238,8 @@ class Batchcreate extends AdminController
 			'dryrun'  => $dryRun
 		));
 		Log::info('Returned result to user');
-		exit();
+		return;
+		// exit();
 	}
 
 	/**
