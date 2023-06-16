@@ -114,16 +114,10 @@ jQuery(document).ready(function(jq){
 					   processData: false,
 			           success: function(response)
 			           {
-							console.log('Form submitted successfully');
 							self.handleResults(response);
-			           },
-					   error: function(response)
-					   {
-							console.log('Error:');
-							console.log(response);
-					   }
+			           }
 			     });
-				console.log('Form failed to submit');
+
 			    return false;
 			});	
 				
