@@ -215,6 +215,7 @@ class Batchcreate extends AdminController
 		{
 			$outputData = $this->parse($dryRun);
 		}
+		Log::info('Finished parse');
 
 		// Parsing errors
 		if ($this->getError())
@@ -364,6 +365,7 @@ class Batchcreate extends AdminController
 				// Supporting docs
 				if ($node->supportingmaterials)
 				{
+					Log::info('Reading supporting materials');
 					$i = 1;
 					foreach ($node->supportingmaterials->file as $file)
 					{
@@ -375,6 +377,7 @@ class Batchcreate extends AdminController
 				// Gallery
 				if ($node->gallery)
 				{
+					Log::info('Reading gallery files');
 					$i = 1;
 					foreach ($node->gallery->file as $file)
 					{
@@ -408,6 +411,8 @@ class Batchcreate extends AdminController
 					}
 				}
 
+				Log::info('Collected authors');
+
 				// Set general process error
 				if (count($item['errors']) > 0)
 				{
@@ -415,6 +420,7 @@ class Batchcreate extends AdminController
 				}
 
 				$items[] = $item;
+				Log::info('New item inserted');
 				$this->reader->next();
 			}
 		}
