@@ -229,6 +229,7 @@ class Batchcreate extends AdminController
 			exit();
 		}
 
+		Log::info('No error found');
 		// return results to user
 		echo json_encode(array(
 			'result'  => 'success',
@@ -236,6 +237,7 @@ class Batchcreate extends AdminController
 			'records' => $outputData,
 			'dryrun'  => $dryRun
 		));
+		Log::info('Returned result to user');
 		exit();
 	}
 
