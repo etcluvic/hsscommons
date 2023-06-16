@@ -128,6 +128,7 @@ class Batchcreate extends AdminController
 	 */
 	public function processTask($dryRun = 0)
 	{
+		Log::info('processTask() invoked');
 		// check token
 		Request::checkToken();
 
@@ -186,6 +187,8 @@ class Batchcreate extends AdminController
 			));
 			exit();
 		}
+		Log::info('Before loading reader');
+
 		// Load reader
 		libxml_use_internal_errors(true);
 		$this->reader = new \XMLReader();
@@ -201,12 +204,16 @@ class Batchcreate extends AdminController
 			exit();
 		}
 
+		Log::info('After validating XML file');
+
 		// Set schema
 		$schema = $this->getSchema();
 		if (file_exists($schema))
 		{
 			$this->reader->setSchema($schema);
 		}
+
+		Log::info('After getting schema');
 
 		// Validation
 		$outputData = $this->validateTask();
