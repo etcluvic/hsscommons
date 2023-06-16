@@ -93,6 +93,7 @@ class File extends Obj
 	 */
 	public function __get($property)
 	{
+		// If publication doesn't have a file in its own dir, use one in the project
 		if ($property === 'downloadUrl' && isset($this->_data['fpath'])) {
 			if (!file_exists($this->_data['fpath']) && isset($this->_data['fullPath'])) {
 				$fullPath = $this->_data['fullPath'];
