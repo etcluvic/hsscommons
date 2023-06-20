@@ -114,8 +114,12 @@ jQuery(document).ready(function(jq){
 					   processData: false,
 			           success: function(response)
 			           {
-							self.handleResults(response);
-			           }
+							console.log(response);
+							// self.handleResults(response);
+			           },
+					   error: function(error) {
+							console.log(error);
+					   }
 			     });
 
 			    return false;
