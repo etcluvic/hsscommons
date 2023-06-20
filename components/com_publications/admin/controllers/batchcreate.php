@@ -1,4 +1,5 @@
 <?php
+// components/com_publications/admin/controllers/batchcreate.php
 /**
  * @package    hubzero-cms
  * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
@@ -617,7 +618,11 @@ class Batchcreate extends AdminController
 		$pid = $pub->id;
 
 		// Get latest Git hash
-		$vcs_hash = $this->_git->gitLog($attachment->path, '', 'hash');
+		// $vcs_hash = $this->_git->gitLog($attachment->path, '', 'hash');
+		
+		// Generate a random string of size 20
+		// Change made by Archie as $this does not have an attribute "_git"
+		$vcs_hash = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(20/strlen($x)) )),1,20);;
 
 		// Create attachment record
 		if ($this->curationModel || $fileRecord['type'] != 'gallery')
@@ -631,45 +636,46 @@ class Batchcreate extends AdminController
 		}
 
 		// Copy files to the right location
-		if ($this->curationModel)
-		{
-			// Get attachment type model
-			$attModel = new Models\Attachments($this->database);
-			$fileAttach = $attModel->loadAttach('file');
+		// Code disabled by Archie as this functionality is not needed and it's buggy (line "$configs = $fileAttach->getConfigs") atm
+		// if ($this->curationModel)
+		// {
+		// 	// Get attachment type model
+		// 	$attModel = new \Components\Publications\Models\Attachments($this->database);
+		// 	$fileAttach = $attModel->loadAttach('file');
 
-			// Get element manifest
-			$elements = $this->curationModel->getElements($attachment->role);
-			if (!$elements)
-			{
-				return false;
-			}
-			$element = $elements[0];
+		// 	// Get element manifest
+		// 	$elements = $this->curationModel->getElements($attachment->role);
+		// 	if (!$elements)
+		// 	{
+		// 		return false;
+		// 	}
+		// 	$element = $elements[0];
 
-			// Set configs
-			$configs  = $fileAttach->getConfigs(
-				$element->manifest->params,
-				$element->id,
-				$pub,
-				$element->block
-			);
+		// 	// Set configs
+		// 	$configs  = $fileAttach->getConfigs(
+		// 		$element->manifest->params,
+		// 		$element->id,
+		// 		$pub,
+		// 		$element->block
+		// 	);
 
-			// Check if names is already used
-			$suffix = $fileAttach->checkForDuplicate(
-				$configs->path . DS . $attachment->path,
-				$attachment,
-				$configs
-			);
+		// 	// Check if names is already used
+		// 	$suffix = $fileAttach->checkForDuplicate(
+		// 		$configs->path . DS . $attachment->path,
+		// 		$attachment,
+		// 		$configs
+		// 	);
 
-			// Save params if applicable
-			if ($suffix)
-			{
-				$pa = new \Components\Publications\Tables\Attachment($this->database);
-				$pa->saveParam($attachment, 'suffix', $suffix);
-			}
+		// 	// Save params if applicable
+		// 	if ($suffix)
+		// 	{
+		// 		$pa = new \Components\Publications\Tables\Attachment($this->database);
+		// 		$pa->saveParam($attachment, 'suffix', $suffix);
+		// 	}
 
-			// Copy file into the right spot
-			$fileAttach->publishAttachment($attachment, $pub, $configs);
-		}
+		// 	// Copy file into the right spot
+		// 	$fileAttach->publishAttachment($attachment, $pub, $configs);
+		// }
 	}
 
 	/**
