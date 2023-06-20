@@ -235,12 +235,6 @@ class Batchcreate extends AdminController
 			'records' => $outputData,
 			'dryrun'  => $dryRun
 		));
-		Log::info('Sent results to user');
-		$session = App::get('session');
-		Log::info('Session check token');
-		Log::info($session->getFormToken());
-		Log::info($session->getToken());
-		Log::info($session->checkToken() ? "valid token": "invalid token");
 		exit();
 	}
 
