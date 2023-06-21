@@ -192,7 +192,7 @@ $legacy = array(
 				<a id="instruction-link" href="#instruction-modal">How can I improve my score?</a>
 				<div style="display:none;">
 					<div class="modal" id="instruction-modal">
-						To improve the completion score, you need to fill out the followings:
+						To improve the completion score, you need to fill out the following:
 						<ul>
 						<?php foreach ($this->fields as $field) { ?>
 							<?php if (!$this->profile[$field->get('name')]) { ?>
