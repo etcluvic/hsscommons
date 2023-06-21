@@ -652,11 +652,12 @@
 
 /* Completion instruction modal */
 	a#instruction-link {
-		color: #ffffff;
+		color: #eee;
 		font-weight: 300;
-		font-size: 120%;
+		font-size: 140%;
+		text-transform: none;
 	}
 
 	a#instruction-link:hover {
-		font-weight: 500;
+		color: #ffffff;
 	}
