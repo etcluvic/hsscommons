@@ -158,25 +158,36 @@ HUB.Members.Profile = {
 
 	//-------------------------------------------------------------
 
-	// Prevent users from entering an invalid websiteURL on member profile page. URL at '/members/id/profile'
+	// Enforce all url fields to be URLs before getting submitted
+	// Written by Archie
 	editUserProfileWebsiteInteraction: function () {
-		const profileURLInput = $("input#profile_url");
-		const profileURLForm = profileURLInput.closest('form');
-		const profileURLSubmitBtn = profileURLForm.find('input[type="submit"]');
-		if (!(/^https?:\/\/.+$/.test(profileURLInput.val()))) {
-			profileURLSubmitBtn.attr('disabled', true);
-		}
-		profileURLInput.on("keyup", function(e) {
-			const profileURL = profileURLInput.val();
-			if (/^https?:\/\/.+$/.test(profileURL)) {
-				profileURLSubmitBtn.attr('disabled', false);
-			} else {
-				profileURLSubmitBtn.attr('disabled', true);
+		const profileURLInputs = []
+
+		$("input[type='text']").each(function(index, input) {
+			if ($(input).attr('placeholder') && $(input).attr('placeholder').includes('http')) {
+				profileURLInputs.push(input);
 			}
 		})
 
-		const profileURLDiv = profileURLInput.closest('div');
-		profileURLDiv.append('<p>This field has to be a URL that starts with <strong>http://</strong> or <strong>https://</strong></p>');
+		for (let i = 0; i < profileURLInputs.length; i++) {
+			const profileURLInput = $(profileURLInputs[i]);
+			const profileURLForm = profileURLInput.closest('form');
+			const profileURLSubmitBtn = profileURLForm.find('input[type="submit"]');
+			if (!(/^https?:\/\/.+$/.test(profileURLInput.val()))) {
+				profileURLSubmitBtn.attr('disabled', true);
+			}
+			profileURLInput.on("keyup", function(e) {
+				const profileURL = profileURLInput.val();
+				if (/^https?:\/\/.+$/.test(profileURL)) {
+					profileURLSubmitBtn.attr('disabled', false);
+				} else {
+					profileURLSubmitBtn.attr('disabled', true);
+				}
+			})
+
+			const profileURLDiv = profileURLInput.closest('div');
+			profileURLDiv.append('<p>This field has to be a URL that starts with <strong>http://</strong> or <strong>https://</strong></p>');
+		}
 	},
 
 	editSubmitForm: function( submit_button )
