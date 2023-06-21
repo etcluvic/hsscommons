@@ -19,9 +19,19 @@ $this->css()
 \Hubzero\Document\Assets::addPluginScript('projects', 'files', 'jquery.fileuploader.js');
 \Hubzero\Document\Assets::addPluginScript('projects', 'files', 'jquery.queueuploader.js');
 
+$request_uri = $_SERVER['REQUEST_URI'];
+
 ?>
 <header id="content-header">
 	<h2><?php echo $this->title; ?></h2>
+
+	<?php if ($request_uri === '/publications/submit') { ?>
+		<nav id="content-header-extra">
+			<ul id="useroptions">
+				<a class="icon-add btn" href="/publications/submit?action=publication&base=files">Add publications</a>
+			</ul>
+		</nav><!-- / #content-header-extra -->
+	<?php } ?>
 </header><!-- / #content-header -->
 
 <?php if ($this->pid && !empty($this->project) && $this->project->get('created_by_user') == User::get('id')) { ?>
