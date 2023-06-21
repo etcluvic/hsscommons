@@ -189,7 +189,7 @@ $legacy = array(
 					<span id="meter-percent" data-percent="<?php echo $this->completeness; ?>" data-percent-level="<?php echo @$this->completeness_level; ?>"></span>
 				</div>
 				<!-- Modal to display missing fields -->
-				<a id="instruction-link" href="#instruction-modal">How to improve completeness?</a>
+				<a id="instruction-link" href="#instruction-modal">How can I improve my score?</a>
 				<div style="display:none;">
 					<div class="modal" id="instruction-modal">
 						To improve the completion score, you need to fill out the followings:

@@ -52,7 +52,7 @@ HUB.Members.Profile = {
 		// Prevent users from entering an invalid websiteURL on member profile page. URL at '/members/id/profile'
 		HUB.Members.Profile.editUserProfileWebsiteInteraction();
 
-		// Show completeness instruction modal when clicking on "How to improve completeness" link
+		// Show completeness instruction modal when clicking on "How can I improve my score?" link
 		HUB.Members.Profile.showCompletenessInstructionModal();
 	},
 
