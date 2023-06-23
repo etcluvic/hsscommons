@@ -792,7 +792,9 @@ class Projects extends Base
 		{
 			$this->view->setLayout('provisioned');
 			$this->view->model = $this->model;
-
+			
+			// Run member() for add property _tblOwner to $this->model
+			$this->model->member();
 			$this->view->team  = $this->model->_tblOwner->getOwnerNames($this->model->get('alias'));
 
 			// Output HTML

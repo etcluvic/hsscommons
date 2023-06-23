@@ -54,7 +54,7 @@ class File extends Base
 	 * @param   object   $blockParams
 	 * @return  object
 	 */
-	public function getConfigs($element, $elementId, $pub, $blockParams)
+	public function getConfigs($element, $elementId, $pub, $blockParams, $project=null)
 	{
 		$configs = new stdClass;
 		$typeParams = $element->typeParams;
@@ -109,6 +109,9 @@ class File extends Base
 		}
 
 		// Set paths
+		if (!isset($pub->_project) && $project) {
+			$pub->_project = $project;
+		}
 		$configs->path    = $pub->_project->repo()->get('path');
 		$configs->pubBase = $pub->path('base', true);
 		$configs->pubPath = $configs->pubBase . DS . $configs->dirPath;

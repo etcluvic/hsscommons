@@ -1211,6 +1211,7 @@ class Publications extends SiteController
 		$ajax    = Request::getInt('ajax', 0);
 		$doiErr  = Request::getInt('doierr', 0);
 
+
 		// Redirect if publishing is turned off
 		if (!$this->_contributable)
 		{
@@ -1269,8 +1270,9 @@ class Publications extends SiteController
 			}
 
 			// Block unauthorized access
-			if (!$project->access('owner') && !$project->access('content'))
+			if (!$project->access('owner') && !$project->access('member'))
 			{
+				return "Hello, world!";
 				$this->_blockAccess();
 				return;
 			}
@@ -1316,7 +1318,7 @@ class Publications extends SiteController
 
 		$content = Event::trigger('projects.onProject', $plugin_params);
 		$this->view->content = (is_array($content) && isset($content[0]['html'])) ? $content[0]['html'] : '';
-
+		
 		if (isset($content[0]['msg']) && !empty($content[0]['msg']))
 		{
 			$this->setNotification($content[0]['msg']['message'], $content[0]['msg']['type']);

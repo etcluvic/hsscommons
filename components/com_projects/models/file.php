@@ -1,4 +1,5 @@
 <?php
+// components/com_projects/models/file.php
 /**
  * @package    hubzero-cms
  * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
@@ -93,6 +94,20 @@ class File extends Obj
 	 */
 	public function __get($property)
 	{
+		// If publication doesn't have a file in its own dir, use one in the project
+		// if ($property === 'downloadUrl' && isset($this->_data['fpath'])) {
+		// 	if (!file_exists($this->_data['fpath']) && isset($this->_data['fullPath'])) {
+		// 		$fullPath = $this->_data['fullPath'];
+		// 		$matches = array();
+		// 		preg_match('/projects\/(.+)\/files/', $fullPath, $matches);
+		// 		$project_alias = $matches[1];
+		// 		$project_file_downloadUrl = DS . 'projects' . DS . $project_alias . DS . 'files' . DS . 'download?asset=' . $this->_data['name'];
+		// 		if (file_exists($this->_data['fullPath'])) {
+		// 			return $project_file_downloadUrl;
+		// 		}
+		// 	}
+		// }
+
 		if (isset($this->_data[$property]))
 		{
 			return $this->_data[$property];

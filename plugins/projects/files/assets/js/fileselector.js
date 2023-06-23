@@ -21,6 +21,7 @@ if (!jq) {
 HUB.ProjectFilesFileSelect = {
 	jQuery  : jq,
 	fetched : [],
+	mostRecentUploads : [],
 
 	initialize: function () {
 		var $ = this.jQuery;
@@ -72,6 +73,11 @@ HUB.ProjectFilesFileSelect = {
 				// Insert new data
 				target.next('.content-loader-slim').remove();
 				target.after(data);
+
+				// Autoselect most recent uploaded files
+				for (var i=0; i < HUB.ProjectFilesFileSelect.mostRecentUploads.length; i++) {
+					$('li.type-file[data-path="' + HUB.ProjectFilesFileSelect.mostRecentUploads[i] + '"]').addClass('selectedfilter');
+				}
 			},
 			error    : function ( jqXHR, textStatus, errorThrown ) {
 				// We're going to assume we get here because the user isn't authorized to the remote client
@@ -258,6 +264,10 @@ HUB.ProjectFilesFileSelect = {
 		{
 			var url      = form.attr('action'),
 				formData = new FormData($(this)[0]);
+			var selectedFiles = $(this).find('input#uploader')[0].files;
+			for (var i=0; i < selectedFiles.length; i++) {
+				HUB.ProjectFilesFileSelect.mostRecentUploads.push(selectedFiles[i].name);
+			}
 
 			// Show loader
 			statusBox.css('opacity', '1.0');
@@ -284,6 +294,7 @@ HUB.ProjectFilesFileSelect = {
 							if (response.error || response.error !== false)
 							{
 								error = response.error;
+								HUB.ProjectFilesFileSelect.mostRecentUploads = [];
 							}
 							else
 							{
@@ -293,6 +304,7 @@ HUB.ProjectFilesFileSelect = {
 						catch (e)
 						{
 							success = 0;
+							HUB.ProjectFilesFileSelect.mostRecentUploads = [];
 						}
 					}
 

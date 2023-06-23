@@ -3209,6 +3209,12 @@ section.section {
   border-color: #333;
   background: #333;
 }
+.btn.btn-primary {
+  color: #cfcfcf !important;
+}
+.btn.btn-primary:hover {
+  color: #ffffff !important;
+}
 .btn-warning {
   color: #fff !important;
   border-color: #f89406;

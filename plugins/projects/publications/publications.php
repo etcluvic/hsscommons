@@ -727,6 +727,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 	public function saveDraft()
 	{
 		// Incoming
+		$aid	 = Request::getInt('aid', 0);
 		$pid     = $this->_pid ? $this->_pid : Request::getInt('pid', 0);
 		$vid     = Request::getInt('vid', 0);
 		$version = Request::getString('version', 'dev');
@@ -808,7 +809,34 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				break;
 
 			case 'deleteitem':
+				// Call this function to instantiate _tblOwner property for $this->model
+				$this->model->member();
 				$pub->_curationModel->deleteItem($this->_uid, $element);
+				$removed_owners = array();
+				
+				// Remove members who aren't authors for standalone publication's project
+				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
+				{
+					$authors = $pub->authors($overwrite=true);
+					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
+					foreach ($owners as $k => $owner)
+					{
+						if (!in_array($owner->userid, $authors)) {
+							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
+							$removed_owners[] = $owner->userid;
+						}
+					}
+				}
+				
+				// Email to notify removed authors
+				if (count($removed_owners) > 0) {
+					\Components\Publications\Helpers\Html::notify(
+						$pub,
+						$removed_owners,
+						Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_SUB'),
+						Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_REMOVE_AUTHORS_MSG')
+					);
+				}
 				break;
 
 			case 'reorder':
@@ -1968,6 +1996,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$blockId   = Request::getInt('step', 0);
 		$element   = Request::getInt('element', 0);
 
+		$task = Request::getString('task', '');
+
 		// Check permission
 		if (!$this->model->access('content'))
 		{
@@ -1996,8 +2026,13 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Agreement to terms is required
 		if ($confirm && !$agree)
 		{
-			Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
-			App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
+			if ($task == 'submit') {
+				App::redirect(Route::url($pub->link('edit') . '&action=review' . '&termserror=1', false));
+			} else {
+				// return $pub->project()->member()[0];
+				Notify::error(Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATION_REVIEW_AGREE_TERMS_REQUIRED'), 'projects');
+				App::redirect(Route::url($pub->link('editversion') . '&action=' . $this->_task));
+			}
 			return;
 		}
 
@@ -2282,6 +2317,15 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// OnAfterPublish
 		$this->onAfterChangeState($pub, $originalStatus);
+
+		// Notify all authors after publishing a publication
+		$authors = $pub->authors($overwrite=true);
+		\Components\Publications\Helpers\Html::notify(
+			$pub,
+			$authors,
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_PUBLISH_SUB'),
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_PUBLISH_MSG')
+		);
 
 		// Redirect
 		$link = $pub->link('editversion');
