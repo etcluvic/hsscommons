@@ -308,7 +308,7 @@ class Batchcreate extends AdminController
 			{
 				$node = new \SimpleXMLElement($this->reader->readOuterXML());
 				// Check that category exists
-				$category = isset($node->cat) ? $node->cat : 'dataset';
+				$category = isset($node->category) ? $node->category : 'article';
 				$catId = $objCat->getCatId($category);
 
 				$item['category'] = $category;
