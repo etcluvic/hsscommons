@@ -524,14 +524,12 @@ class Batchcreate extends AdminController
 		{
 			$tags = '';
 			$i = 0;
-			Log::debug($item['tags']);
 			foreach ($item['tags'] as $tag)
 			{
 				$i++;
 				$tags .= trim($tag);
 				$tags .= $i == count($item['tags']) ? '' : ',';
 			}
-			Log::debug($tags);
 
 			// Add tags
 			$tagsHelper = new \Components\Publications\Helpers\Tags($this->database);
