@@ -694,7 +694,7 @@ class Batchcreate extends AdminController
 		// Need to create project owner
 		if (!$author->project_owner_id)
 		{
-			$objO = new Tables\Owner($this->database);
+			$objO = new \Components\Projects\Tables\Owner($this->database);
 
 			$objO->projectid     = $this->project->get('id');
 			$objO->userid        = $author->user_id;
