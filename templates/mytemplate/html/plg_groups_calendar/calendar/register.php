@@ -324,7 +324,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 
 	<?php if ($this->params->get('show_dinner')) : ?>
 		<fieldset>
-			<legend><?php echo Lang::txt('Dinner'); ?></legend>
+			<legend><?php echo Lang::txt('Event meal'); ?></legend>
 			<label for="filed-dinner">
 				<input type="checkbox" class="option" name="dinner" id="filed-dinner" value="yes" <?php if (isset($this->dinner) && $this->dinner == 'yes') { echo 'checked="checked"'; } ?> />
 				<?php echo Lang::txt('I plan to attend the event meal.'); ?>
