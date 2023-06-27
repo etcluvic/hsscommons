@@ -859,6 +859,10 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 			$url  = Route::url($url);
 		}
 
+		Log::debug(Request::getString('task', 'notask'));
+		Log::debug($view);
+		Log::debug($url);
+
 		// Set params
 		$params = array(
 			'subdir'     => $this->subdir,
