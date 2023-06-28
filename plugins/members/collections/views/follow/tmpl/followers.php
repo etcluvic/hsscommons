@@ -54,6 +54,7 @@ $this->css()
 								<?php echo $this->escape(stripslashes($row->follower()->title())); ?>
 							</a>
 							<br />
+							<!-- Commented out by Archie: Display wrong number of followers and followings -->
 							<!-- <span class="entry-details">
 								<span class="follower count"><?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_NUM_FOLLOWERS', $row->count('followers')); ?></span>
 								<span class="following count"><?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_NUM_FOLLOWING', $row->count('following')); ?></span>
