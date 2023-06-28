@@ -54,10 +54,10 @@ $this->css()
 								<?php echo $this->escape(stripslashes($row->follower()->title())); ?>
 							</a>
 							<br />
-							<span class="entry-details">
+							<!-- <span class="entry-details">
 								<span class="follower count"><?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_NUM_FOLLOWERS', $row->count('followers')); ?></span>
 								<span class="following count"><?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_NUM_FOLLOWING', $row->count('following')); ?></span>
-							</span>
+							</span> -->
 						</td>
 						<td>
 							<time datetime="<?php echo $row->get('created'); ?>"><?php echo Date::of($row->get('created'))->toLocal(Lang::txt('DATE_FORMAT_HZ1')); ?></time>
