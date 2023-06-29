@@ -287,7 +287,7 @@ class connections
 	 */
 	public function browse()
 	{
-		Log::debug(get_object_vars($this->connection));
+		Log::debug(get_object_vars($this));
 		// Keep a list of confirmed connections
 		$connection = Request::getInt('connection', 0);
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
