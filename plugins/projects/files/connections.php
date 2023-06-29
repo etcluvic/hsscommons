@@ -287,6 +287,26 @@ class connections
 	 */
 	public function browse()
 	{
+		// Archie: Need to check if this code gets triggered when repository already connects with Google Drive
+		$projectid = $this->plugin->model->_tblOwner->projectid;
+		$this->projectid = $projectid;
+
+		// Keep a list of project ids that have the disclosure confirmed in the app session
+		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
+		$confirmed_project_ids = Session::get('confirmed_project_ids', array());
+		if ($disclosure_confirmed) {
+			if (!in_array($disclosure_confirmed, $confirmed_project_ids)) {
+				$confirmed_project_ids[] = $disclosure_confirmed;
+			}
+			Session::set('confirmed_project_ids', $confirmed_project_ids);
+		}
+
+		// Temporarily redirect to disclosure page if provider is Google Drive
+		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($projectid, $confirmed_project_ids))
+		{	
+			return $this->disclosure();
+		}
+		
 		// Set up view
 		$connection_params = json_decode($this->connection->params);
 		if (!isset($connection_params->path))
@@ -321,6 +341,25 @@ class connections
 		$view->model      = $this->model;
 		$view->fileparams = $this->params;
 		$view->connection = $this->connection;
+
+		// Load and return view content
+		return $view->loadTemplate();
+	}
+
+	/**
+	 * Show a disclosure that users must accept when syncing repositories with Google Drive
+	 *
+	 * @return  string
+	 */
+	public function disclosure()
+	{
+		$view = new \Hubzero\Plugin\View([
+			'folder'  => 'projects',
+			'element' => 'files',
+			'name'    => 'connect',
+			'layout'  => 'disclosure'
+		]);
+		$view->projectid = $this->projectid;
 
 		// Load and return view content
 		return $view->loadTemplate();
