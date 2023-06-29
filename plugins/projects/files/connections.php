@@ -287,7 +287,8 @@ class connections
 	 */
 	public function browse()
 	{
-		Log::debug(get_object_vars($this));
+		$connection_params = json_decode($this->connection->params);
+		Log::debug(!isset($connection_params->path) ? "no path" : "have path");
 		// Keep a list of confirmed connections
 		$connection = Request::getInt('connection', 0);
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
@@ -309,7 +310,7 @@ class connections
 		}
 		
 		// Set up view
-		$connection_params = json_decode($this->connection->params);
+		// $connection_params = json_decode($this->connection->params);
 		if (!isset($connection_params->path))
 		{
 			return $this->setup_base_dir();
