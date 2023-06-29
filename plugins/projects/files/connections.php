@@ -288,6 +288,7 @@ class connections
 	public function browse()
 	{
 		$connection_params = json_decode($this->connection->params);
+		Log::debug(get_object_vars($this));
 		Log::debug(!isset($connection_params->path) ? "no path" : "have path");
 		// Keep a list of confirmed connections
 		$connection = Request::getInt('connection', 0);
