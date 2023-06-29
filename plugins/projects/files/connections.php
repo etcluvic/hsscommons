@@ -287,29 +287,23 @@ class connections
 	 */
 	public function browse()
 	{
-		// Archie: Need to check if this code gets triggered when repository already connects with Google Drive
-		$dir = Entity::fromPath($this->subdir, $this->connection->adapter());
-		Log::debug('Printing $dir: ');
-		Log::debug($dir);
-
-		$projectid = $this->plugin->model->_tblOwner->projectid;
-		$this->projectid = $projectid;
-
-		// Keep a list of project ids that have the disclosure confirmed in the app session
+		Log::debug(get_object_vars($this->connection));
+		// Keep a list of confirmed connections
+		$connection = Request::getInt('connection', 0);
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
-		$confirmed_project_ids = Session::get('confirmed_project_ids', array());
-		Log::debug('projectid: ' . $projectid);
-		Log::debug('confirmed_project_ids: ' . $confirmed_project_ids);
+		$confirmed_connections = Session::get('confirmed_connections', array());
 		if ($disclosure_confirmed) {
-			if (!in_array($disclosure_confirmed, $confirmed_project_ids)) {
-				$confirmed_project_ids[] = $disclosure_confirmed;
+			if (!in_array($connection, $confirmed_connections)) {
+				$confirmed_connections[] = $connection;
 			}
-			Session::set('confirmed_project_ids', $confirmed_project_ids);
+			Session::set('confirmed_connections', $confirmed_connections);
 		}
 
-		Log::debug('Connection provider name: ' . $this->connection->provider()->rows()->get('name'));
+		Log::debug('confirmed_connections:');
+		Log::debug($confirmed_connections);
+
 		// Temporarily redirect to disclosure page if provider is Google Drive
-		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($projectid, $confirmed_project_ids))
+		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
 		{	
 			return $this->disclosure();
 		}
@@ -335,7 +329,7 @@ class connections
 		$sortasc = Request::getString('sortdir', 'ASC') == 'ASC' ? true : false;
 
 		// Get directory that we're interested in
-		// $dir = Entity::fromPath($this->subdir, $this->connection->adapter());
+		$dir = Entity::fromPath($this->subdir, $this->connection->adapter());
 
 		// Assign view vars
 		$view->items      = $dir->listContents()->sort($sortby, $sortasc);
@@ -366,7 +360,6 @@ class connections
 			'name'    => 'connect',
 			'layout'  => 'disclosure'
 		]);
-		$view->projectid = $this->projectid;
 
 		// Load and return view content
 		return $view->loadTemplate();
