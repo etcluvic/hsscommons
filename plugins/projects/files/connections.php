@@ -298,6 +298,8 @@ class connections
 		// Keep a list of project ids that have the disclosure confirmed in the app session
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
 		$confirmed_project_ids = Session::get('confirmed_project_ids', array());
+		Log::debug('projectid: ' . $projectid);
+		Log::debug('confirmed_project_ids: ' . $confirmed_project_ids);
 		if ($disclosure_confirmed) {
 			if (!in_array($disclosure_confirmed, $confirmed_project_ids)) {
 				$confirmed_project_ids[] = $disclosure_confirmed;
@@ -305,6 +307,7 @@ class connections
 			Session::set('confirmed_project_ids', $confirmed_project_ids);
 		}
 
+		Log::debug('Connection provider name: ' . $this->connection->provider()->rows()->get('name'));
 		// Temporarily redirect to disclosure page if provider is Google Drive
 		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($projectid, $confirmed_project_ids))
 		{	
