@@ -288,6 +288,10 @@ class connections
 	public function browse()
 	{
 		// Archie: Need to check if this code gets triggered when repository already connects with Google Drive
+		$dir = Entity::fromPath($this->subdir, $this->connection->adapter());
+		Log::debug('Printing $dir: ');
+		Log::debug($dir);
+
 		$projectid = $this->plugin->model->_tblOwner->projectid;
 		$this->projectid = $projectid;
 
@@ -328,7 +332,7 @@ class connections
 		$sortasc = Request::getString('sortdir', 'ASC') == 'ASC' ? true : false;
 
 		// Get directory that we're interested in
-		$dir = Entity::fromPath($this->subdir, $this->connection->adapter());
+		// $dir = Entity::fromPath($this->subdir, $this->connection->adapter());
 
 		// Assign view vars
 		$view->items      = $dir->listContents()->sort($sortby, $sortasc);
