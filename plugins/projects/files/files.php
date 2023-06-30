@@ -857,7 +857,6 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 			$url .= "&action=" . $view;
 			$url .= $this->repo->isLocal() ? '' : '&repo=' . $this->repo->get('name');
 			$url .= $this->subdir ? '?subdir=' . urlencode($this->subdir) : '';
-			Log::debug('Url: ' . $url);
 			$url  = Route::url($url);
 		}
 
