@@ -102,19 +102,21 @@ class Collection extends Base
 		{
 			$this->bind($oid);
 
-			if (isset($oid->following))
-			{
-				$this->_following = $oid->following ? true : false;
-			}
+			// Commented out by Archie: This code results in misdisplay of follow buttons
+			// if (isset($oid->following))
+			// {
+			// 	$this->_following = $oid->following ? true : false;
+			// }
 		}
 		else if (is_array($oid))
 		{
 			$this->bind($oid);
 
-			if (isset($oid['following']))
-			{
-				$this->_following = $oid['following'] ? true : false;
-			}
+			// Commented out by Archie: This code results in misdisplay of follow buttons
+			// if (isset($oid['following']))
+			// {
+			// 	$this->_following = $oid['following'] ? true : false;
+			// }
 		}
 	}
 

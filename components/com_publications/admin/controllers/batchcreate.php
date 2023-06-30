@@ -468,6 +468,8 @@ class Batchcreate extends AdminController
 	 */
 	public function processRecord($item, &$out)
 	{
+		$autopublish = Request::getInt("autopublish", 0);
+		
 		// Create publication record
 		if (!$item['publication']->store())
 		{
@@ -484,7 +486,13 @@ class Batchcreate extends AdminController
 		$item['version']->secret         = strtolower(\Components\Projects\Helpers\Html::generateCode(10, 10, 0, 1, 1));
 		$item['version']->access         = 0;
 		$item['version']->main           = 1;
-		$item['version']->state          = 3;
+
+		if ($autopublish) {
+			$item['version']->state = 1;
+		} else {
+			$item['version']->state = 3;
+		}
+		
 
 		if (!$item['version']->store())
 		{

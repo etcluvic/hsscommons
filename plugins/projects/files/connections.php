@@ -287,6 +287,34 @@ class connections
 	 */
 	public function browse()
 	{
+		// Keep a list of confirmed connections
+		$connection = Request::getInt('connection', 0);
+		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
+		$confirmed_connections = Session::get('confirmed_connections', array());
+		if ($disclosure_confirmed) {
+			if (!in_array($connection, $confirmed_connections)) {
+				$confirmed_connections[] = $connection;
+			}
+			Session::set('confirmed_connections', $confirmed_connections);
+		}
+
+		// Set current confirmed connection ids in the app session
+		if (!$confirmed_connections) {
+			$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
+			foreach ($connection_model::all() as $c)
+			{
+				$confirmed_connections[] = $c->id;
+			}
+			Session::set('confirmed_connections', $confirmed_connections);
+		}
+		
+
+		// Temporarily redirect to disclosure page if provider is Google Drive
+		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
+		{	
+			return $this->disclosure();
+		}
+		
 		// Set up view
 		$connection_params = json_decode($this->connection->params);
 		if (!isset($connection_params->path))
@@ -321,6 +349,24 @@ class connections
 		$view->model      = $this->model;
 		$view->fileparams = $this->params;
 		$view->connection = $this->connection;
+
+		// Load and return view content
+		return $view->loadTemplate();
+	}
+
+	/**
+	 * Show a disclosure that users must accept when syncing repositories with Google Drive
+	 *
+	 * @return  string
+	 */
+	public function disclosure()
+	{
+		$view = new \Hubzero\Plugin\View([
+			'folder'  => 'projects',
+			'element' => 'files',
+			'name'    => 'connect',
+			'layout'  => 'disclosure'
+		]);
 
 		// Load and return view content
 		return $view->loadTemplate();

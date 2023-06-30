@@ -256,6 +256,37 @@ class Archive extends Obj
 	{
 		$filters['following_id']   = $this->_object_id;
 		$filters['following_type'] = $this->_object_type;
+		
+		// Added by Archie: Return list of followings for a list of collections
+		if (isset($filters['collections']) && $filters['collections']) {
+			$followings = array();
+			$tbl = new Tables\Following($this->_db);
+
+			foreach($filters['collections'] as $collection)
+			{
+				$results = $tbl->find(array(
+					'following_type' => 'collection',
+					'following_id' => $collection->get('id')
+				));
+
+				if ($results) {
+					// Loop through all the items and push assets and tags
+					foreach ($results as $key => $result)
+					{
+						$results[$key] = new Following($result);
+					}
+				}
+
+				$followings = array_merge($followings, $results);
+			}
+			
+			if (isset($filters['count']) && $filters['count']) {
+				return count($followings);	
+			}
+
+			$this->_followers = new ItemList($followings);
+			return $this->_followers;
+		}
 
 		if (isset($filters['count']) && $filters['count'])
 		{

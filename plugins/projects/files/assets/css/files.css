@@ -1397,6 +1397,9 @@
 	table.listing tbody tr.connections.mline:hover {
 		border: none;
 	}
+	.disclosure-title {
+		font-weight: 500;
+	}
 
 /* Misc
 --------------------------------------------- */
