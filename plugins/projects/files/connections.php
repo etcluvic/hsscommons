@@ -287,9 +287,6 @@ class connections
 	 */
 	public function browse()
 	{
-		$connection_params = json_decode($this->connection->params);
-		Log::debug(get_object_vars($this));
-		Log::debug(!isset($connection_params->path) ? "no path" : "have path");
 		// Keep a list of confirmed connections
 		$connection = Request::getInt('connection', 0);
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
@@ -301,8 +298,13 @@ class connections
 			Session::set('confirmed_connections', $confirmed_connections);
 		}
 
-		Log::debug('confirmed_connections:');
-		Log::debug($confirmed_connections);
+		// Log::debug('confirmed_connections:');
+		// Log::debug($confirmed_connections);
+		$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
+		foreach ($connection_model::all() as $c)
+		{
+			Log::debug($c->project_id);
+		}
 
 		// Temporarily redirect to disclosure page if provider is Google Drive
 		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
@@ -311,7 +313,7 @@ class connections
 		}
 		
 		// Set up view
-		// $connection_params = json_decode($this->connection->params);
+		$connection_params = json_decode($this->connection->params);
 		if (!isset($connection_params->path))
 		{
 			return $this->setup_base_dir();
