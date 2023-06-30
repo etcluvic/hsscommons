@@ -37,6 +37,15 @@ $this->js('batchcreate');
 					<input type="file" name="file" id="field-file" />
 				</div>
 				<div class="input-wrap">
+					<label for="field-autopublish">
+						<?php echo Lang::txt('COM_PUBLICATIONS_AUTO_PUBLISH'); ?>
+					</label>
+					<select name="autopublish" id="field-autopublish" defaultValue="0">
+						<option value="0">No</option>
+						<option value="1">Yes</option>
+					</select>
+				</div>
+				<div class="input-wrap">
 					<input type="submit" name="batch_submit" id="batch_submit" value="<?php echo Lang::txt('COM_PUBLICATIONS_UPLOAD_AND_PREPROCESS'); ?>" />
 				</div>
 			</div>
