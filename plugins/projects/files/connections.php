@@ -298,13 +298,16 @@ class connections
 			Session::set('confirmed_connections', $confirmed_connections);
 		}
 
-		// Log::debug('confirmed_connections:');
-		// Log::debug($confirmed_connections);
-		$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
-		foreach ($connection_model::all() as $c)
-		{
-			Log::debug($c->project_id);
+		// Set current confirmed connection ids in the app session
+		if (!$confirmed_connections) {
+			$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
+			foreach ($connection_model::all() as $c)
+			{
+				$confirmed_connections[] = $c->id;
+			}
+			Session::set('confirmed_connections', $confirmed_connections);
 		}
+		
 
 		// Temporarily redirect to disclosure page if provider is Google Drive
 		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
