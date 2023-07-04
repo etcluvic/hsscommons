@@ -469,6 +469,7 @@ class Batchcreate extends AdminController
 	public function processRecord($item, &$out)
 	{
 		$autopublish = Request::getInt("autopublish", 0);
+		$setdoi = Request::getInt("setdoi", 0);
 		
 		// Create publication record
 		if (!$item['publication']->store())
@@ -542,6 +543,30 @@ class Batchcreate extends AdminController
 			// Add tags
 			$tagsHelper = new \Components\Publications\Helpers\Tags($this->database);
 			$tagsHelper->tag_object($this->_uid, $pid, $tags, 1);
+		}
+
+		// Issue DOI
+		if ($setdoi) {
+			$pubModel = new \Components\Publications\Models\Publication($this->database);
+			$pubInstance = $pubModel->getInstance($pid);
+
+			// Get DOI service
+			$doiService = new \Components\Publications\Models\Doi($pubInstance);
+			if (!$pubInstance->version->doi)
+			{
+				$doi = $doiService->register(true, false, null, false, 'public');
+				// Store DOI
+				if ($doi)
+				{
+					$pubInstance->version->set('doi', $doi);
+					$pubInstance->version->store();
+				}
+				else
+				{
+					$item['errors'] = $doiService->getError();
+					return false;
+				}
+			}
 		}
 
 		// Display results
