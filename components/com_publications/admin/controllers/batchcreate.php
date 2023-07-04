@@ -542,7 +542,7 @@ class Batchcreate extends AdminController
 
 			// Add tags
 			$tagsHelper = new \Components\Publications\Helpers\Tags($this->database);
-			$tagsHelper->tag_object($this->_uid, $pid, $tags, 1);
+			$tagsHelper->tag_object($this->_uid, $vid, $tags, 1);
 		}
 
 		// Issue DOI
