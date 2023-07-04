@@ -285,7 +285,7 @@ HUB.Projects = {
 
 		// Add confirmation
 		var ancestor = $(link).parent().parent();
-		$(ancestor).after('<div class="confirmaction" id="confirm-box" style="display:absolute;">' +
+		$(ancestor).after('<div class="confirmaction" id="confirm-box" style="display:block;">' +
 			'<p>' + question + '</p>' +
 			'<p>' +
 				'<a href="' + href + '" class="confirm">' + yesanswer + '</a>' +
@@ -307,7 +307,7 @@ HUB.Projects = {
 		}, 2000); */
 
 		// $('#confirm-box').css('left', coord.left).css('top', coord.top + 200);
-		$('#confirm-box').css('right', 0).css('top', 0);
+		$('#confirm-box').css('right', 0).css('top', '180px');
 	},
 
 	loadingIma: function(txt)
