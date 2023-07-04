@@ -276,6 +276,7 @@ HUB.Projects = {
 
 	addConfirm: function (link, question, yesanswer, noanswer)
 	{
+		console.log('Calling addConfirm from com_projects js file');
 		var $ = this.jQuery;
 		if ($('#confirm-box')) {
 			$('#confirm-box').remove();
