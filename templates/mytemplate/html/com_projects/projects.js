@@ -307,6 +307,7 @@ HUB.Projects = {
 		}, 2000); */
 
 		// $('#confirm-box').css('left', coord.left).css('top', coord.top + 200);
+		$('#confirm-box').css('right', 0).css('top', 0);
 	},
 
 	loadingIma: function(txt)
