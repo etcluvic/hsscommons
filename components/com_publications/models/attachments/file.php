@@ -1629,6 +1629,7 @@ class File extends Base
 	public function drawAttachment($data, $params, $handler = null)
 	{
 		// Check if we have an alternative view of attachments for the handler
+		Log::info(get_class($handler));
 		$html = is_object($handler) ? $handler->drawAttachment($data, $params) : null;
 		if ($html)
 		{
