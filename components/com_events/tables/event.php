@@ -288,7 +288,6 @@ class Event extends Table
 			}
 		}
 
-		Log::info($sql);
 		$this->_db->setQuery($sql);
 		return $this->_db->loadObjectList();
 	}
