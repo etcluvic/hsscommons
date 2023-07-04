@@ -138,7 +138,6 @@ echo $complete == 1 ? ' el-complete' : ' el-incomplete'; ?> <?php if ($coming) {
 								$i++;
 
 								// Draw attachment
-								Log::info(get_class($modelAttach));
 								echo $modelAttach->drawAttachment(
 									$att->type,
 									$data,
