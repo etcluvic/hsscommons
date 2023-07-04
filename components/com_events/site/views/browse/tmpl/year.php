@@ -10,6 +10,8 @@ defined('_HZEXEC_') or die();
 
 $this->css()
 	->js();
+
+Log::info('This template is executed');
 ?>
 <header id="content-header">
 	<h2><?php echo $this->title; ?></h2>
@@ -56,6 +58,7 @@ $this->css()
 			<p class="warning"><?php echo Lang::txt('EVENTS_CAL_LANG_NO_EVENTFOR').' <strong>'.$this->year.'</strong>'; ?></p>
 		<?php } ?>
 		</div><!-- / .subject -->
+		<?php Log::info('Get past events successfully'); ?>
 		<div class="aside">
 		<form action="<?php echo Route::url('index.php?option='.$this->option.'&year='.$this->year); ?>" method="get" id="event-categories">
 			<fieldset>
@@ -81,6 +84,7 @@ $this->css()
 		<div class="calendarwrap">
 			<p class="datenav">
 				<?php
+				Log::info("Before getting current events");
 				$this_date = new \Components\Events\Helpers\EventsDate();
 				$this_date->setDate( $this->year, 0, 0 );
 
@@ -115,7 +119,7 @@ $this->css()
 					$next = "javascript:void(0);";
 					$next_text = Lang::txt('EVENTS_CAL_LANG_NO_EVENTFOR') . ' ' . Lang::txt('EVENTS_CAL_LANG_NEXTYEAR');
 				}
-
+				Log::info("After getting current events");
 				?>
 				<a class="prv" href="<?php echo $prev;?>" title="<?php echo $prev_text; ?>">&lsaquo;</a>
 				<a class="nxt" href="<?php echo $next;?>" title="<?php echo $next_text; ?>">&rsaquo;</a>
