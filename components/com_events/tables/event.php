@@ -171,9 +171,15 @@ class Event extends Table
 			case 'year':
 				$year = $filters['year'];
 
+				// $sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
+				// 	WHERE $this->_tbl.catid = b.id
+				// 	AND publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year . '%') . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
+				// 	AND $this->_tbl.state = '1'";
+
+				// Change made by Archie to prevent wrong formatting of year
 				$sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
 					WHERE $this->_tbl.catid = b.id
-					AND publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year . '%') . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
+					AND publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year) . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
 					AND $this->_tbl.state = '1'";
 
 				//did we pass in a scope filter
@@ -282,6 +288,7 @@ class Event extends Table
 			}
 		}
 
+		Log::info($sql);
 		$this->_db->setQuery($sql);
 		return $this->_db->loadObjectList();
 	}
