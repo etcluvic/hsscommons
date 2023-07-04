@@ -285,7 +285,7 @@ HUB.Projects = {
 
 		// Add confirmation
 		var ancestor = $(link).parent().parent();
-		$(ancestor).after('<div class="confirmaction" id="confirm-box" style="display:block;">' +
+		$(ancestor).after('<div class="confirmaction" id="confirm-box" style="display:absolute;">' +
 			'<p>' + question + '</p>' +
 			'<p>' +
 				'<a href="' + href + '" class="confirm">' + yesanswer + '</a>' +
