@@ -320,7 +320,6 @@ class Attachments extends Obj
 	{
 		// Load attachment type
 		$type = $this->loadAttach($name);
-		Log::info(get_class($type));
 
 		if ($type === false)
 		{
