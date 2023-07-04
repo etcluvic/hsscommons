@@ -158,6 +158,7 @@ HUB.ProjectPublications = {
 			var coord = $($(link).parent().parent()).position();
 			
 			$(link).on('click', function(e) {	
+				console.log('Calling panelCitations from com_publications js file');
 				e.preventDefault();
 				if (HUB.Projects) {
 					HUB.Projects.addConfirm($(link), 'Permanently delete this entry?', 'yes, delete', 'cancel');
