@@ -68,6 +68,7 @@ $lastname = $author->lastName ? htmlspecialchars($author->lastName) : $lastname;
 <h3><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_AUTHORS_EDIT_AUTHOR'); ?></h3>
 	<form id="hubForm-ajax" method="post" action="">
 			<fieldset>
+				<input type="hidden" name="uid" value="<?php echo ($author->user_id) ? $author->user_id : "0" ?>">
 				<input type="hidden" name="id" value="<?php echo $this->project->get('id'); ?>" />
 				<input type="hidden" name="aid" value="<?php echo $this->row->id; ?>" />
 				<input type="hidden" name="pid" value="<?php echo $this->pub->id; ?>" />
