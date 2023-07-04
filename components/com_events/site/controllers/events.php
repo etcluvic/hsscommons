@@ -304,6 +304,7 @@ class Events extends SiteController
 	 */
 	public function yearTask()
 	{
+		Log::info('calling yearTask');
 		// Get some needed info
 		$year   = $this->year;
 		$month  = $this->month;
@@ -362,6 +363,8 @@ class Events extends SiteController
 		{
 			$this->view->setError($error);
 		}
+
+		Log::info('Before display yearTask()');
 
 		$this->view->display();
 	}
