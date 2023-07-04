@@ -1632,9 +1632,11 @@ class File extends Base
 		$html = is_object($handler) ? $handler->drawAttachment($data, $params) : null;
 		if ($html)
 		{
+			Log::info('There is a handler');
 			return $html;
 		}
 
+		Log::info($this->_name);
 		// Output HTML
 		$view = new \Hubzero\Plugin\View(
 			array(
