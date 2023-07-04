@@ -319,8 +319,8 @@ class Attachments extends Obj
 	public function drawAttachment($name, $data = null, $typeParams = null, $handler = null)
 	{
 		// Load attachment type
-		Log::info(get_class($type));
 		$type = $this->loadAttach($name);
+		Log::info(get_class($type));
 
 		if ($type === false)
 		{
