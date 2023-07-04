@@ -302,7 +302,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 
 	<?php if ($this->params->get('show_disability') || $this->params->get('show_dietary')) : ?>
 		<fieldset>
-			<legend><?php echo Lang::txt('Disability/Dietary needs'); ?></legend>
+			<legend><?php echo Lang::txt('Accessibility/Dietary needs'); ?></legend>
 			<?php if ($this->params->get('show_disability')) : ?>
 				<label>
 					<input type="checkbox" class="option" name="disability" value="yes" <?php if (isset($this->disability) && $this->disability == 'yes') { echo 'checked="checked"'; } ?> />

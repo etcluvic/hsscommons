@@ -383,6 +383,9 @@
 	#edit-project #ajax-upload {
 		border: none;
 	}
+	.image-container {
+		position: relative;
+	}
 
 /* Setup - info box
 --------------------------------------------- */

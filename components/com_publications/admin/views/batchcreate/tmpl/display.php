@@ -46,6 +46,15 @@ $this->js('batchcreate');
 					</select>
 				</div>
 				<div class="input-wrap">
+					<label for="field-setdoi">
+						<?php echo Lang::txt('COM_PUBLICATIONS_SET_DOI'); ?>
+					</label>
+					<select name="setdoi" id="field-setdoi" defaultValue="0">
+						<option value="0">No</option>
+						<option value="1">Yes</option>
+					</select>
+				</div>
+				<div class="input-wrap">
 					<input type="submit" name="batch_submit" id="batch_submit" value="<?php echo Lang::txt('COM_PUBLICATIONS_UPLOAD_AND_PREPROCESS'); ?>" />
 				</div>
 			</div>
