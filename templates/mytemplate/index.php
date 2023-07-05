@@ -97,6 +97,9 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
     <![endif]-->
   </head>
   <body>
+    <!-- Archie: hidden div tag to store side-wide public information -->
+    <div id="public-info" data-session-timeout="<?php echo Config::get('session')->lifetime; ?>" style="display: none;"></div>
+
     <div id="outer-wrap">
       <jdoc:include type="modules" name="helppane" />
 
