@@ -294,8 +294,12 @@ jQuery(document).ready(function($){
 
 	function countIdleTime() {
 		idleTime++;
-		if (idleTime >= expiredTime - 10) {
-			alert('Your session is about to expired in ' + (expiredTime - idleTime) + ' minutes. Please make sure to save your current work before it getting lost!');
+		if (idleTime >= expiredTime - 10 && idleTime <= expiredTime) {
+			if (idleTime === expiredTime) {
+				alert('Your session has expired. Refreshing this page or visiting any other page will log you out!');
+			} else {
+				alert('Your session is about to expired in ' + (expiredTime - idleTime) + ' minutes. Please make sure to save your current work before it getting lost!');
+			}
 		}
 	}
 
