@@ -296,9 +296,9 @@ jQuery(document).ready(function($){
 		idleTime++;
 		if (idleTime >= expiredTime - 10 && idleTime <= expiredTime) {
 			if (idleTime === expiredTime) {
-				alert('Your session has expired. Refreshing this page or visiting any other page will log you out!');
+				alert('Your session has expired. Please refresh the page and log in again.');
 			} else {
-				alert('Your session is about to expired in ' + (expiredTime - idleTime) + ' minutes. Please make sure to save your current work before it getting lost!');
+				alert('Your session will expire in ' + (expiredTime - idleTime) + ' minutes. Please make sure to save your current work before it is lost.');
 			}
 		}
 	}
