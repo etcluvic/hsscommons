@@ -78,6 +78,29 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 							<h5><?php echo $tagline; ?> <?php if ($this->manifest->about && !$this->pub->_project->isProvisioned()) { ?><a class="pub-info-pop more-content" href="#info-panel" title="<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_CLICK_TO_LEARN_MORE'); ?>">&nbsp;</a> <?php } ?></h5>
 						<?php }
 						?>
+						<!-- Archie writes this block to handle pre-published publications -->
+						<?php if ($this->active === 'content') { ?>
+							<div class="prev-published-block">
+								<p style="font-size: 110%;">Has this item been published previously?</p>
+								<div style="display: flex; flex-direction: row; margin-top: 5px;">
+									<input id="yes-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="1" <?php if ($this->pub->doi) { ?>checked="checked" disabled<?php } ?>>
+									<label>Yes</label>
+									<input id="no-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="0" style="margin-left: 30px;" <?php if (!$this->pub->doi) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
+									<label>No</label>
+								</div>
+								<div class="retrieve-block <?php echo ($this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
+									<div style="margin-top: 15px; margin-bottom: 10px;">Retrieve information</div>
+									<div>Enter this text later (for Alyssa and Ray)</div>
+									<div>Enter a publication DOI.</div>
+									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="Enter the publication DOI for this item" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
+									<div style="margin-top: 10px;">
+										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>>Retrieve</button>
+									</div>
+									<div id="retrieve-msg" class="hidden" style="font-weight: 500; margin-top: 10px;"></div>
+								</div>
+							</div>
+						<?php } ?>
+						<!---->
 						<?php echo $this->content; ?>
 						<div class="hidden">
 							<div id="info-panel" class="full-content"><?php echo $this->manifest->about; ?></div>
