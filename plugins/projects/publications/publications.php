@@ -288,6 +288,10 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'handler':
 				$arr['html'] = $this->handler();
 				break;
+			// Retrieve publication from external API
+			case 'retrieve':
+				$this->retrieveDraft();
+				break;
 		}
 
 		// Return data
@@ -3101,5 +3105,162 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		}
 
 		exit;
+	}
+
+	/*
+	* Written by Archie
+	* An API endpoint to fetch a publication from external APIs by DOI and update the current publication based on the data received
+	*/
+	public function retrieveDraft()
+	{
+		$pid		= Request::getInt('pid', 0);
+		$vid		= Request::getInt('vid', 0);
+		$doi 		= Request::getString('doi', '');
+
+		// Enforce publication id
+		if (!$pid) {
+			echo json_encode(array(
+				"success" => 0,
+				"error" => "Missing publication Id"
+			));
+			exit();
+		}
+
+		// Enforce DOI
+		if (!$doi) {
+			echo json_encode(array(
+				"success" => 0,
+				"error" => "Missing DOI"
+			));
+			exit();
+		}
+
+		$curl = curl_init();
+
+		// Fetch publication info by DOI
+		curl_setopt_array($curl, [
+		CURLOPT_URL => 'https://api.crossref.org/works/' . $doi,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_HTTPHEADER => [
+			'Content-Type: application/json'
+		]
+		]);
+
+		$response = curl_exec($curl);
+		$error = curl_error($curl);
+
+		curl_close($curl);
+
+		// Assign fetched information to the corresponding fields
+		$response = json_decode($response, true);
+		$data = $response["message"];
+
+		$pub = new \Components\Publications\Models\Publication($pid, null, $vid);
+		$version = $pub->get('version');
+		$version->title					= isset($data["title"])  && $data["title"] ? $data["title"][0] : "";
+		$version->description			= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
+		$version->abstract				= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
+		$version->doi					= $doi;
+		$version->store();
+
+		// Get all authors by given and family names
+		if (isset($data['author']) && $data['author']) {
+			$authors = array();
+			foreach ($data['author'] as $author) {
+				$query = new \Hubzero\Database\Query;
+				$users = $query->select('*')  
+					->from('#__users')  
+					->whereEquals('givenName', $author['given'])
+					->whereEquals('surname', $author['family'])
+					->fetch();
+				if (count($users) > 0) {
+					$authors = array_merge($authors, $users);
+				} else {
+					$user 				= new StdClass();
+					$user->id			= 0;
+					$user->givenName	= $author['given'];
+					$user->surname		= $author['family'];
+					$authors[] = $user;
+				}
+			}
+		}
+		
+
+		// Set authors of publication
+		$ordering = 1;
+		foreach ($authors as $author) {
+			$pAuthor = new \Components\Publications\Tables\Author($this->_database);
+			if (!$pAuthor->loadAssociationByFirstLastName($author->id, $vid, $author->givenName, $author->surname)) {
+				$pAuthor->user_id      = $author->id;
+				$pAuthor->ordering     = $ordering;
+				$pAuthor->credit       = '';
+				$pAuthor->role         = '';
+				$pAuthor->status       = 1;
+				
+				$pAuthor->firstName    = $author->givenName;
+				$pAuthor->lastName     = $author->surname;
+				$pAuthor->name         = trim($pAuthor->firstName . ' ' . $pAuthor->lastName);
+
+				// Check if project member
+				$objO   = $pub->project()->table('Owner');
+				$owner  = $objO->getOwnerId($pub->project()->get('id'), $pAuthor->user_id, $pAuthor->name);
+
+				if ($owner) {
+					$pAuthor->project_owner_id = $owner;
+				} else {
+					$objO = new \Components\Projects\Tables\Owner($this->_database);
+					$objO->projectid     = $pub->project()->get('id');
+					$objO->userid        = $pAuthor->user_id;
+					$objO->status        = $pAuthor->user_id ? 1 : 0;
+					$objO->added         = Date::toSql();
+					$objO->role          = 2;
+					$objO->invited_email = '';
+					$objO->invited_name  = $pAuthor->name;
+					$objO->store();
+					$pAuthor->project_owner_id = $objO->id;
+				}
+
+				$pAuthor->publication_version_id = $vid;
+				$pAuthor->created_by = User::getInstance()->get('id');
+				$pAuthor->created    = Date::toSql();
+
+				$pAuthor->store();
+
+				$ordering++;
+			}
+		}
+
+		// Build tags string
+		if (isset($data['subject']) && $data['subject'])
+		{
+			$tags = '';
+			$i = 0;
+			foreach ($data['subject'] as $tag)
+			{
+				$i++;
+				$tags .= trim($tag);
+				$tags .= $i == count($data['subject']) ? '' : ',';
+			}
+
+			// Add tags
+			$tagsHelper = new \Components\Publications\Helpers\Tags($this->_database);
+			$tagsHelper->tag_object(User::getInstance()->get('id'), $vid, $tags, 1);
+		}
+
+
+		if ($error) {
+			echo json_encode(array(
+				"success" => 0,
+				"error" => $error
+			));
+		} else {
+			echo json_encode(array(
+				"success" => 1,
+				"data" => $data
+			));
+		}
+		
+		exit();
 	}
 }
