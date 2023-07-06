@@ -94,6 +94,31 @@ class Author extends Table
 	}
 
 	/**
+	 * Load record by first name and last name
+	 *
+	 * @param   integer  $uid  User ID
+	 * @param   integer  $vid  Pub version ID
+	 * @param   string   $firstName  First name
+	 * @param   string   $lastName  Last name
+	 * @return  mixed    False if error, array of objects on success
+	 */
+	public function loadAssociationByFirstLastName($uid = null, $vid = null, $firstName, $lastName)
+	{
+		$query = new \Hubzero\Database\Query;
+		$authors = $query->select('*')
+					->from('#__publication_authors')
+					->whereEquals('publication_version_id', $vid)
+					->whereEquals('user_id', $uid)
+					->whereEquals('firstName', $firstName)
+					->whereEquals('lastName', $lastName)
+					->fetch();
+		if (count($authors) == 0) {
+			return false;
+		}
+		return $authors;
+	}
+
+	/**
 	 * Get array of author Ids ordered by ordering
 	 *
 	 * @param   array    $uids  Ids of authors for publication
