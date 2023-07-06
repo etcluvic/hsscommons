@@ -73,6 +73,65 @@ HUB.ProjectPublicationsDraft = {
 		// Enable disputes
 		HUB.ProjectPublicationsDraft.allowDispute();
 
+		// Show "Retrieve" field if selecting "Yes" for item being published previously. Otherwise, hide the field
+		HUB.ProjectPublicationsDraft.toggleRetrieveField();
+
+		// Retrieve publication's info from DOI
+		HUB.ProjectPublicationsDraft.retrievePubInfoFromDOI();
+
+	},
+
+	// Show "Retrieve" field if selecting "Yes" for item being published previously. Otherwise, hide the field
+	toggleRetrieveField: function()
+	{
+		var $ = this.jQuery;
+	
+		$('#yes-prev-published').click(function() {
+			$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
+		})
+
+		$('#no-prev-published').click(function() {
+			$(this).closest('.prev-published-block').find('.retrieve-block').addClass('hidden');
+		})
+	},
+
+	// Retrieve publication's info from DOI
+	retrievePubInfoFromDOI: function()
+	{
+		$('#retrieve-btn').click(function(e) {
+			e.preventDefault();
+			const retrieveBlock = $(this).closest('.retrieve-block');
+			const retrieveMsg = retrieveBlock.find('#retrieve-msg');
+			const retrieveDOI = retrieveBlock.find('#retrieve-doi').val();
+			const currentURI = window.location.pathname;
+			const URIparams = currentURI.split('/');
+			const projectId = URIparams[2];
+			const publicationId = URIparams[4];
+			const versionId = $(this).data('vid');
+			$.ajax({
+				url: '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId,
+				method: 'GET',
+				dataType: 'json',
+				success: function(response) {
+					console.log(response);
+					retrieveMsg.removeClass('hidden');
+					if (response.success) {
+						// console.log(JSON.parse(response.data));
+						retrieveMsg.css('color', 'green');
+						retrieveMsg.text('Fetched publication successfully');
+						$('#retrieve-btn').attr("disabled", true);
+						retrieveBlock.find('#retrieve-doi').attr("disabled", true);
+						$('.prev-published-btn').attr("disabled", true);
+					} else {
+						retrieveMsg.css('color', 'red');
+						retrieveMsg.text(response.error);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.log('Error: ' + error);
+				}
+			})
+		})
 	},
 
 	// Allow to edit notices
