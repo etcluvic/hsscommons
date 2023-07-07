@@ -2250,7 +2250,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		}
 
 		// When dataset is automatically approved.
-		if (!$review && ($autoApprove || $this->_pubconfig->get('autoapprove') == 1) && $pub->version->get('doi'))
+		if (!$review && ($autoApprove || $this->_pubconfig->get('autoapprove') == 1) && $pub->version->get('doi') && !$pub->version->get('forked_from') == $pub->version->get('id'))
 		{
 			// Update DOI metadata
 			$doiService->update($pub->version->get('doi'), true);
@@ -3162,6 +3162,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$version->description			= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
 		$version->abstract				= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
 		$version->doi					= $doi;
+		
+		// Previously published publications have the "forked_from" field set to its own version id
+		$version->forked_from			= $vid;
 		$version->store();
 
 		// Get all authors by given and family names
