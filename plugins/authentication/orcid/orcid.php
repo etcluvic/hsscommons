@@ -102,7 +102,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		}
 
 		// Create and follow the authorization URL
-		App::redirect(getAuthorizationUrl($this->params->get('client_id'), True));
+		App::redirect(self::getAuthorizationUrl($this->params->get('client_id'), True));
 	}
 
 	public function getAuthorizationUrl($clientId, $sandbox)
