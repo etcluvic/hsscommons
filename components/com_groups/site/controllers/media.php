@@ -552,7 +552,7 @@ class Media extends Base
 		// clean file name & make unique
 		$file['name'] = urldecode($file['name']);
 		$file['name'] = Filesystem::clean($file['name']);
-		$file['name'] = str_replace(' ', '_', $file['name']);
+		// $file['name'] = str_replace(' ', '_', $file['name']);
 		$fileInfo     = pathinfo($file['name']);
 		$filename     = $fileInfo['filename'];
 		$ext          = $fileInfo['extension'];
