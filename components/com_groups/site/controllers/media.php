@@ -549,6 +549,10 @@ class Media extends Base
 			}
 		}
 
+		Log::debug($groupFolder);
+		Log::debug($groupUploadsFolder);
+		Log::debug($file['name']);
+
 		// clean file name & make unique
 		$file['name'] = urldecode($file['name']);
 		$file['name'] = Filesystem::clean($file['name']);
