@@ -384,8 +384,7 @@ class Media extends Base
 	 * @return  void
 	 */
 	public function uploadTask()
-	{	
-		Log::info('Calling uploadTask');
+	{
 		// vars for later
 		$message     = '';
 		$messageType = 'error';
@@ -476,7 +475,6 @@ class Media extends Base
 	 */
 	public function doUpload()
 	{
-		Log::info('Calling doUpload');
 		Request::checkToken(['get', 'post']);
 
 		// var to hold potential error
@@ -551,14 +549,10 @@ class Media extends Base
 			}
 		}
 
-		Log::info($groupFolder);
-		Log::info($groupUploadsFolder);
-		Log::info($file['name']);
-
 		// clean file name & make unique
 		$file['name'] = urldecode($file['name']);
 		$file['name'] = Filesystem::clean($file['name']);
-		// $file['name'] = str_replace(' ', '_', $file['name']);
+		$file['name'] = str_replace(' ', '_', $file['name']);
 		$fileInfo     = pathinfo($file['name']);
 		$filename     = $fileInfo['filename'];
 		$ext          = $fileInfo['extension'];
