@@ -656,9 +656,6 @@ class Media extends Base
 			$folder = '/uploads';
 		}
 
-		Log::debug($folder);
-		Log::debug($file);
-
 		// regular groups can only access inside /uploads
 		if ($this->group->get('type') != 3)
 		{
@@ -671,7 +668,6 @@ class Media extends Base
 
 		// Build the upload path if it doesn't exist
 		$uploadDirectory = PATH_APP . DS . trim($this->config->get('uploadpath', '/site/groups'), DS) . DS . $this->group->get('gidNumber') . DS . ltrim($folder, DS);
-		Log::debug($uploadDirectory);
 
 		//make sure upload directory is writable
 		if (!is_dir($uploadDirectory))
@@ -724,8 +720,6 @@ class Media extends Base
 
 		//final file
 		$file = $uploadDirectory . DS . $filename . '.' . $ext;
-
-		Log::debug($file);
 
 		//save file
 		if ($stream)
