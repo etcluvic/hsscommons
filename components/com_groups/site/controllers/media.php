@@ -1055,7 +1055,8 @@ class Media extends Base
 		Request::checkToken(['get', 'post']);
 
 		//get request vars
-		$name   = Request::getCmd('name', '');
+		// $name   = Request::getCmd('name', '');
+		$name   = Request::getString('name', '');
 		$folder = Request::getString('folder', '');
 
 		//create return folder
