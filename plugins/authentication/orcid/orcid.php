@@ -105,16 +105,12 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		App::redirect(self::getAuthorizationUrl($this->params->get('client_id'), True));
 	}
 
-	public function getAuthorizationUrl($clientId, $sandbox)
+	public function getAuthorizationUrl($sandbox, $clientId, $scope, $state, $showLogin)
 	{
-		if ($sandbox){
+		
 
-			$url = 'https://sandbox.orcid.org/oauth/authorize?client_id=' . $clientId . '&response_type=code&scope=/read-limited&redirect_uri=' . self::getRedirectUri('orcid');
-		} else {
-
-			$url = 'https://orcid.org/oauth/authorize?client_id=' . $clientId . '&response_type=code&scope=/read-limited&redirect_uri=' . self::getRedirectUri('orcid');
-		}
-
+		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/oauth/authorize?client_id=' . $clientId . '&scope=' . $scope . '&redirect_uri=' . self::getRedirectUri('orcid') . '&task=user.login&authenticator=orcid&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state;
+		
 		return $url;
 
 	}
