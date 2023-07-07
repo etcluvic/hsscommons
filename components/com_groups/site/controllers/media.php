@@ -385,7 +385,7 @@ class Media extends Base
 	 */
 	public function uploadTask()
 	{	
-		Log::debug('Calling uploadTask');
+		Log::info('Calling uploadTask');
 		// vars for later
 		$message     = '';
 		$messageType = 'error';
@@ -476,7 +476,7 @@ class Media extends Base
 	 */
 	public function doUpload()
 	{
-		Log::debug('Calling doUpload');
+		Log::info('Calling doUpload');
 		Request::checkToken(['get', 'post']);
 
 		// var to hold potential error
@@ -551,9 +551,9 @@ class Media extends Base
 			}
 		}
 
-		Log::debug($groupFolder);
-		Log::debug($groupUploadsFolder);
-		Log::debug($file['name']);
+		Log::info($groupFolder);
+		Log::info($groupUploadsFolder);
+		Log::info($file['name']);
 
 		// clean file name & make unique
 		$file['name'] = urldecode($file['name']);
