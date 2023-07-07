@@ -109,7 +109,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{
 		
 
-		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/oauth/authorize?client_id=' . $clientId . '&scope=' . $scope . '&redirect_uri=' . self::getRedirectUri('orcid') . '&task=user.login&authenticator=orcid&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state;
+		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/oauth/authorize?client_id=' . $clientId . '&scope=' . $scope . '&redirect_uri=' . self::getRedirectUri('orcid') . ($showLogin ? 'true' : 'false') . '&state=' . $state;
 		
 		return $url;
 
