@@ -384,7 +384,8 @@ class Media extends Base
 	 * @return  void
 	 */
 	public function uploadTask()
-	{
+	{	
+		Log::debug('Calling uploadTask');
 		// vars for later
 		$message     = '';
 		$messageType = 'error';
@@ -475,6 +476,7 @@ class Media extends Base
 	 */
 	public function doUpload()
 	{
+		Log::debug('Calling doUpload');
 		Request::checkToken(['get', 'post']);
 
 		// var to hold potential error
