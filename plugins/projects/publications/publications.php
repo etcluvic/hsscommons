@@ -3154,18 +3154,19 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// Assign fetched information to the corresponding fields
 		$response = json_decode($response, true);
+
+		// Return "DOI not found" if response is empty
+		if (!$response) {
+			echo json_encode(array(
+				"success" => 0,
+				"error" => "DOI not found"
+			));
+			exit();
+		}
+
 		$data = $response["message"];
 
 		$pub = new \Components\Publications\Models\Publication($pid, null, $vid);
-		$version = $pub->get('version');
-		$version->title					= isset($data["title"])  && $data["title"] ? $data["title"][0] : "";
-		$version->description			= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
-		$version->abstract				= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
-		$version->doi					= $doi;
-		
-		// Previously published publications have the "forked_from" field set to its own version id
-		$version->forked_from			= $vid;
-		$version->store();
 
 		// Get all authors by given and family names
 		if (isset($data['author']) && $data['author']) {
@@ -3250,6 +3251,16 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			$tagsHelper = new \Components\Publications\Helpers\Tags($this->_database);
 			$tagsHelper->tag_object(User::getInstance()->get('id'), $vid, $tags, 1);
 		}
+
+		$version = $pub->get('version');
+		$version->title					= isset($data["title"])  && $data["title"] ? $data["title"][0] : "";
+		$version->description			= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
+		$version->abstract				= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
+		$version->doi					= $doi;
+		
+		// Previously published publications have the "forked_from" field set to its own version id
+		$version->forked_from			= $vid;
+		$version->store();
 
 
 		if ($error) {
