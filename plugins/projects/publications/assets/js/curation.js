@@ -105,11 +105,18 @@ HUB.ProjectPublicationsDraft = {
 			const retrieveDOI = retrieveBlock.find('#retrieve-doi').val();
 			const currentURI = window.location.pathname;
 			const URIparams = currentURI.split('/');
-			const projectId = URIparams[2];
-			const publicationId = URIparams[4];
 			const versionId = $(this).data('vid');
+			let ajaxUrl = '';
+			if (URIparams[1] === "projects") {
+				const projectId = URIparams[2];
+				const publicationId = URIparams[4];
+				ajaxUrl = '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId;
+			} else if (URIparams[1] === "publications") {
+				const publicationId = URIparams[3];
+				ajaxUrl = '/publications/retrieve/' + publicationId + '?doi=' + retrieveDOI + '&vid=' + versionId;
+			}
 			$.ajax({
-				url: '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId,
+				url: ajaxUrl,
 				method: 'GET',
 				dataType: 'json',
 				success: function(response) {
@@ -129,6 +136,9 @@ HUB.ProjectPublicationsDraft = {
 				},
 				error: function(xhr, status, error) {
 					console.log('Error: ' + error);
+					retrieveMsg.removeClass('hidden');
+					retrieveMsg.css('color', 'red');
+					retrieveMsg.text(error);
 				}
 			})
 		})
