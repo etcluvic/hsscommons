@@ -183,6 +183,9 @@
 	.icon-revert:before    {
 		content: "\2714";
 	}
+	.icon-cancel:before {
+		content: "\2716";
+	}
 	ul#status-bar li a {
 		font-size: 1.1em;
 	}

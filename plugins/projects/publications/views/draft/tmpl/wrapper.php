@@ -71,6 +71,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 		 </fieldset>
   		<div id="c-pane" class="columns">
 			 <div class="c-inner draftflow">
+			 			<a class="icon-cancel" style="position: absolute; top: 50px; right: 70px; cursor: pointer;">Cancel draft</a>
 						<h4><?php echo $title; ?></h4>
 						<?php
 							if ($tagline && $move)
