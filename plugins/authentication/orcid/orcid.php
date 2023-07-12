@@ -279,10 +279,11 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		}
 
 		// Authenticate the user
-		$oauth->authenticate(Request::getString('code'));
+		// $oauth->authenticate(Request::getString('code'));
+		$access_token = self::authenticate(True, $this->params->get('client_id'), $this->params->get('client_secret'), self::getRedirectUri('orcid'), Request::getString('code'));
 
 		// Check for successful authentication
-		if ($oauth->isAuthenticated())
+		if ($access_token)
 		{
 			$orcid = new Profile($oauth);
 
