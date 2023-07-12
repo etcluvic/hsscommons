@@ -648,7 +648,7 @@ class Media extends Base
 		}
 
 		Log::debug($file);
-		Log::debug($_FILES['qqfile']);
+		Log::debug(get_object_vars($_FILES['qqfile']));
 
 		//get folder
 		$folder = Request::getString('folder', '');
