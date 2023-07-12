@@ -860,8 +860,6 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 			$url  = Route::url($url);
 		}
 
-		Log::debug('Block 1');
-
 		// Set params
 		$params = array(
 			'subdir'     => $this->subdir,
@@ -869,12 +867,10 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 			'ajaxUpload' => $ajaxUpload,
 			'path'       => $this->_path
 		);
-		
+
 		// Upload file
-		Log::debug(get_class($this->repo));
 		$results = $this->repo->insert($params);
-		Log::debug($results);
-		Log::debug('Block 2');
+
 		// Register changes for active projects
 		if (!empty($results))
 		{
@@ -909,11 +905,10 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 				}
 			}
 		}
-		Log::debug('Block 3');
+
 		// On error
 		if ($this->repo->getError())
 		{
-			Log::debug('Block 4');
 			if ($ajaxUpload || $json)
 			{
 				return json_encode(array(
@@ -927,11 +922,10 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 				return;
 			}
 		}
-		Log::debug('Block 5');
+
 		// Return status in JSON
 		if ($json)
 		{
-			Log::debug('Block 6');
 			// After upload actions
 			$this->onAfterUpdate();
 
@@ -945,7 +939,6 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 		{
 			\Notify::message($this->_msg, 'success', 'projects');
 		}
-		Log::debug('Block 7');
 
 		// Redirect
 		App::redirect($url);

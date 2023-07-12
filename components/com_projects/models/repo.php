@@ -1000,11 +1000,6 @@ class Repo extends Obj
 		{
 			// Regular upload
 			$upload = Request::getArray('upload', '', 'files');
-			Log::debug("upload_max_filesize:");
-			$upload_max_size = ini_get('upload_max_filesize');
-			Log::debug($upload_max_size);
-			Log::debug($upload);
-			Log::debug($_FILES);
 
 			if (empty($upload['name']) or $upload['name'][0] == '')
 			{
@@ -1048,7 +1043,6 @@ class Repo extends Obj
 	 */
 	protected function _insert($dataPath, $target, &$available, $params)
 	{
-		Log::debug('Calling _insert');
 		$path         = isset($params['path']) ? $params['path'] : $this->get('path');
 		$dirPath      = isset($params['subdir']) ? $params['subdir'] : null;
 		$dirsize      = isset($params['dirsize']) ? $params['dirsize'] : 0;
@@ -1171,7 +1165,6 @@ class Repo extends Obj
 	 */
 	protected function _upload($file, $tmp_name, $target, $size, &$available, $params)
 	{
-		Log::debug('Calling _upload');
 		$dirPath     = isset($params['subdir']) ? $params['subdir'] : null;
 		$expand      = isset($params['expand']) ? $params['expand'] : false;
 
@@ -1192,10 +1185,8 @@ class Repo extends Obj
 			// Run some checks
 			if (!$this->_check($file, $tmp_name, $size, $available))
 			{
-				Log::debug('_check failed');
 				return false;
 			}
-			Log::debug('_check succeeded');
 
 			$where = $target . DS . $file;
 			$exists = is_file($where) ? true : false;
@@ -1207,15 +1198,11 @@ class Repo extends Obj
 			}
 			else
 			{
-				Log::debug($tmp_name);
-				Log::debug($where);
 				if (!move_uploaded_file($tmp_name, $where))
 				{
-					Log::debug('move_uploaded_file failed');
 					$this->setError(Lang::txt('COM_PROJECTS_FILES_ERROR_UPLOADING'));
 					return false;
 				}
-				Log::debug('move_uploaded_file succeeded');
 			}
 
 			// File object

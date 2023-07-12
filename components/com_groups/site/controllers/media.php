@@ -632,14 +632,12 @@ class Media extends Base
 		//get the file
 		if (isset($_GET['qqfile']))
 		{
-			Log::debug('Execute _GET');
 			$stream = true;
 			$file = $_GET['qqfile'];
 			$size = (int) $_SERVER["CONTENT_LENGTH"];
 		}
 		elseif (isset($_FILES['qqfile']))
 		{
-			Log::debug('Execute _FILES');
 			$stream = false;
 			$file = $_FILES['qqfile']['name'];
 			$size = (int) $_FILES['qqfile']['size'];
@@ -648,9 +646,6 @@ class Media extends Base
 		{
 			return;
 		}
-
-		Log::debug($file);
-		Log::debug($_GET['qqfile']);
 
 		//get folder
 		$folder = Request::getString('folder', '');
