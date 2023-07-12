@@ -1001,6 +1001,7 @@ class Repo extends Obj
 			// Regular upload
 			$upload = Request::getArray('upload', '', 'files');
 			Log::debug($upload);
+			Log::debug($_FILES);
 
 			if (empty($upload['name']) or $upload['name'][0] == '')
 			{
