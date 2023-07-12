@@ -1202,6 +1202,8 @@ class Repo extends Obj
 			}
 			else
 			{
+				Log::debug($tmp_name);
+				Log::debug($where);
 				if (!move_uploaded_file($tmp_name, $where))
 				{
 					Log::debug('move_uploaded_file failed');
