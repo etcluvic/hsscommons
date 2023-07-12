@@ -73,24 +73,38 @@ HUB.ProjectPublicationsDraft = {
 		// Enable disputes
 		HUB.ProjectPublicationsDraft.allowDispute();
 
-		// Show "Retrieve" field if selecting "Yes" for item being published previously. Otherwise, hide the field
-		HUB.ProjectPublicationsDraft.toggleRetrieveField();
+		// Interactions for retrieve previous publication info block
+		HUB.ProjectPublicationsDraft.retrieveBlockInteractions();
 
 		// Retrieve publication's info from DOI
 		HUB.ProjectPublicationsDraft.retrievePubInfoFromDOI();
 
 	},
 
-	// Show "Retrieve" field if selecting "Yes" for item being published previously. Otherwise, hide the field
-	toggleRetrieveField: function()
+	// Interactions for retrieve previous publication info block
+	retrieveBlockInteractions: function()
 	{
 		var $ = this.jQuery;
-	
+
+		// Ask if a previously published publication has a DOI
 		$('#yes-prev-published').click(function() {
-			$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
+			$(this).closest('.prev-published-block').find('.has-doi-block').removeClass('hidden');
+			if ($('#yes-doi').is(':checked')) {
+				$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
+			}
 		})
 
 		$('#no-prev-published').click(function() {
+			$(this).closest('.prev-published-block').find('.has-doi-block').addClass('hidden');
+			$(this).closest('.prev-published-block').find('.retrieve-block').addClass('hidden');
+		})
+
+		// Show "Retrieve" field if selecting "Yes" for item having a DOI. Otherwise, hide the field
+		$('#yes-doi').click(function() {
+			$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
+		})
+
+		$('#no-doi').click(function() {
 			$(this).closest('.prev-published-block').find('.retrieve-block').addClass('hidden');
 		})
 	},
