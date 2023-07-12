@@ -100,6 +100,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 								</div>
 								<div class="retrieve-block <?php echo ($this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
 									<div style="margin-top: 15px; margin-bottom: 10px;">Retrieve information</div>
+									<div>Graham: Add text to warn users about the disabling of the retrieval button after clicking it</div>
 									<div>Enter this text later (for Alyssa and Ray)</div>
 									<div>Enter a publication DOI.</div>
 									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="Enter the publication DOI for this item" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
