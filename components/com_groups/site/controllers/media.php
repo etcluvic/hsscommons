@@ -499,6 +499,8 @@ class Media extends Base
 
 		// get request vars
 		$file = Request::getArray('upload', '', 'files');
+		Log::debug('Files from group:');
+		Log::debug($file);
 
 		// make sure we have file
 		if (!$file['name'] || $file['size'] == 0)
