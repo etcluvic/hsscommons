@@ -499,8 +499,6 @@ class Media extends Base
 
 		// get request vars
 		$file = Request::getArray('upload', '', 'files');
-		Log::debug('Files from group:');
-		Log::debug($file);
 
 		// make sure we have file
 		if (!$file['name'] || $file['size'] == 0)
@@ -630,6 +628,8 @@ class Media extends Base
 		//max upload size
 		$sizeLimit = $config->get('upload_maxsize');
 		$sizeLimit = $sizeLimit * 1024 * 1024;
+
+		Log::debug($_FILES['qqfile']);
 
 		//get the file
 		if (isset($_GET['qqfile']))
