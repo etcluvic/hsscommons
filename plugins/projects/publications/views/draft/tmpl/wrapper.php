@@ -86,7 +86,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 								<div style="display: flex; flex-direction: row; margin-top: 5px;">
 									<input id="yes-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="1" <?php if ($this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } ?>>
 									<label>Yes</label>
-									<input id="no-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="0" style="margin-left: 30px;" <?php if (!$this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
+									<input id="no-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="0" style="margin-left: 30px;" <?php if (!$this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } else if ($this->pub->doi) { ?>disabled<?php } ?>>
 									<label>No</label>
 								</div>
 								<div class="has-doi-block <?php echo ($this->pub->version->forked_from == $this->pub->version->id) ? "" : "hidden" ?>">
