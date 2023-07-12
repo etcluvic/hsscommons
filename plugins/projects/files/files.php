@@ -871,7 +871,9 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 		);
 		
 		// Upload file
+		Log::debug(get_class($this->repo));
 		$results = $this->repo->insert($params);
+		Log::debug($results);
 		Log::debug('Block 2');
 		// Register changes for active projects
 		if (!empty($results))

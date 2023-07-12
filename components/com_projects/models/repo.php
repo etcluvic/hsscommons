@@ -1043,6 +1043,7 @@ class Repo extends Obj
 	 */
 	protected function _insert($dataPath, $target, &$available, $params)
 	{
+		Log::debug('Calling _insert');
 		$path         = isset($params['path']) ? $params['path'] : $this->get('path');
 		$dirPath      = isset($params['subdir']) ? $params['subdir'] : null;
 		$dirsize      = isset($params['dirsize']) ? $params['dirsize'] : 0;
@@ -1165,6 +1166,7 @@ class Repo extends Obj
 	 */
 	protected function _upload($file, $tmp_name, $target, $size, &$available, $params)
 	{
+		Log::debug('Calling _upload');
 		$dirPath     = isset($params['subdir']) ? $params['subdir'] : null;
 		$expand      = isset($params['expand']) ? $params['expand'] : false;
 
