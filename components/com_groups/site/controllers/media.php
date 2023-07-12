@@ -629,8 +629,6 @@ class Media extends Base
 		$sizeLimit = $config->get('upload_maxsize');
 		$sizeLimit = $sizeLimit * 1024 * 1024;
 
-		Log::debug($_FILES['qqfile']);
-
 		//get the file
 		if (isset($_GET['qqfile']))
 		{
@@ -648,6 +646,8 @@ class Media extends Base
 		{
 			return;
 		}
+
+		Log::debug($file);
 
 		//get folder
 		$folder = Request::getString('folder', '');
