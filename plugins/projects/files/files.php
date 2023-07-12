@@ -234,6 +234,8 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 				$this->_task = 'connections';
 			}
 
+			Log::debug($this->_task);
+
 			// File actions
 			switch ($this->_task)
 			{
