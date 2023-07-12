@@ -1000,6 +1000,9 @@ class Repo extends Obj
 		{
 			// Regular upload
 			$upload = Request::getArray('upload', '', 'files');
+			Log::debug("upload_max_filesize:");
+			$upload_max_size = ini_get('upload_max_filesize');
+			Log::debug($upload_max_filesize);
 			Log::debug($upload);
 			Log::debug($_FILES);
 
