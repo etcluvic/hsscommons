@@ -115,6 +115,55 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 	}
 
+	public function authenticate($sandbox, $clientId, $clientSecret, $redirectUri, $code)
+	{
+		// Check for required items
+		if (!$clientId)
+		{
+			throw new Exception('Client ID is required');
+		}
+		if (!$clientSecret)
+		{
+			throw new Exception('Client secret is required');
+		}
+		if (!$redirectUri)
+		{
+			throw new Exception('Redirect URI is required');
+		}
+
+		$url  = 'https://';
+		$url .= ($sandbox ? 'sandbox.' : '') . 'orcid.org/oauth/token';
+
+		$fields = [
+			'client_id'     => $clientId,
+			'client_secret' => $clientSecret,
+			'code'          => $code,
+			'redirect_uri'  => urlencode($redirectUri),
+			'grant_type'    => 'authorization_code'
+		];
+
+		$this->http->setUrl($url)
+				->setPostFields($fields)
+				->setHeader(['Accept' => 'application/json']);
+
+		$data = json_decode($this->http->execute());
+
+		if (isset($data->access_token))
+		{
+			$access_token = ($data->access_token);
+		}
+		else
+		{
+			// Seems like the response format changes on occasion... not sure what's going on there?
+			$error = (isset($data->error)) ? $data->error : 'unknown error';
+
+			throw new Exception($error);
+		}
+
+		return $access_token;
+
+	}
+
 	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
@@ -132,10 +181,10 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
 
 		// Authenticate the user
-		$oauth->authenticate(Request::getString('code'));
+		$access_token = self::authenticate(Request::getString('code'));
 
 		// Check for successful authentication
-		if ($oauth->isAuthenticated())
+		if ($access_token)
 		{
 			$orcid = new Profile($oauth);
 
