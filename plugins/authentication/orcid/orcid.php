@@ -181,7 +181,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
 
 		// Authenticate the user
-		$access_token = self::authenticate(Request::getString('code'));
+		$access_token = self::authenticate(True, $this->params->get('client_id'), $this->params->get('client_secret'), self::getRedirectUri('orcid'), Request::getString('code'));
 
 		// Check for successful authentication
 		if ($access_token)
