@@ -731,20 +731,21 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 	public function saveDraft()
 	{
 		// Incoming
-		$aid	 = Request::getInt('aid', 0);
-		$pid     = $this->_pid ? $this->_pid : Request::getInt('pid', 0);
-		$vid     = Request::getInt('vid', 0);
-		$version = Request::getString('version', 'dev');
-		$block   = Request::getString('section', '');
-		$blockId = Request::getInt('step', 0);
-		$element = Request::getInt('element', 0);
-		$next    = Request::getInt('next', 0);
-		$json    = Request::getInt('json', 0);
-		$move    = Request::getString('move', ''); // draft flow?
-		$back    = Request::getString('backUrl', Request::getString('HTTP_REFERER', null, 'server'));
-		$new     = false;
-		$props   = Request::getString('p', '');
-		$parts   = explode('-', $props);
+		$aid	 				= Request::getInt('aid', 0);
+		$pid     				= $this->_pid ? $this->_pid : Request::getInt('pid', 0);
+		$vid     				= Request::getInt('vid', 0);
+		$version 				= Request::getString('version', 'dev');
+		$block   				= Request::getString('section', '');
+		$blockId 				= Request::getInt('step', 0);
+		$element 				= Request::getInt('element', 0);
+		$next    				= Request::getInt('next', 0);
+		$json    				= Request::getInt('json', 0);
+		$move    				= Request::getString('move', ''); // draft flow?
+		$back    				= Request::getString('backUrl', Request::getString('HTTP_REFERER', null, 'server'));
+		$new     				= false;
+		$props   				= Request::getString('p', '');
+		$parts   				= explode('-', $props);
+		$publishedPreviously	= Request::getInt('published_previously', 0);
 
 		// Check permission
 		if ($this->model->exists() && !$this->model->access('content'))
@@ -799,6 +800,12 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		if (!$pub->_curationModel->setBlock($block, $blockId))
 		{
 			$block = 'status';
+		}
+		
+		$pubVersion = $pub->get('version');
+		if ($publishedPreviously && !$pubVersion->forked_from && $block == 'content') {
+			$pubVersion->forked_from = $pubVersion->id;
+			$pubVersion->store();
 		}
 
 		// Save incoming
