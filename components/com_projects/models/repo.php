@@ -1187,8 +1187,10 @@ class Repo extends Obj
 			// Run some checks
 			if (!$this->_check($file, $tmp_name, $size, $available))
 			{
+				Log::debug('_check failed');
 				return false;
 			}
+			Log::debug('_check succeeded');
 
 			$where = $target . DS . $file;
 			$exists = is_file($where) ? true : false;
@@ -1202,9 +1204,11 @@ class Repo extends Obj
 			{
 				if (!move_uploaded_file($tmp_name, $where))
 				{
+					Log::debug('move_uploaded_file failed');
 					$this->setError(Lang::txt('COM_PROJECTS_FILES_ERROR_UPLOADING'));
 					return false;
 				}
+				Log::debug('move_uploaded_file succeeded');
 			}
 
 			// File object
