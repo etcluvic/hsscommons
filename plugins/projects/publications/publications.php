@@ -803,9 +803,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		}
 		
 		$pubVersion = $pub->get('version');
-		Log::debug($publishedPreviously);
 		if ($publishedPreviously && !$pubVersion->forked_from && $block == 'content') {
-			Log::debug('Setting pub forked_from to its id');
 			$pubVersion->forked_from = $pubVersion->id;
 			$pubVersion->store();
 		}
