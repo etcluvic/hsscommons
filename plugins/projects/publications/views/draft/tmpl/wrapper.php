@@ -84,7 +84,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 							<div class="prev-published-block">
 								<p style="font-size: 110%;">Has this item been published previously?</p>
 								<div style="display: flex; flex-direction: row; margin-top: 5px;">
-									<input id="yes-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="1" <?php if ($this->pub->forked_from == $this->pub->id) { Log::debug('Setting checked'); ?>checked="checked"<?php } ?>>
+									<input id="yes-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="1" <?php Log::debug($this->pub->forked_from); Log::debug($this->pub->id); if ($this->pub->forked_from == $this->pub->id) { Log::debug('Setting checked'); ?>checked="checked"<?php } ?>>
 									<label>Yes</label>
 									<input id="no-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="0" style="margin-left: 30px;" <?php if (!$this->pub->forked_from == $this->pub->id) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
 									<label>No</label>
