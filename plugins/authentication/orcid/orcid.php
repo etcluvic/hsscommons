@@ -10,7 +10,7 @@ defined('_HZEXEC_') or die();
 
 use Orcid\Profile;
 use Orcid\Oauth;
-use SciStarter\Http\Curl;
+use Orcid\Http\Curl;
 
 class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 {
