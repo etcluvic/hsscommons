@@ -105,7 +105,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		App::redirect(self::getAuthorizationUrl(True, $this->params->get('client_id'), '/authenticate', $view->return, True));
 	}
 
-	public function getRedirectUri($name)
+	public function getRedirect($name)
 	{
 		// Get the hub url
 		$service = trim(\Request::base(), '/');
@@ -137,7 +137,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{
 		
 
-		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/signin?client_id=' . $clientId . '&scope=' . $scope . '&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state . '&redirect_uri=' . self::getRedirectUri('orcid');
+		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/signin?client_id=' . $clientId . '&scope=' . $scope . '&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state . '&redirect_uri=' . self::getRedirect('orcid');
 		
 		return $url;
 
