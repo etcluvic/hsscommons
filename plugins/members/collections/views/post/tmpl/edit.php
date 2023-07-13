@@ -128,7 +128,7 @@ $this->css()
 
 					<div class="form-group">
 						<label for="field-title">
-							<?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_FIELD_TITLE'); ?>
+							<?php echo Lang::txt('PLG_MEMBERS_COLLECTIONS_FIELD_TITLE'); ?> (supports HTML)
 							<input type="text" name="fields[title]" id="field-title" class="form-control" value="<?php echo $this->escape(stripslashes($item->get('title'))); ?>" />
 						</label>
 					</div>
