@@ -168,7 +168,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			'redirect_uri'  => urlencode($redirectUri),
 			'grant_type'    => 'authorization_code'
 		];
-		$this->http = $http ?: new Curl;
+		$this->http = new Curl;
 
 		$this->http->setUrl($url)
 				->setPostFields($fields)
