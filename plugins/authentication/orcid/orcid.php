@@ -10,6 +10,7 @@ defined('_HZEXEC_') or die();
 
 use Orcid\Profile;
 use Orcid\Oauth;
+use Orcid\Http\Curl;
 
 class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 {
@@ -19,7 +20,6 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 * @var boolean
 	 */
 	protected $_autoloadLanguage = true;
-
 	/**
 	 * Perform logout
 	 *
@@ -105,11 +105,39 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		App::redirect(self::getAuthorizationUrl(True, $this->params->get('client_id'), '/authenticate', $view->return, True));
 	}
 
+	public function getRedirect($name)
+	{
+		// Get the hub url
+		$service = trim(\Request::base(), '/');
+
+		$task = 'login';
+		$option = 'login';
+
+		if (\App::isSite())
+		{
+			// Legacy support
+			if (\App::has('component') && \App::get('component')->isEnabled('com_users'))
+			{
+				// If someone is logged in already, then we're linking an account
+				$task   = (\User::isGuest()) ? 'user.login' : 'user.link';
+				$option = 'users';
+			}
+			else
+			{
+				$task   = (\User::isGuest()) ? 'login' : 'link';
+			}
+		}
+
+		$scope = '/index.php%3Foption%3Dcom_' . $option . '%26task%3D' . $task . '%26authenticator%3D' . $name;
+
+		return $service . $scope;
+	}
+
 	public function getAuthorizationUrl($sandbox, $clientId, $scope, $state, $showLogin)
 	{
 		
 
-		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/signin?client_id=' . $clientId . '&scope=' . $scope . '&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state . '&redirect_uri=' . self::getRedirectUri('orcid');
+		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/signin?client_id=' . $clientId . '&scope=' . $scope . '&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state . '&redirect_uri=' . self::getRedirect('orcid');
 		
 		return $url;
 
@@ -141,6 +169,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			'redirect_uri'  => urlencode($redirectUri),
 			'grant_type'    => 'authorization_code'
 		];
+		$this->http = new Curl;
 
 		$this->http->setUrl($url)
 				->setPostFields($fields)
