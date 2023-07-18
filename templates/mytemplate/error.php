@@ -49,6 +49,11 @@ $code = (is_numeric($this->error->getCode()) && $this->error->getCode() > 100 ? 
 
 Lang::load('tpl_' . $this->template) ||
 Lang::load('tpl_' . $this->template, __DIR__);
+
+// Redirect to home page if 404 error
+if ($this->error->getCode() == 404) {
+	App::redirect('/');
+}
 ?>
 <!DOCTYPE html>
 <html dir="<?php echo $this->direction; ?>" lang="<?php echo $this->language; ?>" class="<?php echo implode(' ', $cls); ?>">
