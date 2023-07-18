@@ -2078,7 +2078,7 @@ class Tickets extends SiteController
 		}
 
 		// Email the owner of the ticket if they don't have an account
-		if ($old->get('email') && !$old->get('owner')) {
+		if ($old->get('email') && !$old->get('owner') && Request::getInt('email_submitter', 0) == 1) {
 			$email = $old->get('email');
 			$subject = "Comment on your ticket on HSSCommons";
 			$contents = "Your ticket:\n\n '" . $old->get('summary') . "'\n\n";
