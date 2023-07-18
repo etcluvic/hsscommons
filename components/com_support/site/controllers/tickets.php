@@ -1077,6 +1077,12 @@ class Tickets extends SiteController
 			$this->setError($row->getError());
 		}
 
+		// Make this user watch the ticket by default
+		$watching = Watching::blank();
+		$watching->set('user_id', User::get('id'));
+		$watching->set('ticket_id', $row->get('id'));
+		$watching->save();
+
 		$attachment = $this->uploadTask($row->get('id'));
 
 		// Save tags
