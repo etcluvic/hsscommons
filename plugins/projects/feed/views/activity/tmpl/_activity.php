@@ -46,7 +46,7 @@ if (!$this->activity->log->get('anonymous'))
 	}
 }
 ?>
-<div id="li_<?php echo $this->activity->log->get('id'); ?>" class="activity <?php echo $new ? ' newitem' : ''; ?>" data-recorded="<?php echo $recorded; ?>">
+<div id="li_<?php echo $this->activity->log->get('id'); ?>" class="activity activity-<?php echo $this->activity->log->details->get('class'); ?> <?php echo $new ? ' newitem' : ''; ?>" data-recorded="<?php echo $recorded; ?>">
 
 	<div class="activity-actor-picture<?php if ($online) { echo ' tooltips" title="' . Lang::txt('PLG_PROJECTS_FEED_ONLINE'); } ?>">
 		<?php if ($showProject) { ?>
