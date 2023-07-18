@@ -279,7 +279,8 @@ class plgProjectsFeed extends \Hubzero\Plugin\Plugin
 			'role'  => ($this->model->member() ? $this->model->member()->role : 0),
 			'limit' => Request::getInt('limit', $limit),
 			'start' => Request::getInt('start', 0),
-			'search' => Request::getString('search', '')
+			'search' => Request::getString('search', ''),
+			// 'class' => Request::getString('class', 'blog'),
 		);
 
 		$recipient = Hubzero\Activity\Recipient::all();
@@ -313,9 +314,19 @@ class plgProjectsFeed extends \Hubzero\Plugin\Plugin
 
 		$activities = $recipient
 			->ordered()
-			->limit($filters['limit'])
+			// ->limit($filters['limit'])
 			->start($filters['start'])
 			->rows();
+
+		// if ($filters['class']) {
+		// 	$classActivites = array();
+		// 	foreach ($activities as $activity) {
+		// 		if ($activity->log->details->get('class') == $filters['class']) {
+		// 			$classActivites[] = $activity;
+		// 		}
+		// 	}
+		// 	$activities = $classActivites;
+		// }
 
 		// Output html
 		$view = $this->view('default', 'view')
