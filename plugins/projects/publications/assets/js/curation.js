@@ -142,7 +142,8 @@ HUB.ProjectPublicationsDraft = {
 						retrieveMsg.text('Fetched publication successfully');
 						$('#retrieve-btn').attr("disabled", true);
 						retrieveBlock.find('#retrieve-doi').attr("disabled", true);
-						$('.prev-published-btn').attr("disabled", true);
+						$('#no-prev-published').attr("disabled", true);
+						$('#no-doi').attr("disabled", true);
 					} else {
 						retrieveMsg.css('color', 'red');
 						retrieveMsg.text(response.error);
