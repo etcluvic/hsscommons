@@ -1765,8 +1765,6 @@ h6 {
   line-height: 1;
   margin: 0;
   padding: 0;
-  text-transform: lowercase;
-  font-family: 'Kaushan Script', cursive;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
