@@ -24,6 +24,15 @@ $this->css()
 ?>
 
 <div id="latest_activity" class="infofeed" data-frequency="60" data-base="<?php echo Route::url($this->model->link() . '&active=feed'); ?>">
+	<div style="margin-top: 10px; margin-bottom: 10px;">
+		<label>View option:</label>
+		<select id="view-option">
+			<option value="all">All</option>
+			<option value="blog">Messages</option>
+			<option value="publication">Publications</option>
+			<option value="files">Files</option>
+		</select>
+	</div>
 	<?php
 	// Display item list
 	$this->view('default', 'activity')
