@@ -2077,6 +2077,20 @@ class Tickets extends SiteController
 			]);
 		}
 
+		// Email the owner of the ticket if they don't have an account
+		if ($old->get('email') && !$old->get('owner')) {
+			$email = $old->get('email');
+			$subject = "Comment on your ticket on HSSCommons";
+			$contents = "Your ticket:\n\n '" . $old->get('summary') . "'\n\n";
+			$contents .= User::get('name') . " commented:\n\n'" . $comment . "'";
+			$from = array(
+				'name'      => Lang::txt('COM_SUPPORT_EMAIL_FROM', Config::get('sitename')),
+				'email'     => Config::get('mailfrom'),
+				'multipart' => md5(date('U'))  // Html email
+			);
+			Utilities::sendEmail($email, $subject, $contents, $from);
+		}
+
 		// Display the ticket with changes, new comment
 		App::redirect(
 			Route::url('index.php?option=' . $this->_option . '&controller=' . $this->_controller . '&task=ticket&id=' . $id),
