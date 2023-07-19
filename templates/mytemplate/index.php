@@ -74,6 +74,18 @@ $cls = array(
 
 // Prepend site name to document title
 $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
+
+if (!User::isGuest()) {
+  try {
+    Log::debug(App::get('authn'));
+  } catch (Exception $e) {
+    Log::debug('No authn');
+    App::set('authn', array('user_id' => User::get('id')));
+    Log::debug('New authn:');
+    Log::debug(App::get('authn'));
+  }
+  
+}
 ?>
 <!DOCTYPE html>
 <html dir="<?php echo $this->direction; ?>" lang="<?php echo $this->language; ?>" class="<?php echo implode(' ', $cls); ?>">
