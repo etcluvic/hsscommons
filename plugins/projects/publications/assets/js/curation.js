@@ -102,10 +102,12 @@ HUB.ProjectPublicationsDraft = {
 		// Show "Retrieve" field if selecting "Yes" for item having a DOI. Otherwise, hide the field
 		$('#yes-doi').click(function() {
 			$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
+			$(this).closest('.prev-published-block').find('.prev-published-hint-block').addClass('hidden');
 		})
 
 		$('#no-doi').click(function() {
 			$(this).closest('.prev-published-block').find('.retrieve-block').addClass('hidden');
+			$(this).closest('.prev-published-block').find('.prev-published-hint-block').removeClass('hidden');
 		})
 	},
 
@@ -117,45 +119,55 @@ HUB.ProjectPublicationsDraft = {
 			const retrieveBlock = $(this).closest('.retrieve-block');
 			const retrieveMsg = retrieveBlock.find('#retrieve-msg');
 			const retrieveDOI = retrieveBlock.find('#retrieve-doi').val();
-			const currentURI = window.location.pathname;
-			const URIparams = currentURI.split('/');
-			const versionId = $(this).data('vid');
-			let ajaxUrl = '';
-			if (URIparams[1] === "projects") {
-				const projectId = URIparams[2];
-				const publicationId = URIparams[4];
-				ajaxUrl = '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId;
-			} else if (URIparams[1] === "publications") {
-				const publicationId = URIparams[3];
-				ajaxUrl = '/publications/retrieve/' + publicationId + '?doi=' + retrieveDOI + '&vid=' + versionId;
-			}
-			$.ajax({
-				url: ajaxUrl,
-				method: 'GET',
-				dataType: 'json',
-				success: function(response) {
-					console.log(response);
-					retrieveMsg.removeClass('hidden');
-					if (response.success) {
-						// console.log(JSON.parse(response.data));
-						retrieveMsg.css('color', 'green');
-						retrieveMsg.text('Fetched publication successfully');
-						$('#retrieve-btn').attr("disabled", true);
-						retrieveBlock.find('#retrieve-doi').attr("disabled", true);
-						$('#no-prev-published').attr("disabled", true);
-						$('#no-doi').attr("disabled", true);
-					} else {
-						retrieveMsg.css('color', 'red');
-						retrieveMsg.text(response.error);
-					}
-				},
-				error: function(xhr, status, error) {
-					console.log('Error: ' + error);
-					retrieveMsg.removeClass('hidden');
-					retrieveMsg.css('color', 'red');
-					retrieveMsg.text(error);
+
+			// Check if DOI is valid
+			const validDOI = retrieveDOI.match(/^10\.\d{4,5}\/\S+$/);
+			if (!validDOI) {
+				retrieveMsg.removeClass('hidden');
+				retrieveMsg.css('color', 'red');
+				retrieveMsg.text("Pease make sure DOI has the right format (10.12345/ABDC-1001). No 'https' or 'DOI' should be included");
+			} else {
+				console.log('Valid DOI');
+				const currentURI = window.location.pathname;
+				const URIparams = currentURI.split('/');
+				const versionId = $(this).data('vid');
+				let ajaxUrl = '';
+				if (URIparams[1] === "projects") {
+					const projectId = URIparams[2];
+					const publicationId = URIparams[4];
+					ajaxUrl = '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId;
+				} else if (URIparams[1] === "publications") {
+					const publicationId = URIparams[3];
+					ajaxUrl = '/publications/retrieve/' + publicationId + '?doi=' + retrieveDOI + '&vid=' + versionId;
 				}
-			})
+				$.ajax({
+					url: ajaxUrl,
+					method: 'GET',
+					dataType: 'json',
+					success: function(response) {
+						console.log(response);
+						retrieveMsg.removeClass('hidden');
+						if (response.success) {
+							// console.log(JSON.parse(response.data));
+							retrieveMsg.css('color', 'green');
+							retrieveMsg.text('Fetched publication successfully');
+							$('#retrieve-btn').attr("disabled", true);
+							retrieveBlock.find('#retrieve-doi').attr("disabled", true);
+							$('#no-prev-published').attr("disabled", true);
+							$('#no-doi').attr("disabled", true);
+						} else {
+							retrieveMsg.css('color', 'red');
+							retrieveMsg.text(response.error);
+						}
+					},
+					error: function(xhr, status, error) {
+						console.log('Error: ' + error);
+						retrieveMsg.removeClass('hidden');
+						retrieveMsg.css('color', 'red');
+						retrieveMsg.text(error);
+					}
+				})
+			}
 		})
 	},
 

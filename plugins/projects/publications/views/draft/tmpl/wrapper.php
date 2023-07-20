@@ -90,20 +90,31 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 									<label>No</label>
 								</div>
 								<div class="has-doi-block <?php echo ($this->pub->version->forked_from == $this->pub->version->id) ? "" : "hidden" ?>">
-									<p style="font-size: 110%;">Does this item have a DOI?</p>
+									<p style="font-size: 110%;">Does this item have a DOI (Digital Object Identifier)?<span style="margin-left: 15px;">(Not sure? <a href="https://hsscommons.ca/kb/resources/what-is-doi" style="text-decoration: underline;" target="_blank">Learn more</a>.)</span></p>
 									<div style="display: flex; flex-direction: row; margin-top: 5px;">
 										<input id="yes-doi" type="radio" class="prev-published-btn" name="has_doi" value="1" <?php if ($this->pub->doi) { ?>checked="checked"<?php } ?>>
 										<label>Yes</label>
 										<input id="no-doi" type="radio" class="prev-published-btn" name="has_doi" value="0" style="margin-left: 30px;" <?php if (!$this->pub->doi) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
 										<label>No</label>
 									</div>
+									<div class="prev-published-hint-block <?php echo (!$this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
+										<div style="background-color: rgb(217 249 157); padding: 10px; margin-top: 20px; margin-bottom: 20px;">
+											<p>Please enter more information about your publication here and on the following pages to re-publish it in the Canadian HSS Commons Repository. On the “Notes” page, you can enter the publication’s original citation information.</p>
+											<p>Would you like to give your previously published item a DOI? You can do that, too! On the final review page, simply select “Publish with DOI".</p>
+										</div>
+									</div>
 								</div>
 								<div class="retrieve-block <?php echo ($this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
-									<div style="margin-top: 15px; margin-bottom: 10px;">Retrieve information</div>
+									<!-- <div style="margin-top: 15px; margin-bottom: 10px;">Retrieve information</div>
 									<div>Graham: Add text to warn users about the disabling of the retrieval button after clicking it</div>
 									<div>Enter this text later (for Alyssa and Ray)</div>
-									<div>Enter a publication DOI.</div>
-									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="Enter the publication DOI for this item" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
+									<div>Enter a publication DOI.</div> -->
+									<div style="background-color: rgb(217 249 157); padding: 10px; margin-top: 20px; margin-bottom: 20px;">
+										<p>If your publication already has a Digital Object Identifier (DOI), please enter it below to automatically retrieve information about your publication.</p>
+										<p>Note: once you click the "Retrieve" button below, the button will be disabled. If you entered the DOI incorrectly or need to start over, please click on the "Cancel draft" link in the top-right corner of this page.</p>
+										<strong>Enter the publication's DOI in the following format: 10.12345/ABDC-1001</strong>
+									</div>
+									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="10.12345/ABDC-1001" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
 									<div style="margin-top: 10px;">
 										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>>Retrieve</button>
 									</div>
