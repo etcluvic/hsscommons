@@ -61,7 +61,7 @@ class plgAuthenticationSciStarter extends \Hubzero\Plugin\OauthClient
 		}
 		$client->setClientId($this->params->get('app_id'))
 		       ->setClientSecret($this->params->get('app_secret'))
-		       ->setRedirectUri(self::getRedirectUri('scistarter'));
+		       ->setRedirectUri(self::getRedirectUri('orcid'));
 
 		// If we have a code coming back, the user has authorized our app, and we can authenticate
 		if ($code = Request::getString('code'))
@@ -99,7 +99,7 @@ class plgAuthenticationSciStarter extends \Hubzero\Plugin\OauthClient
 			$client->useSandboxEnvironment();
 		}
 		$client->setClientId($this->params->get('app_id'))
-		       ->setRedirectUri(self::getRedirectUri('scistarter'));
+		       ->setRedirectUri(self::getRedirectUri('orcid'));
 
 		// Redirect to the login URL
 		App::redirect($client->getAuthorizationUrl());
@@ -167,7 +167,7 @@ class plgAuthenticationSciStarter extends \Hubzero\Plugin\OauthClient
 
 				// Create the hubzero auth link
 				$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
-				$hzal = \Hubzero\Auth\Link::$method('authentication', 'scistarter', null, $username);
+				$hzal = \Hubzero\Auth\Link::$method('authentication', 'orcid', null, $username);
 
 				if ($hzal === false)
 				{
@@ -213,7 +213,7 @@ class plgAuthenticationSciStarter extends \Hubzero\Plugin\OauthClient
 					$prefs = array(
 						'user_id'       => $user->get('id'),
 						'user_img'      => $user->picture(0, false),
-						'authenticator' => 'scistarter'
+						'authenticator' => 'orcid'
 					);
 
 					$namespace = 'authenticator';
