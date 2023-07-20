@@ -147,7 +147,22 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                     <?php echo $code; ?>
                   </h2>
                   <div>
-                    <p>We couldn't find the page you were looking for</p>
+                    <p><?php 
+                    switch ($this->error->getCode())
+                    {
+                      case 404:
+                        $message = "We couldn't find the page you were looking for";
+                        break;
+                      case 403:
+                        $message = "You are not authorized to visit this page";
+                        break;
+                      case 500:
+                      default:
+                        $message = "Server error. Sorry! Please contact us for support.";
+                        break;
+                    } 
+                    echo $message;?></p>
+                    
                     <div id="go-back-btn" class="btn">Go back</div>
                     <script>
                       document.getElementById("go-back-btn").onclick = function () {
