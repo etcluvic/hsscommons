@@ -98,7 +98,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 										<label>No</label>
 									</div>
 									<div class="prev-published-hint-block <?php echo (!$this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
-										<div style="background-color: rgb(217 249 157); padding: 10px; margin-top: 20px; margin-bottom: 20px;">
+										<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
 											<p>Please enter more information about your publication here and on the following pages to re-publish it in the Canadian HSS Commons Repository. On the “Notes” page, you can enter the publication’s original citation information.</p>
 											<p>Would you like to give your previously published item a DOI? You can do that, too! On the final review page, simply select “Publish with DOI".</p>
 										</div>
@@ -109,7 +109,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 									<div>Graham: Add text to warn users about the disabling of the retrieval button after clicking it</div>
 									<div>Enter this text later (for Alyssa and Ray)</div>
 									<div>Enter a publication DOI.</div> -->
-									<div style="background-color: rgb(217 249 157); padding: 10px; margin-top: 20px; margin-bottom: 20px;">
+									<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
 										<p>If your publication already has a Digital Object Identifier (DOI), please enter it below to automatically retrieve information about your publication.</p>
 										<p>Note: once you click the "Retrieve" button below, the button will be disabled. If you entered the DOI incorrectly or need to start over, please click on the "Cancel draft" link in the top-right corner of this page.</p>
 										<strong>Enter the publication's DOI in the following format: 10.12345/ABDC-1001</strong>
