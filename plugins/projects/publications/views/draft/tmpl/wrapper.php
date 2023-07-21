@@ -71,7 +71,9 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 		 </fieldset>
   		<div id="c-pane" class="columns">
 			 <div class="c-inner draftflow">
-			 			<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 50px; right: 70px; cursor: pointer;">Cancel draft</a>
+			 			<?php if ($this->pub->version->state != 1) { ?>
+			 				<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 50px; right: 70px; cursor: pointer;">Cancel draft</a>
+						<?php } ?>
 						<h4><?php echo $title; ?></h4>
 						<?php
 							if ($tagline && $move)
