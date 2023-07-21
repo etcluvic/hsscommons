@@ -34,7 +34,7 @@ endif;
 </header><!-- / #content-header -->
 
 <section class="main section">
-	<p class="info"><?php echo Lang::txt('COM_SUPPORT_TROUBLE_TICKET_TIMES'); ?></p>
+	<p class="warning"><?php echo Lang::txt('COM_SUPPORT_TROUBLE_TICKET_TIMES'); ?></p>
 
 	<?php if ($this->getError()): ?>
 		<p class="error"><?php echo implode('<br />', $this->getErrors()); ?></p>
