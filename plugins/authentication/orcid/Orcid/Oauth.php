@@ -16,6 +16,10 @@ class Oauth
     private $clientId = null;
     private $clientSecret = null;
 
+    private $email = '';
+    private $familyName = '';
+    private $givenName = '';
+
     private $scope = null;
 
     private $state = null;
@@ -37,6 +41,24 @@ class Oauth
     public function useSandboxEnvironment()
     {
         $this->environment = 'sandbox';
+        return $this;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function setFamilyName($familyName)
+    {
+        $this->familyName = $familyName;
+        return $this;
+    }
+
+    public function setGivenName($givenName)
+    {
+        $this->givenName = $givenName;
         return $this;
     }
 
@@ -76,7 +98,8 @@ class Oauth
         $url .= (!empty($this->environment)) ? $this->environment . '.' : '';
         $url .= self::HOSTNAME . '/oauth/' . self::AUTHORIZE;
         $url .= '?client_id=' . $this->clientId;
-        $url .= '?redirect_uri=' . urlencode($this->redirectUri);
+        $url .= '&scope=' . $this->scope;
+        $url .= '&redirect_uri=' . urlencode($this->redirectUri);
         $url .- '&response_type=code';
 
         return $url;
