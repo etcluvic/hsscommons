@@ -28,6 +28,7 @@ class Helper extends Module
 	 */
 	public function display()
 	{
+		Log::debug('Calling display()');
 		if (User::isGuest())
 		{
 			return;
