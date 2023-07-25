@@ -14,12 +14,17 @@
 */
 
 	.collector {
-		position: absolute;
-		top: 4.75em;
-		right: 6em;
 		padding: 0;
 		margin: 0;
+		margin-left: auto;
+		margin-top: auto;
+		margin-bottom: auto;
 	}
+@media (max-width: 510px) {
+	.collector {
+		margin-left: 0;
+	}
+}
 	.has-notice .collector {
 		top: 8.25em;
 	}
@@ -31,20 +36,17 @@
 		margin-right: 2em;
 	}
 	.collector .icon-collect {
-		font-size: 1.4em;
-		border: none;
-		overflow: hidden;
-		width: 0.1em;
+		font-size: 1.3em;
 		white-space: nowrap;
-		color: transparent !important;
+		color: #fff;
+		border: 1px solid #fff !important;
 	}
 	.collector .icon-collect:hover {
-		color: transparent;
-		background: transparent;
-		border: none !important;
+		background: white;
+		color: #000 !important;
 	}
 	.collector .icon-collect:hover:before {
-		color: #fff;
+		color: #000;
 	}
 
 /* Form */
