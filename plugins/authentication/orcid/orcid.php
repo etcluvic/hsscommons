@@ -89,7 +89,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		$oauth = new Oauth;
 		$oauth->useSandboxEnvironment();
 		$oauth->setClientId($this->params->get('client_id'))
-		      ->setScope('/authenticate')
+		      ->setScope('/authenticate%20/read-limited')
 		      ->setState($view->return)
 		      ->showLogin()
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
