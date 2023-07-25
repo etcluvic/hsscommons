@@ -139,7 +139,7 @@ class Asset extends Base
 		{
 			$UrlPtn  = "(?:https?:|mailto:|ftp:|gopher:|news:|file:)"
 					 . "(?:[^ |\\/\"\']*\\/)*[^ |\\t\\n\\/\"\']*[A-Za-z0-9\\/?=&~_]";
-
+			Log::debug($this->get('filename'));
 			if (preg_match("/$UrlPtn/", $this->get('filename')))
 			{
 				return true;
