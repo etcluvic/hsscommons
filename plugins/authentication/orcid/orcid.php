@@ -10,7 +10,6 @@ defined('_HZEXEC_') or die();
 
 use Orcid\Profile;
 use Orcid\Oauth;
-use Orcid\Http\Curl;
 
 class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 {
@@ -20,6 +19,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 * @var boolean
 	 */
 	protected $_autoloadLanguage = true;
+
 	/**
 	 * Perform logout
 	 *
@@ -87,6 +87,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
+		$oauth->useSandboxEnvironment();
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setScope('/authenticate')
 		      ->setState($view->return)
@@ -102,95 +103,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		}
 
 		// Create and follow the authorization URL
-		App::redirect(self::getAuthorizationUrl(True, $this->params->get('client_id'), '/authenticate', $view->return, True));
-	}
-
-	public function getRedirect($name)
-	{
-		// Get the hub url
-		$service = trim(\Request::base(), '/');
-
-		$task = 'login';
-		$option = 'login';
-
-		if (\App::isSite())
-		{
-			// Legacy support
-			if (\App::has('component') && \App::get('component')->isEnabled('com_users'))
-			{
-				// If someone is logged in already, then we're linking an account
-				$task   = (\User::isGuest()) ? 'user.login' : 'user.link';
-				$option = 'users';
-			}
-			else
-			{
-				$task   = (\User::isGuest()) ? 'login' : 'link';
-			}
-		}
-
-		$scope = '/index.php%3Foption%3Dcom_' . $option . '%26task%3D' . $task . '%26authenticator%3D' . $name;
-
-		return $service . $scope;
-	}
-
-	public function getAuthorizationUrl($sandbox, $clientId, $scope, $state, $showLogin)
-	{
-		
-
-		$url = 'https://' . ($sandbox ? 'sandbox.' : '') . 'orcid.org/signin?client_id=' . $clientId . '&scope=' . $scope . '&response_type=code&show_login=' . ($showLogin ? 'true' : 'false') . '&state=' . $state . '&redirect_uri=' . self::getRedirect('orcid');
-		
-		return $url;
-
-	}
-
-	public function authenticate($sandbox, $clientId, $clientSecret, $redirectUri, $code)
-	{
-		// Check for required items
-		if (!$clientId)
-		{
-			throw new Exception('Client ID is required');
-		}
-		if (!$clientSecret)
-		{
-			throw new Exception('Client secret is required');
-		}
-		if (!$redirectUri)
-		{
-			throw new Exception('Redirect URI is required');
-		}
-
-		$url  = 'https://';
-		$url .= ($sandbox ? 'sandbox.' : '') . 'orcid.org/oauth/token';
-
-		$fields = [
-			'client_id'     => $clientId,
-			'client_secret' => $clientSecret,
-			'code'          => $code,
-			'redirect_uri'  => urlencode($redirectUri),
-			'grant_type'    => 'authorization_code'
-		];
-		$this->http = new Curl;
-
-		$this->http->setUrl($url)
-				->setPostFields($fields)
-				->setHeader(['Accept' => 'application/json']);
-
-		$data = json_decode($this->http->execute());
-
-		if (isset($data->access_token))
-		{
-			$access_token = ($data->access_token);
-		}
-		else
-		{
-			// Seems like the response format changes on occasion... not sure what's going on there?
-			$error = (isset($data->error)) ? $data->error : 'unknown error';
-
-			throw new Exception($error);
-		}
-
-		return $access_token;
-
+		App::redirect($oauth->getAuthorizationUrl());
 	}
 
 	/**
@@ -205,15 +118,16 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
+		$oauth->useSandboxEnvironment();
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
 
 		// Authenticate the user
-		$access_token = self::authenticate(True, $this->params->get('client_id'), $this->params->get('client_secret'), self::getRedirectUri('orcid'), Request::getString('code'));
+		$oauth->authenticate(Request::getString('code'));
 
 		// Check for successful authentication
-		if ($access_token)
+		if ($oauth->isAuthenticated())
 		{
 			$orcid = new Profile($oauth);
 
@@ -221,7 +135,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			$username = $orcid->id();
 
 			// Create the hubzero auth link
-				$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
+			$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
 			$hzal = \Hubzero\Auth\Link::$method('authentication', 'orcid', null, $username);
 
 			if ($hzal === false)
@@ -292,6 +206,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
+		$oauth->useSandboxEnvironment();
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
@@ -308,11 +223,10 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		}
 
 		// Authenticate the user
-		// $oauth->authenticate(Request::getString('code'));
-		$access_token = self::authenticate(True, $this->params->get('client_id'), $this->params->get('client_secret'), self::getRedirectUri('orcid'), Request::getString('code'));
+		$oauth->authenticate(Request::getString('code'));
 
 		// Check for successful authentication
-		if ($access_token)
+		if ($oauth->isAuthenticated())
 		{
 			$orcid = new Profile($oauth);
 
