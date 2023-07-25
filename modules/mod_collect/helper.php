@@ -28,7 +28,6 @@ class Helper extends Module
 	 */
 	public function display()
 	{
-		Log::debug('Calling display()');
 		if (User::isGuest())
 		{
 			return;
@@ -39,16 +38,13 @@ class Helper extends Module
 		$this->model = new Archive('member', User::get('id'));
 
 		$this->item = $this->model->collectible(Request::getCmd('option'));
-		Log::debug('Got item');
 		if (!$this->item->canCollect())
 		{
-			Log::debug('Block 1');
 			return;
 		}
 
 		if (Request::getWord('tryto', '') == 'collect')
 		{
-			Log::debug('Block 2');
 			return $this->collect();
 		}
 
