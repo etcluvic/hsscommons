@@ -99,14 +99,14 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 										<input id="no-doi" type="radio" class="prev-published-btn" name="has_doi" value="0" style="margin-left: 30px;" <?php if (!$this->pub->doi) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
 										<label>No</label>
 									</div>
-									<div class="prev-published-hint-block <?php echo (!$this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
+									<div class="prev-published-hint-block <?php echo (!$this->pub->doi) ? "" : "hidden" ?>" style="font-size: 100%;">
 										<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
 											<p>Please enter more information about your publication here and on the following pages to re-publish it in the Canadian HSS Commons Repository. On the “Notes” page, you can enter the publication’s original citation information.</p>
 											<p>Would you like to give your previously published item a DOI? You can do that, too! On the final review page, simply select “Publish with DOI".</p>
 										</div>
 									</div>
 								</div>
-								<div class="retrieve-block <?php echo ($this->pub->doi) ? "" : "hidden" ?>" style="font-size: 90%;">
+								<div class="retrieve-block <?php echo ($this->pub->doi) ? "" : "hidden" ?>" style="font-size: 100%;">
 									<!-- <div style="margin-top: 15px; margin-bottom: 10px;">Retrieve information</div>
 									<div>Graham: Add text to warn users about the disabling of the retrieval button after clicking it</div>
 									<div>Enter this text later (for Alyssa and Ray)</div>
