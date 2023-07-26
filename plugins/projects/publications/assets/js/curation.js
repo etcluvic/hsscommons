@@ -125,7 +125,7 @@ HUB.ProjectPublicationsDraft = {
 			if (!validDOI) {
 				retrieveMsg.removeClass('hidden');
 				retrieveMsg.css('color', 'red');
-				retrieveMsg.text("Pease make sure DOI has the right format (10.12345/ABDC-1001). No 'https' or 'DOI' should be included");
+				retrieveMsg.text("Please make sure the DOI is in the right format (10.12345/ABDC-1001). No 'https://' or 'DOI:' should be included.");
 			} else {
 				console.log('Valid DOI');
 				const currentURI = window.location.pathname;
