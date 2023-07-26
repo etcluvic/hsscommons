@@ -1056,6 +1056,15 @@ class Register extends SiteController
 			->where('action_' . ($task == 'update' ? 'create' : $task), '!=', Field::STATE_HIDDEN)
 			->ordered()
 			->rows();
+		
+		// Autofill registration form if there are corresponding info in the session
+		foreach ($fields as $field) {
+			$fieldName = $field->get('name');
+			$defaultValue = $field->get('default_value');
+			if ($tmpVal = Session::get('auth_link.tmp_' . $fieldName, null)) {
+				$field->set('default_value', $tmpVal);
+			}
+		}
 
 		// Display the view
 		$this->view
