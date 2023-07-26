@@ -242,7 +242,8 @@ $schema = $metaElements->getSchema();
 // Show version notes
 if (($this->publication->params->get('show_notes')) && $this->publication->get('release_notes'))
 {
-	$notes = $this->publication->notes('clean');
+	// $notes = $this->publication->notes('clean');
+	$notes = $this->publication->notes('parsed');
 	?>
 	<h4><?php echo Lang::txt('COM_PUBLICATIONS_NOTES'); ?></h4>
 	<div class="pub-content">

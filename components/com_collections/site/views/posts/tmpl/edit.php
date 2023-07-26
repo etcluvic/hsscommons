@@ -160,7 +160,7 @@ if (!$dir)
 					</div><!-- / .field-wrap -->
 
 					<label for="field-title">
-						<?php echo Lang::txt('COM_COLLECTIONS_FIELD_TITLE'); ?>
+						<?php echo Lang::txt('COM_COLLECTIONS_FIELD_TITLE'); ?> (supports HTML)
 						<input type="text" name="fields[title]" id="field-title" size="35" value="<?php echo $this->escape(stripslashes($item->get('title'))); ?>" />
 					</label>
 	<?php } ?>

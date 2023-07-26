@@ -97,6 +97,9 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
     <![endif]-->
   </head>
   <body>
+    <!-- Archie: hidden div tag to store side-wide public information -->
+    <div id="public-info" data-session-timeout="<?php echo Config::get('session')->lifetime; ?>" style="display: none;"></div>
+
     <div id="outer-wrap">
       <jdoc:include type="modules" name="helppane" />
 
@@ -167,7 +170,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                   </a>
                 </p>
               <?php endif; ?>
-
+              
               <div id="trail">
                 <?php if ($menu->getActive() == $menu->getDefault()) : ?>
                   <span class="pathway"><?php echo Lang::txt('TPL_MYTEMPLATE_TAGLINE'); ?></span>
@@ -189,7 +192,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
           </div><!-- / .inner-wrap -->
         </div><!-- / #splash -->
       </div><!-- / #top -->
-
+      
       <div id="wrap">
         <main id="content" class="<?php echo Request::getCmd('option', ''); ?>">
           <div class="inner<?php if ($this->countModules('left or right')) { echo ' withmenu'; } ?>">

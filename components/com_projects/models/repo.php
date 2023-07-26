@@ -495,7 +495,9 @@ class Repo extends Obj
 		$reserved  = isset($params['reserved']) ? $params['reserved'] : array();
 
 		$newDir    = isset($params['newDir']) ? $params['newDir'] : null; // New directory name
-		$newDir    = Filesystem::cleanDirectory($newDir); // Remove unwanted characters
+		// $newDir    = Filesystem::cleanDirectory($newDir); // Remove unwanted characters
+		$regex 	   = array('#[^A-Za-z0-9:_\\\/-\s]#');
+		$newDir    = preg_replace($regex, '', $newDir);
 		$newDir    = Filesystem::cleanPath($newDir); // Remove path shenanigans like "/./"
 		$localDirPath = $dirPath ? $dirPath . DS . $newDir : $newDir;
 

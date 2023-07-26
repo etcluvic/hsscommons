@@ -26,6 +26,17 @@ jQuery(document).ready(function($){
 		return;
 	}
 
+	// Change view option
+	$('#view-option').on('change', function(e) {
+		var viewOption = $(this).val();
+		if (viewOption === 'all') {
+			$('.activity').removeClass('hidden');
+			return;
+		}
+		$('.activity').addClass('hidden');
+		$('.activity.activity-' + viewOption).removeClass('hidden');
+	})
+
 	container
 		// Showing comment area
 		.on('click', '.reply', function(e) {

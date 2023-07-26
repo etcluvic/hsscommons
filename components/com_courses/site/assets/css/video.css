@@ -1,0 +1,15 @@
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+/* Overrides of default video.css for courses */
+
+.video-player-wrap {
+	background: black;
+}
+#video-player {
+	max-width: 100%;
+	margin: 0 auto;
+}

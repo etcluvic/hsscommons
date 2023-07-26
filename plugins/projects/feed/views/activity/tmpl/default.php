@@ -43,7 +43,8 @@ if (count($this->activities) > 0) { ?>
 	<p class="noresults"><?php echo Lang::txt('PLG_PROJECTS_BLOG_NO_ACTIVITIES'); ?></p>
 <?php } ?>
 
-<div id="more-updates" class="nav_pager">
+<!-- / #more-updates -->
+<!-- <div id="more-updates" class="nav_pager">
 	<?php
 	$limit = $this->filters['limit'] + $this->limit;
 	$start = $this->filters['limit'] + $this->filters['start'];
@@ -61,4 +62,4 @@ if (count($this->activities) > 0) { ?>
 		<?php
 	}
 	?>
-</div><!-- / #more-updates -->
+</div> -->

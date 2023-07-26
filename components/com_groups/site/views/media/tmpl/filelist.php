@@ -154,7 +154,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 					<div class="title"><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PREVIEW'); ?></div>
 					<div class="preview">
 						<?php if ($isImage) : ?>
-							<img src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_groups/site/assets/img/loading.gif" data-src="<?php echo $viewPath; ?>" />
+							<img src="<?php echo rtrim(Request::base(true), '/'); ?>/core/components/com_groups/site/assets/img/loading.gif" data-src="<?php echo $downloadPath; ?>" />
 						<?php else : ?>
 							<p><strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PREVIEW_NOT_AVAILABLE'); ?></strong></p>
 						<?php endif; ?>
@@ -181,7 +181,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 							<?php if ($this->authorized && isset($ckeditor) && $ckeditor != '') : ?>
 								<a href="javascript:void(0);" class="btn btn-secondary icon-add" onclick="return ckeditorInsertFile('<?php echo $downloadPath; ?>');"><?php echo Lang::txt('COM_GROUPS_MEDIA_INSERT_FILE'); ?></a>
 							<?php endif; ?>
-							<a href="<?php echo $viewPath; ?>" class="btn btn-secondary icon-download action-download" download><?php echo Lang::txt('COM_GROUPS_MEDIA_DOWNLOAD'); ?></a>
+							<a href="<?php echo $downloadPath; ?>" class="btn btn-secondary icon-download action-download"><?php echo Lang::txt('COM_GROUPS_MEDIA_DOWNLOAD'); ?></a>
 							<?php if ($this->authorized) : ?>
 								<?php if ($this->group->published == 1) : ?>
 									<a href="<?php echo $renamePath; ?>" class="btn btn-secondary icon-edit action-rename"><?php echo Lang::txt('COM_GROUPS_MEDIA_RENAME'); ?></a>

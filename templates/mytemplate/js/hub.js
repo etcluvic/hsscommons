@@ -287,4 +287,28 @@ jQuery(document).ready(function($){
 			e.preventDefault();
 		}
 	});
+
+	let idleTime = 0;
+	const expiredTime = $('#public-info').data('session-timeout');
+	console.log('Session expired time: ' + expiredTime);
+
+	function countIdleTime() {
+		idleTime++;
+		if (idleTime >= expiredTime - 10 && idleTime <= expiredTime) {
+			if (idleTime === expiredTime) {
+				alert('Your session has expired. Please refresh the page and log in again.');
+			} else {
+				alert('Your session will expire in ' + (expiredTime - idleTime) + ' minutes. Please make sure to save your current work before it is lost.');
+			}
+		}
+	}
+
+	setInterval(countIdleTime, 60000);
+	// Zero the idle timer on mouse movement.
+	$(this).mousemove(function (e) {
+		idleTime = 0;
+	});
+	$(this).keypress(function (e) {
+		idleTime = 0;
+	});
 });

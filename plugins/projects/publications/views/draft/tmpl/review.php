@@ -195,12 +195,12 @@ $requestReview = isset($this->pub->_curationModel->_manifest->params->request_re
 					<?php if ($requireDoi == 2 && !$this->pub->doi) { 	// Choice of publish/post  ?>
 						<h6><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_POST_OR_PUBLISH'); ?></h6>
 						<label>
-							<input class="option" name="action" type="radio" value="publish" checked="checked" />
+							<input class="option" name="action" type="radio" value="publish" <?php if ($this->pub->version->forked_from != $this->pub->version->id) { ?>checked="checked"<?php } else { ?>disabled<?php } ?> />
 							<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_OPTION_PUBLISH'); ?>
 							<span class="hint block ipadded"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_OPTION_PUBLISH_HINT'); ?></span>
 						</label>
 						<label>
-							<input class="option" name="action" type="radio" value="post" />
+							<input class="option" name="action" type="radio" value="post" <?php if ($this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } ?>/>
 							<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_OPTION_POST'); ?>
 							<span class="hint block ipadded"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_OPTION_POST_HINT'); ?></span>
 						</label>

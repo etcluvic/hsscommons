@@ -136,7 +136,10 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 				</div>
 				<fieldset>
 					<legend>Connect With</legend>
-					<div id="providers" class="auth">
+					<p class="warning" style="margin-top: 30px;">
+						Note: ORCID will be making changes to its system on August 8, 2023. These changes may temporarily affect ORCID-based registrations and logins on our site.
+					</p>
+					<div id="providers" class="auth" style="margin-top: 20px;">
 						<?php
 							echo $provider_html;
 						?>

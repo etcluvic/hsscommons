@@ -688,6 +688,7 @@
 		margin-right: 0;
 	}
 	#pub-editor #c-pane {
+		position: relative;
 		margin: 0;
 		padding: 0;
 		float: left;
