@@ -148,12 +148,29 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			$activitiesProp = "activities-summary";
 			$employmentProp = "employment-summary";
 			$roleProp = "role-title";
-			$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
 
-			$email = $orcid->person()->emails->email[0]->email ? $orcid->person()->emails->email[0]->email : null;
-			$bio = $orcid->person()->biography->content;
-			$title = $employments[0]->$roleProp;
-			$affiliation = $employments[0]->organization->name;
+			$employments = null;
+			if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
+				$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
+			}
+			
+
+			$email = null;
+			if (isset($orcid->person()->emails->email) && is_array($orcid->person()->emails->email) && count($orcid->person()->emails->email) > 0) {
+				$email = $orcid->person()->emails->email[0]->email;
+			}
+
+			$bio = null;
+			if (isset($orcid->person()->biography->content)) {
+				$bio = $orcid->person()->biography->content;
+			}
+			
+			$title = null;
+			$affiliation = null;
+			if (isset($employments) && is_array($employments)) {
+				$title = $employments[0]->$roleProp;
+				$affiliation = $employments[0]->organization->name;
+			}
 			
 			// Temporarily set some session info to autofill the registration form
 			$hzal->set('email', $email);
@@ -246,6 +263,40 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 			// Set username to ORCID iD
 			$username = $orcid->id();
+
+			// Archie: Temporarily comment this out and come back to this later
+			// $activitiesProp = "activities-summary";
+			// $employmentProp = "employment-summary";
+			// $roleProp = "role-title";
+
+			// $employments = null;
+			// if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
+			// 	$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
+			// }
+			
+
+			// $email = null;
+			// if (isset($orcid->person()->emails->email) && is_array($orcid->person()->emails->email) && count($orcid->person()->emails->email) > 0) {
+			// 	$email = $orcid->person()->emails->email[0]->email;
+			// }
+
+			// $bio = null;
+			// if (isset($orcid->person()->biography->content)) {
+			// 	$bio = $orcid->person()->biography->content;
+			// }
+			
+			// $title = null;
+			// $affiliation = null;
+			// if (isset($employments) && is_array($employments)) {
+			// 	$title = $employments[0]->$roleProp;
+			// 	$affiliation = $employments[0]->organization->name;
+			// }
+			
+			// Temporarily set some session info to autofill the registration form
+			// Session::set('auth_link.tmp_email', $email);
+			// Session::set('auth_link.tmp_bio', $bio);
+			// Session::set('auth_link.tmp_title', $title);
+			// Session::set('auth_link.tmp_affiliation', $affiliation);
 
 			$hzad = \Hubzero\Auth\Domain::getInstance('authentication', 'orcid', '');
 
