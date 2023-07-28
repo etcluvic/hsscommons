@@ -31,6 +31,24 @@ if ($this->isUser) : ?>
 					<input type="hidden" name="no_html" value="1" />
 					<?php echo Html::input('token'); ?>
 				</form>
+				<?php if ($this->profile_field === 'orcid') { ?>
+					<script type="text/javascript">
+						const orcidBtn = document.getElementById('create-orcid');
+						orcidBtn.setAttribute('href', '/login?authenticator=orcid&disconnect=1');
+						orcidBtn.removeAttribute('target');
+						orcidBtn.removeAttribute('rel');
+
+						const orcidInput = document.getElementById('profile_orcid');
+						orcidInput.readOnly = true;
+
+						const orcidText = orcidInput.closest('.input-wrap').querySelector('p');
+						
+						if (orcidInput.value) {
+							orcidBtn.style.display = 'none';
+							orcidText.style.display = 'none';
+						}
+					</script>
+				<?php } ?>
 			</div>
 		<?php endif; ?>
 	</div>

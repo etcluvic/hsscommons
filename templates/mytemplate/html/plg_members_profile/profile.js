@@ -224,6 +224,7 @@ HUB.Members.Profile = {
 					{
 						case 'email':
 						case 'usageAgreement':
+						case 'orcid':
 							HUB.Members.Profile.editRedirect(window.location.href);
 						break;
 						default:
