@@ -1058,11 +1058,17 @@ class Register extends SiteController
 			->rows();
 		
 		// Autofill registration form if there are corresponding info in the session
+		$orcidField = null;
 		foreach ($fields as $field) {
 			$fieldName = $field->get('name');
 			$defaultValue = $field->get('default_value');
 			if ($tmpVal = Session::get('auth_link.tmp_' . $fieldName, null)) {
 				$field->set('default_value', $tmpVal);
+			}
+
+			// Save ORCID field
+			if ($fieldName === 'orcid') {
+				$orcidField = $field;
 			}
 		}
 
@@ -1078,6 +1084,7 @@ class Register extends SiteController
 			->set('password_rules', $password_rules)
 			->set('xregistration', $xregistration)
 			->set('registration', $xregistration->_registration)
+			->set('orcidField', $orcidField)
 			->setLayout('default')
 			->setErrors($this->getErrors())
 			->display();
