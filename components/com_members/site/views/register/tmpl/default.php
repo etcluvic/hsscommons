@@ -327,6 +327,10 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 
 					const orcidInput = document.getElementById('profile_orcid');
 					orcidInput.readOnly = true;
+
+					if (orcidInput.value) {
+						orcidBtn.classList.add('disabled');
+					}
 				</script>
 
 				<?php if ($this->registrationFullname != Field::STATE_HIDDEN) { ?>
