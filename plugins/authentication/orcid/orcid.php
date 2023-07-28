@@ -283,6 +283,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 */
 	public function link($options=array())
 	{
+		Log::debug('Calling link');
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
 		$oauth->useSandboxEnvironment();
@@ -368,8 +369,14 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				//    or the Link record failed to be created
 				if ($hzal)
 				{
+					$person = $orcid->person();
+
+					$email = null;
+					if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
+						$email = $person->emails->email[0]->email;
+					}
 					$hzal->set('user_id', User::get('id'));
-					$hzal->set('email', $orcid->email());
+					$hzal->set('email', $email);
 					$hzal->update();
 				}
 				else
