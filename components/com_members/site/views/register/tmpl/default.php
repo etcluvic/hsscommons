@@ -324,6 +324,9 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 					orcidBtn.setAttribute('href', '/login?authenticator=orcid&disconnect=1');
 					orcidBtn.removeAttribute('target');
 					orcidBtn.removeAttribute('rel');
+
+					const orcidInput = document.getElementById('profile_orcid');
+					orcidInput.readOnly = true;
 				</script>
 
 				<?php if ($this->registrationFullname != Field::STATE_HIDDEN) { ?>
