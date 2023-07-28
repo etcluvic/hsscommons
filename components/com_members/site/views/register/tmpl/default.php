@@ -306,6 +306,8 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 				if (isset($this->registration['_profile'][$this->orcidField->get('name')]))
 				{
 					$orcidFormField->setValue($this->registration['_profile'][$this->orcidField->get('name')]);
+				} else {
+					$orcidFormField->setValue($this->orcidField->get('default_value'));
 				}
 
 				$errors = (!empty($this->xregistration->_invalid[$this->orcidField->get('name')])) ? '<span class="error">' . $this->xregistration->_invalid[$this->orcidField->get('name')] . '</span>' : '';
@@ -318,7 +320,7 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 					?>
 				</div>
 				<script type="text/javascript">
-					const orcidBtn = document.getElementById('create-orcid')
+					const orcidBtn = document.getElementById('create-orcid');
 					orcidBtn.setAttribute('href', '/login?authenticator=orcid&disconnect=1');
 					orcidBtn.removeAttribute('target');
 					orcidBtn.removeAttribute('rel');

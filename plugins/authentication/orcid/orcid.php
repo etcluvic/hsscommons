@@ -85,6 +85,12 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 */
 	public function display($view, $tpl)
 	{
+		if (Request::getInt('disconnect', 0)) {
+			Session::set('orcid_disconnect', 1);
+		} else {
+			Session::set('orcid_disconnect', null);
+		}
+
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
 		$oauth->useSandboxEnvironment();
@@ -115,7 +121,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 * @return  boolean
 	 */
 	public function onUserAuthenticate($credentials, $options, &$response)
-	{
+	{	
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
 		$oauth->useSandboxEnvironment();
@@ -133,6 +139,48 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 			// Set username to ORCID iD
 			$username = $orcid->id();
+			$person = $orcid->person();
+
+			if (Session::get('orcid_disconnect', null)) {
+				$activitiesProp = "activities-summary";
+				$employmentProp = "employment-summary";
+				$roleProp = "role-title";
+
+				$employments = null;
+				if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
+					$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
+				}
+				
+
+				$email = null;
+				if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
+					$email = $person->emails->email[0]->email;
+				}
+
+				$bio = null;
+				if (isset($person->biography->content)) {
+					$bio = $person->biography->content;
+				}
+				
+				$title = null;
+				$affiliation = null;
+				if (isset($employments) && is_array($employments)) {
+					$title = $employments[0]->$roleProp;
+					$affiliation = $employments[0]->organization->name;
+				}
+
+				// Session::set('auth_link.username', $username);
+				$details = $person->name;
+
+				Session::set('auth_link.tmp_orcid', $username);
+				Session::set('auth_link.tmp_name', $orcid->fullName());
+				Session::set('auth_link.tmp_email', $email);
+				Session::set('auth_link.tmp_bio', $bio);
+				Session::set('auth_link.tmp_title', $title);
+				Session::set('auth_link.tmp_affiliation', $affiliation);
+			
+				App::redirect('/register?autofill=orcid');
+			}
 
 			// Create the hubzero auth link
 			$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
@@ -156,13 +204,13 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			
 
 			$email = null;
-			if (isset($orcid->person()->emails->email) && is_array($orcid->person()->emails->email) && count($orcid->person()->emails->email) > 0) {
-				$email = $orcid->person()->emails->email[0]->email;
+			if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
+				$email = $person->emails->email[0]->email;
 			}
 
 			$bio = null;
-			if (isset($orcid->person()->biography->content)) {
-				$bio = $orcid->person()->biography->content;
+			if (isset($person->biography->content)) {
+				$bio = $person->biography->content;
 			}
 			
 			$title = null;
@@ -276,13 +324,13 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			
 
 			// $email = null;
-			// if (isset($orcid->person()->emails->email) && is_array($orcid->person()->emails->email) && count($orcid->person()->emails->email) > 0) {
-			// 	$email = $orcid->person()->emails->email[0]->email;
+			// if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
+			// 	$email = $person->emails->email[0]->email;
 			// }
 
 			// $bio = null;
-			// if (isset($orcid->person()->biography->content)) {
-			// 	$bio = $orcid->person()->biography->content;
+			// if (isset($person->biography->content)) {
+			// 	$bio = $person->biography->content;
 			// }
 			
 			// $title = null;

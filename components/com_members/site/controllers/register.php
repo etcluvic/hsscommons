@@ -648,6 +648,17 @@ class Register extends SiteController
 	 */
 	public function createTask()
 	{
+		if (!Request::getString('autofill', '')) {
+			Session::set('auth_link.tmp_orcid_id', null);
+			Session::set('auth_link.tmp_name', null);
+			Session::set('auth_link.tmp_given_name', null);
+			Session::set('auth_link.tmp_family_name', null);
+			Session::set('auth_link.tmp_email', null);
+			Session::set('auth_link.tmp_bio', null);
+			Session::set('auth_link.tmp_title', null);
+			Session::set('auth_link.tmp_affiliation', null);
+		}
+
 		if (!User::isGuest() && !User::get('tmp_user'))
 		{
 			App::redirect(
@@ -964,6 +975,11 @@ class Register extends SiteController
 					$xregistration->set('email', $hzal->email);
 					$xregistration->set('confirmEmail', $hzal->email);
 				}
+			} else {
+				$xregistration->set('email', Session::get('auth_link.tmp_email', ''));
+				$xregistration->set('confirmEmail', Session::get('auth_link.tmp_email', ''));
+				$xregistration->set('name', Session::get('auth_link.tmp_name', ''));
+				$xregistration->set('orcid', Session::get('auth_link.tmp_orcid', ''));
 			}
 		}
 
