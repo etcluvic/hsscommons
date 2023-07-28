@@ -649,7 +649,7 @@ class Register extends SiteController
 	public function createTask()
 	{
 		if (!Request::getString('autofill', '')) {
-			Session::set('auth_link.tmp_orcid_id', null);
+			Session::set('auth_link.tmp_orcid', null);
 			Session::set('auth_link.tmp_name', null);
 			Session::set('auth_link.tmp_given_name', null);
 			Session::set('auth_link.tmp_family_name', null);
