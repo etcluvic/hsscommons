@@ -89,6 +89,7 @@ class Oauth
     public function setAccessToken($token)
     {
         $this->accessToken = $token;
+        Session::set('accessToken', $token);
         return $this;
     }
 
