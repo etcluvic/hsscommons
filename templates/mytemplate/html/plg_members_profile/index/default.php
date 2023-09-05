@@ -147,6 +147,12 @@ $legacy = array(
 	1 => Lang::txt('COM_MEMBERS_FIELD_ACCESS_REGISTERED'),
 	2 => Lang::txt('COM_MEMBERS_FIELD_ACCESS_PRIVATE')
 );
+
+// Get profile's ORCID from database
+$orcidRow = \Hubzero\Auth\Link::all()
+	-> whereEquals('user_id', $this->profile->get('id'))
+	->row();
+$profileOrcid = $orcidRow->username;
 ?>
 
 <?php if ($this->getError()) { ?>
@@ -788,7 +794,7 @@ $legacy = array(
 					<div class="section-content">
 						<div class="key"><?php echo $field->get('label'); ?></div>
 						<?php if ($field->get('name') == 'orcid') {?>
-							<div class="value"><a href="<?php echo "https://orcid.org/" . $val; ?>" target="_blank"><?php echo $val; ?></a></div>
+							<div class="value" id="orcid-value" data-orcid="<?php echo $profileOrcid ? $profileOrcid : "" ?>"><a href="<?php echo "https://orcid.org/" . $val; ?>" target="_blank"><?php echo $val; ?></a></div>
 						<?php } else { ?>
 							<div class="value"><?php echo (!empty($val)) ? (is_array($val) ? implode(', ', $val) : $val) : Lang::txt('PLG_MEMBERS_PROFILE_NOT_SET'); ?></div>
 						<?php } ?>

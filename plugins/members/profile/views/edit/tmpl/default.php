@@ -38,8 +38,14 @@ if ($this->isUser) : ?>
 						orcidBtn.removeAttribute('target');
 						orcidBtn.removeAttribute('rel');
 
+						// Set current ORCID id if exists in the ORCID input field
 						const orcidInput = document.getElementById('profile_orcid');
 						orcidInput.readOnly = true;
+
+						const orcid = document.getElementById('orcid-value').dataset.orcid;
+						if (orcid) {
+							orcidInput.value = orcid;
+						}
 
 						const orcidText = orcidInput.closest('.input-wrap').querySelector('p');
 						
