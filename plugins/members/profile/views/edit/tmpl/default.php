@@ -34,7 +34,7 @@ if ($this->isUser) : ?>
 				<?php if ($this->profile_field === 'orcid') { ?>
 					<script type="text/javascript">
 						const orcidBtn = document.getElementById('create-orcid');
-						orcidBtn.setAttribute('href', '/login?authenticator=orcid&disconnect=1');
+						orcidBtn.setAttribute('href', '/login?authenticator=orcid&redirect=profile');
 						orcidBtn.removeAttribute('target');
 						orcidBtn.removeAttribute('rel');
 

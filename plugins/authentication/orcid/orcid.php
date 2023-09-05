@@ -85,11 +85,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 */
 	public function display($view, $tpl)
 	{
-		if (Request::getInt('disconnect', 0)) {
-			Session::set('orcid_disconnect', 1);
-		} else {
-			Session::set('orcid_disconnect', null);
-		}
+		Session::set('orcid-link-redirect', Request::getString('redirect', ''));
 
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
@@ -283,7 +279,10 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 */
 	public function link($options=array())
 	{
-		Log::debug('Calling link');
+		$redirect = Session::get('orcid-link-redirect', '');
+		Session::set('orcid-link-redirect', null);
+		$redirectUrl = 'index.php?option=com_members&id=' . User::get('id') . '&active=' . ($redirect ? $redirect : "account");
+
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
 		$oauth->useSandboxEnvironment();
@@ -296,7 +295,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		{
 			// User didn't authorize our app, or, clicked cancel...
 			App::redirect(
-				Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
+				Route::url($redirectUrl),
 				Lang::txt('PLG_AUTHENTICATION_ORCID_MUST_AUTHORIZE_TO_LINK', Config::get('sitename')),
 				'error'
 			);
@@ -354,7 +353,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			{
 				// This orcid account is already linked to another hub account
 				App::redirect(
-					Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
+					Route::url($redirectUrl),
 					Lang::txt('PLG_AUTHENTICATION_ORCID_ACCOUNT_ALREADY_LINKED'),
 					'error'
 				);
@@ -389,7 +388,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		{
 			// User didn't authorize our app, or, clicked cancel...
 			App::redirect(
-				Route::url('index.php?option=com_members&id=' . User::get('id') . '&active=account'),
+				Route::url($redirectUrl),
 				Lang::txt('PLG_AUTHENTICATION_ORCID_MUST_AUTHORIZE_TO_LINK', Config::get('sitename')),
 				'error'
 			);
