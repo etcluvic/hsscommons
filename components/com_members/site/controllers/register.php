@@ -648,6 +648,17 @@ class Register extends SiteController
 	 */
 	public function createTask()
 	{
+		if (!Request::getString('autofill', '')) {
+			Session::set('auth_link.tmp_orcid', null);
+			Session::set('auth_link.tmp_name', null);
+			Session::set('auth_link.tmp_given_name', null);
+			Session::set('auth_link.tmp_family_name', null);
+			Session::set('auth_link.tmp_email', null);
+			Session::set('auth_link.tmp_bio', null);
+			Session::set('auth_link.tmp_title', null);
+			Session::set('auth_link.tmp_affiliation', null);
+		}
+
 		if (!User::isGuest() && !User::get('tmp_user'))
 		{
 			App::redirect(
@@ -964,6 +975,11 @@ class Register extends SiteController
 					$xregistration->set('email', $hzal->email);
 					$xregistration->set('confirmEmail', $hzal->email);
 				}
+			} else {
+				$xregistration->set('email', Session::get('auth_link.tmp_email', ''));
+				$xregistration->set('confirmEmail', Session::get('auth_link.tmp_email', ''));
+				$xregistration->set('name', Session::get('auth_link.tmp_name', ''));
+				$xregistration->set('orcid', Session::get('auth_link.tmp_orcid', ''));
 			}
 		}
 
@@ -1056,6 +1072,21 @@ class Register extends SiteController
 			->where('action_' . ($task == 'update' ? 'create' : $task), '!=', Field::STATE_HIDDEN)
 			->ordered()
 			->rows();
+		
+		// Autofill registration form if there are corresponding info in the session
+		$orcidField = null;
+		foreach ($fields as $field) {
+			$fieldName = $field->get('name');
+			$defaultValue = $field->get('default_value');
+			if ($tmpVal = Session::get('auth_link.tmp_' . $fieldName, null)) {
+				$field->set('default_value', $tmpVal);
+			}
+
+			// Save ORCID field
+			if ($fieldName === 'orcid') {
+				$orcidField = $field;
+			}
+		}
 
 		// Display the view
 		$this->view
@@ -1069,6 +1100,7 @@ class Register extends SiteController
 			->set('password_rules', $password_rules)
 			->set('xregistration', $xregistration)
 			->set('registration', $xregistration->_registration)
+			->set('orcidField', $orcidField)
 			->setLayout('default')
 			->setErrors($this->getErrors())
 			->display();
