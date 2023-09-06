@@ -85,6 +85,13 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	 */
 	public function display($view, $tpl)
 	{
+		// Disconnect means creating a Common-based account with ORCID id
+		// Not disconnect means creating an ORCID-based account
+		if (Request::getInt('disconnect', 0)) {
+			Session::set('orcid_disconnect', 1);
+		} else {
+			Session::set('orcid_disconnect', null);
+		}
 		Session::set('orcid-link-redirect', Request::getString('redirect', ''));
 
 		// Set up the config for the ORCID api instance
@@ -137,6 +144,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			$username = $orcid->id();
 			$person = $orcid->person();
 
+			// Create a Commons-based account with ORCID iD
 			if (Session::get('orcid_disconnect', null)) {
 				$activitiesProp = "activities-summary";
 				$employmentProp = "employment-summary";
@@ -160,7 +168,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				
 				$title = null;
 				$affiliation = null;
-				if (isset($employments) && is_array($employments)) {
+				if (isset($employments) && is_array($employments) && count($employments) > 0) {
 					$title = $employments[0]->$roleProp;
 					$affiliation = $employments[0]->organization->name;
 				}
@@ -178,7 +186,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				App::redirect('/register?autofill=orcid');
 			}
 
-			// Create the hubzero auth link
+			// Create the hubzero auth link - Create an ORCID-based account
 			$method = (Component::params('com_members')->get('allowUserRegistration', false)) ? 'find_or_create' : 'find';
 			$hzal = \Hubzero\Auth\Link::$method('authentication', 'orcid', null, $username);
 
@@ -211,7 +219,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			
 			$title = null;
 			$affiliation = null;
-			if (isset($employments) && is_array($employments)) {
+			if (isset($employments) && is_array($employments) && count($employments) > 0) {
 				$title = $employments[0]->$roleProp;
 				$affiliation = $employments[0]->organization->name;
 			}
@@ -313,6 +321,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			$username = $orcid->id();
 
 			// Archie: Temporarily comment this out and come back to this later
+			// TODO: Need to see if we need to update user info from ORCID when they link their account
+
 			// $activitiesProp = "activities-summary";
 			// $employmentProp = "employment-summary";
 			// $roleProp = "role-title";
