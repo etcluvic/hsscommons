@@ -287,48 +287,14 @@ class connections
 	 */
 	public function browse()
 	{
-		// Keep a list of confirmed connections
-		$connection = Request::getInt('connection', 0);
-		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
-		$confirmed_connections = Session::get('confirmed_connections', array());
-		Log::debug($confirmed_connections);
-		if ($disclosure_confirmed) {
-			Log::debug('Block 1');
-			if (!in_array($connection, $confirmed_connections)) {
-				$confirmed_connections[] = $connection;
-			}
-			Session::set('confirmed_connections', $confirmed_connections);
-		}
-
-		// Set current confirmed connection ids in the app session
-		if (!$confirmed_connections) {
-			Log::debug('Block 2');
-			$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
-			foreach ($connection_model::all() as $c)
-			{
-				$confirmed_connections[] = $c->id;
-			}
-			Session::set('confirmed_connections', $confirmed_connections);
-		}
-		
-		Log::debug($this->connection->provider()->rows()->get('name'));
-		Log::debug($confirmed_connections);
-		Log::debug($connection);
-
-		// Temporarily redirect to disclosure page if provider is Google Drive
-		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
-		{	
-			Log::debug('Block 3');
-			return $this->disclosure();
-		}
-		
 		// Set up view
 		$connection_params = json_decode($this->connection->params);
-		Log::debug('connection_params:');
-		Log::debug(get_object_vars($connection_params));
+		if (!Request::getString('disclosure_confirmed', 0) && !$connection_params) {
+			return $this->disclosure();
+		}
+
 		if (!isset($connection_params->path))
 		{
-			Log::debug('Execute this');
 			return $this->setup_base_dir();
 		}
 		$view = new \Hubzero\Plugin\View([
