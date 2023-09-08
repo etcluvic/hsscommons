@@ -325,7 +325,7 @@ class connections
 		// Set up view
 		$connection_params = json_decode($this->connection->params);
 		Log::debug('connection_params:');
-		Log::debug(get_objects_var($connection_params));
+		Log::debug(get_object_vars($connection_params));
 		if (!isset($connection_params->path))
 		{
 			Log::debug('Execute this');
