@@ -96,7 +96,12 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		$oauth->useSandboxEnvironment();
+		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+			$oauth->useSandboxEnvironment();
+		} else {
+			$oauth->useProducionEnvironment();
+		}
+		
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setScope('/authenticate')
 		      ->setState($view->return)
@@ -127,7 +132,13 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{	
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		$oauth->useSandboxEnvironment();
+		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+			Log::debug('Use ORCID sandbox environment');
+			$oauth->useSandboxEnvironment();
+		} else {
+			Log::debug('Use ORCID production environment');
+			$oauth->useProducionEnvironment();
+		}
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
@@ -293,7 +304,11 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		$oauth->useSandboxEnvironment();
+		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+			$oauth->useSandboxEnvironment();
+		} else {
+			$oauth->useProducionEnvironment();
+		}
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
 		      ->setRedirectUri(self::getRedirectUri('orcid'));
