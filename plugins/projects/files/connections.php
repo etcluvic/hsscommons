@@ -291,7 +291,9 @@ class connections
 		$connection = Request::getInt('connection', 0);
 		$disclosure_confirmed = Request::getString('disclosure_confirmed', 0);
 		$confirmed_connections = Session::get('confirmed_connections', array());
+		Log::debug($confirmed_connections);
 		if ($disclosure_confirmed) {
+			Log::debug('Block 1');
 			if (!in_array($connection, $confirmed_connections)) {
 				$confirmed_connections[] = $connection;
 			}
@@ -300,6 +302,7 @@ class connections
 
 		// Set current confirmed connection ids in the app session
 		if (!$confirmed_connections) {
+			Log::debug('Block 2');
 			$connection_model = new \Components\Projects\Models\Orm\Connection($this->_database);
 			foreach ($connection_model::all() as $c)
 			{
@@ -308,10 +311,14 @@ class connections
 			Session::set('confirmed_connections', $confirmed_connections);
 		}
 		
+		Log::debug($this->connection->provider()->rows()->get('name'));
+		Log::debug($confirmed_connections);
+		Log::debug($connection);
 
 		// Temporarily redirect to disclosure page if provider is Google Drive
 		if ($this->connection->provider()->rows()->get('name') === 'Google Drive' && !in_array($connection, $confirmed_connections))
 		{	
+			Log::debug('Block 3');
 			return $this->disclosure();
 		}
 		
