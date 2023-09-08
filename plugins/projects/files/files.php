@@ -406,6 +406,7 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 	 */
 	protected function _browse($sync = 0)
 	{
+		Log::debug('Calling browse');
 		// Output HTML
 		$view = new \Hubzero\Plugin\View(
 			array(
