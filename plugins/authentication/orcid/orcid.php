@@ -310,10 +310,10 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 						Log::debug(get_object_vars($data));
 					}
 
-					$query->alter('#__xprofiles_tokens', 'user_id', $user->get('id'), ['token' => $oauth->getAccessToken(), 'created' => date('d-m-y h:i:s')]); 
+					$query->alter('#__xprofiles_tokens', 'user_id', $user->get('id'), ['token' => $oauth->getAccessToken(), 'created' => date('y-m-d h:i:s')]); 
 				} else {
 					// Store the new access token into the database and relates it to the current logged in user
-					$query->push('#__xprofiles_tokens', ['token' => $oauth->getAccessToken(), 'user_id' => $user->get('id'), 'created' => date('d-m-y h:i:s')]);
+					$query->push('#__xprofiles_tokens', ['token' => $oauth->getAccessToken(), 'user_id' => $user->get('id'), 'created' => date('y-m-d h:i:s')]);
 				}
 
 				// Set cookie with login preference info
