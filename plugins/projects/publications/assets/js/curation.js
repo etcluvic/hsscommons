@@ -85,6 +85,13 @@ HUB.ProjectPublicationsDraft = {
 	retrieveBlockInteractions: function()
 	{
 		var $ = this.jQuery;
+		
+		const vid = $('#vid').val();
+
+		if (window.localStorage.getItem(`prev-published-${vid}`, null)) {
+			$('#yes-prev-published').attr('checked', 'checked');
+			$('.has-doi-block').removeClass('hidden');
+		}
 
 		// Ask if a previously published publication has a DOI
 		$('#yes-prev-published').click(function() {
@@ -92,11 +99,13 @@ HUB.ProjectPublicationsDraft = {
 			if ($('#yes-doi').is(':checked')) {
 				$(this).closest('.prev-published-block').find('.retrieve-block').removeClass('hidden');
 			}
+			window.localStorage.setItem(`prev-published-${vid}`, 1);
 		})
 
 		$('#no-prev-published').click(function() {
 			$(this).closest('.prev-published-block').find('.has-doi-block').addClass('hidden');
 			$(this).closest('.prev-published-block').find('.retrieve-block').addClass('hidden');
+			window.localStorage.removeItem(`prev-published-${vid}`);
 		})
 
 		// Show "Retrieve" field if selecting "Yes" for item having a DOI. Otherwise, hide the field
@@ -613,6 +622,11 @@ HUB.ProjectPublicationsDraft = {
 			$(item).on('click', function(e)
 			{
 				e.preventDefault();
+
+				if ($(this).attr('id') === 'element1-apply') {
+					const vid = $('#vid').val();
+					window.localStorage.removeItem(`prev-published-${vid}`);
+				}
 
 				if ($(parent).length)
 				{
