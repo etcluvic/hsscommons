@@ -67,9 +67,6 @@ if ($primary != 'hubzero' && !isset($refl[$primary]))
 <?php endif; ?>
 
 <section class="main section">
-    <p class="warning">
-        Note: ORCID will be making changes to its system on August 8, 2023. These changes may temporarily affect ORCID-based registrations and logins on our site.
-    </p>
 	<div class="hz_user">
 		<?php if ($errorText = Request::getString('errorText', false)) : ?>
 			<p class="error">
