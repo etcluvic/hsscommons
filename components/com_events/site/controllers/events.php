@@ -298,31 +298,13 @@ class Events extends SiteController
 	}
 
 	/**
-	 * List events for a given year
+	 * Written by Archie: Select proper events to display on the front page
 	 *
-	 * @return     void
+	 * @param   array   $rows - Rows of Event object
+	 * @return  array	$displayEvents - Selected rows of Event object to be displayed
 	 */
-	public function yearTask()
+	public function selectDisplayedEvents($rows)
 	{
-		// Get some needed info
-		$year   = $this->year;
-		$month  = $this->month;
-		$day    = $this->day;
-		$offset = $this->offset;
-		$option = $this->_option;
-		$gid    = $this->gid;
-
-		// Set some filters
-		$filters = array();
-		$filters['gid'] = $gid;
-		$filters['year'] = $year;
-		$filters['category'] = $this->category;
-		// $filters['scope'] = 'event';
-
-		// Retrieve records
-		$ee = new Event($this->database);
-		$rows = $ee->getEvents('year', $filters);
-		
 		// Select events to display on the "/events" page
 		$displayEvents = array();
 		foreach ($rows as $row) {
@@ -369,7 +351,35 @@ class Events extends SiteController
 			}
 		}
 
-		$rows = $displayEvents;
+		return $displayEvents;
+	}
+
+	/**
+	 * List events for a given year
+	 *
+	 * @return     void
+	 */
+	public function yearTask()
+	{
+		// Get some needed info
+		$year   = $this->year;
+		$month  = $this->month;
+		$day    = $this->day;
+		$offset = $this->offset;
+		$option = $this->_option;
+		$gid    = $this->gid;
+
+		// Set some filters
+		$filters = array();
+		$filters['gid'] = $gid;
+		$filters['year'] = $year;
+		$filters['category'] = $this->category;
+		// $filters['scope'] = 'event';
+
+		// Retrieve records
+		$ee = new Event($this->database);
+		$rows = $ee->getEvents('year', $filters);
+		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -441,11 +451,12 @@ class Events extends SiteController
 		$filters['select_date'] = $select_date->toSql();
 		$filters['select_date_fin'] = $select_date_fin->toSql();
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('month', $filters);
+		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -527,7 +538,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		$ee = new Event($this->database);
 
@@ -553,6 +564,8 @@ class Events extends SiteController
 
 			$rows[$d] = array();
 			$rows[$d]['events'] = $ee->getEvents('day', $filters);
+			$rows[$d]['events'] = $this->selectDisplayedEvents($rows[$d]['events']);
+
 			$rows[$d]['week']   = $week;
 		}
 
@@ -617,7 +630,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		$select_date     = sprintf("%4d-%02d-%02d 00:00:00", $year, $month, $day);
 		$select_date_fin = sprintf("%4d-%02d-%02d 23:59:59", $year, $month, $day);
@@ -629,6 +642,7 @@ class Events extends SiteController
 
 		$ee = new Event($this->database);
 		$events = $ee->getEvents('day', $filters);
+		$events = $this->selectDisplayedEvents($events);
 
 		// Go through each event and ensure it should be displayed
 		// $events = array();
