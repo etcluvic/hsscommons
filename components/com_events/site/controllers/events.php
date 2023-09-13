@@ -317,11 +317,59 @@ class Events extends SiteController
 		$filters['gid'] = $gid;
 		$filters['year'] = $year;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('year', $filters);
+		
+		// Select events to display on the "/events" page
+		$displayEvents = array();
+		foreach ($rows as $row) {
+			// Display all standlone events
+			if ($row->scope === "event") {
+				$displayEvents[] = $row;
+			// Display events from groups based on the group's calendar setting
+			} else if ($row->scope === "group") {
+				$groupId = $row->scope_id;
+
+				// Retrieve group information
+				$query = new \Hubzero\Database\Query;
+				$groups = $query->select('*')
+								->from('#__xgroups')
+								->whereEquals('gidNumber', $groupId)
+								->fetch();
+				
+				// Do not show the event if there is no group has the scope id as its gidNumber
+				if (count($groups) === 0) {
+					continue;
+				}
+				$group = $groups[0];
+				$calendarSetting = explode('=', explode(',', $group->plugins)[4])[1];
+				
+				// Group canlendar is set to 'Any HUB Visitor'
+				if ($calendarSetting === 'anyone') {
+					$displayEvents[] = $row;
+				// Group canlendar is set to 'Registered HUB Users'
+				} else if ($calendarSetting === 'registered' && !User::isGuest()) {
+					$displayEvents[] = $row;
+				// Group canlendar is set to 'Group members only'
+				} else if ($calendarSetting === 'members') {
+					// Display if the user is in this group
+					$query = new \Hubzero\Database\Query;
+					$members = $query->select('*')
+									->from('#__xgroups_members')
+									->whereEquals('gidNumber', $groupId)
+									->whereEquals('uidNumber', User::get('id'))
+									->fetch();
+					if (count($members) > 0) {
+						$displayEvents[] = $row;
+					}
+				}
+			}
+		}
+
+		$rows = $displayEvents;
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
