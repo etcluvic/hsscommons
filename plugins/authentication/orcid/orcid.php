@@ -100,7 +100,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
 			$oauth->useSandboxEnvironment();
 		} else {
-			$oauth->useProducionEnvironment();
+			$oauth->useProductionEnvironment();
 		}
 		
 		$oauth->setClientId($this->params->get('client_id'))
@@ -138,7 +138,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			$oauth->useSandboxEnvironment();
 		} else {
 			Log::debug('Use ORCID production environment');
-			$oauth->useProducionEnvironment();
+			$oauth->useProductionEnvironment();
 		}
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
@@ -353,7 +353,7 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
 			$oauth->useSandboxEnvironment();
 		} else {
-			$oauth->useProducionEnvironment();
+			$oauth->useProductionEnvironment();
 		}
 		$oauth->setClientId($this->params->get('client_id'))
 		      ->setClientSecret($this->params->get('client_secret'))
