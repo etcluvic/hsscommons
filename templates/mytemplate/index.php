@@ -177,7 +177,9 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 <?php else: ?>
                   <jdoc:include type="modules" name="breadcrumbs" />
                 <?php endif; ?>
+                <!-- <div style="margin: auto 0 auto auto;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div> -->
               </div>
+             
             </div><!-- / #sub-masthead -->
 
             <div class="inner">
