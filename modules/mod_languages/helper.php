@@ -29,6 +29,12 @@ class Helper extends Module
 	{
 		// [!] Legacy compatibility
 		$params = $this->params;
+
+		// Display only when the module is enabled
+		if (!$params->count()) {
+			return "";
+		}
+
 		$module = $this->module;
 
 		$headerText = trim($params->get('header_text'));
