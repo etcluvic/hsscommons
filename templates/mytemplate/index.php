@@ -117,7 +117,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 	<!--  Modified by CANARIE Inc. End  -->
                 </a>
               </h1>
-
+              
               <nav id="account" class="account-navigation">
                 <ul>
                   <li>
@@ -159,6 +159,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
               </nav>
               <nav id="nav" class="main-navigation" aria-label="<?php echo Lang::txt('TPL_MYTEMPLATE_MAINMENU'); ?>">
                 <jdoc:include type="modules" name="user3" />
+                <div style="position: fixed; top: 80px; right: 20px;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
               </nav>
             </header>
 
@@ -177,7 +178,6 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 <?php else: ?>
                   <jdoc:include type="modules" name="breadcrumbs" />
                 <?php endif; ?>
-                <!-- <div style="margin: auto 0 auto auto;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div> -->
               </div>
              
             </div><!-- / #sub-masthead -->
