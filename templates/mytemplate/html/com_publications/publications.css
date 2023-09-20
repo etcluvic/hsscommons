@@ -1723,3 +1723,14 @@
 		content: "\f001";
 		color: #c6a68d;
 	}
+
+/* Additionals */
+	.fork-source a {
+		color: #fff !important;
+	}
+
+	.fork-source a:hover {
+		border: none;
+		text-decoration: underline;
+		text-decoration-color: #fff;
+	}
