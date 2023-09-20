@@ -33,7 +33,7 @@
 		top: 0;
 		left: 0;
 		background-color: #000;
-		opacity: 50%;
+		opacity: 70%;
 		z-index: 0;
 	}
 	.slide-content {
@@ -78,9 +78,9 @@
 	}
 
 /* Standard billboard styling (could override here, or on a per-billboard basis) */
-	.slide {
+	/* .slide {
 		background-repeat: repeat;
-	}
+	} */
 	.slide * {
 		color: #fff;
 	}
