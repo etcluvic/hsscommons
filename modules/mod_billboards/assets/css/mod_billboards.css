@@ -19,9 +19,35 @@
 	}
 	.banner,
 	.slide {
-		height: 230px;
+		position: relative;
+		min-height: 500px;
+		height: fit-content;
 		width: 100%;
-		overflow: hidden;
+		background-size: contain;
+		background-color: #000;
+	}
+	.slide-overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: #000;
+		opacity: 50%;
+		z-index: 0;
+	}
+	.slide-content {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 500;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 30px;
 	}
 	.banner div {
 		width: 100%;
@@ -54,6 +80,14 @@
 /* Standard billboard styling (could override here, or on a per-billboard basis) */
 	.slide {
 		background-repeat: repeat;
+	}
+	.slide * {
+		color: #fff;
+	}
+	.slide h3 {
+		font-size: 200%;
+		font-weight: 500;
+		color: #ffffff;
 	}
 	.slide p {
 		font-size: 1.2em;

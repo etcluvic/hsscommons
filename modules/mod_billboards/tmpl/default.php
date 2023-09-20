@@ -13,12 +13,15 @@ defined('_HZEXEC_') or die();
 	<div class="banner" id="<?php echo $this->collection; ?>">
 		<?php foreach ($this->slides as $slide) : ?>
 			<div class="slide" id="<?php echo $slide->alias; ?>">
-				<h3><?php echo $slide->header; ?></h3>
-				<?php echo $slide->text; ?>
-				<div class="<?php echo $slide->learn_more_location; ?>">
-					<a class="<?php echo $slide->learn_more_class; ?>" href="<?php echo $slide->learn_more_target; ?>">
-						<?php echo $slide->learn_more_text; ?>
-					</a>
+				<div class="slide-overlay"></div>
+				<div class="slide-content">
+					<h3><?php echo $slide->header; ?></h3>
+					<?php echo $slide->text; ?>
+					<div class="<?php echo $slide->learn_more_location; ?>">
+						<a class="<?php echo $slide->learn_more_class; ?>" href="<?php echo $slide->learn_more_target; ?>">
+							<?php echo $slide->learn_more_text; ?>
+						</a>
+					</div>
 				</div>
 			</div>
 		<?php endforeach; ?>

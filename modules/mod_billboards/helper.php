@@ -78,6 +78,7 @@ class Helper extends Module
 		// Add the CSS to the template for each billboard
 		foreach ($this->slides as $slide)
 		{
+			Log::debug(get_object_vars($slide));
 			$background = $slide->background_img ? "background-image: url('{$slide->background_img}');" : '';
 			$padding    = $slide->padding        ? "padding: {$slide->padding};"                        : '';
 
