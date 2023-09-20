@@ -195,9 +195,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
         </div><!-- / #splash -->
       </div><!-- / #top -->
       
-      <div style="margin-bottom: -15px;">
-        <jdoc:include type="modules" name="features" />
-      </div>
+      <jdoc:include type="modules" name="features" />
 
       <div id="wrap">
         <main id="content" class="<?php echo Request::getCmd('option', ''); ?>">
