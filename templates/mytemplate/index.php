@@ -195,6 +195,10 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
         </div><!-- / #splash -->
       </div><!-- / #top -->
       
+      <div style="margin-bottom: -15px;">
+        <jdoc:include type="modules" name="features" />
+      </div>
+
       <div id="wrap">
         <main id="content" class="<?php echo Request::getCmd('option', ''); ?>">
           <div class="inner<?php if ($this->countModules('left or right')) { echo ' withmenu'; } ?>">
@@ -211,7 +215,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
           <?php if ($this->countModules('left or right')) : ?>
               <div class="subject">
           <?php endif; ?>
-
+                
                 <!-- start component output -->
                 <jdoc:include type="component" />
                 <!-- end component output -->
