@@ -294,7 +294,6 @@ class Event extends Table
 				}
 
 				$sql .= " ORDER BY publish_up ASC";
-				Log::debug($sql);
 			break;
 		}
 
