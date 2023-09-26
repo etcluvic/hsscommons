@@ -466,7 +466,12 @@ class Publication extends Table
 
 		if ($sortby == 'popularity')
 		{
-			$sql .= ", (SELECT S.users FROM `#__publication_stats` AS S WHERE S.publication_id=C.id AND S.period=14 ORDER BY S.datetime DESC LIMIT 1) as stat ";
+			// Archie: Sort by popularity using total page_views of table jos_publication_logs, as usage is currently not used
+			$sql .= ", (SELECT SUM(page_views)
+			FROM `#__publication_logs`
+			WHERE `publication_id`=C.id AND `publication_version_id`=V.id
+			ORDER BY `year` ASC, `month` ASC) as stat ";
+			// $sql .= ", (SELECT S.users FROM `#__publication_stats` AS S WHERE S.publication_id=C.id AND S.period=14 ORDER BY S.datetime DESC LIMIT 1) as stat ";
 		}
 
 		$sql .= (isset($filters['tag']) && $filters['tag'] != '') ? ", TA.tag, COUNT(DISTINCT TA.tag) AS uniques " : " ";
