@@ -78,6 +78,16 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
 <!DOCTYPE html>
 <html dir="<?php echo $this->direction; ?>" lang="<?php echo $this->language; ?>" class="<?php echo implode(' ', $cls); ?>">
   <head>
+    <!-- Google tag (gtag.js) for Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8C0W35938"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P8C0W35938');
+    </script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/index.css?v=<?php echo filemtime(__DIR__ . '/css/index.css'); ?>" />
 
@@ -97,16 +107,6 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
     <![endif]-->
   </head>
 
-  <!-- Google tag (gtag.js) for Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8C0W35938"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-P8C0W35938');
-  </script>
-  
   <body>
     <!-- Archie: hidden div tag to store side-wide public information -->
     <div id="public-info" data-session-timeout="<?php echo Config::get('session')->lifetime; ?>" style="display: none;"></div>
