@@ -96,6 +96,17 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
       <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/browser/ie8.css" />
     <![endif]-->
   </head>
+
+  <!-- Google tag (gtag.js) for Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8C0W35938"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-P8C0W35938');
+  </script>
+  
   <body>
     <!-- Archie: hidden div tag to store side-wide public information -->
     <div id="public-info" data-session-timeout="<?php echo Config::get('session')->lifetime; ?>" style="display: none;"></div>
