@@ -129,7 +129,7 @@ $ignoreDst = $eventParams->get('ignore_dst') == 1 ? true : false;
 					</label>
 
 					<label for="event_end">
-						<?php echo Lang::txt('End:'); ?> <span class="optional">Optional</span>
+						<?php echo Lang::txt('End:'); ?> <span class="required">Required</span>
 						<?php
 							$end               = Request::getString('end', '', 'get');
 							$publish_down      = ($this->event->get('publish_down')) ? $this->event->get('publish_down') : $end;
@@ -142,7 +142,7 @@ $ignoreDst = $eventParams->get('ignore_dst') == 1 ? true : false;
 							}
 						?>
 						<div class="input-group">
-							<input type="text" name="event[publish_down]" id="event_end_date" value="<?php echo $this->escape($publish_down_date); ?>" placeholder="mm/dd/yyyy" class="no-legacy-placeholder-support" />
+							<input type="text" name="event[publish_down]" id="event_end_date" value="<?php echo $this->escape($publish_down_date); ?>" placeholder="mm/dd/yyyy" class="no-legacy-placeholder-support" required/>
 							<input type="text" name="event[publish_down_time]" id="event_end_time" value="<?php echo $this->escape($publish_down_time); ?>" placeholder="h:mm am/pm" class="no-legacy-placeholder-support" />
 						</div>
 					</label>
