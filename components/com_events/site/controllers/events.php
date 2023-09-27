@@ -298,6 +298,63 @@ class Events extends SiteController
 	}
 
 	/**
+	 * Written by Archie: Select proper events to display on the front page
+	 *
+	 * @param   array   $rows - Rows of Event object
+	 * @return  array	$displayEvents - Selected rows of Event object to be displayed
+	 */
+	public function selectDisplayedEvents($rows)
+	{
+		// Select events to display on the "/events" page
+		$displayEvents = array();
+		foreach ($rows as $row) {
+			// Display all standlone events
+			if ($row->scope === "event") {
+				$displayEvents[] = $row;
+			// Display events from groups based on the group's calendar setting
+			} else if ($row->scope === "group") {
+				$groupId = $row->scope_id;
+
+				// Retrieve group information
+				$query = new \Hubzero\Database\Query;
+				$groups = $query->select('*')
+								->from('#__xgroups')
+								->whereEquals('gidNumber', $groupId)
+								->fetch();
+				
+				// Do not show the event if there is no group has the scope id as its gidNumber
+				if (count($groups) === 0) {
+					continue;
+				}
+				$group = $groups[0];
+				$calendarSetting = explode('=', explode(',', $group->plugins)[4])[1];
+				
+				// Group canlendar is set to 'Any HUB Visitor'
+				if ($calendarSetting === 'anyone') {
+					$displayEvents[] = $row;
+				// Group canlendar is set to 'Registered HUB Users'
+				} else if ($calendarSetting === 'registered' && !User::isGuest()) {
+					$displayEvents[] = $row;
+				// Group canlendar is set to 'Group members only'
+				} else if ($calendarSetting === 'members') {
+					// Display if the user is in this group
+					$query = new \Hubzero\Database\Query;
+					$members = $query->select('*')
+									->from('#__xgroups_members')
+									->whereEquals('gidNumber', $groupId)
+									->whereEquals('uidNumber', User::get('id'))
+									->fetch();
+					if (count($members) > 0) {
+						$displayEvents[] = $row;
+					}
+				}
+			}
+		}
+
+		return $displayEvents;
+	}
+
+	/**
 	 * List events for a given year
 	 *
 	 * @return     void
@@ -317,11 +374,12 @@ class Events extends SiteController
 		$filters['gid'] = $gid;
 		$filters['year'] = $year;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('year', $filters);
+		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -393,11 +451,12 @@ class Events extends SiteController
 		$filters['select_date'] = $select_date->toSql();
 		$filters['select_date_fin'] = $select_date_fin->toSql();
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('month', $filters);
+		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -479,7 +538,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		$ee = new Event($this->database);
 
@@ -505,6 +564,8 @@ class Events extends SiteController
 
 			$rows[$d] = array();
 			$rows[$d]['events'] = $ee->getEvents('day', $filters);
+			$rows[$d]['events'] = $this->selectDisplayedEvents($rows[$d]['events']);
+
 			$rows[$d]['week']   = $week;
 		}
 
@@ -569,7 +630,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		$filters['scope'] = 'event';
+		// $filters['scope'] = 'event';
 
 		$select_date     = sprintf("%4d-%02d-%02d 00:00:00", $year, $month, $day);
 		$select_date_fin = sprintf("%4d-%02d-%02d 23:59:59", $year, $month, $day);
@@ -581,6 +642,7 @@ class Events extends SiteController
 
 		$ee = new Event($this->database);
 		$events = $ee->getEvents('day', $filters);
+		$events = $this->selectDisplayedEvents($events);
 
 		// Go through each event and ensure it should be displayed
 		// $events = array();

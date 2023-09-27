@@ -78,6 +78,16 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
 <!DOCTYPE html>
 <html dir="<?php echo $this->direction; ?>" lang="<?php echo $this->language; ?>" class="<?php echo implode(' ', $cls); ?>">
   <head>
+    <!-- Google tag (gtag.js) for Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8C0W35938"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P8C0W35938');
+    </script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/index.css?v=<?php echo filemtime(__DIR__ . '/css/index.css'); ?>" />
 
@@ -96,6 +106,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
       <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/browser/ie8.css" />
     <![endif]-->
   </head>
+
   <body>
     <!-- Archie: hidden div tag to store side-wide public information -->
     <div id="public-info" data-session-timeout="<?php echo Config::get('session')->lifetime; ?>" style="display: none;"></div>
@@ -117,7 +128,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 	<!--  Modified by CANARIE Inc. End  -->
                 </a>
               </h1>
-
+              
               <nav id="account" class="account-navigation">
                 <ul>
                   <li>
@@ -159,6 +170,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
               </nav>
               <nav id="nav" class="main-navigation" aria-label="<?php echo Lang::txt('TPL_MYTEMPLATE_MAINMENU'); ?>">
                 <jdoc:include type="modules" name="user3" />
+                <div style="position: fixed; top: 80px; right: 20px;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
               </nav>
             </header>
 
@@ -178,6 +190,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                   <jdoc:include type="modules" name="breadcrumbs" />
                 <?php endif; ?>
               </div>
+             
             </div><!-- / #sub-masthead -->
 
             <div class="inner">
@@ -193,6 +206,8 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
         </div><!-- / #splash -->
       </div><!-- / #top -->
       
+      <jdoc:include type="modules" name="features" />
+
       <div id="wrap">
         <main id="content" class="<?php echo Request::getCmd('option', ''); ?>">
           <div class="inner<?php if ($this->countModules('left or right')) { echo ' withmenu'; } ?>">
@@ -209,7 +224,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
           <?php if ($this->countModules('left or right')) : ?>
               <div class="subject">
           <?php endif; ?>
-
+                
                 <!-- start component output -->
                 <jdoc:include type="component" />
                 <!-- end component output -->
