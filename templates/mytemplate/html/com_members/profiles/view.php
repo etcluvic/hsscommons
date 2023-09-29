@@ -84,6 +84,12 @@ if (!$no_html)
 {
 	$this->css()
 	     ->js();
+
+// Get profile's ORCID from database
+$orcidRow = \Hubzero\Auth\Link::all()
+	-> whereEquals('user_id', $this->profile->get('id'))
+	->row();
+$profileOrcid = $orcidRow->username;
 ?>
 <header id="content-header" class="content-header">
 	<h2>
@@ -295,6 +301,11 @@ if (!$no_html)
 
 if (!$no_html) {
 				?>
+			<?php if ($profileOrcid) { ?>
+				<script>
+					document.querySelector('.profile-orcid').classList.remove("hide");
+				</script>
+			<?php } ?>
 			</div><!-- /#page_content -->
 		</div><!-- /#page_main -->
 	</div> <!-- //#page_container -->
