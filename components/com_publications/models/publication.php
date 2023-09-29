@@ -2133,7 +2133,7 @@ class Publication extends Obj
 			Filesystem::makeDirectory(PATH_APP . $logPath, 0755, true, true);
 		}
 
-		// $this->_tblLog->logAccess($this->get('id'), $this->get('version_id'), $type, $logPath);
+		$this->_tblLog->logAccess($this->get('id'), $this->get('version_id'), $type, $logPath);
 	}
 
 	/**
