@@ -17,12 +17,17 @@ if ($this->isUser) : ?>
 					<div class="input-wrap">
 						<?php echo $this->inputs; ?>
 					</div>
-					<div class="input-wrap">
-						<?php echo $this->access; ?>
-					</div>
 
-					<input type="submit" class="section-edit-submit btn" value="<?php echo Lang::txt('PLG_MEMBERS_PROFILE_SAVE'); ?>" />
-					<input type="reset" class="section-edit-cancel btn" value="<?php echo Lang::txt('JCANCEL'); ?>" />
+					<?php if ($this->profile_field !== 'orcid') { ?>
+						<div class="input-wrap">
+							<?php echo $this->access; ?>
+						</div>
+					
+
+						<input type="submit" class="section-edit-submit btn" value="<?php echo Lang::txt('PLG_MEMBERS_PROFILE_SAVE'); ?>" />
+						<input type="reset" class="section-edit-cancel btn" value="<?php echo Lang::txt('JCANCEL'); ?>" />
+					<?php } ?>
+
 					<input type="hidden" name="field_to_check[]" value="<?php echo $this->registration_field; ?>" />
 					<input type="hidden" name="option" value="com_members" />
 					<input type="hidden" name="controller" value="profiles" />
