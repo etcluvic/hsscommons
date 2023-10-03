@@ -489,6 +489,7 @@ class Batchcreate extends AdminController
 		$item['version']->main           = 1;
 
 		if ($autopublish) {
+			$item['version']->published_up = Date::toSql();
 			$item['version']->state = 1;
 		} else {
 			$item['version']->state = 3;
