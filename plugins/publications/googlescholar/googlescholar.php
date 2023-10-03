@@ -37,7 +37,7 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 
 		$publication->authors();
 		$publication->license();
-
+		
 		// Add metadata
 		Document::setMetaData('citation_title', $view->escape($publication->title));
 
@@ -58,8 +58,16 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 			$thedate = $publication->created;
 		}
 		if ($thedate && $thedate != $nullDate)
-		{
-			Document::setMetaData('citation_date', Date::of($thedate)->toLocal('Y-m-d'));
+		{	
+			// Publication was published from the site
+			if ($publication->isAuthor($publication->created_by)) {
+				Document::setMetaData('citation_publication_date', Date::of($thedate)->toLocal('Y/m/d'));
+			} 
+			
+			// Publication was published from outside the site then imported into the site
+			else {
+				Document::setMetaData('citation_online_date', Date::of($thedate)->toLocal('Y/m/d'));
+			}
 		}
 
 		if ($doi = $publication->version->get('doi'))
@@ -95,6 +103,18 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 			{
 				Document::setMetaData('citation_author_institution', $view->escape($contributor->organization));
 			}
+
+			// NOTE: Have to comment out as there aren't suitable fields in the database
+			// Implement requirement 2D in https://scholar.google.ca/intl/en/scholar/inclusion.html#indexing
+			// $publicationCategoryAlias = $publication->category()->alias;
+			// $isPublicationJournal = strpos($publicationCategoryAlias, "journal") !== false;
+			// $isPublicationConference = strpos($publicationCategoryAlias, "conference") !== false;
+			// if ($isPublicationJournal) {
+			// 	Document::setMetaData("citation_journal_title", $view->escape($publication->title));
+			// }
+			// if ($isPublicationConference) {
+			// 	Document::setMetaData("citation_conference_title", $view->escape($publication->title));
+			// }
 		}
 	}
 }
