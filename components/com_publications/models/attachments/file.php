@@ -433,7 +433,7 @@ class File extends Base
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
-						? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+						? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
 				$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
@@ -734,6 +734,7 @@ class File extends Base
 	{
 		// Incoming
 		$forceDownload = Request::getInt('download', 0); // Force download action?
+		$serveInline = $forceDownload ? 0 : 1;
 
 		// Get configs
 		$configs = $this->getConfigs($element->params, $elementId, $pub, $blockParams);
@@ -787,12 +788,14 @@ class File extends Base
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
-				if (!$server->serve())
+				if ($serveInline && !$server->serve_inline($download))
 				{
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				}
-				else
+				} else if ($server->serve()) {
+					// Should only get here on error
+					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
+				} else
 				{
 					exit;
 				}
