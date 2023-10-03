@@ -75,6 +75,19 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 			Document::setMetaData('citation_doi', $view->escape($doi));
 		}
 
+		// Add "citation_pdf_url" if there is a file attached to the publication
+		$query = new \Hubzero\Database\Query;
+		$primary_files = $query->select('*')
+							   ->from('#__publication_attachments')
+							   ->whereEquals('publication_id', $publication->id)
+							   ->whereEquals('role', 1)
+							   ->fetch();
+
+		foreach ($primary_files as $file) {
+			$file_absolute_path = Request::base() . 'publications' . DS . $publication->id . DS . 'serve' . DS . $file->role . DS . $file->id . '?el=' . $file->ordering;
+			Document::setMetaData('citation_pdf_url', $file_absolute_path);
+		}
+
 		foreach ($publication->_authors as $contributor)
 		{
 			if (strtolower($contributor->role) == 'submitter')
@@ -103,18 +116,18 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 			{
 				Document::setMetaData('citation_author_institution', $view->escape($contributor->organization));
 			}
-
-			// NOTE: Have to comment out as there aren't suitable fields in the database
-			// Implement requirement 2D in https://scholar.google.ca/intl/en/scholar/inclusion.html#indexing
-			// $publicationCategoryAlias = $publication->category()->alias;
-			// $isPublicationJournal = strpos($publicationCategoryAlias, "journal") !== false;
-			// $isPublicationConference = strpos($publicationCategoryAlias, "conference") !== false;
-			// if ($isPublicationJournal) {
-			// 	Document::setMetaData("citation_journal_title", $view->escape($publication->title));
-			// }
-			// if ($isPublicationConference) {
-			// 	Document::setMetaData("citation_conference_title", $view->escape($publication->title));
-			// }
 		}
+
+		// NOTE: Have to comment out as there aren't suitable fields in the database
+		// Implement requirement 2D in https://scholar.google.ca/intl/en/scholar/inclusion.html#indexing
+		// $publicationCategoryAlias = $publication->category()->alias;
+		// $isPublicationJournal = strpos($publicationCategoryAlias, "journal") !== false;
+		// $isPublicationConference = strpos($publicationCategoryAlias, "conference") !== false;
+		// if ($isPublicationJournal) {
+		// 	Document::setMetaData("citation_journal_title", $view->escape($publication->title));
+		// }
+		// if ($isPublicationConference) {
+		// 	Document::setMetaData("citation_conference_title", $view->escape($publication->title));
+		// }
 	}
 }
