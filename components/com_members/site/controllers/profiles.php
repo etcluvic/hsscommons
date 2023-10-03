@@ -438,7 +438,8 @@ class Profiles extends SiteController
 			}])
 			->whereEquals($a . '.block', 0)
 			->where($a . '.activation', '>', 0)
-			->where($a . '.approved', '>', 0);
+			->where($a . '.approved', '>', 0)
+			->whereEquals('usageAgreement', 1);
 
 		// Tags
 		if ($filters['tags'])
