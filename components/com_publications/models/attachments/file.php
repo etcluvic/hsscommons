@@ -430,13 +430,15 @@ class File extends Base
 				$title = $title ? $title : basename($attach->path);
 				$pop   = Lang::txt('Download') . ' ' . $title;
 				$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
+				$previewLink = in_array(explode('.', $title)[1], $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
 						? $icon . ' ' . $title
-						. '<span style="margin-left: 20px;">
-							<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="' . $pop . '">Preview</a>
-							<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
+						. '<span style="margin-left: 20px;">'
+						. $previewLink
+						. '<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
 						   </span>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
