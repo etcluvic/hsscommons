@@ -265,7 +265,7 @@ if ($attachments && count($attachments) > 0) {
 	$firstFile = $attachments[1][0];
 	$fileExtension = $firstFile->path ? explode('.', $firstFile->path)[1] : '';
 	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {
-		echo "<iframe width='600' height='1000' style='border-bottom: #000 solid 2px; border-right: #000 solid 2px;' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $firstFile->id) . "' </iframe>"; 
+		echo "<iframe width='600' height='1000' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $firstFile->id) . "' </iframe>"; 
 	}
 }
 ?>
