@@ -431,15 +431,23 @@ class File extends Base
 				$pop   = Lang::txt('Download') . ' ' . $title;
 				$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
 				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
-				Log::debug($file->get('ext'));
-				$previewLink = in_array($file->get('ext'), $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
+				$previewLink = in_array(strtolower($file->get('ext')), $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
+
+				// $html .= '<li>';
+				// $html .= $file->exists() && $authorized
+				// 		? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+				// 		: $icon . ' ' . $title . $notice;
+				// $html .= '<span class="extras">';
+				// $html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
+				// $html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
+				// $html .= $file->get('ext') ? ')' : '';
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
 						? $icon . ' ' . $title
 						. '<span style="margin-left: 20px;">'
 						. $previewLink
-						. '<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
+						. '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>
 						   </span>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
@@ -800,6 +808,7 @@ class File extends Base
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
 				} else if ($server->serve()) {
+					Log::debug('Call this block');
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
 				} else
