@@ -256,6 +256,21 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 ?>
 </div><!-- / .pubabout -->
 
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<?php
+// Provide a preview of primary document if exists
+$attachments = $this->publication->attachments();
+if (count($attachments) > 0) {
+	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
+	$firstFile = $attachments[1][0];
+	$fileExtension = $firstFile->path ? explode('.', $firstFile->path)[1] : '';
+	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {
+		echo "<iframe width='600' height='1000' style='border-bottom: #000 solid 2px; border-right: #000 solid 2px;' src='" . Route::url($this->publication->link('serve') . '&el=1') . "' </iframe>"; 
+	}
+}
+?>
+</div>
+
 <?php
 	/* Temporarily removing this from the main view in favor of an overlay
 	$this->css('filelist.css');
