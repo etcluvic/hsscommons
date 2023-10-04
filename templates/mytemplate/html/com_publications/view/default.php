@@ -115,10 +115,11 @@ else
 							}
 
 							// Display a button that scroll down to the file preview on 'About' tab
-							if ($this->tab === 'about') {
+							$attachments = $this->publication->attachments();
+							if ($attachments && count($attachments) > 0 && intval($attachments[1][0]->role) === 1) {
 								echo "
 									<p>
-										<a href='#file-preview' class='btn btn-primary'>Preview publication</a>
+										<a href='" . ($this->tab === 'about' ? "#file-preview" : DS . "publications" . DS . $this->publication->get('id') . DS . Request::getInt('v', 1) . "#file-preview" ) . "' class='btn btn-primary'>Preview publication</a>
 									</p>
 								";
 							}

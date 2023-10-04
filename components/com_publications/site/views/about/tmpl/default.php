@@ -263,7 +263,7 @@ $attachments = $this->publication->attachments();
 if ($attachments && count($attachments) > 0) {
 	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
 	$firstFile = $attachments[1][0];
-	$fileExtension = $firstFile->path ? explode('.', $firstFile->path)[1] : '';
+	$fileExtension = strtolower($firstFile->path ? explode('.', $firstFile->path)[1] : '');
 	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {
 		echo "<iframe width='600' height='1000' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $firstFile->id) . "' </iframe>"; 
 	}
