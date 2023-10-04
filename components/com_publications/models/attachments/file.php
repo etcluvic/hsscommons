@@ -433,7 +433,11 @@ class File extends Base
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
-						? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+						? $icon . ' ' . $title
+						. '<span style="margin-left: 20px;">
+							<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="' . $pop . '">Preview</a>
+							<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
+						   </span>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
 				$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
