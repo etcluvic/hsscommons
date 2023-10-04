@@ -803,17 +803,27 @@ class File extends Base
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
-				if ($serveInline && !$server->serve_inline($download))
+				if (!$server->serve())
 				{
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				} else if ($server->serve()) {
-					// Should only get here on error
-					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				} else
+				}
+				else
 				{
 					exit;
 				}
+
+				// if ($serveInline && !$server->serve_inline($download))
+				// {
+				// 	// Should only get here on error
+				// 	throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
+				// } else if ($server->serve()) {
+				// 	// Should only get here on error
+				// 	throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
+				// } else
+				// {
+				// 	exit;
+				// }
 			}
 			else
 			{
