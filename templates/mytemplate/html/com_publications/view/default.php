@@ -113,6 +113,15 @@ else
 							{
 								echo \Components\Publications\Helpers\Html::showLicense($this->publication, 'play');
 							}
+
+							// Display a button that scroll down to the file preview on 'About' tab
+							if ($this->tab === 'about') {
+								echo "
+									<p>
+										<a href='#file-preview' class='btn btn-primary'>Preview publication</a>
+									</p>
+								";
+							}
 						}
 						?>
 					</div><!-- / .aside launcharea -->
