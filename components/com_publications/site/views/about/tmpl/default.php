@@ -256,7 +256,7 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 ?>
 </div><!-- / .pubabout -->
 
-<div id="file-preview" style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<div id="file-preview" style="text-align: center; padding-top: 200px; margin-top: -150px; margin-bottom: 50px;">
 <?php
 // Provide a preview of primary document if exists
 $attachments = $this->publication->attachments();
