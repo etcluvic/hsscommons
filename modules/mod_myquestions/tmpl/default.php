@@ -73,7 +73,7 @@ $this->css();
 		</a>
 	</h4>
 	<?php if ($this->assigned) { ?>
-		<p class="incentive"><span><?php echo strtolower(Lang::txt('MOD_MYQUESTIONS_BEST_ANSWER_MAY_EARN')); ?></span></p>
+		<!-- <p class="incentive"><span><?php echo strtolower(Lang::txt('MOD_MYQUESTIONS_BEST_ANSWER_MAY_EARN')); ?></span></p> -->
 		<ul class="compactlist">
 		<?php
 		for ($i=0; $i < count($this->assigned); $i++)
@@ -119,7 +119,7 @@ $this->css();
 		<span class="q"><?php echo Lang::txt('MOD_MYQUESTIONS_MY_INTERESTS') . ': ' . $this->intext; ?></span>
 	</p>
 	<?php if ($this->otherquestions) { ?>
-		<p class="incentive"><span><?php echo strtolower(Lang::txt('MOD_MYQUESTIONS_BEST_ANSWER_MAY_EARN')); ?></span></p>
+		<!-- <p class="incentive"><span><?php echo strtolower(Lang::txt('MOD_MYQUESTIONS_BEST_ANSWER_MAY_EARN')); ?></span></p> -->
 		<ul class="compactlist">
 		<?php
 		for ($i=0; $i < count($this->otherquestions); $i++)
