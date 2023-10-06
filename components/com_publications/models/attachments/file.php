@@ -433,15 +433,6 @@ class File extends Base
 				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
 				$previewLink = in_array(strtolower($file->get('ext')), $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
 
-				// $html .= '<li>';
-				// $html .= $file->exists() && $authorized
-				// 		? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
-				// 		: $icon . ' ' . $title . $notice;
-				// $html .= '<span class="extras">';
-				// $html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
-				// $html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
-				// $html .= $file->get('ext') ? ')' : '';
-
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
 						? $icon . ' ' . $title
@@ -802,16 +793,6 @@ class File extends Base
 				$server->disposition('attachment');
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
-
-				// if (!$server->serve())
-				// {
-				// 	// Should only get here on error
-				// 	throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				// }
-				// else
-				// {
-				// 	exit;
-				// }
 
 				if ($serveInline && !$server->serve_inline($download))
 				{
