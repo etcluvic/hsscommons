@@ -436,9 +436,9 @@ class File extends Base
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
 						? $icon . ' ' . $title
-						. '<span style="margin-left: 20px;">'
+						. '<span style="margin-left: 30px;">'
 						. $previewLink
-						. '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>
+						. '<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
 						   </span>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
@@ -798,7 +798,7 @@ class File extends Base
 				{
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				} else if (!$server->serve_attachment($download)) {
+				} else if (!$server->serve($download)) {
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
 				} else
