@@ -90,14 +90,27 @@ $base = rtrim(Request::base(true), '/');
 <?php } ?>
 </div>
 
+<!-- Show usage data in CSV -->
+<button id="show-csv-data" class="btn btn-primary">View CSV data</button>
+<div id="csv-data" style="background-color: #fff; padding: 20px; border-radius: 20px; margin-top: 30px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); border: 2px solid rgb(226 232 240);">
+	<!-- <div style="padding: 2px 5px 2px 5px; border: 1px solid rgb(71 85 105); border-radius: 5px; font-size: 75%; width: fit-content;" class>Copy</div> -->
+	<?php
+		echo "Title, This month views, Last month views, Total views<br>";
+		foreach ($this->pubstats as $stat)
+		{
+			echo $stat->title . ", " . $stat->thismonth_views . ", " . $stat->lastmonth_views . ", " . $stat->total_views . "<br>";
+		}
+	?>
+</div>
+
 <div class="pubstats">
 <?php if ($this->pubstats) {
 ?>
-<?php if ($this->pub) { ?>
+<!-- <?php if ($this->pub) { ?>
 <p class="viewallstats"><a href="<?php echo Route::url($this->project->link('publications') . '&action=stats'); ?>"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_VIEW_ALL_USAGE_STATS'); ?> &raquo;</a></p>
-<?php } ?>
+<?php } ?> -->
 <?php if (!$this->pub->exists() && $this->totals && count($this->pubstats) > 1) { ?>
-<p class="pubstats-overall"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_YOUR') . ' <span class="prominent">' . count($this->pubstats) . '</span> ' . Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATIONS_S') . ' ' . Lang::txt('PLG_PROJECTS_PUBLICATIONS_HAVE_BEEN_ACCESSED') . ' <span class="prominent">' . $this->totals->all_total_primary . '</span> ' . Lang::txt('PLG_PROJECTS_PUBLICATIONS_TIMES'); ?>.</p>
+<p class="pubstats-overall"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_YOUR') . ' <span class="prominent">' . count($this->pubstats) . '</span> ' . Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUBLICATIONS_S') . ' have been viewed ' . ' <span class="prominent">' . $this->totals->all_total_views . '</span> ' . ' times and downloaded ' . ' <span class="prominent">' . $this->totals->all_total_primary . '</span> ' . Lang::txt('PLG_PROJECTS_PUBLICATIONS_TIMES'); ?>.</p>
 <?php } ?>
 <script src="<?php echo $base; ?>/core/assets/js/flot/jquery.flot.min.js"></script>
 <script src="<?php echo $base; ?>/core/assets/js/flot/jquery.flot.time.min.js"></script>
