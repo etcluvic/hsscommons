@@ -377,40 +377,41 @@ class File extends Base
 		$notice = $authorized ? ' (' . Lang::txt('unavailable')  . ')' : '';
 
 		// Draw bundles
-		if ($configs->multiZip && $attachments && count($attachments) > 1)
-		{
-			$title = $configs->bundleTitle ? $configs->bundleTitle : 'Bundle';
-			$pop   = Lang::txt('Download') . ' ' . $title;
+		// NOTE: Temporarily disable to display all files separately
+		// if ($configs->multiZip && $attachments && count($attachments) > 1)
+		// {
+		// 	$title = $configs->bundleTitle ? $configs->bundleTitle : 'Bundle';
+		// 	$pop   = Lang::txt('Download') . ' ' . $title;
 
-			$fpath = $this->bundle($attachments, $configs, false);
+		// 	$fpath = $this->bundle($attachments, $configs, false);
 
-			// File model
-			$file = new \Components\Projects\Models\File(trim($fpath));
+		// 	// File model
+		// 	$file = new \Components\Projects\Models\File(trim($fpath));
 
-			// Get file icon
-			$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+		// 	// Get file icon
+		// 	$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
 
-			// Serve as bundle
-			$html .= '<li>';
-			$html .= $file->exists() && $authorized
-					? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId) . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
-					: $icon . ' ' . $title . $notice;
-			$html .= '<span class="extras">';
-			$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
-			$html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
-			$html .= $file->get('ext') ? ')' : '';
-			if ($authorized === 'administrator')
-			{
-				$html .= ' <span class="edititem">';
-				$html .= '<a href="index.php?option=com_publications&controller=items&task=editcontent&id=' . $pub->get('id') . '&el=' . $elementId . '&v=' . $pub->get('version_number') . '">';
-				$html .= Lang::txt('COM_PUBLICATIONS_EDIT');
-				$html .= '</a>';
-				$html .= '</span>';
-			}
-			$html .= '</span>';
-			$html .='</li>';
-		}
-		elseif ($attachments)
+		// 	// Serve as bundle
+		// 	$html .= '<li>';
+		// 	$html .= $file->exists() && $authorized
+		// 			? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId) . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+		// 			: $icon . ' ' . $title . $notice;
+		// 	$html .= '<span class="extras">';
+		// 	$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
+		// 	$html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
+		// 	$html .= $file->get('ext') ? ')' : '';
+		// 	if ($authorized === 'administrator')
+		// 	{
+		// 		$html .= ' <span class="edititem">';
+		// 		$html .= '<a href="index.php?option=com_publications&controller=items&task=editcontent&id=' . $pub->get('id') . '&el=' . $elementId . '&v=' . $pub->get('version_number') . '">';
+		// 		$html .= Lang::txt('COM_PUBLICATIONS_EDIT');
+		// 		$html .= '</a>';
+		// 		$html .= '</span>';
+		// 	}
+		// 	$html .= '</span>';
+		// 	$html .='</li>';
+		// }
+		if ($attachments)
 		{
 			// Serve individually
 			foreach ($attachments as $attach)
