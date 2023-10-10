@@ -344,6 +344,8 @@ class connections
 			'layout'  => 'disclosure'
 		]);
 
+		$view->connection = $this->connection;
+
 		// Load and return view content
 		return $view->loadTemplate();
 	}
