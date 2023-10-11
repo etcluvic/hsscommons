@@ -63,27 +63,37 @@ class Helper extends Module
 	}
 
 	/**
-	 * Looks up a user's interests (tags)
+	 * Get all user interests from their profile
 	 *
-	 * @param   integer  $cloud  Output as tagcloud (defaults to no)
-	 * @return  string   List of tags as either a tagcloud or comma-delimitated string
+	 * @return  string   Comma-delimitated string of their profile interests
 	 */
-	private function _getInterests($cloud=0)
+	private function _getInterests()
 	{
-		require_once Component::path('com_members') . '/models/tags.php';
+		// require_once Component::path('com_members') . '/models/tags.php';
 
-		// Get tags of interest
-		$mt = new \Components\Members\Models\Tags(User::get('id'));
-		if ($cloud)
-		{
-			$tags = $mt->render();
-		}
-		else
-		{
-			$tags = $mt->render('string');
+		// // Get tags of interest
+		// $mt = new \Components\Members\Models\Tags(User::get('id'));
+		// if ($cloud)
+		// {
+		// 	$tags = $mt->render();
+		// }
+		// else
+		// {
+		// 	$tags = $mt->render('string');
+		// }
+
+		$query = new \Hubzero\Database\Query;
+		$interestRows = $query->select('*')
+						->from('#__user_profiles')
+						->whereEquals('user_id', User::get('id'))
+						->whereEquals('profile_key', 'interests')
+						->fetch();
+		$interests = [];
+		foreach($interestRows as $row) {
+			$interests[] = $row->profile_value;
 		}
 
-		return $tags;
+		return implode(', ', $interests);
 	}
 
 	/**

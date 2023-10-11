@@ -87,6 +87,7 @@ $ignoreDst = $eventParams->get('ignore_dst') == 1 ? true : false;
 				<label for="event_content">
 					<?php echo Lang::txt('Details:'); ?> <span class="optional">Optional</span>
 					<textarea name="content" id="event_content" rows="10"><?php echo $this->escape($this->event->get('content')); ?></textarea>
+					<!-- <?php echo App::get('editor')->display('econtent', $this->event->get('content'), '', '', 10, 15, false, 'econtent', null, null, array('class' => 'minimal no-footer')); ?> -->
 					<span class="hint"><?php echo Lang::txt('Limited HTML allowed (a, iframe, strong, em, u)'); ?></span>
 				</label>
 
