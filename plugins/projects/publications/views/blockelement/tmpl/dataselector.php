@@ -46,7 +46,8 @@ $last   = ($this->order == $this->total) ? 1 : 0;
 $max    = $this->manifest->params->max;
 
 // Get side text
-$aboutText = $this->manifest->about ? $this->manifest->about : null;
+// $aboutText = $this->manifest->about ? $this->manifest->about : null;
+$aboutText = "If multiple primary files are uploaded, only the first one can be previewed on the publication landing page. Previewable file formats include .pdf, .png, .jpg and .jpeg";
 if ($this->pub->_project->isProvisioned() && isset($this->manifest->aboutProv))
 {
 	$aboutText = $this->manifest->aboutProv;
