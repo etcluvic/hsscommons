@@ -262,7 +262,7 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 // Provide a preview of primary document if exists
 $attachments = $this->publication->attachments();
 if ($attachments && count($attachments) > 0) {
-	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
+	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
 	$firstFile = $attachments[1][0];
 	$fileExtension = strtolower($firstFile->path ? explode('.', $firstFile->path)[1] : '');
 	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {

@@ -431,7 +431,7 @@ class File extends Base
 				$title = $title ? $title : basename($attach->path);
 				$pop   = Lang::txt('Download') . ' ' . $title;
 				$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
-				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'];
+				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
 				$previewLink = in_array(strtolower($file->get('ext')), $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
 
 				$html .= '<li>';
