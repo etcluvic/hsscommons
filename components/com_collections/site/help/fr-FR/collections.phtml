@@ -1,0 +1,42 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+?>
+<article>
+	<h1>Aide sur les Collections : Collection</h1>
+	<p>Une collection est l'endroit où vous organisez vos publications par sujet. Vous pourriez rassembler des ressources pour créer une introduction à la communication savante, par exemple. Vous pouvez même placer une collection à l'intérieur d'une autre collection !</p>
+
+	<section>
+		<h2>Collection par défaut</h2>
+		<p>Tout le monde dispose d'une collection par défaut créée automatiquement. Ainsi, vous disposez déjà d'un espace où vous pouvez commencer à ajouter des publications immédiatement. Les collections par défaut sont privées dès le départ, mais n'hésitez pas à modifier les paramètres de confidentialité comme bon vous semble. Vous pouvez également changer le titre et la description.</p>
+	</section>
+
+	<section>
+		<h2>Création d'une collection</h2>
+		<p>Vous pouvez créer une collection en cliquant sur le bouton "Nouvelle collection" lorsque vous consultez votre liste de collections, ou en créant une collection "sur le moment" lorsque vous collectez une publication.</p>
+
+		<h3>Bouton "Nouvelle collection"</h3>
+		<p>Après avoir cliqué sur le bouton, vous aurez la possibilité de personnaliser et de décrire votre collection. Le seul champ obligatoire est le titre, mais vous pouvez également entrer une description plus longue en option.</p>
+
+		<h3>Création "sur le moment"</h3>
+		<p>Une collection peut être créée au moment de la collecte d'un élément sur le site. Lorsque vous parcourez du contenu collectionnable, comme des ressources, des pages wiki, etc., vous pouvez trouver un bouton "Collecter" sur la page. Après avoir cliqué sur ce bouton, vous aurez la possibilité d'ajouter l'élément à une collection existante ou de créer une nouvelle collection avec le titre que vous indiquez.</p>
+	</section>
+
+	<section>
+		<h2>Créer une collection privée</h2>
+		<p>Vous pouvez également créer des collections privées ou secrètes. Lors de la création ou de la modification d'une collection, il y aura un champ "Confidentialité" avec une liste déroulante d'options. Sélectionnez "Privé" et enregistrez les modifications. Lorsqu'une collection est privée, un petit <span class="icon-private">cadenas</span> apparaîtra à côté de son titre.</p>
+		<p><strong>Remarque :</strong> Lorsqu'une collection est privée, elle n'apparaîtra pas dans les recherches ni dans la liste des <a href="<?php echo Route::url('index.php?option=com_collections'); ?>">collections globales du site</a>.</p>
+	</section>
+
+	<section>
+		<h2>Supprimer une collection</h2>
+		<p>Pour supprimer une collection, connectez-vous à votre compte et trouvez la collection appropriée dans votre liste de "Collections". Lorsque vous survolez ou mettez le focus sur la collection, un bouton "Supprimer" apparaîtra. En le cliquant, vous serez invité à confirmer la suppression. Si vous répondez "non", rien ne se passera de plus. Si vous répondez "oui", la collection sera supprimée.</p>
+		<p><strong>Remarque :</strong> La suppression d'une collection ne supprimera <em>pas</em> toutes les publications qu'elle contient.</p>
+	</section>
+</article>

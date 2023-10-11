@@ -1,0 +1,35 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>Aide sur les Collections</h1>
+
+	<p class="tagline">Les collections sont un moyen rapide et simple de partager, sauvegarder et organiser des informations sur les Canadian HSS Commons.</p>
+
+	<section class="about-odd posts">
+		<h2>Publication</h2>
+		<p>Une publication commence par une image, un lien ou un fichier que vous souhaitez partager. Vous pouvez ajouter une publication en collectant du contenu sur le site ou en téléchargeant un fichier directement depuis votre ordinateur. Toute publication peut être partagée à nouveau, et toutes les publications renvoient à leur source.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>">En savoir plus</a></p>
+	</section>
+
+	<section class="about-even collections">
+		<h2>Collecter</h2>
+		<p>Une collection est l'endroit où vous organisez vos publications par sujet. Vous pourriez rassembler des ressources pour créer une introduction à la communication savante, par exemple. Les collections peuvent être secrètes ou publiques, et vous pouvez même placer une collection à l'intérieur d'une autre collection !</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>">En savoir plus</a></p>
+	</section>
+
+	<section class="about-odd following">
+		<h2>Suivre</h2>
+		<p>Lorsque vous suivez quelqu'un, leurs publications apparaissent dans votre flux en direct. Vous pouvez suivre toutes les collections de quelqu'un ou seulement celles que vous préférez. Pour gérer les personnes que vous suivez, rendez-vous sur votre profil, trouvez Collections, et cliquez sur Suivi.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>">En savoir plus</a></p>
+	</section>
+</article>
