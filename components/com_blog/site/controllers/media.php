@@ -101,11 +101,8 @@ class Media extends SiteController
 		}
 
 		// Incoming file
-		// $file = Request::getArray('upload', '', 'files');
-		$file = $_FILES['file'];
-		Log::debug($_FILES);
-		Log::debug($file);
-
+		$file = Request::getArray('upload', '', 'files');
+		Log::debug(Request::current());
 		if (!$file['name'] || $file['size'] == 0)
 		{
 			$this->setError(Lang::txt('COM_BLOG_NO_FILE'));
