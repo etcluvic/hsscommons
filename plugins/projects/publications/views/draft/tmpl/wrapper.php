@@ -72,7 +72,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
   		<div id="c-pane" class="columns">
 			 <div class="c-inner draftflow">
 			 			<?php if ($this->pub->version->state != 1) { ?>
-			 				<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 50px; right: 70px; cursor: pointer;"><?php echo Lang::txt("PLG_PROJECTS_PUBLICATIONS_CANCEL_DRAFT"); ?></a>
+			 				<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 20px; right: 70px; cursor: pointer;"><?php echo Lang::txt("PLG_PROJECTS_PUBLICATIONS_CANCEL_DRAFT"); ?></a>
 						<?php } ?>
 						<h4><?php echo $title; ?></h4>
 						<?php
@@ -111,13 +111,11 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 									<div>Enter this text later (for Alyssa and Ray)</div>
 									<div>Enter a publication DOI.</div> -->
 									<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
-										<p>If your publication already has a Digital Object Identifier (DOI), please enter it below to automatically retrieve information about your publication.</p>
-										<p>Note: once you click the "Retrieve" button below, the button will be disabled. If you entered the DOI incorrectly or need to start over, please click on the "Cancel draft" link in the top-right corner of this page.</p>
-										<strong>Enter the publication's DOI in the following format: 10.12345/ABDC-1001</strong>
+										<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_CONTENT_HAVE_DOI_EXPLANATION');?>
 									</div>
 									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="10.12345/ABDC-1001" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
 									<div style="margin-top: 10px;">
-										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>>Retrieve</button>
+										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_RETRIEVE');?></button>
 									</div>
 									<div id="retrieve-msg" class="hidden" style="font-weight: 500; margin-top: 10px;"></div>
 								</div>
