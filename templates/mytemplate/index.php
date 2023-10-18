@@ -168,11 +168,11 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 <?php } ?>
                 </ul>
               </nav>
-              <nav id="nav" class="main-navigation" style="display: flex; flex-direction: row; gap: 50px; justify-content: space-between;" aria-label="<?php echo Lang::txt('TPL_MYTEMPLATE_MAINMENU'); ?>">
+              <nav id="nav" class="main-navigation" aria-label="<?php echo Lang::txt('TPL_MYTEMPLATE_MAINMENU'); ?>">
                   <jdoc:include type="modules" name="user3" />
-                  <?php if (Request::current() === Request::base() || Request::current() === Request::base() . 'fr' || Request::current() === Request::base() . 'en') {?>
+                  <!-- <?php if (Request::current() === Request::base() || Request::current() === Request::base() . 'fr' || Request::current() === Request::base() . 'en') {?>
                     <div style="display: flex; flex-direction: column; justify-content: center;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
-                  <?php } ?>
+                  <?php } ?> -->
               </nav>
             </header>
 
