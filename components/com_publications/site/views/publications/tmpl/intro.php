@@ -31,6 +31,7 @@ $this->css('introduction.css', 'system')
 <?php } ?>
 
 <section class="section intropage">
+	<h1 class><?php echo Lang::txt("COM_PUBLICATIONS_INTRO_TEXT");?></h1>
 	<div class="grid">
 		<div class="col <?php echo (!User::isGuest() && $this->contributable) ? 'span4' : 'span6';  ?>">
 			<h3><?php echo Lang::txt('Recent Publications'); ?></h3>
