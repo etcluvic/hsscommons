@@ -620,6 +620,7 @@ class Profiles extends SiteController
 			->set('past_month_members', $stats->past_month_members)
 			->set('total_members', $stats->total_members)
 			->set('total_public_members', $stats->total_public_members)
+			->set('sortBy', $filters['sort'])
 			->display();
 	}
 

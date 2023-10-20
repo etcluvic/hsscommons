@@ -416,7 +416,7 @@ foreach ($this->fields as $field)
 											if ($val = $row->get($c->get('name'))) {
 												$val = (is_array($val) ? implode(', ', $val) : $val);
 											?>
-												<div class="result-snippet-<?php echo $this->escape($c->get('name')); ?>">
+												<div class="result-snippet-<?php echo $this->escape($c->get('name')); ?>" <?php if ($this->escape($c->get('name')) !== $this->sortBy) { ?>style="display: none;"<?php } ?>>
 													<?php echo $this->escape(Hubzero\Utility\Str::truncate(strip_tags(stripslashes($val)), 150)); ?>
 												</div>
 											<?php } ?>
