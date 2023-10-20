@@ -377,40 +377,41 @@ class File extends Base
 		$notice = $authorized ? ' (' . Lang::txt('unavailable')  . ')' : '';
 
 		// Draw bundles
-		if ($configs->multiZip && $attachments && count($attachments) > 1)
-		{
-			$title = $configs->bundleTitle ? $configs->bundleTitle : 'Bundle';
-			$pop   = Lang::txt('Download') . ' ' . $title;
+		// NOTE: Temporarily disable to display all files separately
+		// if ($configs->multiZip && $attachments && count($attachments) > 1)
+		// {
+		// 	$title = $configs->bundleTitle ? $configs->bundleTitle : 'Bundle';
+		// 	$pop   = Lang::txt('Download') . ' ' . $title;
 
-			$fpath = $this->bundle($attachments, $configs, false);
+		// 	$fpath = $this->bundle($attachments, $configs, false);
 
-			// File model
-			$file = new \Components\Projects\Models\File(trim($fpath));
+		// 	// File model
+		// 	$file = new \Components\Projects\Models\File(trim($fpath));
 
-			// Get file icon
-			$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+		// 	// Get file icon
+		// 	$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
 
-			// Serve as bundle
-			$html .= '<li>';
-			$html .= $file->exists() && $authorized
-					? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId) . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
-					: $icon . ' ' . $title . $notice;
-			$html .= '<span class="extras">';
-			$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
-			$html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
-			$html .= $file->get('ext') ? ')' : '';
-			if ($authorized === 'administrator')
-			{
-				$html .= ' <span class="edititem">';
-				$html .= '<a href="index.php?option=com_publications&controller=items&task=editcontent&id=' . $pub->get('id') . '&el=' . $elementId . '&v=' . $pub->get('version_number') . '">';
-				$html .= Lang::txt('COM_PUBLICATIONS_EDIT');
-				$html .= '</a>';
-				$html .= '</span>';
-			}
-			$html .= '</span>';
-			$html .='</li>';
-		}
-		elseif ($attachments)
+		// 	// Serve as bundle
+		// 	$html .= '<li>';
+		// 	$html .= $file->exists() && $authorized
+		// 			? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId) . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+		// 			: $icon . ' ' . $title . $notice;
+		// 	$html .= '<span class="extras">';
+		// 	$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
+		// 	$html .= $file->getSize() ? ' | ' . $file->getSize('formatted') : '';
+		// 	$html .= $file->get('ext') ? ')' : '';
+		// 	if ($authorized === 'administrator')
+		// 	{
+		// 		$html .= ' <span class="edititem">';
+		// 		$html .= '<a href="index.php?option=com_publications&controller=items&task=editcontent&id=' . $pub->get('id') . '&el=' . $elementId . '&v=' . $pub->get('version_number') . '">';
+		// 		$html .= Lang::txt('COM_PUBLICATIONS_EDIT');
+		// 		$html .= '</a>';
+		// 		$html .= '</span>';
+		// 	}
+		// 	$html .= '</span>';
+		// 	$html .='</li>';
+		// }
+		if ($attachments)
 		{
 			// Serve individually
 			foreach ($attachments as $attach)
@@ -430,10 +431,16 @@ class File extends Base
 				$title = $title ? $title : basename($attach->path);
 				$pop   = Lang::txt('Download') . ' ' . $title;
 				$icon  = '<img height="16" src="' . $file->getIcon() . '" alt="' . $file->get('ext') . '" />';
+				$allowPreviewFileExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+				$previewLink = in_array(strtolower($file->get('ext')), $allowPreviewFileExtensions) ? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id) . '" target="_blank"' . '" title="Preview ' . $title . '">Preview</a>' : '';
 
 				$html .= '<li>';
 				$html .= $file->exists() && $authorized
-						? '<a href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">' . $icon . ' ' . $title . '</a>'
+						? $icon . ' ' . $title
+						. '<span style="margin-left: 30px;">'
+						. $previewLink
+						. '<a style="margin-left: 10px;" href="' . Route::url($pub->link('serve') . '&el=' . $elementId . '&a=' . $attach->id . '&download=1') . '" title="' . $pop . '">Download</a>
+						   </span>'
 						: $icon . ' ' . $title . $notice;
 				$html .= '<span class="extras">';
 				$html .= $file->get('ext') ? '(' . strtoupper($file->get('ext')) : '';
@@ -734,6 +741,7 @@ class File extends Base
 	{
 		// Incoming
 		$forceDownload = Request::getInt('download', 0); // Force download action?
+		$serveInline = $forceDownload ? 0 : 1;
 
 		// Get configs
 		$configs = $this->getConfigs($element->params, $elementId, $pub, $blockParams);
@@ -787,12 +795,14 @@ class File extends Base
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
-				if (!$server->serve())
+				if ($serveInline && !$server->serve_inline($download))
 				{
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
-				}
-				else
+				} else if (!$server->serve($download)) {
+					// Should only get here on error
+					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
+				} else
 				{
 					exit;
 				}

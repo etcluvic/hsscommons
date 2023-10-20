@@ -12,6 +12,7 @@
 	</files>
 	<languages>
 		<language tag="en-GB">en-GB.plg_members_profile.ini</language>
+		<language tag="fr-FR">fr-FR.plg_members_profile.ini</language>
 	</languages>
 	<config>
 		<fields name="params">

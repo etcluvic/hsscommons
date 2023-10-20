@@ -2384,4 +2384,21 @@ class Publication extends Obj
 
 		return $series;
 	}
+
+	/**
+	 * Check if an user is an author of the publication
+	 * 
+	 * @param	int		$userId
+	 * @return	bool	true if the user is an author, false otherwise
+	 */
+	public function isAuthor($userId) {
+		$pubAuthors = $this->authors();
+		foreach($pubAuthors as $author) {
+			if ($author->user_id === $userId) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

@@ -183,6 +183,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'curation');
 		\Hubzero\Document\Assets::addPluginScript('projects', 'publications', 'curation');
 
+		Log::debug($this->_task);
+
 		// Actions
 		switch ($this->_task)
 		{
@@ -3127,6 +3129,10 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$pid		= Request::getInt('pid', 0);
 		$vid		= Request::getInt('vid', 0);
 		$doi 		= Request::getString('doi', '');
+		Log::debug('Calling retrieve');
+		Log::debug("Pid: " . $pid);
+		Log::debug("Vid: " . $vid);
+		Log::debug("DOI: " . $doi);
 
 		// Enforce publication id
 		if (!$pid) {

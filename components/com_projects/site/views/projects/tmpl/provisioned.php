@@ -91,7 +91,7 @@ $this->css()
 								</label>
 								<p class="submitarea">
 									<input type="submit" id="b-continue" class="btn btn-primary active" value="<?php echo Lang::txt('COM_PROJECTS_ACTIVATE_CREATE_A_PROJECT'); ?>" />
-									<span class="btn btncancel"><a href="<?php echo $url; ?>"><?php echo "Cancel"; ?></a></span>
+									<span style="margin-top: 0;" class="btn btn-cancel"><a href="<?php echo $url; ?>"><?php echo "Cancel"; ?></a></span>
 								</p>
 							</fieldset>
 						</form>

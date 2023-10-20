@@ -1734,3 +1734,8 @@
 		text-decoration: underline;
 		text-decoration-color: #fff;
 	}
+	#file-preview-btn:before {
+		font-family: 'Fontcons';
+		content: "\f06e";
+		margin-right: 10px;
+	}

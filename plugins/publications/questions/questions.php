@@ -100,7 +100,7 @@ class plgPublicationsQuestions extends \Hubzero\Plugin\Plugin
 
 		// Load component language file
 		Lang::load('com_answers') ||
-		Lang::load('com_answers', PATH_CORE . DS . 'components' . DS . 'com_answers' . DS . 'site');
+		Lang::load('com_answers', PATH_APP . DS . 'components' . DS . 'com_answers' . DS . 'site');
 
 		// Are we returning HTML?
 		if ($rtrn == 'all' || $rtrn == 'html')

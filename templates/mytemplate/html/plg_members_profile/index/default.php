@@ -195,10 +195,10 @@ $profileOrcid = $orcidRow->username;
 					<span id="meter-percent" data-percent="<?php echo $this->completeness; ?>" data-percent-level="<?php echo @$this->completeness_level; ?>"></span>
 				</div>
 				<!-- Modal to display missing fields -->
-				<a id="instruction-link" href="#instruction-modal">How can I improve my score?</a>
+				<a id="instruction-link" href="#instruction-modal"><?php echo Lang::txt('PLG_MEMBERS_PROFILE_INSTRUCTION_MODAL_LINK'); ?></a>
 				<div style="display:none;">
 					<div class="modal" id="instruction-modal">
-						To improve the completion score, you need to fill out the following:
+						<?php echo Lang::txt('PLG_MEMBERS_PROFILE_INSTRUCTION_MODAL_TAGLINE'); ?>
 						<ul>
 						<?php foreach ($this->fields as $field) { ?>
 							<?php if (!$this->profile[$field->get('name')]) { ?>
@@ -206,7 +206,7 @@ $profileOrcid = $orcidRow->username;
 							<?php } ?>
 						<?php } ?>
 						</ul>
-						<p style="margin-top: 20px;"><strong>Note: </strong>If you made a change, you need to refresh the page to update this list</p>
+						<p style="margin-top: 20px;"><?php echo Lang::txt('PLG_MEMBERS_PROFILE_INSTRUCTION_MODAL_NOTE'); ?></p>
 					</div>
 				</div>
 				<?php if ($isUser && $isIncrementalEnabled) : ?>

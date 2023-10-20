@@ -134,7 +134,14 @@ class Pages
 			$base = substr($base, strlen($root));
 		}
 
-		if (preg_match("/^\/?groups\/(.*?)/i", Request::path()))
+		$currentLanguageCode = explode('-', App::get('language')->getLanguage())[0];
+		$newPath = Request::path();
+		$basePathSegments = explode('/', Request::path());
+		if ($currentLanguageCode === $basePathSegments[1]) {
+			array_splice($basePathSegments, 1, 1);
+			$newPath = implode(DS, $basePathSegments);
+		}
+		if (preg_match("/^\/?groups\/(.*?)/i", $newPath))
 		{
 			// remove /groups/{group_cname} from path
 			$path = trim(str_replace($base, '', Request::path()), '/');

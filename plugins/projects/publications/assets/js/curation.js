@@ -148,6 +148,17 @@ HUB.ProjectPublicationsDraft = {
 				} else if (URIparams[1] === "publications") {
 					const publicationId = URIparams[3];
 					ajaxUrl = '/publications/retrieve/' + publicationId + '?doi=' + retrieveDOI + '&vid=' + versionId;
+				// Detect language
+				} else {
+					const language = URIparams[1];
+					if (URIparams[2] === "projects") {
+						const projectId = URIparams[3];
+						const publicationId = URIparams[5];
+						ajaxUrl = "/" + language + '/projects/' + projectId + '/publications/' + publicationId + '/retrieve?doi=' + retrieveDOI + '&vid=' + versionId;
+					} else if (URIparams[2] === "publications") {
+						const publicationId = URIparams[4];
+						ajaxUrl = "/" + language + '/publications/retrieve/' + publicationId + '?doi=' + retrieveDOI + '&vid=' + versionId;
+					}
 				}
 				$.ajax({
 					url: ajaxUrl,

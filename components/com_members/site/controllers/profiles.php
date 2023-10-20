@@ -438,7 +438,8 @@ class Profiles extends SiteController
 			}])
 			->whereEquals($a . '.block', 0)
 			->where($a . '.activation', '>', 0)
-			->where($a . '.approved', '>', 0);
+			->where($a . '.approved', '>', 0)
+			->whereEquals('usageAgreement', 1);
 
 		// Tags
 		if ($filters['tags'])
@@ -619,6 +620,7 @@ class Profiles extends SiteController
 			->set('past_month_members', $stats->past_month_members)
 			->set('total_members', $stats->total_members)
 			->set('total_public_members', $stats->total_public_members)
+			->set('sortBy', $filters['sort'])
 			->display();
 	}
 

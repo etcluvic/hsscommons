@@ -37,6 +37,21 @@ HUB.Projects = {
 
 		// Fade-out status message
 		HUB.Projects.addMessageFade();
+
+		// Show fancy box with all exported usage data
+		$('#csv-data').hide();
+		HUB.Projects.showUsageDataFancyBox();
+	},
+
+	// Show fancy box with all exported usage data
+	// NOTE: Have to do it here as /app/plugins/projects/publications/assets/js/curation.js doesn't work for some reason
+	showUsageDataFancyBox: function(e)
+	{
+		var $ = this.jQuery;
+		$("#show-csv-data").click(function() {
+			$('#csv-data').fadeToggle();
+			$(this).text($(this).text() === 'View CSV data' ? 'Hide CSV data' : 'View CSV data');
+		})
 	},
 
 	addFiltering: function()

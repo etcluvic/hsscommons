@@ -72,7 +72,7 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
   		<div id="c-pane" class="columns">
 			 <div class="c-inner draftflow">
 			 			<?php if ($this->pub->version->state != 1) { ?>
-			 				<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 50px; right: 70px; cursor: pointer;">Cancel draft</a>
+			 				<a href="<?php echo Route::url($this->pub->link('editversion') . '&action=cancel'); ?>" class="icon-cancel" style="position: absolute; top: 20px; right: 70px; cursor: pointer;"><?php echo Lang::txt("PLG_PROJECTS_PUBLICATIONS_CANCEL_DRAFT"); ?></a>
 						<?php } ?>
 						<h4><?php echo $title; ?></h4>
 						<?php
@@ -84,25 +84,24 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 						<!-- Archie writes this block to handle pre-published publications -->
 						<?php if ($this->active === 'content') { ?>
 							<div class="prev-published-block">
-								<p style="font-size: 110%;">Has this item been published previously?</p>
+								<p style="font-size: 110%;"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PREVIOUSLY_PUBLISHED'); ?></p>
 								<div style="display: flex; flex-direction: row; margin-top: 5px;">
 									<input id="yes-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="1" <?php if ($this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } ?>>
-									<label>Yes</label>
+									<label><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_YES'); ?></label>
 									<input id="no-prev-published" type="radio" class="prev-published-btn" name="published_previously" value="0" style="margin-left: 30px;" <?php if (!$this->pub->version->forked_from == $this->pub->version->id) { ?>checked="checked"<?php } else if ($this->pub->doi) { ?>disabled<?php } ?>>
-									<label>No</label>
+									<label><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_NO'); ?></label>
 								</div>
 								<div class="has-doi-block <?php echo ($this->pub->version->forked_from == $this->pub->version->id) ? "" : "hidden" ?>">
-									<p style="font-size: 110%;">Does this item have a DOI (Digital Object Identifier)?<span style="margin-left: 15px;">(Not sure? <a href="https://hsscommons.ca/kb/resources/what-is-doi" style="text-decoration: underline;" target="_blank">Learn more</a>.)</span></p>
+									<p style="font-size: 110%;"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_HAS_DOI'); ?><span style="margin-left: 15px;">(<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_NOT_SURE'); ?>? <a href="https://hsscommons.ca/kb/resources/what-is-doi" style="text-decoration: underline;" target="_blank"><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_LEARN_MORE'); ?></a>.)</span></p>
 									<div style="display: flex; flex-direction: row; margin-top: 5px;">
 										<input id="yes-doi" type="radio" class="prev-published-btn" name="has_doi" value="1" <?php if ($this->pub->doi) { ?>checked="checked"<?php } ?>>
-										<label>Yes</label>
+										<label><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_YES'); ?></label>
 										<input id="no-doi" type="radio" class="prev-published-btn" name="has_doi" value="0" style="margin-left: 30px;" <?php if (!$this->pub->doi) { ?>checked="checked"<?php } else { ?>disabled<?php } ?>>
-										<label>No</label>
+										<label><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_NO'); ?></label>
 									</div>
 									<div class="prev-published-hint-block <?php echo (!$this->pub->doi) ? "" : "hidden" ?>" style="font-size: 100%;">
 										<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
-											<p>Please enter more information about your publication here and on the following pages to re-publish it in the Canadian HSS Commons Repository. On the “Notes” page, you can enter the publication’s original citation information.</p>
-											<p>Would you like to give your previously published item a DOI? You can do that, too! On the final review page, simply select “Publish with DOI".</p>
+											<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_CONTENT_NO_DOI_EXPLANATION');?>
 										</div>
 									</div>
 								</div>
@@ -112,13 +111,11 @@ $isFirst = $this->pub->curation()->getFirstBlock() == $this->step ? true : false
 									<div>Enter this text later (for Alyssa and Ray)</div>
 									<div>Enter a publication DOI.</div> -->
 									<div style="padding: 10px; margin-top: 20px; margin-bottom: 20px;">
-										<p>If your publication already has a Digital Object Identifier (DOI), please enter it below to automatically retrieve information about your publication.</p>
-										<p>Note: once you click the "Retrieve" button below, the button will be disabled. If you entered the DOI incorrectly or need to start over, please click on the "Cancel draft" link in the top-right corner of this page.</p>
-										<strong>Enter the publication's DOI in the following format: 10.12345/ABDC-1001</strong>
+										<?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_CONTENT_HAVE_DOI_EXPLANATION');?>
 									</div>
 									<input id="retrieve-doi" type="text" style="width: 50%;" placeholder="10.12345/ABDC-1001" <?php if ($this->pub->doi) { ?>value="<?php echo $this->pub->doi ?>" disabled<?php } ?>>
 									<div style="margin-top: 10px;">
-										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>>Retrieve</button>
+										<button id="retrieve-btn" class="btn" data-vid="<?php echo $this->pub->get('version_id'); ?>" <?php if ($this->pub->doi) { ?>disabled<?php } ?>><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_RETRIEVE');?></button>
 									</div>
 									<div id="retrieve-msg" class="hidden" style="font-weight: 500; margin-top: 10px;"></div>
 								</div>

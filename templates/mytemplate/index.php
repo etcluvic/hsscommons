@@ -169,8 +169,10 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 </ul>
               </nav>
               <nav id="nav" class="main-navigation" aria-label="<?php echo Lang::txt('TPL_MYTEMPLATE_MAINMENU'); ?>">
-                <jdoc:include type="modules" name="user3" />
-                <div style="position: fixed; top: 80px; right: 20px;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
+                  <jdoc:include type="modules" name="user3" />
+                  <!-- <?php if (Request::current() === Request::base() || Request::current() === Request::base() . 'fr' || Request::current() === Request::base() . 'en') {?>
+                    <div style="display: flex; flex-direction: column; justify-content: center;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
+                  <?php } ?> -->
               </nav>
             </header>
 
@@ -187,7 +189,10 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                 <?php if ($menu->getActive() == $menu->getDefault()) : ?>
                   <span class="pathway"><?php echo Lang::txt('TPL_MYTEMPLATE_TAGLINE'); ?></span>
                 <?php else: ?>
-                  <jdoc:include type="modules" name="breadcrumbs" />
+                  <div style="display: flex; flex-direction: row; gap: 50px; justify-content: space-between; width: 100%;">
+                    <jdoc:include type="modules" name="breadcrumbs" />
+                    <div style="display: flex; flex-direction: column; justify-content: center; width: 100px;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
+                  </div>
                 <?php endif; ?>
               </div>
              
