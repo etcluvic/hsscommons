@@ -283,6 +283,9 @@ foreach ($this->fields as $field)
 
 						foreach ($this->rows as $row)
 						{
+							if (in_array($row->id, $this->hidden_member_ids)) {
+								continue;
+							}
 							$cls = '';
 							if ($row->get('access') != 1)
 							{

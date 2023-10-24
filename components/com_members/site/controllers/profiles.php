@@ -581,6 +581,23 @@ class Profiles extends SiteController
 			->paginated('limitstart', 'limit')
 			->rows();
 
+		// Remove users from sorted display list if they set their sorting field to private
+		$hiddenMemberIds = [];
+		foreach($rows as $row) {
+			$sortBy = $filters['sort'];
+			if ($sortBy && $sortBy !== "name") {
+				$query = new \Hubzero\Database\Query;
+				$memberFields = $query->select('*')
+										->from('#__user_profiles')
+										->whereEquals('user_id', $row->id)
+										->whereEquals('profile_key', $sortBy)
+										->fetch();
+				if (!in_array($memberFields[0]->access, $access)) {
+					$hiddenMemberIds[] = $row->id;
+				}
+			}
+		}
+
 		// Set the page title
 		$title  = Lang::txt('COM_MEMBERS');
 		$title .= ($this->_task) ? ': ' . Lang::txt(strtoupper($this->_task)) : '';
@@ -621,6 +638,7 @@ class Profiles extends SiteController
 			->set('total_members', $stats->total_members)
 			->set('total_public_members', $stats->total_public_members)
 			->set('sortBy', $filters['sort'])
+			->set('hidden_member_ids', $hiddenMemberIds)
 			->display();
 	}
 
