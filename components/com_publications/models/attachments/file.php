@@ -796,7 +796,7 @@ class File extends Base
 				} else {
 					$server->disposition('attachment');
 				}
-				$server->acceptranges(false);
+				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
 				if ($serveInline && !$server->serve_inline($download))
