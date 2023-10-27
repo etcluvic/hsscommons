@@ -795,7 +795,7 @@ class File extends Base
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
-				if ($serveInline && !$server->serve_inline($download))
+				if ($serveInline && !$server->serve_inline($download, false))
 				{
 					// Should only get here on error
 					throw new Exception(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_SERVE'), 404);
