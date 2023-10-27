@@ -626,6 +626,19 @@ class Profiles extends SiteController
 			Cache::put('members.stats', $stats, intval($this->config->get('cache_time', 15)));
 		}
 
+		// Get all users that this currently logged in user is following
+		$query = new \Hubzero\Database\Query;
+		$followings = $query->select('*')
+							->from('#__collections_following')
+							->whereEquals('follower_type', 'member')
+							->whereEquals('following_type', 'member')
+							->whereEquals('follower_id', User::get('id'))
+							->fetch();
+		$followingIds = [];
+		foreach ($followings as $following) {
+			$followingIds[] = $following->following_id;
+		}
+
 		// Instantiate the view
 		$this->view
 			->set('config', $this->config)
@@ -639,6 +652,7 @@ class Profiles extends SiteController
 			->set('total_public_members', $stats->total_public_members)
 			->set('sortBy', $filters['sort'])
 			->set('hidden_member_ids', $hiddenMemberIds)
+			->set('following_member_ids', $followingIds)
 			->display();
 	}
 
@@ -1984,5 +1998,92 @@ class Profiles extends SiteController
 		}
 
 		$this->view->display();
+	}
+
+	/**
+	 * Follow an user
+	 * 
+	 * @return void
+	 */
+	public function followTask()
+	{
+		// Only logged-in users should ever get to this page
+		if (User::isGuest())
+		{
+			App::redirect(
+				Route::url('index.php?option=com_users&view=login&return=' . base64_encode(Request::current(true)), false)
+			);
+		}
+
+		$followingId = Request::getInt('followingId', 0);
+		$followingName = Request::getString('followingName', '');
+		$redirectUrl = Request::getString('redirect', '');
+
+		// Users cannot follow users that they already followed
+		$query = new \Hubzero\Database\Query;
+		$followings = $query->select('*')
+							->from('#__collections_following')
+							->whereEquals('follower_type', 'member')
+							->whereEquals('following_type', 'member')
+							->whereEquals('follower_id', User::get('id'))
+							->whereEquals('following_id', $followingId)
+							->fetch();
+		if (count($followings) > 0) {
+			App::redirect(base64_decode($redirectUrl), Lang::txt("You already follow user %s", $followingName), "warning");
+		}
+
+		// Add a following entry into the database
+		$query = new \Hubzero\Database\Query;
+		$query->insert('#__collections_following')
+				->values(['follower_type' => 'member', 'follower_id' => User::get('id'), 'following_type' => 'member', 'following_id' => $followingId, 'created' => date("Y-m-d H:M:s")])
+				->execute();
+
+		// Redirect to the page that made the request
+		App::redirect(base64_decode($redirectUrl), Lang::txt("Follow user %s successfully", $followingName), "success");
+	}
+
+	/**
+	 * Unfollow an user
+	 * 
+	 * @return void
+	 */
+	public function unfollowTask()
+	{
+		// Only logged-in users should ever get to this page
+		if (User::isGuest())
+		{
+			App::redirect(
+				Route::url('index.php?option=com_users&view=login&return=' . base64_encode(Request::current(true)), false)
+			);
+		}
+
+		$unfollowingId = Request::getInt('unfollowingId', 0);
+		$unfollowingName = Request::getString('unfollowingName', '');
+		$redirectUrl = Request::getString('redirect', '');
+
+		// Users cannot unfollow users that they haven't followed
+		$query = new \Hubzero\Database\Query;
+		$followings = $query->select('*')
+							->from('#__collections_following')
+							->whereEquals('follower_type', 'member')
+							->whereEquals('following_type', 'member')
+							->whereEquals('follower_id', User::get('id'))
+							->whereEquals('following_id', $unfollowingId)
+							->fetch();
+		if (count($followings) == 0) {
+			App::redirect(base64_decode($redirectUrl), Lang::txt("You haven't followed user %s", $unfollowingName), "warning");
+		}
+
+		// Add a following entry into the database
+		$query = new \Hubzero\Database\Query;
+		$query->delete('#__collections_following')
+				->whereEquals('follower_type', 'member')
+				->whereEquals('follower_id', User::get('id')) 
+				->whereEquals('following_type', 'member')
+				->whereEquals('following_id', $unfollowingId)
+				->execute();
+
+		// Redirect to the page that made the request
+		App::redirect(base64_decode($redirectUrl), Lang::txt("Unfollow user %s successfully", $unfollowingName), "success");
 	}
 }
