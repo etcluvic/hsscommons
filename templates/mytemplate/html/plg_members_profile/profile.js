@@ -57,6 +57,9 @@ HUB.Members.Profile = {
 
 		// Show followings and followers modal
 		HUB.Members.Profile.showFollowingsFollowersModal();
+
+		// Show ORCID auto populate modal
+		HUB.Members.Profile.showOrcidPopulateModal();
 	},
 
 	//-------------------------------------------------------------
@@ -878,6 +881,17 @@ HUB.Members.Profile = {
 		});
 
 		$('a#followers-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+	},
+
+	showOrcidPopulateModal: function()
+	{
+		$('a#orcid-autopopulate-link').fancybox({
 			'transitionIn'	:	'elastic',
 			'transitionOut'	:	'elastic',
 			'speedIn'		:	600, 

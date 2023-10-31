@@ -30,6 +30,7 @@ use App;
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'registration.php';
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'member.php';
 include_once dirname(dirname(__DIR__)) . DS . 'helpers' . DS . 'filters.php';
+include_once dirname(dirname(__DIR__)) . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
 
 /**
  * Members controller class for profiles
@@ -2085,5 +2086,52 @@ class Profiles extends SiteController
 
 		// Redirect to the page that made the request
 		App::redirect(base64_decode($redirectUrl), Lang::txt("Unfollow user %s successfully", $unfollowingName), "success");
+	}
+
+	/**
+	 * Auto-populate a member profile with ORCID
+	 * 
+	 * @return void
+	 */
+	public function orcidpopulateTask()
+	{
+		$id = Request::getInt('id', 0);
+		$redirectUrl = DS . "members" . DS . $id . DS . "profile";
+
+		// User can only auto populate their own profile
+		if (User::get('id') != $id) {
+			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NOT_AUTHORIZE"), "warning");
+		}
+
+		// Get profile's ORCID from database
+		$orcidRow = \Hubzero\Auth\Link::all()
+		->whereEquals('user_id', User::get('id'))
+		->row();
+		$orcid = $orcidRow->username;
+
+		if (!$orcid) {
+			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NO_ORCID"), "warning");
+		}
+
+		// Get user access token
+		$query = new \Hubzero\Database\Query;
+		$accessTokens = $query->select('*')
+							->from('#__xprofiles_tokens')
+							->whereEquals('user_id', User::get('id'))
+							->fetch();
+		if (count($accessTokens) == 0) {
+			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NO_ACCESS_TOKEN"), "warning");
+		}
+
+		// Read ORCID profile record
+		$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+		$orcidHandler->setAccessToken($accessTokens[0]->token);
+		$orcidHandler->setOrcid($orcid);
+		$orcidProfile = $orcidHandler->getProfile();
+		Log::debug(get_object_vars($orcidProfile));
+
+
+		// Redirect to profile page
+		App::redirect($redirectUrl);
 	}
 }

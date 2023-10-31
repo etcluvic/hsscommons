@@ -454,6 +454,51 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 					Log::error(sprintf('Hubzero\Auth\Link::find_or_create("authentication", "orcid", null, %s) returned false', $username));
 				}
 			}
+
+			// Get the previous ORCID access token of this user
+			$query = new \Hubzero\Database\Query;
+			
+			$accessTokens = $query->select('*')
+								->from('#__xprofiles_tokens')
+								->whereEquals('user_id', User::get('id'))
+								->fetch();
+
+			// Revoke the previous access token
+			// Archie: Have to write the revoke code out here as we can't override Oauth.php file
+			if (count($accessTokens) > 0) {
+				$accessToken = $accessTokens[0]->token;
+				$http = new Curl;
+				$revokeUrl = '';
+				
+				if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+					$revokeUrl = 'https://sandbox.orcid.org/oauth/revoke';
+				} else {
+					$revokeUrl = 'https://orcid.org/oauth/revoke';
+				}
+
+				$revokeFields = [
+					'client_id'     => $this->params->get('client_id'),
+					'client_secret' => $this->params->get('client_secret'),
+					'token'			=> $accessToken
+				];
+
+				$http->setUrl($revokeUrl)
+					->setPostFields($revokeFields)
+					->setHeader(['Accept' => 'application/json']);
+
+				$data = json_decode($http->execute());
+
+				if (!$data) {
+					Log::debug('No data returned after revoking ORCID access token');
+				} else {
+					Log::debug(get_object_vars($data));
+				}
+
+				$query->alter('#__xprofiles_tokens', 'user_id', User::get('id'), ['token' => $oauth->getAccessToken(), 'created' => date('y-m-d h:i:s')]); 
+			} else {
+				// Store the new access token into the database and relates it to the current logged in user
+				$query->push('#__xprofiles_tokens', ['token' => $oauth->getAccessToken(), 'user_id' => User::get('id'), 'created' => date('y-m-d h:i:s')]);
+			}
 		}
 		else
 		{

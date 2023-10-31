@@ -150,7 +150,7 @@ $legacy = array(
 
 // Get profile's ORCID from database
 $orcidRow = \Hubzero\Auth\Link::all()
-	-> whereEquals('user_id', $this->profile->get('id'))
+	->whereEquals('user_id', $this->profile->get('id'))
 	->row();
 $profileOrcid = $orcidRow->username;
 ?>
@@ -163,6 +163,10 @@ $profileOrcid = $orcidRow->username;
 <div class="followings-display">
 	<a id="followings-link" href="#followings-modal"><?php echo count($this->followings); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWINGS"); ?></a>
 	<a id="followers-link" href="#followers-modal"><?php echo count($this->followers); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWERS"); ?></a>
+	<!-- Button to auto populate profile with ORCID -->
+	<?php if ($isUser && $profileOrcid) { ?>
+		<a id="orcid-autopopulate-link" href="#orcid-autopopulate-modal" class="btn" style="margin-left: auto;">Auto populate profile with ORCID</a>
+	<?php } ?>
 </div>
 
 <!-- Modal to display members that this user is following -->
@@ -181,6 +185,7 @@ $profileOrcid = $orcidRow->username;
 	</div>
 </div>
 
+<!-- Modal to display members that are followers of this user -->
 <div style="display:none;">
 	<div class="modal follow-members-modal" id="followers-modal">
 		<?php if (count($this->followers) > 0) { ?>
@@ -196,7 +201,16 @@ $profileOrcid = $orcidRow->username;
 	</div>
 </div>
 
-<!-- Modal to display members that are followers of this user -->
+<!-- Modal to get user confirmation to auto-populate profile with ORCID -->
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="orcid-autopopulate-modal">
+		<h1><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_CONFIRMATION_TEXT"); ?></h1>
+		<p><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_DOUBLE_CHECK_ORCID"); ?> <a href="<?php echo "https://orcid.org/" . $profileOrcid; ?>" target="_blank"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_PROFILE_LINK"); ?></a></p>
+		<div>
+			<a href="<?php echo DS . "members" . DS . $this->profile->get('id') . DS . "profile" . DS . "orcidpopulate" ?>" class="btn" style="margin-left: auto;"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_YES"); ?></a>
+		</div>
+	</div>
+</div>
 
 <div id="profile-page-content" data-url="<?php echo Route::url('index.php?option=com_members&id=' . $this->profile->get('uidNumber') . '&active=profile'); ?>">
 	<h3 class="section-header">
