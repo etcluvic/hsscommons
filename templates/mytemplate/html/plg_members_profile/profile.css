@@ -661,3 +661,24 @@
 	a#instruction-link:hover {
 		color: #ffffff;
 	}
+
+/* Display user's followings */
+	.followings-display {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		display: flex;
+		flex-direction: row;
+		gap: 20px;
+		cursor: default;
+	}
+
+	.follow-members-modal {
+		min-width: 300px;
+	}
+
+	.follow-members-display {
+		display: flex;
+		flex-direction: row;
+		gap: 20px;
+		flex-wrap: wrap;
+	}

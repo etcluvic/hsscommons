@@ -54,6 +54,9 @@ HUB.Members.Profile = {
 
 		// Show completeness instruction modal when clicking on "How can I improve my score?" link
 		HUB.Members.Profile.showCompletenessInstructionModal();
+
+		// Show followings and followers modal
+		HUB.Members.Profile.showFollowingsFollowersModal();
 	},
 
 	//-------------------------------------------------------------
@@ -855,7 +858,6 @@ HUB.Members.Profile = {
 
 	showCompletenessInstructionModal: function()
 	{
-		console.log("Showing completeness instruction modal");
 		$('a#instruction-link').fancybox({
 			'transitionIn'	:	'elastic',
 			'transitionOut'	:	'elastic',
@@ -864,6 +866,25 @@ HUB.Members.Profile = {
 			'overlayShow'	:	false
 		});
 	},
+
+	showFollowingsFollowersModal: function()
+	{
+		$('a#followings-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+
+		$('a#followers-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+	}
 };
 
 //-------------------------------------------------------------

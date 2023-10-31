@@ -159,6 +159,45 @@ $profileOrcid = $orcidRow->username;
 	<p class="error"><?php echo $this->getError(); ?></p>
 <?php } ?>
 
+<!-- Display number of followings and followers -->
+<div class="followings-display">
+	<a id="followings-link" href="#followings-modal"><?php echo count($this->followings); ?> followings</a>
+	<a id="followers-link" href="#followers-modal"><?php echo count($this->followers); ?> followers</a>
+</div>
+
+<!-- Modal to display members that this user is following -->
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="followings-modal">
+		<?php if (count($this->followings) > 0) { ?>
+			<h1>This user is following:</h1>
+			<div class="follow-members-display">
+				<?php foreach($this->followings as $following) {
+					echo "<a href='/members/" . $following->id . "'>" .  $following->name . "</a>";
+				} ?>
+			</div>
+		<?php } else { ?>
+			<h1>This user is not following anyone</h1>
+		<?php } ?>
+	</div>
+</div>
+
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="followers-modal">
+		<?php if (count($this->followers) > 0) { ?>
+			<h1>This user's followers:</h1>
+			<div class="follow-members-display">
+				<?php foreach($this->followers as $follower) {
+					echo "<a href='/members/" . $follower->id . "'>" .  $follower->name . "</a>";
+				} ?>
+			</div>
+		<?php } else { ?>
+			<h1>This user has no follower</h1>
+		<?php } ?>
+	</div>
+</div>
+
+<!-- Modal to display members that are followers of this user -->
+
 <div id="profile-page-content" data-url="<?php echo Route::url('index.php?option=com_members&id=' . $this->profile->get('uidNumber') . '&active=profile'); ?>">
 	<h3 class="section-header">
 		<?php echo Lang::txt('PLG_MEMBERS_PROFILE'); ?>

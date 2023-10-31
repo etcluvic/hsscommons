@@ -173,13 +173,57 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			}
 		}
 
+		// Get all user ids and names that is currently logged in user is following 
+		$followings = [];
+		$query = new \Hubzero\Database\Query;
+		$followingsResult = $query->select('*')
+						->from('#__collections_following')
+						->whereEquals('follower_type', 'member')
+						->whereEquals('following_type', 'member')
+						->whereEquals('follower_id', $this->member->id)
+						->fetch();
+		foreach($followingsResult as $result) {
+			$query = new \Hubzero\Database\Query;
+			$followingMemberResult = $query->select('*')
+									->from('#__users')
+									->whereEquals('id', $result->following_id)
+									->fetch();
+			$followingMember = new stdClass();
+			$followingMember->id = $followingMemberResult[0]->id;
+			$followingMember->name = $followingMemberResult[0]->name;
+			$followings[] = $followingMember;
+		}
+
+		// Get all user ids and names that are followers of the currently logged in user
+		$followers = [];
+		$query = new \Hubzero\Database\Query;
+		$followersResult = $query->select('*')
+						->from('#__collections_following')
+						->whereEquals('follower_type', 'member')
+						->whereEquals('following_type', 'member')
+						->whereEquals('following_id', $this->member->id)
+						->fetch();
+		foreach($followersResult as $result) {
+			$query = new \Hubzero\Database\Query;
+			$followerMemberResult = $query->select('*')
+									->from('#__users')
+									->whereEquals('id', $result->follower_id)
+									->fetch();
+			$followerMember = new stdClass();
+			$followerMember->id = $followerMemberResult[0]->id;
+			$followerMember->name = $followerMemberResult[0]->name;
+			$followers[] = $followerMember;
+		}
+
 		$view = $this->view('default', 'index')
 			->set('params', $params)
 			->set('option', 'com_members')
 			->set('profile', $this->member)
 			->set('fields', $fields)
 			->set('completeness', $this->getProfileCompleteness($fields, $this->member))
-			->set('registration_update', $xreg);
+			->set('registration_update', $xreg)
+			->set('followings', $followings)
+			->set('followers', $followers);
 
 		return $view
 			->setErrors($this->getErrors())
