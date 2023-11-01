@@ -173,6 +173,7 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			}
 		}
 
+		$isUserFollowing = false;
 		// Get all user ids and names that is currently logged in user is following 
 		$followings = [];
 		$query = new \Hubzero\Database\Query;
@@ -204,6 +205,9 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 						->whereEquals('following_id', $this->member->id)
 						->fetch();
 		foreach($followersResult as $result) {
+			if (User::get('id') != $this->member->id && $result->follower_id == User::get('id')) {
+				$isUserFollowing = true;
+			}
 			$query = new \Hubzero\Database\Query;
 			$followerMemberResult = $query->select('*')
 									->from('#__users')
@@ -223,7 +227,8 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			->set('completeness', $this->getProfileCompleteness($fields, $this->member))
 			->set('registration_update', $xreg)
 			->set('followings', $followings)
-			->set('followers', $followers);
+			->set('followers', $followers)
+			->set('isUserFollowing', $isUserFollowing);
 
 		return $view
 			->setErrors($this->getErrors())

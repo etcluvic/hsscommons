@@ -163,9 +163,26 @@ $profileOrcid = $orcidRow->username;
 <div class="followings-display">
 	<a id="followings-link" href="#followings-modal"><?php echo count($this->followings); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWINGS"); ?></a>
 	<a id="followers-link" href="#followers-modal"><?php echo count($this->followers); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWERS"); ?></a>
+	<!-- Help icon for following -->
+	<div class="following-help-container">
+		<span class="icon-info" id="following-help-icon"></span>
+		<div id="following-help">If you follow someone, you will receive an email every time that person publishes a publication.</div>
+	</div>
 	<!-- Button to auto populate profile with ORCID -->
 	<?php if ($isUser && $profileOrcid) { ?>
 		<a id="orcid-autopopulate-link" href="#orcid-autopopulate-modal" class="btn" style="margin-left: auto;">Auto populate profile with ORCID</a>
+	<?php } ?>
+	<!-- Follow button -->
+	<?php if (!User::isGuest() && !$isUser) { ?>
+		<?php if ($this->isUserFollowing) { ?>
+			<a class="btn message-member" style="margin-left: auto;" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=unfollow&unfollowingId=' . $this->profile->get('id') . '&unfollowingName=' . $this->profile->get('name') . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($this->profile->get('name'))); ?>">
+				<?php echo Lang::txt('UNFOLLOW'); ?>
+			</a>
+		<?php } else { ?>
+			<a class="btn message-member" style="margin-left: auto;" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=follow&followingId=' . $this->profile->get('id') . '&followingName=' . $this->profile->get('name') . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($this->profile->get('name'))); ?>">
+				<?php echo Lang::txt('FOLLOW'); ?>
+			</a>
+		<?php } ?>
 	<?php } ?>
 </div>
 

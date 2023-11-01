@@ -682,3 +682,26 @@
 		gap: 20px;
 		flex-wrap: wrap;
 	}
+
+	.following-help-container {
+		position: relative;
+	}
+
+	#following-help-icon:hover {
+		color: #000;
+	}
+
+	#following-help {
+		position: absolute;
+		top: 10px;
+		right: -200px;
+		width: 200px;
+		height: fit-content;
+		background-color: #fff;
+		z-index: 10;
+		border-top-right-radius: 20px;
+		border-bottom-right-radius: 20px;
+		border-bottom-left-radius: 20px;
+		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+		padding: 15px;
+	}

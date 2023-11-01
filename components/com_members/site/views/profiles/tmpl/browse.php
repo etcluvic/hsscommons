@@ -432,8 +432,8 @@ foreach ($this->fields as $field)
 											<?php if (!User::isGuest() && User::get('id') != $row->get('id')) { ?>
 												<?php if (in_array($row->get('id'), $this->following_member_ids)) { ?>
 													<a class="btn message-member" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=unfollow&unfollowingId=' . $row->get('id') . '&unfollowingName=' . $name . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($name)); ?>">
-													<?php echo Lang::txt('UNFOLLOW'); ?>
-												</a>
+														<?php echo Lang::txt('UNFOLLOW'); ?>
+													</a>
 												<?php } else { ?>
 													<a class="btn message-member" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=follow&followingId=' . $row->get('id') . '&followingName=' . $name . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($name)); ?>">
 														<?php echo Lang::txt('FOLLOW'); ?>

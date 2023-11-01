@@ -887,6 +887,14 @@ HUB.Members.Profile = {
 			'speedOut'		:	200, 
 			'overlayShow'	:	false
 		});
+
+		// Display following help when hovering on following icon
+		$('#following-help').hide();
+		$('#following-help-icon').hover(function() {
+			$('#following-help').show();
+		}, function() {
+			$('#following-help').hide();
+		});
 	},
 
 	showOrcidPopulateModal: function()
