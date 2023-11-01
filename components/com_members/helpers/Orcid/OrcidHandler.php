@@ -188,19 +188,67 @@ class OrcidHandler extends Orcid\Oauth
         $person = $profileJSON->person;
         $givenNameField = "given-names";
         $familyNameField = "family-name";
+        $researcherUrls = "researcher-urls";
+        $researcherUrl = "researcher-url";
+        $activitiesSummary = "activities-summary";
+        $educationSummary = "education-summary";
+        $roleTitle = "role-title";
+        $employmentSummary = "employment-summary";
 
         $profile = new stdClass();
+        // Add name
         if ($person->name->visibility === "PUBLIC") {
             $profile->givenName = $person->name->$givenNameField->value;
             $profile->surname = $person->name->$familyNameField->value;
             $profile->name = $profile->givenName . ' ' . $profile->surname;
         }
 
-        if ($person->biography->visibility === "PUBLIC") {
+        // Add bio
+        if (isset($person->biography) && isset($person->biography->visibility) && $person->biography->visibility === "PUBLIC") {
             $profile->bio = $person->biography->content;
         }
 
+        // Add website and social medias
+        if (isset($person->$researcherUrls->$researcherUrl)) 
+        {
+            foreach($person->$researcherUrls->$researcherUrl as $url) {
+                if ($url->visibility === "PUBLIC") {
+                    $urlValue = $url->url->value;
+                    if (strpos($urlValue, "twitter") !== false) {
+                        $profile->twitter = $urlValue;
+                    } else if (strpos($urlValue, "facebook") !== false) {
+                        $profile->facebook = $urlValue;
+                    } else if (strpos($urlValue, "linkedin") !== false) {
+                        $profile->linkedin = $urlValue;
+                    } else {
+                        $profile->url = $urlValue;
+                    }
+                }
+            }
+        }
 
+        // Add email
+        if (isset($person->emails->email) && count($person->emails->email) > 0 && $person->emails->email[0]->visibility === "PUBLIC") {
+            $profile->email = $person->emails->email[0]->email;
+        }
+
+        // Add education
+        $activities = $profileJSON->$activitiesSummary;
+        if (count($activities->educations->$educationSummary) > 0) {
+            $education = $activities->educations->$educationSummary;
+            if ($education[0]->visibility === "PUBLIC") {
+                $profile->education = $education[0]->$roleTitle;
+            }
+        }
+
+        // Add title and affiliation
+        if (count($activities->employments->$employmentSummary) > 0) {
+            $employment = $activities->employments->$employmentSummary;
+            if ($employment[0]->visibility === "PUBLIC") {
+                $profile->title = $employment[0]->$roleTitle;
+                $profile->affiliation = $employment[0]->organization->name;
+            }
+        }
 
         return $profile;
     }
