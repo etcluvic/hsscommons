@@ -674,6 +674,9 @@
 
 	.follow-members-modal {
 		min-width: 300px;
+		max-width: 600px;
+		max-height: 70vh;
+		overflow-y: auto;
 	}
 
 	.follow-members-display {

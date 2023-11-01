@@ -219,6 +219,15 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			$followers[] = $followerMember;
 		}
 
+		// Sort followings and followers
+		usort($followings, function($a, $b) {
+			return strcmp($a->name, $b->name);
+		});
+
+		usort($followers, function($a, $b) {
+			return strcmp($a->name, $b->name);
+		});
+
 		$view = $this->view('default', 'index')
 			->set('params', $params)
 			->set('option', 'com_members')
