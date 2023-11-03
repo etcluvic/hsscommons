@@ -227,6 +227,33 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 		usort($followers, function($a, $b) {
 			return strcmp($a->name, $b->name);
 		});
+		
+		// Get user ORCID profile to render the ORCID auto-populate modal
+		$orcidProfile = new stdClass;
+		if (User::get('id') == $this->member->id) {
+			// Get profile's ORCID from database
+			$orcidRow = \Hubzero\Auth\Link::all()
+			->whereEquals('user_id', User::get('id'))
+			->row();
+			$orcid = $orcidRow->username;
+
+			if ($orcid) {
+				// Get user access token
+				$query = new \Hubzero\Database\Query;
+				$accessTokens = $query->select('*')
+									->from('#__xprofiles_tokens')
+									->whereEquals('user_id', User::get('id'))
+									->fetch();
+
+				// Get user ORCID profile
+				if (count($accessTokens) > 0) {
+					$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+					$orcidHandler->setAccessToken($accessTokens[0]->token);
+					$orcidHandler->setOrcid($orcid);
+					$orcidProfile = $orcidHandler->getProfile();
+				}
+			}
+		}
 
 		$view = $this->view('default', 'index')
 			->set('params', $params)
@@ -237,7 +264,8 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			->set('registration_update', $xreg)
 			->set('followings', $followings)
 			->set('followers', $followers)
-			->set('isUserFollowing', $isUserFollowing);
+			->set('isUserFollowing', $isUserFollowing)
+			->set('orcidProfile', $orcidProfile);
 
 		return $view
 			->setErrors($this->getErrors())

@@ -222,10 +222,40 @@ $profileOrcid = $orcidRow->username;
 <div style="display:none;">
 	<div class="modal follow-members-modal" id="orcid-autopopulate-modal">
 		<h1><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_CONFIRMATION_TEXT"); ?></h1>
-		<p><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_DOUBLE_CHECK_ORCID"); ?> <a href="<?php echo "https://orcid.org/" . $profileOrcid; ?>" target="_blank"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_PROFILE_LINK"); ?></a></p>
-		<div>
-			<a href="<?php echo DS . "members" . DS . $this->profile->get('id') . DS . "profile" . DS . "orcidpopulate" ?>" class="btn" style="margin-left: auto;"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_YES"); ?></a>
-		</div>
+		<?php if (!isset($this->orcidProfile->error)) { ?>
+			<p><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_DOUBLE_CHECK_ORCID"); ?> <a href="<?php echo "https://orcid.org/" . $profileOrcid; ?>" target="_blank"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_PROFILE_LINK"); ?></a></p>
+			<p>If you select <strong>Yes, I'm sure</strong>, the following fields will be updated:</p>
+			<ul style="margin-bottom: 20px;">
+				<?php 
+				$defaultFields = ["name", "username", "email"];
+				foreach ($this->orcidProfile as $profile_key => $profile_value) {
+					if ($profile_key != "surname" && $profile_key != "givenName") {
+						// If the updating field is not a profile field created from the backend, set the label to the key capitalized
+						if (in_array($profile_key, $defaultFields)) {
+							echo "<li>" . ucfirst($profile_key) . ": " . $profile_value . "</li>";
+						} else {
+							// Get the label for the profile field
+							$query = new \Hubzero\Database\Query;
+							$profileLabelQuery = $query->select('*')
+														->from('#__user_profile_fields')
+														->whereEquals('name', $profile_key)
+														->fetch();
+
+							if (count($profileLabelQuery) > 0) {
+								$profile_label = $profileLabelQuery[0]->label;
+								echo "<li>" . $profile_label . ": " . $profile_value . "</li>";
+							}
+						}
+					}
+				} 
+				?>
+			</ul>
+			<div>
+				<a href="<?php echo DS . "members" . DS . $this->profile->get('id') . DS . "profile" . DS . "orcidpopulate" ?>" class="btn" style="margin-left: auto;"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_YES"); ?></a>
+			</div>
+		<?php } else { ?>
+			<p>Oops, we can't retrieve your ORCID profile for some reason. Error received: <strong><?php echo $this->orcidProfile->error; ?></strong>. Please contact our team for further support. Thank you!</p>
+		<?php } ?>
 	</div>
 </div>
 

@@ -2129,6 +2129,11 @@ class Profiles extends SiteController
 		$orcidHandler->setOrcid($orcid);
 		$orcidProfile = $orcidHandler->getProfile();
 		Log::debug(get_object_vars($orcidProfile));
+
+		// Failed to get an ORCID profile
+		if (isset($orcidProfile->error)) {
+			App::redirect($redirectUrl, $orcidProfile->errorDescription, "error");
+		}
 		
 		// Replace Commons profile with ORCID profile
 		foreach($orcidProfile as $profile_key => $profile_value) {

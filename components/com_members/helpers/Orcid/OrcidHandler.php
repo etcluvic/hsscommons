@@ -184,6 +184,14 @@ class OrcidHandler extends Orcid\Oauth
 
         $profileJSON = json_decode($this->http->execute());
         Log::debug(get_object_vars($profileJSON));
+        
+        // Fetch to ORCID API failed
+        if (isset($profileJSON->error)) {
+            $error = new stdClass;
+            $error->error = $profileJSON->error;
+            $error->errorDescription = $profileJSON->error_description;
+            return $error;
+        }
 
         $person = $profileJSON->person;
         $givenNameField = "given-names";
