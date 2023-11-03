@@ -66,7 +66,7 @@ $defaultName = $this->params->get('default_connection_name', '%s Master Reposito
 				<select name="provider_id" class="connection-type">
 					<option value=""><?php echo Lang::txt('New Connection'); ?></option>
 					<?php foreach (\Components\Projects\Models\Orm\Provider::all() as $provider) : ?>
-						<option value="<?php echo $provider->id; ?>"><?php echo $this->escape($provider->name); ?></option>
+						<option value="<?php echo $provider->id; ?>"><?php echo $this->escape($provider->name); if ($this->escape($provider->name) == "Google Drive") { echo "&trade;"; } ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
