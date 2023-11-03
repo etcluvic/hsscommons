@@ -657,6 +657,11 @@ class Register extends SiteController
 			Session::set('auth_link.tmp_bio', null);
 			Session::set('auth_link.tmp_title', null);
 			Session::set('auth_link.tmp_affiliation', null);
+			Session::set('auth_link.tmp_education', null);
+			Session::set('auth_link.tmp_twitter', null);
+			Session::set('auth_link.tmp_facebook', null);
+			Session::set('auth_link.tmp_linkedin', null);
+			Session::set('auth_link.tmp_url', null);
 		}
 
 		if (!User::isGuest() && !User::get('tmp_user'))
