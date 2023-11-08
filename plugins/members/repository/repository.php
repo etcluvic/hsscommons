@@ -41,6 +41,8 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
+include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
+
 /**
  * Members Plugin class for author's repository
  */
@@ -218,6 +220,30 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		$view->database  = $this->_database;
 		$view->uid       = $uid;
 		$view->pubconfig = Component::params('com_publications');
+
+		// Get current user's ORCID from database
+		$orcidRow = \Hubzero\Auth\Link::all()
+		->whereEquals('user_id', User::get('id'))
+		->row();
+		$orcid = $orcidRow->username;
+
+		$orcidWorks = [];
+		if ($orcid) {
+			// Get user access token
+			$query = new \Hubzero\Database\Query;
+			$accessTokens = $query->select('*')
+								->from('#__xprofiles_tokens')
+								->whereEquals('user_id', User::get('id'))
+								->fetch();
+			Log::debug($accessTokens);
+			if (count($accessTokens) > 0) {
+				// Read the current user's ORCID works
+				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+				$orcidHandler->setAccessToken($accessTokens[0]->token);
+				$orcidHandler->setOrcid($orcid);
+				$orcidWorks = $orcidHandler->getAllWorks();
+			}
+		}
 
 		if ($this->getError())
 		{

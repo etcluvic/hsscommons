@@ -262,6 +262,71 @@ class OrcidHandler extends Orcid\Oauth
     }
 
     /**
+     * Grabs the user's ORCID works and parse it into an easy-to-read array of objects
+     *
+     *
+     * @param   string  $orcid  the orcid to look up, if not already set as class prop
+     * @return  array
+     * @throws  Exception
+     **/
+    public function getAllWorks($orcid = null)
+    {
+        $this->selectEnvironment();
+        $this->http->setUrl($this->getApiEndpoint('works', $orcid));
+
+        if ($this->level == 'api') {
+            // If using the members api, we have to have an access token set
+            if (!$this->getAccessToken()) {
+                throw new Exception('You must first set an access token or authenticate');
+            }
+
+            $this->http->setHeader([
+                'Content-Type'  => 'application/vnd.orcid+json',
+                'Authorization' => 'Bearer ' . $this->getAccessToken()
+            ]);
+        } else {
+            $this->http->setHeader('Accept: application/vnd.orcid+json');
+        }
+
+        $worksJSON = json_decode($this->http->execute());
+        $worksGroup = $worksJSON->group;
+
+         // Fetch to ORCID API failed
+         if (isset($worksJSON->error)) {
+            $error = new stdClass;
+            $error->error = $worksJSON->error;
+            $error->errorDescription = $worksJSON->error_description;
+            return $error;
+        }
+
+        // Define some string constants
+        $workSummary = "work-summary";
+
+        // Translate work type JSON response into human readable string
+        // Archie: Don't need this yet as there are too many
+        // $workTypes = [
+        //     "BOOK" => "book", 
+        //     "BOOK_CHAPTER" => "Book chapter",
+        //     "BOOK_REVIEW" => "Book"
+        // ]
+
+        $works = [];
+        foreach($group as $workData) {
+            // Only read public works
+            if ($workData->visibility !== "PUBLIC") {
+                continue;
+            }
+            $work = new stdClass;
+            $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
+            $work->type = isset($workData->type) ? $workData->type : "";
+            // $work->
+        }
+
+
+        return $works;
+    }
+
+    /**
      * Creates the qualified api endpoint for retrieving the desired data
      *
      * @param   string  $endpoint  the shortname of the endpoint

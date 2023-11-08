@@ -554,6 +554,14 @@ class Register extends SiteController
 					// The profile info, however, may have issues. But, it's not crucial.
 					//$result = false;
 				}
+
+				// Save user ORCID access token if user authenticated with ORCID
+				$orcidAccessToken = Session::get('tmp_orcid_access_tokens', '');
+				if ($orcidAccessToken) {
+					$query = new \Hubzero\Database\Query;
+					$query->push('#__xprofiles_tokens', ['token' => $orcidAccessToken, 'user_id' => User::get('id'), 'created' => date('y-m-d h:i:s')]);
+					Session::set('tmp_orcid_access_tokens', null);
+				}
 			}
 
 			// Update current session if appropriate
