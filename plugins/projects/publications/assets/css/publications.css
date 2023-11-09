@@ -1958,3 +1958,35 @@
 			min-width: 800px;
 		}
 	}
+
+/*** ORCID publications import ***/
+.hidden {
+	display: none;
+}
+
+.pub-modal {
+	max-width: 700px;
+	min-width: 300px;
+	padding: 30px;
+}
+
+.pub-modal-item-container {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.pub-modal .pub-modal-item {
+	padding: 10px;
+	border: 1px rgb(203 213 225) solid;
+	border-radius: 5px;
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	cursor: default;
+	background-color: #fff;
+}
+
+.pub-modal .pub-modal-item:hover,
+.pub-modal .pub-modal-item.selected {
+	background-color: rgb(226 232 240);
+}

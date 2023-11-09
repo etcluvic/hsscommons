@@ -39,7 +39,8 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
-$this->css('publications.css', 'plg_projects_publications');
+$this->css('publications.css', 'plg_projects_publications')
+		->js('stats.js', 'plg_members_repository');
 
 function getStatus($status = null)
 {
@@ -112,7 +113,34 @@ function getStatus($status = null)
 	<?php } ?>
 	</table>
 <?php } else { ?>
-	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> right now!</p>
+	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import one from ORCID</a> right now!</p>
 <?php } ?>
+
+<!-- Modal displays for ORCID publications -->
+<div style="display:none;">
+	<div class="modal pub-modal" id="orcid-pub-modal">
+		<?php if (count($this->orcidWorks) === 0 ) { ?>
+			You don't have any publication on ORCID to import
+		<?php } else { ?>
+			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
+			<i>Click on each publication container to select/deselect that publication for importation</i>
+			<form action="/publications/orcidImport" class="pub-modal-item-container" method="post">
+				<?php
+				foreach($this->orcidWorks as $work) {
+				?>
+					<div class='pub-modal-item' data-putcode="<?php echo $work->putCode; ?>">
+						<strong class="pub-modal-item-selected-text hidden">Selected for importation</strong>
+						<?php echo "<div>" . $work->title . " | " . $work->type . "</div>"; ?>
+					</div>
+				<?php } ?>
+				<input name="putCodes" type="text" class="selected-putcodes-input">
+				<fieldset class="hidden">
+					<input name="redirectUrl" value="<?php echo urlencode(Request::current()); ?>">
+				</fieldset>
+				<button class="btn" style="margin-top: 20px; width: fit-content; margin-left: auto;">Import selected publications</button>
+			</form>
+		<?php } ?>
+	</div>
+</div>
 
 </div>

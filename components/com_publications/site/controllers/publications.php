@@ -10,6 +10,7 @@ namespace Components\Publications\Site\Controllers;
 $componentPath = Component::path('com_publications');
 
 require_once "$componentPath/models/bundle.php";
+include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
 
 use Hubzero\Component\SiteController;
 use Hubzero\Pagination\Paginator;
@@ -2396,6 +2397,43 @@ class Publications extends SiteController
 		}
 		
 		exit();
+	}
+
+	/*
+	* Written by Archie
+	* Import publications from selected ORCID publications of the currently logged in user
+	*/
+	public function orcidImportTask()
+	{
+		$selectedPutCodes = Request::getString('putCodes', '', 'post');
+		Log::debug('Selected put codes: ' . $selectedPutCodes);
+
+		// Get current user's ORCID from database
+		$orcidRow = \Hubzero\Auth\Link::all()
+					->whereEquals('user_id', User::get('id'))
+					->row();
+		$orcid = $orcidRow->username;
+		$orcidWorks = [];
+		if ($selectedPutCodes && $orcid) {
+			// Get user access token
+			$query = new \Hubzero\Database\Query;
+			$accessTokens = $query->select('*')
+								->from('#__xprofiles_tokens')
+								->whereEquals('user_id', User::get('id'))
+								->fetch();
+
+			if (count($accessTokens) > 0) {
+				// Get information about the user's selected ORCID publications
+				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+				$orcidHandler->setAccessToken($accessTokens[0]->token);
+				$orcidHandler->setOrcid($orcid);
+				$orcidWorks = $orcidHandler->getMultipleWorks(null, $selectedPutCodes);
+			}
+			Log::debug($orcidWorks);
+		}
+		
+		$redirectUrl = urldecode(Request::getString('redirectUrl', '', 'post'));
+		App::redirect($redirectUrl, 'Import ORCID publications successfully', 'success');
 	}
 
 	/**

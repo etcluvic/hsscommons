@@ -301,6 +301,8 @@ class OrcidHandler extends Orcid\Oauth
 
         // Define some string constants
         $workSummary = "work-summary";
+        $publicationDate = "publication-date";
+        $putCode = "put-code";
 
         // Translate work type JSON response into human readable string
         // Archie: Don't need this yet as there are too many
@@ -311,17 +313,89 @@ class OrcidHandler extends Orcid\Oauth
         // ]
 
         $works = [];
-        foreach($group as $workData) {
+        foreach($worksGroup as $groupData) {
             // Only read public works
+            $workDatas = $groupData->$workSummary;
+            $workData = $workDatas[0];
             if ($workData->visibility !== "PUBLIC") {
                 continue;
             }
             $work = new stdClass;
+            $work->putCode = $workData->$putCode;
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
             $work->type = isset($workData->type) ? $workData->type : "";
-            // $work->
+            $works[] = $work;
         }
 
+        return $works;
+    }
+
+    /**
+     * Grabs the user's multiple ORCID works (put codes provided) and parse it into an easy-to-read array of objects
+     *
+     *
+     * @param   string  $orcid  the orcid to look up, if not already set as class prop
+     * @param   string  put codes of selected publications, separated by a comma
+     * @return  array
+     * @throws  Exception
+     **/
+    public function getMultipleWorks($orcid = null, $putCodes = '')
+    {
+        $this->selectEnvironment();
+        $this->http->setUrl($this->getApiEndpoint('works' . DS . $putCodes, $orcid));
+
+        if ($this->level == 'api') {
+            // If using the members api, we have to have an access token set
+            if (!$this->getAccessToken()) {
+                throw new Exception('You must first set an access token or authenticate');
+            }
+
+            $this->http->setHeader([
+                'Content-Type'  => 'application/vnd.orcid+json',
+                'Authorization' => 'Bearer ' . $this->getAccessToken()
+            ]);
+        } else {
+            $this->http->setHeader('Accept: application/vnd.orcid+json');
+        }
+
+        $worksJSON = json_decode($this->http->execute());
+        Log::debug(get_object_vars($worksJSON));
+        $worksBulk = $worksJSON->bulk;
+
+         // Fetch to ORCID API failed
+         if (isset($worksJSON->error)) {
+            $error = new stdClass;
+            $error->error = $worksJSON->error;
+            $error->errorDescription = $worksJSON->error_description;
+            return $error;
+        }
+
+        // Define some string constants
+        $publicationDate = "publication-date";
+        $putCode = "put-code";
+
+        // Translate work type JSON response into human readable string
+        // Archie: Don't need this yet as there are too many
+        // $workTypes = [
+        //     "BOOK" => "book", 
+        //     "BOOK_CHAPTER" => "Book chapter",
+        //     "BOOK_REVIEW" => "Book"
+        // ]
+
+        $works = [];
+        foreach($worksBulk as $bulkData) {
+        // Only read public works
+            $workData = $bulkData->work;
+            if ($workData->visibility !== "PUBLIC") {
+                continue;
+            }
+            $work = new stdClass;
+            $work->putCode = $workData->$putCode;
+            $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
+            $work->type = isset($workData->type) ? $workData->type : "";
+            $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle : "";
+            $works[] = $work;
+        }
 
         return $works;
     }

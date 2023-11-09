@@ -223,8 +223,8 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 
 		// Get current user's ORCID from database
 		$orcidRow = \Hubzero\Auth\Link::all()
-		->whereEquals('user_id', User::get('id'))
-		->row();
+					->whereEquals('user_id', User::get('id'))
+					->row();
 		$orcid = $orcidRow->username;
 
 		$orcidWorks = [];
@@ -235,7 +235,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 								->from('#__xprofiles_tokens')
 								->whereEquals('user_id', User::get('id'))
 								->fetch();
-			Log::debug($accessTokens);
+
 			if (count($accessTokens) > 0) {
 				// Read the current user's ORCID works
 				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
@@ -244,6 +244,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 				$orcidWorks = $orcidHandler->getAllWorks();
 			}
 		}
+		$view->orcidWorks = $orcidWorks;
 
 		if ($this->getError())
 		{
