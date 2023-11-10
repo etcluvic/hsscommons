@@ -39,6 +39,7 @@ class plgFilesystemGoogleDrive extends \Hubzero\Plugin\Plugin
 		$client->setAccessType('offline');
 		$client->setApprovalPrompt('force');
 		$client->setIncludeGrantedScopes(true);
+		Log::debug($client->getScopes());
 
 
 		if (isset($params['app_token']))
