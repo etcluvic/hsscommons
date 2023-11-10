@@ -37,6 +37,7 @@ class plgFilesystemGoogleDrive extends \Hubzero\Plugin\Plugin
 		$client->setClientSecret($app_secret);
 		$client->addScope(Google_Service_Drive::DRIVE_FILE);
 		$client->addScope('https://www.googleapis.com/auth/drive.apps.readonly');
+		$client->addScope('https://www.googleapis.com/auth/drive.install');
 		$client->setAccessType('offline');
 		$client->setApprovalPrompt('force');
 		$client->setIncludeGrantedScopes(true);
