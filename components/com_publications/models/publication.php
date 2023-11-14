@@ -1029,7 +1029,8 @@ class Publication extends Obj
 
 			// Only allow certain file types to be previewed
 			if ($firstFile) {
-				$fileExtension = strtolower($firstFile->path ? explode('.', $firstFile->path)[1] : '');
+				$splittedFilePath = explode('.', $firstFile->path);
+				$fileExtension = strtolower($firstFile->path ? end($splittedFilePath) : '');
 				if (in_array($fileExtension, $allowedFileExtensions)) {
 					return $firstFile;
 				} else {
