@@ -357,7 +357,6 @@ class connections
 	 */
 	public function setup_base_dir()
 	{
-		Log::debug('Calling setup_base_dir');
 		$view = new \Hubzero\Plugin\View([
 			'folder'	=> 'projects',
 			'element'	=> 'files',
@@ -367,6 +366,7 @@ class connections
 		$subdir = Request::getString('subdir', '');
 		$dir = Entity::fromPath($subdir, $this->connection->adapter());
 		$contents = $dir->listContents()->sort('basename', 'ASC');
+		Log::debug($contents);
 		$dirs = array();
 		foreach ($contents as $file)
 		{
