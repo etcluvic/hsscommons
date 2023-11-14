@@ -2439,7 +2439,7 @@ class Publications extends SiteController
 			
 			// Create new Commons publications
 			foreach($orcidWorks as $work) {
-				$pub = new \Components\Publications\Models\Publication;
+				// $pub = new \Components\Publications\Models\Publication;
 
 				// Add authors
 				$authors = [];
@@ -2447,16 +2447,114 @@ class Publications extends SiteController
 					$query = new \Hubzero\Database\Query;
 					
 					// Author has an ORCID
+					$userNotFound = true;
 					if ($author["orcid"]) {
-						$users = $query->select('*')
+						$orcidUsers = $query->select('*')
 										->from('#__auth_link')
 										->whereEquals('username', $author["orcid"])
 										->fetch();
+						if (count($orcidUsers) > 0) {
+							$userId = $orcidUsers[0]->user_id;
+							$users = $query->select('*')  
+								->from('#__users')  
+								->whereEquals('id', $userId)
+								->fetch();
+							if (count($users) > 0) {
+								$userNotFound = false;
+								$authors = array_merge($authors, $users);
+							}
+						}
+					}
+					
+					// Can't find user in our system with ORCID or user doesn't ahve an ORCID
+					if ($userNotFound) {
+						// Search user by given name and surname
+						$users = $query->select('*')  
+							->from('#__users')  
+							->whereEquals('givenName', $author['givenname'])
+							->whereEquals('surname', $author['surname'])
+							->fetch();
+
 						if (count($users) > 0) {
-							$userId = $users[0]->user_id;
+							$authors = array_merge($authors, $users);
+						} else {
+							$user 				= new StdClass();
+							$user->id			= 0;
+							$user->givenName	= $author['givenname'];
+							$user->surname		= $author['surname'];
+							$authors[] = $user;
 						}
 					}
 				}
+
+				// Create a new publication
+				$project = new \Components\Projects\Models\Project();
+				$plugin_params = array (
+					$project,
+					'create',
+					['publication']
+				);
+				$plugin_responses = Event::trigger('projects.onProject', $plugin_params);
+				$pub = $plugin_responses[0];
+				// $query = new \Hubzero\Database\Query;
+				// $versions = $query->select('*')
+				// 					->from('#__publication_versions')
+				// 					->whereEquals('publication_id', $pub->id)
+				// 					->fetch();
+				// $vid = $versions[0]->id;
+				$version = $pub->get('version');
+				$vid = $version->id;
+
+				// Set authors of publication
+				$ordering = 1;
+				foreach ($authors as $author) {
+					$pAuthor = new \Components\Publications\Tables\Author($this->database);
+					if (!$pAuthor->loadAssociationByFirstLastName($author->id, $vid, $author->givenName, $author->surname)) {
+						$pAuthor->user_id      = $author->id;
+						$pAuthor->ordering     = $ordering;
+						$pAuthor->credit       = '';
+						$pAuthor->role         = '';
+						$pAuthor->status       = 1;
+						
+						$pAuthor->firstName    = $author->givenName;
+						$pAuthor->lastName     = $author->surname;
+						$pAuthor->name         = trim($pAuthor->firstName . ' ' . $pAuthor->lastName);
+
+						// Check if project member
+						$objO   = $pub->project()->table('Owner');
+						$owner  = $objO->getOwnerId($pub->project()->get('id'), $pAuthor->user_id, $pAuthor->name);
+
+						if ($owner) {
+							$pAuthor->project_owner_id = $owner;
+						} else {
+							$objO = new \Components\Projects\Tables\Owner($this->database);
+							$objO->projectid     = $pub->project()->get('id');
+							$objO->userid        = $pAuthor->user_id;
+							$objO->status        = $pAuthor->user_id ? 1 : 0;
+							$objO->added         = Date::toSql();
+							$objO->role          = 2;
+							$objO->invited_email = '';
+							$objO->invited_name  = $pAuthor->name;
+							$objO->store();
+							$pAuthor->project_owner_id = $objO->id;
+						}
+
+						$pAuthor->publication_version_id = $vid;
+						$pAuthor->created_by = User::getInstance()->get('id');
+						$pAuthor->created    = Date::toSql();
+
+						$pAuthor->store();
+
+						$ordering++;
+					}
+				}
+
+				// Set the rest of the information
+				$version->title 			= $work->title;
+				$version->abstract 			= $work->abstract;
+				$version->description		= $work->description;
+				$version->doi				= $work->doi;
+				$version->store();
 			}
 		}
 		App::redirect($redirectUrl, 'Import ORCID publications successfully', 'success');

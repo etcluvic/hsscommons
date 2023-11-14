@@ -77,6 +77,7 @@ function getStatus($status = null)
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
 	<div style="margin-bottom: 10px;">
 		<a class="icon-add btn" href="/publications/submit"><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ADD_BTN_TEXT'); ?></a>
+		<a class="icon-add btn" href="#orcid-pub-modal" id="show-orcid-pub-btn" style="margin-left: 10px;">Import publications from ORCID</a>
 	</div>
 	<table>
 		<thead>
@@ -133,11 +134,11 @@ function getStatus($status = null)
 						<?php echo "<div>" . $work->title . " | " . $work->type . "</div>"; ?>
 					</div>
 				<?php } ?>
-				<input name="putCodes" type="text" class="selected-putcodes-input">
+				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
 				<fieldset class="hidden">
 					<input name="redirectUrl" value="<?php echo urlencode(Request::current()); ?>">
 				</fieldset>
-				<button class="btn" style="margin-top: 20px; width: fit-content; margin-left: auto;">Import selected publications</button>
+				<button id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;">Import selected publications</button>
 			</form>
 		<?php } ?>
 	</div>

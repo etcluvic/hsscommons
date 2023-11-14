@@ -424,7 +424,13 @@ class OrcidHandler extends Orcid\Oauth
                 if ($author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
                     $authorOrcid = $author->$contributorOrcid->path;
                 }
-                $authors[] = array("orcid" => $authorOrcid, "name" => $authorName);
+                $authorNameSegments = explode(" ", $authorName);
+                $authors[] = array(
+                                "orcid" => $authorOrcid, 
+                                "name" => $authorName, 
+                                "givenname" => $authorNameSegments[0], 
+                                "surname" => count($authorNameSegments) >= 2 ? $authorNameSegments[count($authorNameSegments) - 1] : ""
+                            );
             }
             $work->authors = $authors;
             

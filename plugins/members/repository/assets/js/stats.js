@@ -55,6 +55,13 @@ HUB.Members.Repository = {
             $(this).toggleClass('selected');
             $(this).find('.pub-modal-item-selected-text').toggleClass('hidden');
             $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','))
+            
+            // Enable/disable import button depeding on if there is any selected publication
+            if (selectedPutCodes.length === 0) {
+                $('#orcid-pub-modal-submit-btn').addClass('disabled');
+            } else {
+                $('#orcid-pub-modal-submit-btn').removeClass('disabled');
+            }
         })
     }
 }
