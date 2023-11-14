@@ -2405,6 +2405,7 @@ class Publications extends SiteController
 	*/
 	public function orcidImportTask()
 	{
+		$redirectUrl = urldecode(Request::getString('redirectUrl', '', 'post'));
 		$selectedPutCodes = Request::getString('putCodes', '', 'post');
 		Log::debug('Selected put codes: ' . $selectedPutCodes);
 
@@ -2430,9 +2431,34 @@ class Publications extends SiteController
 				$orcidWorks = $orcidHandler->getMultipleWorks(null, $selectedPutCodes);
 			}
 			Log::debug($orcidWorks);
+
+			// Failed to get an ORCID works
+			if (isset($orcidWorks->error)) {
+				App::redirect($redirectUrl, $orcidWorks->errorDescription, "error");
+			}
+			
+			// Create new Commons publications
+			foreach($orcidWorks as $work) {
+				$pub = new \Components\Publications\Models\Publication;
+
+				// Add authors
+				$authors = [];
+				foreach($work->authors as $author) {
+					$query = new \Hubzero\Database\Query;
+					
+					// Author has an ORCID
+					if ($author["orcid"]) {
+						$users = $query->select('*')
+										->from('#__auth_link')
+										->whereEquals('username', $author["orcid"])
+										->fetch();
+						if (count($users) > 0) {
+							$userId = $users[0]->user_id;
+						}
+					}
+				}
+			}
 		}
-		
-		$redirectUrl = urldecode(Request::getString('redirectUrl', '', 'post'));
 		App::redirect($redirectUrl, 'Import ORCID publications successfully', 'success');
 	}
 
