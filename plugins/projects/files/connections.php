@@ -357,6 +357,7 @@ class connections
 	 */
 	public function setup_base_dir()
 	{
+		Log::debug('Calling setup_base_dir');
 		$view = new \Hubzero\Plugin\View([
 			'folder'	=> 'projects',
 			'element'	=> 'files',
