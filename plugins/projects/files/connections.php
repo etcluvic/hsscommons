@@ -77,6 +77,8 @@ class connections
 	{
 		// Set task in case referenced later
 		$this->_task = $task;
+		Log::debug('Callling connection execute function');
+		Log::debug("task: " . $task);
 
 		$reflection = with(new \ReflectionClass($this))->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$excludes   = ['__construct', '__get', '__call', 'execute'];
