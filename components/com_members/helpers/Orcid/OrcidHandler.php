@@ -373,14 +373,21 @@ class OrcidHandler extends Orcid\Oauth
         // Define some string constants
         $publicationDate = "publication-date";
         $putCode = "put-code";
+        $citationValue = "citation-value";
+        $externalIds = "external-ids";
+        $externalId = "external-id";
+        $externalIdType = "external-id-type";
+        $externalIdValue = "external-id-value";
+        $contributorOrcid = "contributor-orcid";
+        $creditName = "credit-name";
 
         // Translate work type JSON response into human readable string
         // Archie: Don't need this yet as there are too many
         // $workTypes = [
-        //     "BOOK" => "book", 
+        //     "BOOK" => "Book", 
         //     "BOOK_CHAPTER" => "Book chapter",
         //     "BOOK_REVIEW" => "Book"
-        // ]
+        // ];
 
         $works = [];
         foreach($worksBulk as $bulkData) {
@@ -393,7 +400,34 @@ class OrcidHandler extends Orcid\Oauth
             $work->putCode = $workData->$putCode;
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
             $work->type = isset($workData->type) ? $workData->type : "";
-            $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle : "";
+            $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
+            $work->description = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
+            
+            // Set DOI
+            if (isset($workData->$externalIds->$externalId)) {
+                $doi = "";
+                foreach($workData->$externalIds->$externalId as $id) {
+                    if ($id->$externalIdType === "doi") {
+                        $doi = $id->$externalIdValue;
+                    }
+                }
+                $work->doi = $doi;
+            } else {
+                $work->doi = "";
+            }
+
+            // Add authors
+            $authors = [];
+            foreach($workData->contributors->contributor as $author) {
+                $authorOrcid = "";
+                $authorName = $author->$creditName->value;
+                if ($author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
+                    $authorOrcid = $author->$contributorOrcid->path;
+                }
+                $authors[] = array("orcid" => $authorOrcid, "name" => $authorName);
+            }
+            $work->authors = $authors;
+            
             $works[] = $work;
         }
 
