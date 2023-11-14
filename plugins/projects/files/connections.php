@@ -89,7 +89,6 @@ class connections
 				$methods[] = $method->name;
 			}
 		}
-		Log::debug($methods);
 
 		if (in_array($task, $methods))
 		{
