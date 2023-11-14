@@ -365,7 +365,6 @@ class connections
 		]);
 		$subdir = Request::getString('subdir', '');
 		$dir = Entity::fromPath($subdir, $this->connection->adapter());
-		Log::debug(get_class($dir));
 		$contents = $dir->listContents()->sort('basename', 'ASC');
 		$dirs = array();
 		foreach ($contents as $file)
