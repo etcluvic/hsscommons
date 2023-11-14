@@ -260,15 +260,9 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 <h4><?php echo Lang::txt('COM_PUBLICATIONS_PREVIEW'); ?></h4>
 <?php
 // Provide a preview of primary document if exists
-$attachments = $this->publication->attachments();
-if ($attachments && count($attachments) > 0) {
-	Log::debug($attachments);
-	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
-	$firstFile = $attachments[1][0];
-	$fileExtension = strtolower($firstFile->path ? explode('.', $firstFile->path)[1] : '');
-	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {
-		echo "<iframe width='600' height='700' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $firstFile->id) . "' </iframe>"; 
-	}
+$previewAttachment = $this->publication->getPreviewAttachment();
+if ($previewAttachment) {
+	echo "<iframe width='600' height='700' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . "' </iframe>"; 
 }
 ?>
 </div>
