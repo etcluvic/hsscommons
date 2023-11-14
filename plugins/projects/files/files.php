@@ -406,6 +406,7 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 	 */
 	protected function _browse($sync = 0)
 	{
+		Log::debug('Call browse()');
 		// Output HTML
 		$view = new \Hubzero\Plugin\View(
 			array(
@@ -438,6 +439,7 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 		// Get stored remote connections
 		if (!empty($this->_remoteService))
 		{
+			Log::debug('Remote service not empty');
 			$objRFile = new \Components\Projects\Tables\RemoteFile ($this->_database);
 			$remotes  = $objRFile->getRemoteFiles(
 				$this->model->get('id'),
@@ -450,7 +452,7 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 			$view->rSync   = new Sync($this->_connect);
 			$view->sharing = 1;
 		}
-
+		
 		// Set params
 		$view->params = array(
 			'subdir'               => $this->subdir,
@@ -468,6 +470,7 @@ class plgProjectsFiles extends \Hubzero\Plugin\Plugin
 
 		// Retrieve items
 		$view->items = $this->repo->filelist($view->params);
+		Log::debug('After calling fileList');
 
 		$view->publishing = false; // do not show publishing info
 		$view->title      = $this->_area['title'];
