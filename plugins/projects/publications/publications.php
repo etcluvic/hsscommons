@@ -1186,7 +1186,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 	 */
 	public function createDraft()
 	{
-		Log::debug('Call createDraft');
 		// Incoming
 		$base = Request::getString('base', 'files');
 
