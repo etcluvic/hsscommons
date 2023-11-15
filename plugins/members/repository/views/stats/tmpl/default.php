@@ -125,7 +125,7 @@ function getStatus($status = null)
 		<?php } else { ?>
 			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
 			<i>Click on each publication container to select/deselect that publication for importation</i>
-			<form action="/publications/orcidImport" class="pub-modal-item-container" method="post">
+			<form action="/publications/orcidImport" method="post" class="pub-modal-item-container" >
 				<?php
 				foreach($this->orcidWorks as $work) {
 				?>
@@ -134,8 +134,8 @@ function getStatus($status = null)
 						<?php echo "<div>" . $work->title . " | " . $work->type . "</div>"; ?>
 					</div>
 				<?php } ?>
-				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
-				<fieldset class="hidden">
+				<input name="putCodes" type="text" class="selected-putcodes-input">
+				<fieldset>
 					<input name="redirectUrl" value="<?php echo base64_encode(Request::current()); ?>">
 				</fieldset>
 				<input type="submit" value="Import selected publications" id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;"></button>
