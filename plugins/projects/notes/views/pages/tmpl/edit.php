@@ -113,9 +113,9 @@ if ($this->page->exists() && !$this->page->access('modify')) {
 			<?php echo Lang::txt('COM_WIKI_FIELD_PAGETEXT'); ?>:
 			<span class="required"><?php echo Lang::txt('COM_WIKI_REQUIRED'); ?></span>
 			<?php
-			echo Components\Wiki\Helpers\Editor::getInstance()->display('revision[pagetext]', 'pagetext', $this->revision->get('pagetext'), '', '35', '20');
+			// echo Components\Wiki\Helpers\Editor::getInstance()->display('revision[pagetext]', 'pagetext', $this->revision->get('pagetext'), '', '35', '20');
 			?>
-			<!-- <?php echo App::get('editor')->display('revision[pagetext]', $this->revision->get('pagetext'), '', '', 10, 15, false, 'pagetext', null, null, array()); ?> -->
+			<?php echo App::get('editor')->display('revision[pagetext]', $this->revision->get('pagetext'), '', '', 10, 15, false, 'pagetext', null, null, array()); ?>
 		</label>
 		<p class="ta-right hint">
 			<?php echo Lang::txt('COM_WIKI_FIELD_PAGETEXT_HINT', Route::url('index.php?option=com_wiki&pagename=Help:WikiFormatting')); ?>
