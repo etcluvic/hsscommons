@@ -257,11 +257,11 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 </div><!-- / .pubabout -->
 
 <div id="file-preview" style="padding-top: 200px; margin-top: -150px; margin-bottom: 50px; margin-left: 15px;">
-<h4><?php echo Lang::txt('COM_PUBLICATIONS_PREVIEW'); ?></h4>
 <?php
 // Provide a preview of primary document if exists
 $previewAttachment = $this->publication->getPreviewAttachment();
 if ($previewAttachment) {
+	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
 	echo "<iframe width='600' height='700' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . "' </iframe>"; 
 }
 ?>
