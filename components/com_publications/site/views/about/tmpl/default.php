@@ -262,7 +262,16 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 $previewAttachment = $this->publication->getPreviewAttachment();
 if ($previewAttachment) {
 	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
-	echo "<iframe width='600' height='700' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . "' </iframe>"; 
+	$splittedFilePath = explode('.', $previewAttachment->path);
+	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
+	if ($fileExtension === 'mp4') { ?>
+		<video width="320" height="240" controls>
+			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp4">
+			Your browser does not support the video tag.
+		</video>
+	<?php } else { ?>
+		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
+	<?php }
 }
 ?>
 </div>
