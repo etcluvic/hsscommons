@@ -138,7 +138,7 @@ function getStatus($status = null)
 				<fieldset class="hidden">
 					<input name="redirectUrl" value="<?php echo base64_encode(Request::current()); ?>">
 				</fieldset>
-				<button id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;">Import selected publications</button>
+				<input type="submit" value="Import selected publications" id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;"></button>
 			</form>
 		<?php } ?>
 	</div>
