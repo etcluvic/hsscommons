@@ -265,12 +265,12 @@ if ($previewAttachment) {
 	$splittedFilePath = explode('.', $previewAttachment->path);
 	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
 	if ($fileExtension === 'mp4') { ?>
-		<video width="320" height="240" controls>
+		<video width="600" height="700" controls>
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp4">
 			Your browser does not support the video tag.
 		</video>
 	<?php } else if ($fileExtension === 'mp3') { ?>
-		<video width="320" height="240" controls>
+		<video width="600" height="700" controls>
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp3">
 			Your browser does not support the video tag.
 		</video>
