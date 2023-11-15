@@ -136,7 +136,7 @@ function getStatus($status = null)
 				<?php } ?>
 				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
 				<fieldset class="hidden">
-					<input name="redirectUrl" value="<?php echo urlencode(Request::current()); ?>">
+					<input name="redirectUrl" value="<?php echo base64_encode(Request::current()); ?>">
 				</fieldset>
 				<button id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;">Import selected publications</button>
 			</form>
