@@ -124,7 +124,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Check if our area is in the array of areas we want to return results for
 		if (is_array($areas))
 		{
-			if (empty($this->_area) || !in_array($this->_area['name'], $areas))
+			if (empty($this->_area) || !in_array($this->_area['name'], $areas) && $action !== 'create')
 			{
 				return;
 			}
@@ -162,7 +162,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			// Contribute process outside of projects
 			$this->model->set('provisioned', 1);
 
-			$ajax_tasks  = array('showoptions', 'save', 'showitem');
+			$ajax_tasks  = array('showoptions', 'save', 'showitem', 'create');
 			$this->_task = $action == 'start' ? 'start' : 'contribute';
 			if ($action == 'publication')
 			{
@@ -293,6 +293,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'retrieve':
 				$this->retrieveDraft();
 				break;
+			// Create
+			case 'create':
+				return $this->createDraft();
 		}
 
 		// Return data

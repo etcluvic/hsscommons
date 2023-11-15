@@ -298,6 +298,9 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				$lifetime  = time() + 365*24*60*60;
 
 				\Hubzero\Utility\Cookie::bake($namespace, $lifetime, $prefs);
+			} else {				
+				// Temporarily store the ORCID access token into the session until the account is fully registered
+				Session::set('tmp_orcid_access_tokens', $oauth->getAccessToken());
 			}
 		}
 		else
