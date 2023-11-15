@@ -125,7 +125,7 @@ function getStatus($status = null)
 		<?php } else { ?>
 			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
 			<i>Click on each publication container to select/deselect that publication for importation</i>
-			<form action="/publications/orcidImport" method="post" class="pub-modal-item-container" >
+			<form action="<?php echo Route::url('index.php?option=com_publications&task=orcidImport') ?>" method="post" class="pub-modal-item-container" >
 				<?php
 				foreach($this->orcidWorks as $work) {
 				?>
