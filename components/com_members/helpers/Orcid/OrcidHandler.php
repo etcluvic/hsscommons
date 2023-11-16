@@ -358,6 +358,7 @@ class OrcidHandler extends Orcid\Oauth
         }
 
         $worksJSON = json_decode($this->http->execute());
+        Log::debug(get_object_vars($worksJSON));
         $worksBulk = $worksJSON->bulk;
 
          // Fetch to ORCID API failed
@@ -371,6 +372,7 @@ class OrcidHandler extends Orcid\Oauth
         // Define some string constants
         $publicationDate = "publication-date";
         $putCode = "put-code";
+        $shortDescription = "short-description";
         $citationValue = "citation-value";
         $externalIds = "external-ids";
         $externalId = "external-id";
@@ -399,7 +401,8 @@ class OrcidHandler extends Orcid\Oauth
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
             $work->type = isset($workData->type) ? $workData->type : "";
             // $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
-            $work->description = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
+            $work->description = isset($workData->$shortDescription) ? $workData->$shortDescription : "";
+            $work->citation = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
             
             // Set DOI
             if (isset($workData->$externalIds->$externalId)) {
