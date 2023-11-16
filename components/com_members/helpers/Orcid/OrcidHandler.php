@@ -183,7 +183,6 @@ class OrcidHandler extends Orcid\Oauth
         }
 
         $profileJSON = json_decode($this->http->execute());
-        Log::debug(get_object_vars($profileJSON));
         
         // Fetch to ORCID API failed
         if (isset($profileJSON->error)) {
@@ -359,7 +358,6 @@ class OrcidHandler extends Orcid\Oauth
         }
 
         $worksJSON = json_decode($this->http->execute());
-        Log::debug(get_object_vars($worksJSON));
         $worksBulk = $worksJSON->bulk;
 
          // Fetch to ORCID API failed
@@ -400,7 +398,7 @@ class OrcidHandler extends Orcid\Oauth
             $work->putCode = $workData->$putCode;
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
             $work->type = isset($workData->type) ? $workData->type : "";
-            $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
+            // $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
             $work->description = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
             
             // Set DOI

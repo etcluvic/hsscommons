@@ -2406,7 +2406,6 @@ class Publications extends SiteController
 	public function orcidImportTask()
 	{
 		$redirectUrl = base64_decode(Request::getString('redirectUrl', '', 'post'));
-		Log::debug($redirectUrl);
 		$selectedPutCodes = Request::getString('putCodes', '', 'post');
 		Log::debug('Selected put codes: ' . $selectedPutCodes);
 
@@ -2552,7 +2551,7 @@ class Publications extends SiteController
 
 				// Set the rest of the information
 				$version->title 			= $work->title;
-				$version->abstract 			= $work->abstract;
+				// $version->abstract 			= $work->abstract;
 				$version->description		= $work->description;
 				$version->doi				= $work->doi;
 				$version->store();
