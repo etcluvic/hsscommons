@@ -75,9 +75,12 @@ function getStatus($status = null)
 ?>
 
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
-	<div style="margin-bottom: 10px;">
+	<div style="margin-bottom: 10px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
 		<a class="icon-add btn" href="/publications/submit"><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ADD_BTN_TEXT'); ?></a>
-		<a class="icon-add btn" href="#orcid-pub-modal" id="show-orcid-pub-btn" style="margin-left: 10px;">Import existing publications from ORCID</a>
+		<a class="btn" href="#orcid-pub-modal" id="show-orcid-pub-btn">
+			<img src="/core/components/com_members/site/assets/img/orcid_16x16.png" class="logo" width="20" height="20" alt="iD">
+			Import existing publications from ORCID
+		</a>
 	</div>
 	<table>
 		<thead>
