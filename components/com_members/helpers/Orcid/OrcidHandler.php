@@ -322,7 +322,7 @@ class OrcidHandler extends Orcid\Oauth
             $work = new stdClass;
             $work->putCode = $workData->$putCode;
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
-            $work->type = isset($workData->type) ? $workData->type : "";
+            $work->type = isset($workData->type) ? ucfirst(str_replace('_', ' ', strtolower($workData->type))) : "";
             $works[] = $work;
         }
 
@@ -399,7 +399,7 @@ class OrcidHandler extends Orcid\Oauth
             $work = new stdClass;
             $work->putCode = $workData->$putCode;
             $work->title = isset($workData->title->title) ? $workData->title->title->value : "";
-            $work->type = isset($workData->type) ? $workData->type : "";
+            $work->type = isset($workData->type) ? ucfirst(str_replace('_', ' ', strtolower($workData->type))) : "";
             // $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
             $work->description = isset($workData->$shortDescription) ? $workData->$shortDescription : "";
             $work->citation = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
