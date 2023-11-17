@@ -2040,3 +2040,21 @@
 .pub-modal .pub-modal-item.selected {
 	background-color: rgb(226 232 240);
 }
+
+/* .pub-modal label {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	width: fit-content;
+} */
+
+.pub-modal .control-bar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.pub-modal .all-btn {
+	width: fit-content;
+}

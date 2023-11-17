@@ -54,7 +54,7 @@ HUB.Members.Repository = {
             }
             $(this).toggleClass('selected');
             $(this).find('.pub-modal-item-selected-text').toggleClass('hidden');
-            $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','))
+            $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','));
             
             // Enable/disable import button depeding on if there is any selected publication
             if (selectedPutCodes.length === 0) {
@@ -62,6 +62,32 @@ HUB.Members.Repository = {
             } else {
                 $('#orcid-pub-modal-submit-btn').removeClass('disabled');
             }
+        })
+
+        // Select all publications for importation on the modal
+        $('.pub-modal .select-all-btn').on("click", function() {
+
+            selectedPutCodes = [];
+            $('.pub-modal .pub-modal-item').each(function() {
+                const dataPutCode = $(this).data('putcode');
+                selectedPutCodes.push(dataPutCode);
+                $(this).addClass('selected');
+                $(this).find('.pub-modal-item-selected-text').removeClass('hidden');
+            })
+            $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','));
+            $('#orcid-pub-modal-submit-btn').removeClass('disabled');
+        })
+
+        // Deselect all publications for importation on the modal
+        $('.pub-modal .deselect-all-btn').on("click", function() {
+
+            selectedPutCodes = [];
+            $('.pub-modal .pub-modal-item').each(function() {
+                $(this).removeClass('selected');
+                $(this).find('.pub-modal-item-selected-text').addClass('hidden');
+            })
+            $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val('');
+            $('#orcid-pub-modal-submit-btn').addClass('disabled');
         })
     }
 }
