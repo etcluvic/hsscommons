@@ -246,6 +246,29 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		}
 		$view->orcidWorks = $orcidWorks;
 
+		// Construct a list of publication ids in this repo
+		$pubIds = [];
+		foreach($view->pubstats as $stat) {
+			$pubIds[] = $stat->publication_id;
+		}
+
+		// Get the putcodes of all ORCID imported publications into this repo
+		$orcidImportedPutCodes = [];
+		$query = new \Hubzero\Database\Query;
+		$orcidImportedPubs = $query->select('element_id, handler_id, params')
+									->from('#__publication_handler_assoc')
+									->whereIn('publication_version_id', $pubIds)
+									->fetch();
+		foreach($orcidImportedPubs as $orcidPub) {
+			$paramFields = explode('=', $orcidPub->params);
+			$location = $paramFields[1];
+
+			// Only get publications that this user imported to his/her personal repo
+			if ($orcidPub->handler_id == User::get('id') && $location === 'repo')
+			$orcidImportedPutCodes[] = $orcidPub->element_id;
+		}
+		$view->orcidImportedPutCodes = $orcidImportedPutCodes;
+
 		if ($this->getError())
 		{
 			$view->setError($this->getError());

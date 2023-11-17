@@ -2559,6 +2559,13 @@ class Publications extends SiteController
 				// This publication has been published previously
 				$version->forked_from		= $vid;
 				$version->store();
+
+				// Save ORCID info for this publication
+				$query = new \Hubzero\Database\Query;
+
+				$query->insert('#__publication_handler_assoc')
+					->values(['publication_version_id' => $vid, 'element_id' => $work->putCode, 'handler_id' => User::get('id'), 'params' => 'location=repo'])
+					->execute();
 			}
 		}
 		App::redirect($redirectUrl, 'Import ORCID publications successfully', 'success');

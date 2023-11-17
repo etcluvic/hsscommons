@@ -131,7 +131,11 @@ function getStatus($status = null)
 				?>
 					<div class='pub-modal-item' data-putcode="<?php echo $work->putCode; ?>">
 						<strong class="pub-modal-item-selected-text hidden">Selected for importation</strong>
-						<?php echo "<div>" . $work->title . " | " . $work->type . "</div>"; ?>
+						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) {
+							echo "<div>" . $work->title . " | " . $work->type . " <strong>(Previously imported)</strong></div>";
+						} else {
+							echo "<div>" . $work->title . " | " . $work->type . "</div>";
+						} ?>
 					</div>
 				<?php } ?>
 				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
