@@ -77,7 +77,7 @@ function getStatus($status = null)
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
 	<div style="margin-bottom: 10px;">
 		<a class="icon-add btn" href="/publications/submit"><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ADD_BTN_TEXT'); ?></a>
-		<a class="icon-add btn" href="#orcid-pub-modal" id="show-orcid-pub-btn" style="margin-left: 10px;">Import publications from ORCID</a>
+		<a class="icon-add btn" href="#orcid-pub-modal" id="show-orcid-pub-btn" style="margin-left: 10px;">Import existing publications from ORCID</a>
 	</div>
 	<table>
 		<thead>
@@ -124,7 +124,7 @@ function getStatus($status = null)
 			<p>A repository contains all publications that you're an author of. It is a place to manage your publications, view the necessary information and make important decisions.</p>
 
 			<p><strong>How do I get started?</strong></p>
-			<p><p><a href="/publications/submit">Upload a new publication </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import an existing one from ORCID</a> right now!</p></p>
+			<p><p><a href="/publications/submit">Add a new publication </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import existing ones from ORCID</a> right now!</p></p>
 		</div>
 	</div><!-- / .introduction -->
 <?php } ?>
