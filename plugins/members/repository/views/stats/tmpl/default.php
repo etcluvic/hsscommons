@@ -114,7 +114,19 @@ function getStatus($status = null)
 	<?php } ?>
 	</table>
 <?php } else { ?>
-	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import one from ORCID</a> right now!</p>
+	<!-- <p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import one from ORCID</a> right now!</p> -->
+	<div class="introduction">
+		<div class="introduction-message">
+			<p>Your repository is currently empty.</p>
+		</div>
+		<div class="introduction-questions">
+			<p><strong>What is a repository?</strong></p>
+			<p>A repository contains all publications that you're an author of. It is a place to manage your publications, view the necessary information and make import decisions.</p>
+
+			<p><strong>How do I get started?</strong></p>
+			<p><p><a href="/publications/submit">Upload a new publication </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import an existing one from ORCID</a> right now!</p></p>
+		</div>
+	</div><!-- / .introduction -->
 <?php } ?>
 
 <!-- Modal displays for ORCID publications -->
