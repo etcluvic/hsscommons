@@ -214,7 +214,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"status" => array(0,1,3,4,5,6),
 			"author" => $uid
 		));
-
+		Log::debug($view->pubstats);
 		// Output HTML
 		$view->option    = $this->_option;
 		$view->database  = $this->_database;
@@ -249,7 +249,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		// Construct a list of publication ids in this repo
 		$pubIds = [];
 		foreach($view->pubstats as $stat) {
-			$pubIds[] = $stat->publication_id;
+			$pubIds[] = $stat->id;
 		}
 
 		// Get the putcodes of all ORCID imported publications into this repo
