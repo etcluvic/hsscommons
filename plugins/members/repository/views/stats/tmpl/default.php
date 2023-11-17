@@ -121,7 +121,7 @@ function getStatus($status = null)
 		</div>
 		<div class="introduction-questions">
 			<p><strong>What is a repository?</strong></p>
-			<p>A repository contains all publications that you're an author of. It is a place to manage your publications, view the necessary information and make import decisions.</p>
+			<p>A repository contains all publications that you're an author of. It is a place to manage your publications, view the necessary information and make important decisions.</p>
 
 			<p><strong>How do I get started?</strong></p>
 			<p><p><a href="/publications/submit">Upload a new publication </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import an existing one from ORCID</a> right now!</p></p>
