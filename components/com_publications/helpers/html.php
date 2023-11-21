@@ -595,7 +595,7 @@ class Html
 						: 'index.php?option=com_projects&alias='
 						. $publication->project()->get('alias') . '&active=publications';
 
-				$msg .= ' <a href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
+				$msg .= ' <a class="manage-text" href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
 			}
 		}
 

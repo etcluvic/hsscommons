@@ -1739,3 +1739,7 @@
 		content: "\f06e";
 		margin-right: 10px;
 	}
+	.statusmsg .manage-text {
+		text-transform: uppercase;
+		font-weight: 700;
+	}
