@@ -47,9 +47,9 @@ HUB.Members.Repository = {
 			'overlayShow'	:	false
 		});
 
-        // Select/deselect publications for importation on the modal
+        // Select/deselect an individual publication for importation on the modal
         let selectedPutCodes = [];
-        $('.pub-modal .pub-modal-item').on("click", function() {
+        $('.pub-modal .pub-modal-item').on("click", function(e) {
             const dataPutCode = $(this).data('putcode');
             if ($(this).hasClass('selected')) {
                 selectedPutCodes = selectedPutCodes.filter(putCode => putCode != dataPutCode);
@@ -57,7 +57,9 @@ HUB.Members.Repository = {
                 selectedPutCodes.push(dataPutCode);
             }
             $(this).toggleClass('selected');
-            $(this).find('.pub-modal-item-selected-text').toggleClass('hidden');
+            if (!$(e.target).is('.selected-checkbox')) {
+                $(this).find('.selected-checkbox').prop('checked', (i, value) => !value);
+            }
             $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','));
             
             // Enable/disable import button depeding on if there is any selected publication

@@ -152,12 +152,18 @@ function getStatus($status = null)
 				foreach($this->orcidWorks as $work) {
 				?>
 					<div class='<?php echo "pub-modal-item" . (in_array($work->putCode, $this->orcidImportedPutCodes) ? " prev-imported" : "") . " orcid-pub-" . (floor($count / 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
-						<strong class="pub-modal-item-selected-text hidden">Selected for importation</strong>
-						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) {
-							echo "<div>" . $work->title . " | " . $work->type . " <strong>(Previously imported)</strong></div>";
-						} else {
-							echo "<div>" . $work->title . " | " . $work->type . "</div>";
-						} ?>
+						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) { ?>
+							<div>
+								<input type="checkbox" class="selected-checkbox">
+								<?php echo $work->title ?> | <?php echo $work->type ?>
+								<strong>(Previously imported)</strong>
+							</div>
+						<?php } else { ?>
+							<div>
+								<input type="checkbox" class="selected-checkbox">
+								<?php echo $work->title ?> | <?php $work->type ?>
+							</div>
+						<?php } ?>
 					</div>
 				<?php $count++; } ?>
 				<div class="pub-modal-paginator" data-total-pages="<?php echo (floor(($this->totalOrcidWorks - 1) / 5) + 1); ?>">
