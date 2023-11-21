@@ -2554,7 +2554,7 @@ class Publications extends SiteController
 				// $version->abstract 			= $work->abstract;
 				$version->description		= $work->description;
 				$version->doi				= $work->doi;
-				$version->release_notes		= $work->citation;
+				$version->release_notes		= $work->journalTitle . "<br>" . $work->citation;
 				
 				// This publication has been published previously
 				$version->forked_from		= $vid;

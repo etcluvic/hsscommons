@@ -373,6 +373,7 @@ class OrcidHandler extends Orcid\Oauth
         $publicationDate = "publication-date";
         $putCode = "put-code";
         $shortDescription = "short-description";
+        $journalTitle = "journal-title";
         $citationValue = "citation-value";
         $externalIds = "external-ids";
         $externalId = "external-id";
@@ -402,6 +403,7 @@ class OrcidHandler extends Orcid\Oauth
             $work->type = isset($workData->type) ? ucfirst(str_replace('_', ' ', strtolower($workData->type))) : "";
             // $work->abstract = isset($workData->title->subtitle) ? $workData->title->subtitle->value : "";
             $work->description = isset($workData->$shortDescription) ? $workData->$shortDescription : "";
+            $work->journalTitle = isset($workData->$journalTitle) ? $workData->$journalTitle->value : "";
             $work->citation = isset($workData->citation->$citationValue) ? $workData->citation->$citationValue : "";
             
             // Set DOI
