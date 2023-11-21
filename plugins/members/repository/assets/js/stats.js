@@ -78,7 +78,7 @@ HUB.Members.Repository = {
                 const dataPutCode = $(this).data('putcode');
                 selectedPutCodes.push(dataPutCode);
                 $(this).addClass('selected');
-                $(this).find('.pub-modal-item-selected-text').removeClass('hidden');
+                $(this).find('.selected-checkbox').prop('checked', (i, value) => !value);
             })
             $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val(selectedPutCodes.join(','));
             $('#orcid-pub-modal-submit-btn').removeClass('disabled');
@@ -90,7 +90,7 @@ HUB.Members.Repository = {
             selectedPutCodes = [];
             $('.pub-modal .pub-modal-item').each(function() {
                 $(this).removeClass('selected');
-                $(this).find('.pub-modal-item-selected-text').addClass('hidden');
+                $(this).find('.selected-checkbox').prop('checked', (i, value) => !value);
             })
             $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val('');
             $('#orcid-pub-modal-submit-btn').addClass('disabled');
