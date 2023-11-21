@@ -2017,7 +2017,7 @@
 .pub-modal {
 	max-width: 700px;
 	min-width: 300px;
-	max-height: 80vh;
+	height: fit-content;
 	padding: 30px;
 }
 
@@ -2049,6 +2049,7 @@
 	width: fit-content;
 } */
 
+/* Control bar */
 .pub-modal .control-bar {
 	display: flex;
 	flex-direction: row;
@@ -2058,4 +2059,34 @@
 
 .pub-modal .all-btn {
 	width: fit-content;
+}
+
+/* Paginator */
+.pub-modal-paginator {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 8px;
+	margin-top: auto;
+	color: rgb(71 85 105);
+}
+
+.pub-modal-paginator .page-navigator {
+	font-size: 120%;
+	cursor: default;
+}
+
+.pub-modal-paginator .page-navigator:hover {
+	font-weight: 800;
+	color: #000;
+}
+
+.pub-modal-paginator .page-navigator.disabled,
+.pub-modal-paginator .page-navigator.disabled:hover {
+	font-weight: 400;
+	color: rgb(148 163 184) !important;
+}
+
+.pub-modal-paginator .page-text {
+	font-size: 80%;
 }

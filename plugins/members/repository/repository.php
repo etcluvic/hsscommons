@@ -246,6 +246,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			}
 		}
 		$view->orcidWorks = $orcidWorks;
+		$view->totalOrcidWorks = count($orcidWorks);
 
 		// Construct a list of publication ids in this repo
 		$pubIds = [];

@@ -34,6 +34,10 @@ HUB.Members.Repository = {
     // ORCID publications modal functionalities
     orcidPublicationsModal: function()
     {
+        // Only show the first 5 publications initially
+        $('.pub-modal-item').hide();
+        $('.orcid-pub-1').show();
+
         // Show ORCID publications modal
         $('a#show-orcid-pub-btn').fancybox({
 			'transitionIn'	:	'elastic',
@@ -88,6 +92,72 @@ HUB.Members.Repository = {
             })
             $(this).closest('form.pub-modal-item-container').find('input.selected-putcodes-input').val('');
             $('#orcid-pub-modal-submit-btn').addClass('disabled');
+        })
+
+        // Show publications on a page when clicking on a page number on the paginator
+        // $('.pub-modal-paginator-item').on("click", function() {
+        //     if (!$(this).hasClass('selected')) {
+        //         const pageNum = $(this).data('item');
+            
+        //         // Show the publications
+        //         $('.pub-modal-item').hide();
+        //         $('.orcid-pub-' + pageNum).show();
+
+        //         // Display the selected page number differently
+        //         $('.pub-modal-paginator-item.selected').removeClass('selected');
+        //         $(this).addClass('selected');
+        //     }
+        // })
+
+        // Navigate through pages when clicking on the page navigation arrows
+        $('.pub-modal-paginator .page-navigator').on('click', function() {
+            // Doesn't do anything if the button is disabled
+            if ($(this).hasClass('disabled')) {
+                return;
+            }
+            
+            const paginator = $(this).closest('.pub-modal-paginator');
+            const totalPages = paginator.data('total-pages');
+            const currentPage = parseInt(paginator.find('#current-page').text());
+            let nextPage = 0;
+
+            // Move to the next page
+            if ($(this).hasClass('next')) {
+                nextPage = currentPage + 1;
+                paginator.find('#current-page').text(nextPage);
+                
+                // Disable next button if reach the last page
+                if (nextPage === parseInt(totalPages)) {
+                    $(this).addClass('disabled');
+                }
+
+                // Enable the previous button if it is disabled
+                const prevBtn = paginator.find('.previous');
+                if (prevBtn.hasClass('disabled')) {
+                    prevBtn.removeClass('disabled');
+                }
+            }
+
+            // Move to the previous page
+            if ($(this).hasClass('previous')) {
+                nextPage = currentPage - 1;
+                paginator.find('#current-page').text(nextPage);
+                
+                // Disable previous button if reach the first page
+                if (nextPage === 1) {
+                    $(this).addClass('disabled');
+                }
+
+                // Enable the next button if it is disabled
+                const nextBtn = paginator.find('.next');
+                if (nextBtn.hasClass('disabled')) {
+                    nextBtn.removeClass('disabled');
+                }
+            }
+
+            // Show the publications
+            $('.pub-modal-item').hide();
+            $('.orcid-pub-' + nextPage).show();
         })
     }
 }
