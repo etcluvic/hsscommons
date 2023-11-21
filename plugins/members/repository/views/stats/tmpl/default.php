@@ -151,7 +151,7 @@ function getStatus($status = null)
 				$count = 0;
 				foreach($this->orcidWorks as $work) {
 				?>
-					<div class='<?php echo "pub-modal-item orcid-pub-" . (floor($count / 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
+					<div class='<?php echo "pub-modal-item" . (in_array($work->putCode, $this->orcidImportedPutCodes) ? " prev-imported" : "") . " orcid-pub-" . (floor($count / 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
 						<strong class="pub-modal-item-selected-text hidden">Selected for importation</strong>
 						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) {
 							echo "<div>" . $work->title . " | " . $work->type . " <strong>(Previously imported)</strong></div>";

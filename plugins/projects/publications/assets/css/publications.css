@@ -2042,6 +2042,15 @@
 	background-color: rgb(226 232 240);
 }
 
+.pub-modal .pub-modal-item.prev-imported {
+	background-color: rgb(254 202 202) !important;
+}
+
+.pub-modal .pub-modal-item.prev-imported:hover,
+.pub-modal .pub-modal-item.prev-imported.selected {
+	background-color: rgb(248 113 113) !important;
+}
+
 /* .pub-modal label {
 	display: flex;
 	flex-direction: row;
