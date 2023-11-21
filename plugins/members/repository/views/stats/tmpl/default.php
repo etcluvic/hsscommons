@@ -151,7 +151,7 @@ function getStatus($status = null)
 				$count = 0;
 				foreach($this->orcidWorks as $work) {
 				?>
-					<div class='<?php echo "pub-modal-item orcid-pub-" . (intdiv($count, 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
+					<div class='<?php echo "pub-modal-item orcid-pub-" . (floor($count / 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
 						<strong class="pub-modal-item-selected-text hidden">Selected for importation</strong>
 						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) {
 							echo "<div>" . $work->title . " | " . $work->type . " <strong>(Previously imported)</strong></div>";
@@ -160,9 +160,9 @@ function getStatus($status = null)
 						} ?>
 					</div>
 				<?php $count++; } ?>
-				<div class="pub-modal-paginator" data-total-pages="<?php echo (intdiv($this->totalOrcidWorks - 1, 5) + 1); ?>">
+				<div class="pub-modal-paginator" data-total-pages="<?php echo (floor(($this->totalOrcidWorks - 1) / 5) + 1); ?>">
 					<div class="page-navigator previous disabled">&#60;</div>
-					<div class="page-text">Page <span id="current-page">1</span> of <?php echo (intdiv($this->totalOrcidWorks - 1, 5) + 1); ?></div>
+					<div class="page-text">Page <span id="current-page">1</span> of <?php echo (floor(($this->totalOrcidWorks - 1) / 5) + 1); ?></div>
 					<div class="page-navigator next">&#62;</div>
 				</div>
 				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
