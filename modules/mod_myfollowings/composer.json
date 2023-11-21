@@ -1,0 +1,6 @@
+{  
+  "name": "myorg/mod_myfollowings",  
+  "description": "My followings module",  
+  "license": "MIT",  
+  "type": "custom-module"  
+}  

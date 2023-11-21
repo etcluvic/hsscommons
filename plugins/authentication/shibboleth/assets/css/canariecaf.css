@@ -1,0 +1,18 @@
+/**
+ * Created by CANARIE Inc. for the HSSCommons project.
+ *
+ */
+ 
+.canariecaf-color, .auth .shibboleth.account {
+        background: #EC7F3F !important; 
+}
+.auth .canariecaf.account:before {
+	content: "";
+	width: 30px;
+	height: 31px;
+	display: inline-block;
+	background: url('../img/canarie.png') no-repeat center transparent;
+	margin-top: 8px;
+	margin-right: 2px;
+	border-radius: 3px;
+}
