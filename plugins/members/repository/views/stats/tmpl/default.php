@@ -161,7 +161,7 @@ function getStatus($status = null)
 						<?php } else { ?>
 							<div>
 								<input type="checkbox" class="selected-checkbox">
-								<?php echo $work->title ?> | <?php $work->type ?>
+								<?php echo $work->title ?> | <?php echo $work->type ?>
 							</div>
 						<?php } ?>
 					</div>
