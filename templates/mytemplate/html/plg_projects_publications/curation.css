@@ -1271,4 +1271,10 @@
 /* Fix file icon size when users editing content for publications */
 #abox-content .content-selector .file-selector img {
 	width: 50px;
-} 
+}
+
+/* Additional */
+.btn:active,
+.btn:focus {
+	color: #000 !important;
+}
