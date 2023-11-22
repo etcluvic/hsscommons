@@ -75,21 +75,10 @@ class plgWhatsnewKb extends \Hubzero\Plugin\Plugin
 			LEFT JOIN `#__categories` AS c
 				ON c.id = f.category
 			WHERE f.state=1
-				AND c.published = 1";
-		
-		Log::debug('Start date: ' . $period->cStartDate);
-		Log::debug('End date: ' . $period->cEndDate);
-		if ($period->cStartDate) {
-			$f_from .= " AND f.created > " . $database->quote($period->cStartDate);
-		}
-
-		if ($period->cEndDate) {
-			$f_from .= " AND f.created < " . $database->quote($period->cEndDate);
-		}
-				// AND f.created > " . $database->quote($period->cStartDat) . "
-				// AND f.created < " . $database->quote($period->cEndDate) . "
-		$f_from .= " AND f.access IN (" . implode(',', User::getAuthorisedViewLevels()) . ")";
-		Log::debug($f_from);
+				AND c.published = 1
+				AND f.created > " . $database->quote($period->cStartDate) . "
+				AND f.created < " . $database->quote($period->cEndDate) . "
+				AND f.access IN (" . implode(',', User::getAuthorisedViewLevels()) . ")";
 
 		$order_by  = " ORDER BY f.created DESC, f.title";
 		$order_by .= ($limit != 'all') ? " LIMIT $limitstart,$limit" : "";
