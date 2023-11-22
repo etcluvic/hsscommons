@@ -193,6 +193,7 @@ $requestReview = isset($this->pub->_curationModel->_manifest->params->request_re
 					<?php } ?>
 
 					<?php if ($requireDoi == 2 && !$this->pub->doi) { 	// Choice of publish/post  ?>
+						<span class="required"><?php echo Lang::txt('Required'); ?></span>
 						<h6><?php echo Lang::txt('PLG_PROJECTS_PUBLICATIONS_PUB_REVIEW_POST_OR_PUBLISH'); ?></h6>
 						<label>
 							<input class="option" name="action" type="radio" value="publish" <?php if ($this->pub->version->doi) { ?>disabled<?php } ?> />
