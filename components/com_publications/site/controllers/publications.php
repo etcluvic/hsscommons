@@ -2568,7 +2568,7 @@ class Publications extends SiteController
 					->execute();
 			}
 		}
-		App::redirect($redirectUrl, 'Import ORCID publications successfully', 'success');
+		App::redirect($redirectUrl, 'Imported ORCID publications successfully', 'success');
 	}
 
 	/**
