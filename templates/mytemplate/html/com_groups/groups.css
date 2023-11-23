@@ -154,7 +154,7 @@
 		color: #e1e1e1;
 	}
 	.groups-container .group-alias {
-		color: #aaa;
+		color: #555555;
 		display: block;
 		font-size: 85%;
 	}
@@ -193,7 +193,7 @@
 	.group-meta {
 		background-color: rgba(0, 0, 0, 0.02);
 		padding: 1em;
-		color: #aaa;
+		color: #555555;
 		text-align: center;
 		font-size: 85%;
 		min-height: 6em;
