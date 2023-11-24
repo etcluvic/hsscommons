@@ -75,12 +75,13 @@ $first = $this->archive->entries(array(
 				<a href="<?php echo 'http://twitter.com/intent/tweet?text=' . urlencode(Lang::txt('COM_BLOG_SHARE_VIEWING', stripslashes($title))) . '&url=' . $url; ?>" target="_blank">
 					<span class="share_twitter"></span>
 				</a>
+				<!-- Temporarily disabled as these two don't work -->
 				<!-- <a href="<?php echo 'https://plus.google.com/share?url=' . $url; ?>" target="_blank">
 					<span class="share_google"></span>
 				</a> -->
-				<a href="<?php echo 'https://www.linkedin.com/shareArticle?mini=true&url=' . $url . '&title=' . $title . '&summary=' . $description; ?>" target="_blank">
+				<!-- <a href="<?php echo 'https://www.linkedin.com/shareArticle?mini=true&url=' . $url . '&title=' . $title . '&summary=' . $description; ?>" target="_blank">
 					<span class="share_linkedin"></span>
-				</a>
+				</a> -->
 			</div>
 
 		
