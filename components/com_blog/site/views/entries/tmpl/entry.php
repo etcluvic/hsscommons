@@ -56,6 +56,34 @@ $first = $this->archive->entries(array(
 <section class="main section">
 	<div class="section-inner hz-layout-with-aside">
 		<div class="subject">
+
+		<!-- Share blog with social media -->
+		<?php 
+			$url = Request::current();
+			$title = $this->escape(stripslashes($this->row->get('title')));
+			$description = strip_tags(stripslashes($this->row->get('content')));
+			if (strlen($description) > 200) {
+				$description = substr($description, 0, 200) . '...';
+			}
+			$description = urlencode($description);
+		?>
+			<div class="share" style="padding-top: 10px; padding-bottom: 10px;">
+				Share: 
+				<a href="<?php echo 'https://www.facebook.com/sharer/sharer.php?u=' . $url . '&t=' . $title; ?>" target="_blank">
+					<span class="share_facebook"></span>
+				</a>
+				<a href="<?php echo 'http://twitter.com/intent/tweet?text=' . urlencode(Lang::txt('COM_BLOG_SHARE_VIEWING', stripslashes($title))) . '&url=' . $url; ?>" target="_blank">
+					<span class="share_twitter"></span>
+				</a>
+				<!-- <a href="<?php echo 'https://plus.google.com/share?url=' . $url; ?>" target="_blank">
+					<span class="share_google"></span>
+				</a> -->
+				<a href="<?php echo 'https://www.linkedin.com/shareArticle?mini=true&url=' . $url . '&title=' . $title . '&summary=' . $description; ?>" target="_blank">
+					<span class="share_linkedin"></span>
+				</a>
+			</div>
+
+		
 		<?php if ($this->getError()) { ?>
 			<p class="error"><?php echo $this->getError(); ?></p>
 		<?php } ?>
