@@ -229,6 +229,9 @@
 	transform: translate(-50%, -50%);
 	font-family: 'Fontcons';
 }
+.module-links .remove.confirm:before {
+	left: 20% !important;
+}
 .module-links .remove.confirm,
 .module-links .remove.confirm:hover {
 	color: #FFF;
