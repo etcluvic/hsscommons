@@ -53,7 +53,7 @@ $this->css()
 
 			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_FILES'); ?>
-				<input type="file" name="files[]" accept="image/png, image/jpeg, .pdf" multiple/>
+				<input type="file" name="files[]" accept="image/png, image/jpeg, .pdf, .jpg" multiple/>
 			</label>
 
 			<label>

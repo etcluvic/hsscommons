@@ -2084,7 +2084,7 @@ class Events extends SiteController
 		// Handle event files upload
 		$files = $_FILES['files'];
 		if ($files && count($files) > 0) {
-			$this->_uploadFiles($event_id = $row->id);
+			$this->_uploadFiles($event_id=$row->id);
 		}
 
 		if (!$row->check())
@@ -2329,20 +2329,20 @@ class Events extends SiteController
 
 		// Get the file upload
 		$files = $_FILES['files'];
-		Log::debug($_FILES);
 		Log::debug($files);
 
-		// // Loop through the files
-		// foreach ($files['name'] as $i => $name)
-		// {
-		// 	// Skip if no file
-		// 	if (!$name)
-		// 	{
-		// 		continue;
-		// 	}
+		// Loop through the files
+		foreach ($files['name'] as $i => $name)
+		{
+			// Skip if no file
+			if (!$name)
+			{
+				continue;
+			}
 
-		// 	// Get the file extension
-		// 	$ext = strtolower(Filesystem::extension($name));
+			// Get the file extension
+			$ext = strtolower(Filesystem::extension($name));
+			Log::debug($ext);
 
 		// 	// Check for allowed file extensions
 		// 	if (!in_array($ext, array('jpg', 'jpeg', 'gif', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf', 'zip', 'tar', 'gz', 'tgz', 'bz2', '7z')))
@@ -2375,5 +2375,6 @@ class Events extends SiteController
 
 		// 	// Get the file path
 		// 	$path = PATH_APP . DS . trim($this->config->getCfg('uploadpath'), DS) .
+		}
 	}
 }
