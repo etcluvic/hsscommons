@@ -113,7 +113,7 @@ $this->css()
 					$html .= '   <td class="event-files-cal">'."\n";
 					foreach ($files as $file)
 					{
-						$html .= '<a href="' . Route::url('index.php?option=' . $this->option . '&task=serveFile?id=' . $this->row->id . '&file_id=' . $file->id) . '" style="white-space: nowrap;">' . $file->title . '</a>';
+						$html .= '<a href="' . Route::url('index.php?option=' . $this->option . '&task=serveFile') . '?id=' . $this->row->id . '&file_id=' . $file->id . '" style="white-space: nowrap;">' . $file->title . '</a>';
 					}
 					
 					$html .= '   </td>'."\n";

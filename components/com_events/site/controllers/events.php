@@ -2433,7 +2433,6 @@ class Events extends SiteController
 
 		// Get the file id
 		$file_id = Request::getInt('file_id', 0, 'get');
-		Log::debug('Event id: ' . $event_id . ' File id: ' . $file_id . '');
 
 		if (!$event_id)
 		{
@@ -2460,7 +2459,7 @@ class Events extends SiteController
 		}
 		$file = $files[0];
 
-		$server = new Hubzero\Content\Server;
+		$server = new \Hubzero\Content\Server;
 		$server->filename($file->pagetext);
 		$server->disposition('attachment');
 		$server->saveas($file->title);
