@@ -2319,7 +2319,6 @@ class Events extends SiteController
 		// Load event object
 		$event = new Event($this->database);
 		$event->load($event_id);
-		Log::debug(get_object_vars($event));
 
 		// Are they authorized to edit this event? Do they own it? Own it!
 		if (!$this->_authorize($event->created_by)
@@ -2330,6 +2329,7 @@ class Events extends SiteController
 
 		// Get the file upload
 		$files = $_FILES['files'];
+		Log::debug($_FILES);
 		Log::debug($files);
 
 		// // Loop through the files
