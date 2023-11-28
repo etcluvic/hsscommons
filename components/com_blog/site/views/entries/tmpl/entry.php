@@ -82,6 +82,9 @@ $first = $this->archive->entries(array(
 				<!-- <a href="<?php echo 'https://www.linkedin.com/shareArticle?mini=true&url=' . $url . '&title=' . $title . '&summary=' . $description; ?>" target="_blank">
 					<span class="share_linkedin"></span>
 				</a> -->
+				<a href="<?php echo 'mailto:?subject=' . $title .'&body=' . $url; ?>" target="_blank">
+					<span class="share_email"></span>
+				</a>
 			</div>
 
 		

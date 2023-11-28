@@ -401,13 +401,19 @@
 .share_google:before          { content: "\f014"; color: black }
 .share_linkedin:before        { content: "\f016"; color: #2875b7; }
 .share_pinterest:before       { content: "\f01a"; color: #ba1325; }
+.share_email:before { 
+	content: "\2709"; 
+	color: #ba1325;
+	font-size: 175%;
+	margin-left: 2px;
+ }
 /* .share_delicious,
 .share_delicious {
 	background: url("../img/delicious.gif") 0 -18px no-repeat;
 }
 .share_reddit {
 	background: url("../img/reddit.gif") 0 -18px no-repeat;
-}
-.share_email {
-	background: url("../img/email.gif") 0 -18px no-repeat;
+} */
+/* .share_email {
+	background: url("./email.gif") 0 -18px no-repeat;
 } */
