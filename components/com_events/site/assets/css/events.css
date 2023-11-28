@@ -321,3 +321,21 @@
 		border-color: #999;
 		border-bottom: 1px solid #fff;
 	}
+/* Files */
+	#event-files-container {
+		margin-top: 10px;
+	}
+	.event-file {
+		border-top: 1px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.event-files-cal {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		column-gap: 20px;
+	}

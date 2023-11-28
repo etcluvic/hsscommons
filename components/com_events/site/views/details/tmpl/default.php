@@ -98,9 +98,32 @@ $this->css()
 				$html .= '   <th scope="row">'.Lang::txt('EVENTS_CAL_LANG_EVENT_DESCRIPTION').':</th>'."\n";
 				$html .= '   <td>'. html_entity_decode($this->row->content) .'</td>'."\n";
 				$html .= '  </tr>'."\n";
+
+				// Display files
+				$query = new \Hubzero\Database\Query;
+				$files = $query->select('id, title')
+								->from('#__events_pages')
+								->whereEquals('event_id', $this->row->id)
+								->whereEquals('alias', 'event_' . $this->row->id . '_file')
+								->fetch();
+				
+				if (count($files) > 0) {
+					$html .= '  <tr>'."\n";
+					$html .= '   <th scope="row">'.Lang::txt('EVENTS_CAL_LANG_EVENT_FILES').':</th>'."\n";
+					$html .= '   <td class="event-files-cal">'."\n";
+					foreach ($files as $file)
+					{
+						$html .= '<a href="#" style="white-space: nowrap;">' . $file->title . '</a>';
+					}
+					
+					$html .= '   </td>'."\n";
+					$html .= '  </tr>'."\n";
+				}
+
 				$html .= '  <tr>'."\n";
 				$html .= '   <th scope="row">'.Lang::txt('EVENTS_CAL_LANG_EVENT_WHEN').':</th>'."\n";
 				$html .= '   <td>'."\n";
+				
 
 				$ts = explode(':', $this->row->start_time);
 				if (intval($ts[0]) > 12) {

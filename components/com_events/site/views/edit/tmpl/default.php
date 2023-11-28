@@ -54,6 +54,11 @@ $this->css()
 			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_FILES'); ?>
 				<input type="file" name="files[]" accept="image/png, image/jpeg, .pdf, .jpg" multiple/>
+				<div id="event-files-container">
+				<?php foreach ($this->files as $file) {
+					echo '<p class="event-file"><a href="#">' . $file->title . '</a></p>';
+				} ?>
+				</div>
 			</label>
 
 			<label>

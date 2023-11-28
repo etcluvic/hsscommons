@@ -1692,6 +1692,14 @@ class Events extends SiteController
 			$lists['tags'] = $this->tags;
 		}
 
+		// Get files of this event
+		$query = new \Hubzero\Database\Query;
+		$files = $query->select('id, title')
+						->from('#__events_pages')
+						->whereEquals('event_id', $row->id)
+						->whereEquals('alias', 'event_' . $row->id . '_file')
+						->fetch();
+
 		// Set the title
 		Document::setTitle(Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt(strtoupper($this->_name) . '_' . strtoupper($this->_task)));
 
@@ -1732,6 +1740,7 @@ class Events extends SiteController
 		$this->view->lists = $lists;
 		$this->view->gid = $this->gid;
 		$this->view->admin = $this->_authorize();
+		$this->view->files = $files;
 		if ($this->getError())
 		{
 			$this->view->setError($this->getError());
@@ -1837,7 +1846,7 @@ class Events extends SiteController
 
 		// good ol' form validation
 		Request::checkToken();
-		Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
+		// Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
 
 		$offset = $this->offset;
 
@@ -2391,11 +2400,15 @@ class Events extends SiteController
 			}
 
 			// Upload the file
-			// if (!move_uploaded_file($tmp_name, $target_path))
-			// {
-			// 	$this->setError(Lang::txt('File upload error - could not move file to destination'));
-			// 	return false;
-			// }
+			if (!move_uploaded_file($tmp_name, $target_path))
+			{
+				$this->setError(Lang::txt('File upload error - could not move file to destination'));
+				return false;
+			}
+
+			// Save file info into the database
+			$query = new \Hubzero\Database\Query;
+			$query->push('#__events_pages', ['event_id' => $event_id, 'title' => $name, 'pagetext' => $target_path, 'created_by' => User::get('id'), 'alias' => 'event_' . $event_id . '_file']);
 		}
 	}
 }
