@@ -50,6 +50,7 @@ class Events extends SiteController
 		$this->yearFormat  = "Y";
 		$this->monthFormat = "m";
 		$this->dayFormat   = "d";
+		$this->filesRoot   = PATH_APP . DS . 'site' . DS . 'events';
 
 		$this->_setup();
 
@@ -2081,9 +2082,11 @@ class Events extends SiteController
 		$row->scope = 'event';
 
 		// Handle event files upload
-		Log::debug($_FILES);
-		// $files = $_FILES['files'];
-		// Log::debug($files);
+		Log::debug(get_object_vars($row));
+		$files = $_FILES['files'];
+		if ($files && count($files) > 0) {
+			$this->_uploadFiles();
+		}
 
 		if (!$row->check())
 		{
@@ -2299,5 +2302,81 @@ class Events extends SiteController
 		}
 
 		return false;
+	}
+
+	/**
+	 * Handle files upload for events
+	 *
+	 * @return  bool
+	 */
+	private function _uploadFiles()
+	{
+		// Incoming
+		$id = Request::getInt('id', 0, 'post');
+
+		// Ensure we have an ID to work with
+		if (!$id)
+		{
+			return false;
+		}
+
+		// Load event object
+		$event = new Event($this->database);
+		$event->load($id);
+
+		// Are they authorized to edit this event? Do they own it? Own it!
+		if (!$this->_authorize($event->created_by)
+			&& !(User::get('id') == $event->created_by))
+		{
+			return false;
+		}
+
+		// Get the file upload
+		$files = $_FILES['files'];
+		Log::debug($files);
+
+		// // Loop through the files
+		// foreach ($files['name'] as $i => $name)
+		// {
+		// 	// Skip if no file
+		// 	if (!$name)
+		// 	{
+		// 		continue;
+		// 	}
+
+		// 	// Get the file extension
+		// 	$ext = strtolower(Filesystem::extension($name));
+
+		// 	// Check for allowed file extensions
+		// 	if (!in_array($ext, array('jpg', 'jpeg', 'gif', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf', 'zip', 'tar', 'gz', 'tgz', 'bz2', '7z')))
+		// 	{
+		// 		$this->setError(Lang::txt('Invalid file type'));
+		// 		return false;
+		// 	}
+
+		// 	// Get the file size
+		// 	$size = $files['size'][$i];
+
+		// 	// Check for allowed file size
+		// 	if ($size > 5242880)
+		// 	{
+		// 		$this->setError(Lang::txt('File too large'));
+		// 		return false;
+		// 	}
+
+		// 	// Get the file name
+		// 	$name = $files['name'][$i];
+
+		// 	// Get the file tmp name
+		// 	$tmp_name = $files['tmp_name'][$i];
+
+		// 	// Get the file type
+		// 	$type = $files['type'][$i];
+
+		// 	// Get the file error
+		// 	$error = $files['error'][$i];
+
+		// 	// Get the file path
+		// 	$path = PATH_APP . DS . trim($this->config->getCfg('uploadpath'), DS) .
 	}
 }
