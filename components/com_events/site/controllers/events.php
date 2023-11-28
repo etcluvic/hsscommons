@@ -2380,7 +2380,7 @@ class Events extends SiteController
 			}
 
 			// Get the file path
-			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . basename($name);
+			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . DS . $name;
 			Log::debug('Uploading file ' . $tmp_name . ' to ' . $target_path);
 
 			// Check if file already exists
