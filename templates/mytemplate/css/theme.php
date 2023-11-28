@@ -365,7 +365,7 @@ $styles .= '
 	a,
 	a:active,
 	a:visited {
-		color: #3F5C87;
+		color: #2677B5;
 	}
 	a.btn,
 	a.btn:active,
