@@ -417,3 +417,17 @@
 /* .share_email {
 	background: url("./email.gif") 0 -18px no-repeat;
 } */
+#copy-url-btn {
+	border: 1px solid rgb(203 213 225);
+	padding: 5px;
+	margin-left: 3px;
+	border-radius: 5px;
+	font-weight: 300;
+	font-size: 50%;
+	cursor: default;
+	transition-duration: 0.25s;
+}
+
+#copy-url-btn:hover {
+	background-color: rgb(203 213 225);
+}

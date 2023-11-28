@@ -85,6 +85,7 @@ $first = $this->archive->entries(array(
 				<a href="<?php echo 'mailto:?subject=' . $title .'&body=' . $url; ?>" target="_blank">
 					<span class="share_email"></span>
 				</a>
+				<span id="copy-url-btn">Copy URL</span>
 			</div>
 
 		
