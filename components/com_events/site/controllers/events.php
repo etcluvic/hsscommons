@@ -2388,6 +2388,17 @@ class Events extends SiteController
 				return false;
 			}
 
+			// Create the target directory if it doesn't exist
+			$target_dir = $this->filesRoot . DS . $event_id . DS . 'uploads';
+			if (!is_dir($target_dir))
+			{
+				if (!Filesystem::makeDirectory($target_dir))
+				{
+					$this->setError(Lang::txt('Could not create directory'));
+					return false;
+				}
+			}
+
 			// Get the file path
 			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . DS . $name;
 			Log::debug('Uploading file ' . $tmp_name . ' to ' . $target_path);
