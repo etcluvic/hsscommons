@@ -2080,6 +2080,10 @@ class Events extends SiteController
 		//set the scope to be regular events
 		$row->scope = 'event';
 
+		// Handle event files upload
+		$files = Request::getArray('files', array(), 'files');
+		Log::debug($files);
+
 		if (!$row->check())
 		{
 			// Set the error message

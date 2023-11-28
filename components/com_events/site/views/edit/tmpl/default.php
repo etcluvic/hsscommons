@@ -52,6 +52,11 @@ $this->css()
 			</label>
 
 			<label>
+				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_FILES'); ?>
+				<input type="file" name="files" accept="image/png, image/jpeg, pdf" multiple/>
+			</label>
+
+			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_ADRESSE'); ?>
 				<input type="text" name="adresse_info" maxlength="120" value="<?php echo $this->escape(stripslashes($this->row->adresse_info)); ?>" />
 			</label>
