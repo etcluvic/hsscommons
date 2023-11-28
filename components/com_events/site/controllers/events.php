@@ -2313,6 +2313,7 @@ class Events extends SiteController
 	{
 		if (!$event_id)
 		{
+			$this->setError(Lang::txt('Missing event id'));
 			return false;
 		}
 
@@ -2324,6 +2325,7 @@ class Events extends SiteController
 		if (!$this->_authorize($event->created_by)
 			&& !(User::get('id') == $event->created_by))
 		{
+			$this->setError(Lang::txt('User not authorized to upload files for this event'));
 			return false;
 		}
 
@@ -2344,37 +2346,56 @@ class Events extends SiteController
 			$ext = strtolower(Filesystem::extension($name));
 			Log::debug($ext);
 
-		// 	// Check for allowed file extensions
-		// 	if (!in_array($ext, array('jpg', 'jpeg', 'gif', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf', 'zip', 'tar', 'gz', 'tgz', 'bz2', '7z')))
-		// 	{
-		// 		$this->setError(Lang::txt('Invalid file type'));
-		// 		return false;
-		// 	}
+			// Check for allowed file extensions
+			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
+			{
+				$this->setError(Lang::txt('Invalid file type'));
+				return false;
+			}
 
-		// 	// Get the file size
-		// 	$size = $files['size'][$i];
+			// Get the file size
+			$size = $files['size'][$i];
 
-		// 	// Check for allowed file size
-		// 	if ($size > 5242880)
-		// 	{
-		// 		$this->setError(Lang::txt('File too large'));
-		// 		return false;
-		// 	}
+			// Check for allowed file size
+			if ($size > 5242880)
+			{
+				$this->setError(Lang::txt('File too large'));
+				return false;
+			}
 
-		// 	// Get the file name
-		// 	$name = $files['name'][$i];
+			// Get the file name
+			$name = $files['name'][$i];
 
-		// 	// Get the file tmp name
-		// 	$tmp_name = $files['tmp_name'][$i];
+			// Get the file tmp name
+			$tmp_name = $files['tmp_name'][$i];
 
-		// 	// Get the file type
-		// 	$type = $files['type'][$i];
+			// Get the file type
+			$type = $files['type'][$i];
 
-		// 	// Get the file error
-		// 	$error = $files['error'][$i];
+			// Get the file error
+			$error = $files['error'][$i];
+			if ($error > 0) {
+				$this->setError(Lang::txt('File upload error'));
+				return false;
+			}
 
-		// 	// Get the file path
-		// 	$path = PATH_APP . DS . trim($this->config->getCfg('uploadpath'), DS) .
+			// Get the file path
+			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . basename($name);
+			Log::debug('Uploading file ' . $tmp_name . ' to ' . $target_path);
+
+			// Check if file already exists
+			if (file_exists($target_path))
+			{
+				$this->setError(Lang::txt('File already exists'));
+				return false;
+			}
+
+			// Upload the file
+			// if (!move_uploaded_file($tmp_name, $target_path))
+			// {
+			// 	$this->setError(Lang::txt('File upload error - could not move file to destination'));
+			// 	return false;
+			// }
 		}
 	}
 }
