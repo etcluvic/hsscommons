@@ -2081,8 +2081,9 @@ class Events extends SiteController
 		$row->scope = 'event';
 
 		// Handle event files upload
-		$files = $_FILES['files'];
-		Log::debug($files);
+		Log::debug($_FILES);
+		// $files = $_FILES['files'];
+		// Log::debug($files);
 
 		if (!$row->check())
 		{
