@@ -2082,10 +2082,9 @@ class Events extends SiteController
 		$row->scope = 'event';
 
 		// Handle event files upload
-		Log::debug(get_object_vars($row));
 		$files = $_FILES['files'];
 		if ($files && count($files) > 0) {
-			$this->_uploadFiles();
+			$this->_uploadFiles($event_id = $row->id);
 		}
 
 		if (!$row->check())
@@ -2306,23 +2305,21 @@ class Events extends SiteController
 
 	/**
 	 * Handle files upload for events
-	 *
+	 * @param  int $event_id
+	 * 
 	 * @return  bool
 	 */
-	private function _uploadFiles()
+	private function _uploadFiles($event_id=null)
 	{
-		// Incoming
-		$id = Request::getInt('id', 0, 'post');
-
-		// Ensure we have an ID to work with
-		if (!$id)
+		if (!$event_id)
 		{
 			return false;
 		}
 
 		// Load event object
 		$event = new Event($this->database);
-		$event->load($id);
+		$event->load($event_id);
+		Log::debug(get_object_vars($event));
 
 		// Are they authorized to edit this event? Do they own it? Own it!
 		if (!$this->_authorize($event->created_by)
