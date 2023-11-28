@@ -2340,7 +2340,6 @@ class Events extends SiteController
 
 		// Get the file upload
 		$files = $_FILES['files'];
-		Log::debug($files);
 
 		// Loop through the files
 		foreach ($files['name'] as $i => $name)
@@ -2353,7 +2352,6 @@ class Events extends SiteController
 
 			// Get the file extension
 			$ext = strtolower(Filesystem::extension($name));
-			Log::debug($ext);
 
 			// Check for allowed file extensions
 			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
@@ -2401,7 +2399,6 @@ class Events extends SiteController
 
 			// Get the file path
 			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . DS . $name;
-			Log::debug('Uploading file ' . $tmp_name . ' to ' . $target_path);
 
 			// Check if file already exists
 			if (file_exists($target_path))
@@ -2421,5 +2418,52 @@ class Events extends SiteController
 			$query = new \Hubzero\Database\Query;
 			$query->push('#__events_pages', ['event_id' => $event_id, 'title' => $name, 'pagetext' => $target_path, 'created_by' => User::get('id'), 'alias' => 'event_' . $event_id . '_file']);
 		}
+	}
+
+	/**
+	 * Serve a file for an event
+	 *
+	 * 
+	 * @return  void
+	 */
+	public function serveFileTask()
+	{
+		// Get the event id
+		$event_id = Request::getInt('id', 0, 'get');
+
+		// Get the file id
+		$file_id = Request::getInt('file_id', 0, 'get');
+		Log::debug('Event id: ' . $event_id . ' File id: ' . $file_id . '');
+
+		if (!$event_id)
+		{
+			$this->setError(Lang::txt('Missing event id'));
+			return false;
+		}
+
+		if (!$file_id)
+		{
+			$this->setError(Lang::txt('Missing file id'));
+			return false;
+		}
+
+		$query = new \Hubzero\Database\Query;
+		$files = $query->select('title, pagetext')
+						->from('#__events_pages')
+						->whereEquals('id', $file_id)
+						->whereEquals('event_id', $event_id)
+						->fetch();
+		if (count($files) == 0)
+		{
+			$this->setError(Lang::txt('File not found'));
+			return false;
+		}
+		$file = $files[0];
+
+		$server = new Hubzero\Content\Server;
+		$server->filename($file->pagetext);
+		$server->disposition('attachment');
+		$server->saveas($file->title);
+		$server->serve();
 	}
 }
