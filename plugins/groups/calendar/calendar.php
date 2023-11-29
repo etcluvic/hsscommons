@@ -1601,8 +1601,8 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $registrant->event_id . DS . 'respondents' . DS . $registrant->id . DS . 'uploads';
 						if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
 						{
-							Log::debug($files);
-							$output .= $this->escapeCsv($files[0]) . ',';
+							$fileUrl = Route::url('index.php?option=' . $this->option . '&cn=' . $this->group->get('cn') . '&active=calendar&action=serveRespondentFile&event_id=' . $registrant->event_id . '&respondent_id=' . $registrant->id);
+							$output .= $this->escapeCsv($fileUrl) . ',';
 						}
 						break;
 					default:
