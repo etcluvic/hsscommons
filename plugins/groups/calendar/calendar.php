@@ -1226,7 +1226,6 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 	 */
 	private function doRegister()
 	{
-		Log::debug('Call doRegister');
 		//get request vars
 		$register   = Request::getArray('register', null, 'post');
 		$arrival    = Request::getArray('arrival', null, 'post');
@@ -1544,7 +1543,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$registrants = $eventsRespondent->getRecords();
 
 		//var to hold output
-		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,Comments,Register Date' . "\n";
+		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Comments,Register Date' . "\n";
 
 		$fields = array(
 			'first_name',
@@ -1569,6 +1568,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			'dietary_needs',
 			'attending_dinner',
 			'abstract',
+			'file',
 			'comment',
 			'registered'
 		);
@@ -1596,6 +1596,14 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						break;
 					case 'registered':
 						$output .= $this->escapeCsv(Date::of($registrant->registered)->toLocal('Y-m-d H:i:s'));
+						break;
+					case 'file':
+						$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $registrant->event_id . DS . 'respondents' . DS . $registrant->id . DS . 'uploads';
+						if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
+						{
+							Log::debug($files);
+							$output .= $this->escapeCsv($files[0]) . ',';
+						}
 						break;
 					default:
 						$output .= $this->escapeCsv($registrant->$field) . ',';
