@@ -2090,12 +2090,6 @@ class Events extends SiteController
 		//set the scope to be regular events
 		$row->scope = 'event';
 
-		// Handle event files upload
-		$files = $_FILES['files'];
-		if ($files && count($files) > 0) {
-			$this->_uploadFiles($event_id=$row->id);
-		}
-
 		if (!$row->check())
 		{
 			// Set the error message
@@ -2117,6 +2111,12 @@ class Events extends SiteController
 			return;
 		}
 		$row->checkin();
+
+		// Handle event files upload
+		$files = $_FILES['files'];
+		if ($files && count($files) > 0) {
+			$this->_uploadFiles($event_id=$row->id);
+		}
 
 		// Save the tags
 		$rt = new Tags($row->id);
