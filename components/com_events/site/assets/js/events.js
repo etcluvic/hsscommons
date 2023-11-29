@@ -139,6 +139,8 @@ HUB.Events = {
 		}
 		//$('reccurtype0').addEvent('click', HUB.Events.checkDisable());
 		//document.getElementById('reccurtype0').onclick = function() {HUB.Events.checkDisable()};
+	
+		HUB.Events.removeFile();
 	},
 
 	checkTime: function(myField) {
@@ -475,8 +477,32 @@ HUB.Events = {
 				event.preventDefault();
 			}
 		});
+	},
+	removeFile: function() {
+		var $ = this.jQuery;
+		$('.event-file-remove').on("click", function(){
+			const eventId = $(this).data('event');
+			const fileId = $(this).data('file');
+			const url = `/index.php?option=com_events&task=removeFile&id=${eventId}&file_id=${fileId}`;
+			const removeBtn = $(this);
+			$.ajax({
+				url: url,
+				type: 'GET',
+				success: function(data) {
+					data = JSON.parse(data);
+					if (data["status"] === 200) {
+						console.log('success');
+						removeBtn.closest('.event-file').remove();
+					} else {
+						alert('There was an error removing the file.');
+					}
+				},
+				error: function(data) {
+					alert('There was an error removing the file.');
+				}
+			});
+		});
 	}
-
 }
 
 jQuery(document).ready(function($){

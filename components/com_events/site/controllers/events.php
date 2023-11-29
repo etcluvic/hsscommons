@@ -2465,4 +2465,77 @@ class Events extends SiteController
 		$server->saveas($file->title);
 		$server->serve();
 	}
+	/**
+	 * Remove a file for an event (Can only be called via ajax)
+	 *
+	 * 
+	 * @return  void
+	 */
+	public function removeFileTask()
+	{
+		// Get the event id
+		$event_id = Request::getInt('id', 0, 'get');
+
+		// Get the file id
+		$file_id = Request::getInt('file_id', 0, 'get');
+
+		if (!$event_id)
+		{
+			echo json_encode([
+				'status' => 400,
+				'message' => 'Missing event id'
+			]);
+			exit();
+		}
+
+		if (!$file_id)
+		{
+			echo json_encode([
+				'status' => 400,
+				'message' => 'Missing file id'
+			]);
+			exit();
+		}
+
+		// Load event object
+		$event = new Event($this->database);
+		$event->load($event_id);
+
+		// Are they authorized to remove this file? Do they own event? Own it!
+		if (!$this->_authorize($event->created_by)
+			&& !(User::get('id') == $event->created_by))
+		{
+			echo json_encode([
+				'status' => 403,
+				'message' => 'User not authorized to remove files for this event'
+			]);
+			exit();
+		}
+
+		// Get the file path
+		$query = new \Hubzero\Database\Query;
+		$file_paths = $query->select('pagetext')
+						->from('#__events_pages')
+						->whereEquals('id', $file_id)
+						->whereEquals('event_id', $event_id)
+						->fetch();
+
+		// Delete the file from the database
+		$query = new \Hubzero\Database\Query;
+		$query->delete('#__events_pages')
+				->whereEquals('id', $file_id)
+				->whereEquals('event_id', $event_id)
+				->whereEquals('alias', 'event_' . $event_id . '_file')
+				->execute();
+		
+		// Delete the file from the filesystem
+		Log::debug($file_paths[0]->pagetext);
+		unlink($file_paths[0]->pagetext);
+		
+		echo json_encode([
+			'status' => 200,
+			'message' => 'File deleted successfully'
+		]);
+		exit();
+	}
 }

@@ -54,12 +54,12 @@ $this->css()
 			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_FILES'); ?>
 				<input type="file" name="files[]" accept="image/png, image/jpeg, .pdf, .jpg" multiple/>
-				<div id="event-files-container">
-				<?php foreach ($this->files as $file) {
-					echo '<p class="event-file"><a href="#">' . $file->title . '</a></p>';
-				} ?>
-				</div>
 			</label>
+			<div id="event-files-container">
+			<?php foreach ($this->files as $file) {
+				echo '<p class="event-file"><a href="'. Route::url('index.php?option=' . $this->option . '&task=serveFile') . '?id=' . $this->row->id . '&file_id=' . $file->id . '">' . $file->title . '</a><span class="event-file-remove" data-event="' . $this->row->id . '" data-file="' . $file->id . '">Remove</span></p>';
+			} ?>
+			</div>
 
 			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_ADRESSE'); ?>
