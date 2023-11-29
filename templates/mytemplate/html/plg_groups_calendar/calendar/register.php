@@ -334,7 +334,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 
 	<?php if ($this->params->get('show_abstract')) : ?>
 		<fieldset>
-			<legend><?php echo Lang::txt('Abstract'); ?></legend>
+			<legend><?php echo Lang::txt('Abstract (maximum ' . ($this->params->get('abstract_length') ? $this->params->get('abstract_length') : "500") . ' characters)'); ?></legend>
 			<label>
 				<?php
 					if ($this->params->get('abstract_text'))
@@ -342,18 +342,20 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 						echo stripslashes($this->params->get('abstract_text'));
 					}
 				?>
-				<textarea name="register[abstract]" rows="16" cols="32"><?php echo (isset($this->register['abstract'])) ? $this->register['abstract'] : ''; ?></textarea>
+				<textarea name="register[abstract]" rows="16" cols="32" maxlength="<?php echo $this->params->get('abstract_length') ? $this->params->get('abstract_length') : "500" ?>"><?php echo (isset($this->register['abstract'])) ? $this->register['abstract'] : ''; ?></textarea>
 			</label>
 		</fieldset>
 	<?php endif; ?>
 
-	<fieldset>
-		<legend><?php echo Lang::txt('Supporting file'); ?></legend>
-		<label>
-			<?php echo Lang::txt('Please provide any additional supporting file if requested:'); ?>
-			<input type="file" name="register_file" accept="image/png, image/jpeg, .pdf, .jpg">
-		</label>
-	</fieldset>
+	<?php if ($this->params->get('show_file')) : ?>
+		<fieldset>
+			<legend><?php echo Lang::txt('Supporting file'); ?></legend>
+			<label>
+				<?php echo Lang::txt('Please provide any additional supporting file if requested:'); ?>
+				<input type="file" name="register_file" accept="image/png, image/jpeg, .pdf, .jpg">
+			</label>
+		</fieldset>
+	<?php endif; ?>
 
 	<?php if ($this->params->get('show_comments')) : ?>
 		<fieldset>
