@@ -1226,6 +1226,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 	 */
 	private function doRegister()
 	{
+		Log::debug('Call doRegister');
 		//get request vars
 		$register   = Request::getArray('register', null, 'post');
 		$arrival    = Request::getArray('arrival', null, 'post');
@@ -1325,6 +1326,73 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		{
 			$this->setError($eventsRespondent->getError());
 			return $this->register();
+		}
+
+		// Save supporting file if one was uploaded
+		$file = isset($_FILES['register_file']) ? $_FILES['register_file'] : null;
+		if (isset($file['name']) && $file['name']) {
+			$name = $file['name'];
+
+			// Get the file extension
+			$ext = strtolower(Filesystem::extension($name));
+
+			// Check for allowed file extensions
+			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
+			{
+				$this->setError(Lang::txt('Invalid file type'));
+				return $this->register();
+			}
+
+			// Get the file size
+			$size = $file['size'];
+
+			// Check for allowed file size
+			if ($size > 5242880)
+			{
+				$this->setError(Lang::txt('File too large'));
+				return $this->register();
+			}
+
+			// Get the file tmp name
+			$tmp_name = $file['tmp_name'];
+
+			// Get the file type
+			$type = $file['type'];
+
+			// Get the file error
+			$error = $file['error'];
+			if ($error > 0) {
+				$this->setError(Lang::txt('File upload error'));
+				return $this->register();
+			}
+
+			// Create the target directory if it doesn't exist
+			$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $eventsRespondent->id . DS . 'uploads';
+			if (!is_dir($target_dir))
+			{
+				if (!Filesystem::makeDirectory($target_dir))
+				{
+					$this->setError(Lang::txt('Could not create directory'));
+					return $this->register();
+				}
+			}
+
+			// Get the file path
+			$target_path = $target_dir . DS . $name;
+
+			// Check if file already exists
+			if (file_exists($target_path))
+			{
+				$this->setError(Lang::txt('File already exists'));
+				return false;
+			}
+
+			// Upload the file
+			if (!move_uploaded_file($tmp_name, $target_path))
+			{
+				$this->setError(Lang::txt('File upload error - could not move file to destination'));
+				return $this->register();
+			}
 		}
 
 		// Archie: Comment this code out as we already disabled race

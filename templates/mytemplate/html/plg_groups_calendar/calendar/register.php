@@ -63,7 +63,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 	<div class="clear"></div>
 </div>
 
-<form action="<?php echo Route::url('index.php?option='.$this->option.'&cn='.$this->group->get('cn').'&active=calendar&action=register&event_id='.$this->event->get('id')); ?>" id="hubForm" method="post" class="full">
+<form enctype="multipart/form-data" action="<?php echo Route::url('index.php?option='.$this->option.'&cn='.$this->group->get('cn').'&active=calendar&action=register&event_id='.$this->event->get('id')); ?>" id="hubForm" method="post" class="full">
 	<fieldset>
 		<legend><?php echo Lang::txt('Name &amp; Title'); ?></legend>
 
@@ -346,6 +346,14 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 			</label>
 		</fieldset>
 	<?php endif; ?>
+
+	<fieldset>
+		<legend><?php echo Lang::txt('Supporting file'); ?></legend>
+		<label>
+			<?php echo Lang::txt('Please provide any additional supporting file if requested:'); ?>
+			<input type="file" name="register_file" accept="image/png, image/jpeg, .pdf, .jpg">
+		</label>
+	</fieldset>
 
 	<?php if ($this->params->get('show_comments')) : ?>
 		<fieldset>
