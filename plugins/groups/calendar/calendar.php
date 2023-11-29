@@ -1605,7 +1605,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
 						{
 							$fileUrl = Route::url('index.php?option=' . $this->option . '&cn=' . $this->group->get('cn') . '&active=calendar&action=serveRespondentFile&event_id=' . $registrant->event_id . '&respondent_id=' . $registrant->id);
-							$output .= $this->escapeCsv(Request::base() . $fileUrl) . ',';
+							$output .= $this->escapeCsv(rtrim(Request::base(), '/') . $fileUrl) . ',';
 						}
 						break;
 					default:
