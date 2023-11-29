@@ -258,6 +258,9 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 				case 'events':
 					$this->events();
 					break;
+				case 'serveRespondentFile':
+					$arr['html'] = $this->serveRespondentFile();
+					break;
 				default:
 					$arr['html'] = $this->display();
 					break;
@@ -1602,7 +1605,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
 						{
 							$fileUrl = Route::url('index.php?option=' . $this->option . '&cn=' . $this->group->get('cn') . '&active=calendar&action=serveRespondentFile&event_id=' . $registrant->event_id . '&respondent_id=' . $registrant->id);
-							$output .= $this->escapeCsv($fileUrl) . ',';
+							$output .= $this->escapeCsv(Request::base() . $fileUrl) . ',';
 						}
 						break;
 					default:
@@ -2016,5 +2019,45 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 
 		// add good
 		return true;
+	}
+
+	/**
+	 * Serve respondent's supporting file
+	 *
+	 * @return  void
+	 */
+	private function serveRespondentFile()
+	{
+		// Get the event id
+		$event_id = Request::getInt('event_id', 0, 'get');
+
+		// Get the file id
+		$respondent_id = Request::getInt('respondent_id', 0, 'get');
+
+		if (!$event_id)
+		{
+			$this->setError(Lang::txt('Missing event id'));
+			return false;
+		}
+
+		if (!$respondent_id)
+		{
+			$this->setError(Lang::txt('Missing file id'));
+			return false;
+		}
+
+		$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $respondent_id . DS . 'uploads';
+		if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
+		{
+			$server = new \Hubzero\Content\Server;
+			$server->filename($target_dir . DS . $files[0]);
+			$server->disposition('attachment');
+			$server->saveas($files[0]);
+			$server->serve();
+		} else {
+			$this->setError(Lang::txt('File not found'));
+		}
+
+		return $this->details();
 	}
 }
