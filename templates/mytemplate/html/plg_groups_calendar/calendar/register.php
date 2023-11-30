@@ -315,6 +315,9 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 					<input type="checkbox" class="option" name="dietary[needs]" value="yes" <?php if (isset($this->dietary['needs']) && $this->dietary['needs'] == 'yes') { echo 'checked="checked"'; } ?> />
 					<?php echo Lang::txt('I have specific dietary needs.'); ?>
 				</label>
+			<?php endif; ?>
+			
+			<?php if ($this->params->get('show_disability') || $this->params->get('show_dietary')) : ?>
 				<label class="indent"><?php echo Lang::txt('Please specify'); ?>
 					<input type="text" name="dietary[specific]" value="<?php echo $this->dietary['specific']; ?>" />
 				</label>
