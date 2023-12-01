@@ -64,6 +64,10 @@ $this->css()
 				<th><?php echo Lang::txt('PLG_MEMBERS_MESSAGES_MESSAGE'); ?></th>
 				<td><?php echo $this->xmessage->message; ?></td>
 			</tr>
+			<tr>
+				<th><?php echo Lang::txt('Actions:'); ?></th>
+				<td><a class="reply" href="<?php echo Route::url($this->member->link() . '&active=messages&task=new&to=' . $this->xmessage->created_by); ?>"><?php echo Lang::txt('Reply'); ?></a></td>
+			</tr>
 		</tbody>
 	</table>
 </div>
