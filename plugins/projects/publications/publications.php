@@ -836,11 +836,12 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				// Remove members who aren't authors for standalone publication's project
 				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
 				{
+					$submitter = $pub->submitter();
 					$authors = $pub->authors($overwrite=true);
 					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 					foreach ($owners as $k => $owner)
 					{
-						if (!in_array($owner->userid, $authors)) {
+						if (!in_array($owner->userid, $authors) && $owner->userid !== $submitter->user_id) {
 							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
 							$removed_owners[] = $owner->userid;
 						}
