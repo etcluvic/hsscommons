@@ -33,7 +33,7 @@ foreach ($this->calendars as $calendar)
 
 		<div class="subscribe-content">
 			<p class="info">
-				<?php echo Lang::txt('If you are prompted to enter a username & password when subscribing to a calendar, enter your HUB credentials.'); ?>
+				<?php echo Lang::txt('If you are prompted to enter a username & password when subscribing to a calendar, enter your HSS Commons credentials.'); ?>
 			</p>
 
 			<p>
