@@ -1322,6 +1322,10 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$eventsRespondent->dietary_needs    = (isset($dietary['needs']) && strtolower($dietary['needs']) == 'yes') ? $dietary['specific'] : null;
 		$eventsRespondent->attending_dinner = (isset($dinner) && $dinner == 'yes') ? 1 : 0;
 		$eventsRespondent->bind($register);
+		if (isset($register['open_question']) && $register['open_question']) {
+			$eventsRespondent->comment .= '<openquestion>' . $register['open_question'] . '</openquestion>'; 
+		}
+		Log::debug(get_object_vars($eventsRespondent));
 
 		//did we save properly
 		if (!$eventsRespondent->save($eventsRespondent))
@@ -1546,7 +1550,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$registrants = $eventsRespondent->getRecords();
 
 		//var to hold output
-		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Comments,Register Date' . "\n";
+		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Open Question Answer,Comments,Register Date' . "\n";
 
 		$fields = array(
 			'first_name',
@@ -1572,6 +1576,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			'attending_dinner',
 			'abstract',
 			'file',
+			'open_question',
 			'comment',
 			'registered'
 		);
@@ -1584,6 +1589,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			$this->database->setQuery($sql);
 			$race = $this->database->loadResult();
 
+			$openQuestion = '';
 			foreach ($fields as $field)
 			{
 				switch ($field)
@@ -1606,7 +1612,24 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						{
 							$fileUrl = Route::url('index.php?option=' . $this->option . '&cn=' . $this->group->get('cn') . '&active=calendar&action=serveRespondentFile&event_id=' . $registrant->event_id . '&respondent_id=' . $registrant->id);
 							$output .= $this->escapeCsv(rtrim(Request::base(), '/') . $fileUrl) . ',';
+						} else {
+							$output .= ','; // empty file
 						}
+						break;
+					case 'open_question':
+						if (strpos($registrant->comment, '<openquestion>') !== false) {
+							// Extract open question answer from comment (open question is opened and closed by an <optionquestion> tag)
+							$openQuestion = substr($registrant->comment, strpos($registrant->comment, '<openquestion>') + 14);
+							$openQuestion = substr($openQuestion, 0, strpos($openQuestion, '</openquestion>'));
+							$output .= $this->escapeCsv($openQuestion) . ',';
+						} else {
+							$output .= ','; // empty open question
+						}
+						break;
+					case 'comment':
+						// Remove open question answer from comment
+						$comment = str_replace('<openquestion>' . $openQuestion . '</openquestion>', '', $registrant->comment);
+						$output .= $this->escapeCsv($comment) . ',';
 						break;
 					default:
 						$output .= $this->escapeCsv($registrant->$field) . ',';

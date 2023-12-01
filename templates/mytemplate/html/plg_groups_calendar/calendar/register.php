@@ -360,6 +360,16 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 		</fieldset>
 	<?php endif; ?>
 
+	<?php if ($this->params->get('open_question')) : ?>
+		<fieldset>
+			<legend><?php echo Lang::txt($this->params->get('open_question')); ?></legend>
+			<label>
+				<?php echo Lang::txt('Please use the space below to answer the question above:'); ?>
+				<textarea name="register[open_question]" rows="4" cols="32"><?php echo (isset($this->register['open_question'])) ? $this->register['open_question'] : ''; ?></textarea>
+			</label>
+		</fieldset>
+	<?php endif; ?>
+
 	<?php if ($this->params->get('show_comments')) : ?>
 		<fieldset>
 			<legend><?php echo Lang::txt('Comments'); ?></legend>
