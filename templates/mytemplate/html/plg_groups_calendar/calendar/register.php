@@ -177,14 +177,16 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 					<select name="register[position]">
 						<option value="" selected="selected"><?php echo Lang::txt('(select from list or enter below)'); ?></option>
 						<option value="university"><?php echo Lang::txt('University / College Student or Staff'); ?></option>
-						<option value="precollege"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
+						<!-- <option value="precollege"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
 						<option value="nationallab"><?php echo Lang::txt('National Laboratory'); ?></option>
 						<option value="industry"><?php echo Lang::txt('Industry / Private Company'); ?></option>
 						<option value="government"><?php echo Lang::txt('Government Agency'); ?></option>
 						<option value="military"><?php echo Lang::txt('Military'); ?></option>
-						<option value="unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option>
+						<option value="unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option> -->
 					</select>
+					<label><?php echo Lang::txt('If you have a different position, type here:'); ?></label>
 					<input name="register[position_other]" type="text" value="<?php echo (isset($this->register['position_other'])) ? $this->register['position_other'] : ''; ?>" />
+					<label style="font-size: 75%; padding-top: 0px;"><strong>Note: </strong>The position you typed here will overide the position you selected above.</label>
 				</label>
 			<?php endif; ?>
 
