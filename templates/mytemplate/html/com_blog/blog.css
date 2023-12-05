@@ -354,13 +354,14 @@
 	margin: 1em 0 0.2em 0;
 	padding: 0.5em 0 0 0;
 	font-size: 90%;
-	color: #999;
 	border-top: 1px dashed #cccccc;
 	position: relative;
 	overflow: visible;
+	width: fit-content;
+	margin-left: auto;
 }
 .share:before {
-	content: "\2192";
+	content: "\f08e";
 	font-family: "Fontcons";
 	margin-right: 0.2em;
 }
