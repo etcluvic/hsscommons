@@ -39,7 +39,7 @@ class plgBlogOpengraph extends \Hubzero\Plugin\Plugin
 		$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
 		$content = trim($content);
 
-		Document::addCustomTag('<meta property="og:description" content="' . $view->escape($content) . '" />');
+		Document::addCustomTag('<meta property="og:description" content="' . htmlspecialchars_decode($view->escape($content)) . '" />');
 
 		Document::addCustomTag('<meta property="og:type" content="article" />');
 
