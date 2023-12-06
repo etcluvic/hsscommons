@@ -48,4 +48,21 @@ jQuery(document).ready(function (jq) {
 			}
 			return res;
 		});
+	
+	// Copy URL button
+	$('#copy-url-btn').on('click', function() {
+		// Get the current URL
+		var currentUrl = window.location.href;
+	
+		// Use the Clipboard API to copy the URL
+		navigator.clipboard.writeText(currentUrl)
+			.then(function() {
+				// Success: URL copied to clipboard
+				alert('URL copied to clipboard!');
+			})
+			.catch(function(err) {
+				// Error handling
+				console.error('Error copying text: ', err);
+			});
+	});
 });
