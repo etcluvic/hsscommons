@@ -503,11 +503,29 @@ class plgMembersMessages extends \Hubzero\Plugin\Plugin
 			$tos[] = $mem->get('name') . ' (' . $mem->get('id') . ')';
 		}
 
+		// Is this a replying message instead of a new one?
+		$replyTo = Request::getInt('replyTo', 0);
+
+		// Construct the message if is a reply
+		$query = new \Hubzero\Database\Query;
+
+		$body = '';
+		$repliedMessage = $query->select('*')
+								->from('#__xmessage')
+								->whereEquals('id', $replyTo)
+								->fetch();
+		
+		if ($repliedMessage && count($repliedMessage) > 0) {
+			$prevMessage = $repliedMessage[0]->message;
+			$body .= "Reply to: \n \"" . $prevMessage . "\" \n\n";
+		}
+
 		$view = $this->view('create', 'default')
 			->set('option', $option)
 			->set('member', $member)
 			->set('tos', implode(',', $tos))
 			->set('no_html', Request::getInt('no_html', 0))
+			->set('body', $body)
 			->setErrors($this->getErrors());
 
 		return $view->loadTemplate();

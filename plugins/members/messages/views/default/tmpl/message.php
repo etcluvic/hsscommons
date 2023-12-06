@@ -66,7 +66,7 @@ $this->css()
 			</tr>
 			<tr>
 				<th><?php echo Lang::txt('Actions:'); ?></th>
-				<td><a class="reply" href="<?php echo Route::url($this->member->link() . '&active=messages&task=new&to=' . $this->xmessage->created_by); ?>"><?php echo Lang::txt('Reply'); ?></a></td>
+				<td><a class="reply" href="<?php echo Route::url($this->member->link() . '&active=messages&task=new&replyTo=' . $this->xmessage->id . '&to=' . $this->xmessage->created_by); ?>"><?php echo Lang::txt('Reply'); ?></a></td>
 			</tr>
 		</tbody>
 	</table>
