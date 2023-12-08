@@ -176,13 +176,15 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 					<?php echo Lang::txt('Which best describes your current position?'); ?> <span class="optional">Optional</span>
 					<select name="register[position]">
 						<option value="" selected="selected"><?php echo Lang::txt('(select from list or enter below)'); ?></option>
-						<option value="university"><?php echo Lang::txt('University / College Student or Staff'); ?></option>
-						<!-- <option value="precollege"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
-						<option value="nationallab"><?php echo Lang::txt('National Laboratory'); ?></option>
-						<option value="industry"><?php echo Lang::txt('Industry / Private Company'); ?></option>
-						<option value="government"><?php echo Lang::txt('Government Agency'); ?></option>
-						<option value="military"><?php echo Lang::txt('Military'); ?></option>
-						<option value="unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option> -->
+						<option value="University / College Student"><?php echo Lang::txt('University / College Student'); ?></option>
+						<option value="University / College Staff"><?php echo Lang::txt('University / College Staff'); ?></option>
+						<option value="Librarian"><?php echo Lang::txt('Librarian'); ?></option>
+						<option value="K-12 (Pre-College) Student or Staff"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
+						<option value="National Laboratory"><?php echo Lang::txt('National Laboratory'); ?></option>
+						<option value="Industry / Private Company"><?php echo Lang::txt('Industry / Private Company'); ?></option>
+						<option value="Government Agency"><?php echo Lang::txt('Government Agency'); ?></option>
+						<option value="Military"><?php echo Lang::txt('Military'); ?></option>
+						<option value="Retired / Unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option>
 					</select>
 					<label><?php echo Lang::txt('If you have a different position, type here:'); ?></label>
 					<input name="register[position_other]" type="text" value="<?php echo (isset($this->register['position_other'])) ? $this->register['position_other'] : ''; ?>" />
