@@ -954,10 +954,13 @@ class Register extends SiteController
 						'groups_approved_denied',
 						'groups_invite',
 						'group_message',
+						'groups_cancels_membership',
+						'groups_status_changed',
 						'member_message',
 						'projects_member_added',
 						'projects_admin_message',
 						'support_reply_submitted',
+						'resources_new_comment'
 					];
 					$defaultMessageSettings->email = $defaultMessageSettingsTypes;
 					$defaultMessageSettings->internal = $defaultMessageSettingsTypes;
