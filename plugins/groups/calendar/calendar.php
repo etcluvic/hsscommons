@@ -2057,17 +2057,29 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		// Get the file id
 		$respondent_id = Request::getInt('respondent_id', 0, 'get');
 
+		// Need to have an event id
 		if (!$event_id)
 		{
 			$this->setError(Lang::txt('Missing event id'));
 			return false;
 		}
 
+		// Need to have a respondent id
 		if (!$respondent_id)
 		{
 			$this->setError(Lang::txt('Missing file id'));
 			return false;
 		}
+
+		// User must be logged in
+		if (User::isGuest()) {
+			$this->setError(Lang::txt('User must be logged in to download file'));
+			return false;
+		}
+
+		// User must be a member of this group
+		Log::debug('Group id: '. $this->group->get('id'));
+		Log::debug('User id: ' . User::get('id'));
 
 		$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $respondent_id . DS . 'uploads';
 		if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
