@@ -2078,7 +2078,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		}
 
 		// User must be a member of this group
-		Log::debug($this->group->id);
+		Log::debug(get_object_vars($this));
 		Log::debug(User::get('id'));
 
 		$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $respondent_id . DS . 'uploads';
