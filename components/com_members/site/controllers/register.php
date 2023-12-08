@@ -954,7 +954,7 @@ class Register extends SiteController
 						'groups_approved_denied',
 						'groups_invite',
 						'group_message',
-						'groups_cancels_membership',
+						'groups_cancelled_me',
 						'groups_status_changed',
 						'member_message',
 						'projects_member_added',
