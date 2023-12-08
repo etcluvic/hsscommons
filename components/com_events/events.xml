@@ -135,7 +135,7 @@
 			<option value="0">COM_EVENTS_CONFIG_HIDE</option>
 			<option value="1">COM_EVENTS_CONFIG_SHOW</option>
 		</param>
-		<param name="abstract_length" label="Abstract length" type="text" default="500" description="Maximum abstract length"/>
+		<param name="abstract_length" label="Abstract length (characters, default to 500 if not specified)" type="text" default="500" description="Maximum abstract length"/>
 		<param name="abstract_text" label="COM_EVENTS_CONFIG_ABSTRACT_TEXT" type="textarea" rows="8" cols="40" default="" description="COM_EVENTS_CONFIG_ABSTRACT_TEXT_DESC" />
 		<param name="show_file" type="radio" default="1" label="Supporting file" description="Provide suporting file">
 			<option value="0">COM_EVENTS_CONFIG_HIDE</option>
