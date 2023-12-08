@@ -2078,8 +2078,10 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		}
 
 		// User must be a member of this group
-		Log::debug(get_object_vars($this));
-		Log::debug(User::get('id'));
+		if (!in_array(strval(User::get('id')), $this->members)) {
+			$this->setError(Lang::txt('User must be a member of this group to download file'));
+			return false;
+		}
 
 		$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $respondent_id . DS . 'uploads';
 		if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
