@@ -41,6 +41,8 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
+include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
+
 /**
  * Members Plugin class for author's repository
  */
@@ -218,6 +220,56 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		$view->database  = $this->_database;
 		$view->uid       = $uid;
 		$view->pubconfig = Component::params('com_publications');
+
+		// Get current user's ORCID from database
+		$orcidRow = \Hubzero\Auth\Link::all()
+					->whereEquals('user_id', User::get('id'))
+					->row();
+		$orcid = $orcidRow->username;
+		$view->orcid = $orcid;
+
+		$orcidWorks = [];
+		if ($orcid) {
+			// Get user access token
+			$query = new \Hubzero\Database\Query;
+			$accessTokens = $query->select('*')
+								->from('#__xprofiles_tokens')
+								->whereEquals('user_id', User::get('id'))
+								->fetch();
+
+			if (count($accessTokens) > 0) {
+				// Read the current user's ORCID works
+				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+				$orcidHandler->setAccessToken($accessTokens[0]->token);
+				$orcidHandler->setOrcid($orcid);
+				$orcidWorks = $orcidHandler->getAllWorks();
+			}
+		}
+		$view->orcidWorks = $orcidWorks;
+		$view->totalOrcidWorks = count($orcidWorks);
+
+		// Construct a list of publication ids in this repo
+		$pubIds = [];
+		foreach($view->pubstats as $stat) {
+			$pubIds[] = $stat->version_id;
+		}
+
+		// Get the putcodes of all ORCID imported publications into this repo
+		$orcidImportedPutCodes = [];
+		$query = new \Hubzero\Database\Query;
+		$orcidImportedPubs = $query->select('element_id, handler_id, params')
+									->from('#__publication_handler_assoc')
+									->whereIn('publication_version_id', $pubIds)
+									->fetch();
+		foreach($orcidImportedPubs as $orcidPub) {
+			$paramFields = explode('=', $orcidPub->params);
+			$location = $paramFields[1];
+
+			// Only get publications that this user imported to his/her personal repo
+			if ($orcidPub->handler_id == User::get('id') && $location === 'repo')
+			$orcidImportedPutCodes[] = $orcidPub->element_id;
+		}
+		$view->orcidImportedPutCodes = $orcidImportedPutCodes;
 
 		if ($this->getError())
 		{

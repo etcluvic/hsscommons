@@ -63,7 +63,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 	<div class="clear"></div>
 </div>
 
-<form action="<?php echo Route::url('index.php?option='.$this->option.'&cn='.$this->group->get('cn').'&active=calendar&action=register&event_id='.$this->event->get('id')); ?>" id="hubForm" method="post" class="full">
+<form enctype="multipart/form-data" action="<?php echo Route::url('index.php?option='.$this->option.'&cn='.$this->group->get('cn').'&active=calendar&action=register&event_id='.$this->event->get('id')); ?>" id="hubForm" method="post" class="full">
 	<fieldset>
 		<legend><?php echo Lang::txt('Name &amp; Title'); ?></legend>
 
@@ -176,15 +176,19 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 					<?php echo Lang::txt('Which best describes your current position?'); ?> <span class="optional">Optional</span>
 					<select name="register[position]">
 						<option value="" selected="selected"><?php echo Lang::txt('(select from list or enter below)'); ?></option>
-						<option value="university"><?php echo Lang::txt('University / College Student or Staff'); ?></option>
-						<option value="precollege"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
-						<option value="nationallab"><?php echo Lang::txt('National Laboratory'); ?></option>
-						<option value="industry"><?php echo Lang::txt('Industry / Private Company'); ?></option>
-						<option value="government"><?php echo Lang::txt('Government Agency'); ?></option>
-						<option value="military"><?php echo Lang::txt('Military'); ?></option>
-						<option value="unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option>
+						<option value="University / College Student"><?php echo Lang::txt('University / College Student'); ?></option>
+						<option value="University / College Staff"><?php echo Lang::txt('University / College Staff'); ?></option>
+						<option value="Librarian"><?php echo Lang::txt('Librarian'); ?></option>
+						<option value="K-12 (Pre-College) Student or Staff"><?php echo Lang::txt('K-12 (Pre-College) Student or Staff'); ?></option>
+						<option value="National Laboratory"><?php echo Lang::txt('National Laboratory'); ?></option>
+						<option value="Industry / Private Company"><?php echo Lang::txt('Industry / Private Company'); ?></option>
+						<option value="Government Agency"><?php echo Lang::txt('Government Agency'); ?></option>
+						<option value="Military"><?php echo Lang::txt('Military'); ?></option>
+						<option value="Retired / Unemployed"><?php echo Lang::txt('Retired / Unemployed'); ?></option>
 					</select>
+					<label><?php echo Lang::txt('If you have a different position, type here:'); ?></label>
 					<input name="register[position_other]" type="text" value="<?php echo (isset($this->register['position_other'])) ? $this->register['position_other'] : ''; ?>" />
+					<label style="font-size: 75%; padding-top: 0px;"><strong>Note: </strong>The position you typed here will overide the position you selected above.</label>
 				</label>
 			<?php endif; ?>
 
@@ -315,6 +319,9 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 					<input type="checkbox" class="option" name="dietary[needs]" value="yes" <?php if (isset($this->dietary['needs']) && $this->dietary['needs'] == 'yes') { echo 'checked="checked"'; } ?> />
 					<?php echo Lang::txt('I have specific dietary needs.'); ?>
 				</label>
+			<?php endif; ?>
+			
+			<?php if ($this->params->get('show_disability') || $this->params->get('show_dietary')) : ?>
 				<label class="indent"><?php echo Lang::txt('Please specify'); ?>
 					<input type="text" name="dietary[specific]" value="<?php echo $this->dietary['specific']; ?>" />
 				</label>
@@ -334,7 +341,7 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 
 	<?php if ($this->params->get('show_abstract')) : ?>
 		<fieldset>
-			<legend><?php echo Lang::txt('Abstract'); ?></legend>
+			<legend><?php echo Lang::txt('Abstract (maximum ' . ($this->params->get('abstract_length') ? $this->params->get('abstract_length') : "500") . ' characters)'); ?></legend>
 			<label>
 				<?php
 					if ($this->params->get('abstract_text'))
@@ -342,7 +349,27 @@ $month = date("m", strtotime($this->event->get('publish_up')));
 						echo stripslashes($this->params->get('abstract_text'));
 					}
 				?>
-				<textarea name="register[abstract]" rows="16" cols="32"><?php echo (isset($this->register['abstract'])) ? $this->register['abstract'] : ''; ?></textarea>
+				<textarea name="register[abstract]" rows="16" cols="32" maxlength="<?php echo $this->params->get('abstract_length') ? $this->params->get('abstract_length') : "500" ?>"><?php echo (isset($this->register['abstract'])) ? $this->register['abstract'] : ''; ?></textarea>
+			</label>
+		</fieldset>
+	<?php endif; ?>
+
+	<?php if ($this->params->get('show_file')) : ?>
+		<fieldset>
+			<legend><?php echo Lang::txt('Supporting file'); ?></legend>
+			<label>
+				<?php echo Lang::txt('Please provide any additional supporting file if requested:'); ?>
+				<input type="file" name="register_file" accept="image/png, image/jpeg, .pdf, .jpg">
+			</label>
+		</fieldset>
+	<?php endif; ?>
+
+	<?php if ($this->params->get('open_question')) : ?>
+		<fieldset>
+			<legend><?php echo Lang::txt($this->params->get('open_question')); ?></legend>
+			<label>
+				<?php echo Lang::txt('Please use the space below to answer the question above:'); ?>
+				<textarea name="register[open_question]" rows="4" cols="32"><?php echo (isset($this->register['open_question'])) ? $this->register['open_question'] : ''; ?></textarea>
 			</label>
 		</fieldset>
 	<?php endif; ?>

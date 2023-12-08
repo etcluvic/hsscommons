@@ -1958,3 +1958,144 @@
 			min-width: 800px;
 		}
 	}
+
+/* Instructions */
+.introduction {
+	max-width: 32em;
+	margin: 3em auto;
+	background-color: #fff;
+	-webkit-box-shadow: 0 1px 3px rgba(25, 25, 25, 0.4);
+	   -moz-box-shadow: 0 1px 2px rgba(25, 25, 25, 0.4);
+		-ms-box-shadow: 0 1px 3px rgba(25, 25, 25, 0.4);
+		 -o-box-shadow: 0 1px 3px rgba(25, 25, 25, 0.4);
+			box-shadow: 0 1px 3px rgba(25, 25, 25, 0.4);
+	border: 1px solid #ddd\9; /* [!] IE 8 */
+}
+.introduction .introduction-message {
+	padding: 1em 1.4em;
+	text-align: center;
+	font-size: 1.2em;
+}
+.introduction .introduction-message:before {
+	content: "\2298";
+	font-family: "Fontcons";
+	display: block;
+	font-size: 7em;
+	line-height: 1;
+	color: #ccc;
+	margin: 0.1em 0;
+}
+.introduction .introduction-questions {
+	padding: 1em 1.4em;
+	background-color: #f0f0f0;
+}
+.introduction ol {
+	list-style: decimal;
+}
+
+/* Hide the sidebar if the page is too narrow */
+@media only screen and (max-width: 1080px) {
+	.member_blog .aside,
+	.member_blog .subject {
+		float: none;
+	}
+	.member_blog .aside {
+		display: none;
+	}
+	.member_blog .subject {
+		padding-left: 0;
+		padding-right: 0;
+		margin-right: 0;
+	}
+}
+
+/*** ORCID publications import ***/
+.hidden {
+	display: none;
+}
+
+.pub-modal {
+	max-width: 700px;
+	min-width: 300px;
+	height: fit-content;
+	padding: 30px;
+}
+
+.pub-modal-item-container {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.pub-modal .pub-modal-item {
+	padding: 10px;
+	border: 1px rgb(203 213 225) solid;
+	border-radius: 5px;
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	cursor: default;
+	background-color: #fff;
+}
+
+.pub-modal .pub-modal-item:hover,
+.pub-modal .pub-modal-item.selected {
+	background-color: rgb(226 232 240);
+}
+
+.pub-modal .pub-modal-item.prev-imported {
+	background-color: rgb(254 202 202) !important;
+}
+
+.pub-modal .pub-modal-item.prev-imported:hover,
+.pub-modal .pub-modal-item.prev-imported.selected {
+	background-color: rgb(248 113 113) !important;
+}
+
+/* .pub-modal label {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	width: fit-content;
+} */
+
+/* Control bar */
+.pub-modal .control-bar {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.pub-modal .all-btn {
+	width: fit-content;
+}
+
+/* Paginator */
+.pub-modal-paginator {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 8px;
+	margin-top: auto;
+	color: rgb(71 85 105);
+}
+
+.pub-modal-paginator .page-navigator {
+	font-size: 120%;
+	cursor: default;
+}
+
+.pub-modal-paginator .page-navigator:hover {
+	font-weight: 800;
+	color: #000;
+}
+
+.pub-modal-paginator .page-navigator.disabled,
+.pub-modal-paginator .page-navigator.disabled:hover {
+	font-weight: 400;
+	color: rgb(148 163 184) !important;
+}
+
+.pub-modal-paginator .page-text {
+	font-size: 80%;
+}

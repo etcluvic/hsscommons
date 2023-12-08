@@ -23,6 +23,9 @@ $this->css()
 			<a class="icon-add btn add" href="<?php echo Route::url('index.php?option=com_groups&task=new'); ?>">
 				<?php echo Lang::txt('PLG_MEMBERS_GROUPS_CREATE'); ?>
 			</a>
+			<a class="icon-browse btn" href="<?php echo Route::url('index.php?option=com_groups&task=browse'); ?>">
+				<?php echo Lang::txt('PLG_MEMBERS_GROUPS_BROWSE'); ?>
+			</a>
 		</li>
 	</ul>
 <?php } ?>

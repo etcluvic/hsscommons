@@ -21,6 +21,7 @@ use Lang;
 use User;
 use Date;
 use App;
+use stdClass;
 
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'registration.php';
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'member.php';
@@ -554,6 +555,14 @@ class Register extends SiteController
 					// The profile info, however, may have issues. But, it's not crucial.
 					//$result = false;
 				}
+
+				// Save user ORCID access token if user authenticated with ORCID
+				$orcidAccessToken = Session::get('tmp_orcid_access_tokens', '');
+				if ($orcidAccessToken) {
+					$query = new \Hubzero\Database\Query;
+					$query->push('#__xprofiles_tokens', ['token' => $orcidAccessToken, 'user_id' => User::get('id'), 'created' => date('y-m-d h:i:s')]);
+					Session::set('tmp_orcid_access_tokens', null);
+				}
 			}
 
 			// Update current session if appropriate
@@ -657,6 +666,11 @@ class Register extends SiteController
 			Session::set('auth_link.tmp_bio', null);
 			Session::set('auth_link.tmp_title', null);
 			Session::set('auth_link.tmp_affiliation', null);
+			Session::set('auth_link.tmp_education', null);
+			Session::set('auth_link.tmp_twitter', null);
+			Session::set('auth_link.tmp_facebook', null);
+			Session::set('auth_link.tmp_linkedin', null);
+			Session::set('auth_link.tmp_url', null);
 		}
 
 		if (!User::isGuest() && !User::get('tmp_user'))
@@ -929,6 +943,41 @@ class Register extends SiteController
 					if ($user->get('activation') < 0)
 					{
 						\Components\Members\Helpers\Utility::sendConfirmEmail($user, $xregistration);
+					}
+
+					// Check off some default settings for the user's personal message to encourage engagement with the Commons
+					$defaultMessageSettings = new stdClass;
+					$defaultMessageSettingsTypes = [
+						'answers_reply_submitted',
+						'answers_reply_comment',
+						'groups_requests_membership',
+						'groups_approved_denied',
+						'groups_invite',
+						'group_message',
+						'groups_cancelled_me',
+						'groups_status_changed',
+						'member_message',
+						'projects_member_added',
+						'projects_admin_message',
+						'support_reply_submitted',
+						'resources_new_comment'
+					];
+					$defaultMessageSettings->email = $defaultMessageSettingsTypes;
+					$defaultMessageSettings->internal = $defaultMessageSettingsTypes;
+					
+					// Create the entry in the database
+					foreach ($defaultMessageSettings->email as $type) {
+						$query = new \Hubzero\Database\Query;
+						$query->insert('#__xmessage_notify')  
+							->values(['uid' => $user->get('id'), 'method' => 'email', 'type' => $type, 'priority' => 1]) 
+							->execute();
+					}
+
+					foreach ($defaultMessageSettings->internal as $type) {
+						$query = new \Hubzero\Database\Query;
+						$query->insert('#__xmessage_notify')  
+							->values(['uid' => $user->get('id'), 'method' => 'internal', 'type' => $type, 'priority' => 1]) 
+							->execute();
 					}
 
 					// Instantiate a new view

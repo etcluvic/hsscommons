@@ -26,7 +26,7 @@ $this->css()
 </header>
 
 <section class="main section">
-	<form action="<?php echo Route::url('index.php?option=' . $this->option . '&task=save'); ?>" method="post" id="hubForm">
+	<form enctype="multipart/form-data" action="<?php echo Route::url('index.php?option=' . $this->option . '&task=save'); ?>" method="post" id="hubForm">
 <?php if ($this->getError()) { ?>
 		<p class="error"><?php echo $this->getError(); ?></p>
 <?php } ?>
@@ -50,6 +50,16 @@ $this->css()
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_DESCRIPTION'); ?>:
 				<?php echo App::get('editor')->display('econtent', $this->row->content, '', '', 10, 15, false, 'econtent', null, null, array('class' => 'minimal no-footer')); ?>
 			</label>
+
+			<label>
+				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_FILES'); ?>
+				<input type="file" name="files[]" accept="image/png, image/jpeg, .pdf, .jpg" multiple/>
+			</label>
+			<div id="event-files-container">
+			<?php foreach ($this->files as $file) {
+				echo '<p class="event-file"><a href="'. Route::url('index.php?option=' . $this->option . '&task=serveFile') . '?id=' . $this->row->id . '&file_id=' . $file->id . '">' . $file->title . '</a><span class="event-file-remove" data-event="' . $this->row->id . '" data-file="' . $file->id . '">Remove</span></p>';
+			} ?>
+			</div>
 
 			<label>
 				<?php echo Lang::txt('EVENTS_CAL_LANG_EVENT_ADRESSE'); ?>

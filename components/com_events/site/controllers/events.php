@@ -50,6 +50,7 @@ class Events extends SiteController
 		$this->yearFormat  = "Y";
 		$this->monthFormat = "m";
 		$this->dayFormat   = "d";
+		$this->filesRoot   = PATH_APP . DS . 'site' . DS . 'events';
 
 		$this->_setup();
 
@@ -1691,6 +1692,14 @@ class Events extends SiteController
 			$lists['tags'] = $this->tags;
 		}
 
+		// Get files of this event
+		$query = new \Hubzero\Database\Query;
+		$files = $query->select('id, title')
+						->from('#__events_pages')
+						->whereEquals('event_id', $row->id)
+						->whereEquals('alias', 'event_' . $row->id . '_file')
+						->fetch();
+
 		// Set the title
 		Document::setTitle(Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt(strtoupper($this->_name) . '_' . strtoupper($this->_task)));
 
@@ -1731,6 +1740,7 @@ class Events extends SiteController
 		$this->view->lists = $lists;
 		$this->view->gid = $this->gid;
 		$this->view->admin = $this->_authorize();
+		$this->view->files = $files;
 		if ($this->getError())
 		{
 			$this->view->setError($this->getError());
@@ -1836,7 +1846,7 @@ class Events extends SiteController
 
 		// good ol' form validation
 		Request::checkToken();
-		Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
+		// Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
 
 		$offset = $this->offset;
 
@@ -2102,6 +2112,12 @@ class Events extends SiteController
 		}
 		$row->checkin();
 
+		// Handle event files upload
+		$files = $_FILES['files'];
+		if ($files && count($files) > 0) {
+			$this->_uploadFiles($event_id=$row->id);
+		}
+
 		// Save the tags
 		$rt = new Tags($row->id);
 		$rt->setTags($tags, User::get('id'));
@@ -2294,5 +2310,232 @@ class Events extends SiteController
 		}
 
 		return false;
+	}
+
+	/**
+	 * Handle files upload for events
+	 * @param  int $event_id
+	 * 
+	 * @return  bool
+	 */
+	private function _uploadFiles($event_id=null)
+	{
+		if (!$event_id)
+		{
+			$this->setError(Lang::txt('Missing event id'));
+			return false;
+		}
+
+		// Load event object
+		$event = new Event($this->database);
+		$event->load($event_id);
+
+		// Are they authorized to edit this event? Do they own it? Own it!
+		if (!$this->_authorize($event->created_by)
+			&& !(User::get('id') == $event->created_by))
+		{
+			$this->setError(Lang::txt('User not authorized to upload files for this event'));
+			return false;
+		}
+
+		// Get the file upload
+		$files = $_FILES['files'];
+
+		// Loop through the files
+		foreach ($files['name'] as $i => $name)
+		{
+			// Skip if no file
+			if (!$name)
+			{
+				continue;
+			}
+
+			// Get the file extension
+			$ext = strtolower(Filesystem::extension($name));
+
+			// Check for allowed file extensions
+			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
+			{
+				$this->setError(Lang::txt('Invalid file type'));
+				return false;
+			}
+
+			// Get the file size
+			$size = $files['size'][$i];
+
+			// Check for allowed file size
+			if ($size > 5242880)
+			{
+				$this->setError(Lang::txt('File too large'));
+				return false;
+			}
+
+			// Get the file name
+			$name = $files['name'][$i];
+
+			// Get the file tmp name
+			$tmp_name = $files['tmp_name'][$i];
+
+			// Get the file type
+			$type = $files['type'][$i];
+
+			// Get the file error
+			$error = $files['error'][$i];
+			if ($error > 0) {
+				$this->setError(Lang::txt('File upload error'));
+				return false;
+			}
+
+			// Create the target directory if it doesn't exist
+			$target_dir = $this->filesRoot . DS . $event_id . DS . 'uploads';
+			if (!is_dir($target_dir))
+			{
+				if (!Filesystem::makeDirectory($target_dir))
+				{
+					$this->setError(Lang::txt('Could not create directory'));
+					return false;
+				}
+			}
+
+			// Get the file path
+			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . DS . $name;
+
+			// Check if file already exists
+			if (file_exists($target_path))
+			{
+				$this->setError(Lang::txt('File already exists'));
+				return false;
+			}
+
+			// Upload the file
+			if (!move_uploaded_file($tmp_name, $target_path))
+			{
+				$this->setError(Lang::txt('File upload error - could not move file to destination'));
+				return false;
+			}
+
+			// Save file info into the database
+			$query = new \Hubzero\Database\Query;
+			$query->push('#__events_pages', ['event_id' => $event_id, 'title' => $name, 'pagetext' => $target_path, 'created_by' => User::get('id'), 'alias' => 'event_' . $event_id . '_file']);
+		}
+	}
+
+	/**
+	 * Serve a file for an event
+	 *
+	 * 
+	 * @return  void
+	 */
+	public function serveFileTask()
+	{
+		// Get the event id
+		$event_id = Request::getInt('id', 0, 'get');
+
+		// Get the file id
+		$file_id = Request::getInt('file_id', 0, 'get');
+
+		if (!$event_id)
+		{
+			$this->setError(Lang::txt('Missing event id'));
+			return false;
+		}
+
+		if (!$file_id)
+		{
+			$this->setError(Lang::txt('Missing file id'));
+			return false;
+		}
+
+		$query = new \Hubzero\Database\Query;
+		$files = $query->select('title, pagetext')
+						->from('#__events_pages')
+						->whereEquals('id', $file_id)
+						->whereEquals('event_id', $event_id)
+						->fetch();
+		if (count($files) == 0)
+		{
+			$this->setError(Lang::txt('File not found'));
+			return false;
+		}
+		$file = $files[0];
+
+		$server = new \Hubzero\Content\Server;
+		$server->filename($file->pagetext);
+		$server->disposition('attachment');
+		$server->saveas($file->title);
+		$server->serve();
+	}
+	/**
+	 * Remove a file for an event (Can only be called via ajax)
+	 *
+	 * 
+	 * @return  void
+	 */
+	public function removeFileTask()
+	{
+		// Get the event id
+		$event_id = Request::getInt('id', 0, 'get');
+
+		// Get the file id
+		$file_id = Request::getInt('file_id', 0, 'get');
+
+		if (!$event_id)
+		{
+			echo json_encode([
+				'status' => 400,
+				'message' => 'Missing event id'
+			]);
+			exit();
+		}
+
+		if (!$file_id)
+		{
+			echo json_encode([
+				'status' => 400,
+				'message' => 'Missing file id'
+			]);
+			exit();
+		}
+
+		// Load event object
+		$event = new Event($this->database);
+		$event->load($event_id);
+
+		// Are they authorized to remove this file? Do they own event? Own it!
+		if (!$this->_authorize($event->created_by)
+			&& !(User::get('id') == $event->created_by))
+		{
+			echo json_encode([
+				'status' => 403,
+				'message' => 'User not authorized to remove files for this event'
+			]);
+			exit();
+		}
+
+		// Get the file path
+		$query = new \Hubzero\Database\Query;
+		$file_paths = $query->select('pagetext')
+						->from('#__events_pages')
+						->whereEquals('id', $file_id)
+						->whereEquals('event_id', $event_id)
+						->fetch();
+
+		// Delete the file from the database
+		$query = new \Hubzero\Database\Query;
+		$query->delete('#__events_pages')
+				->whereEquals('id', $file_id)
+				->whereEquals('event_id', $event_id)
+				->whereEquals('alias', 'event_' . $event_id . '_file')
+				->execute();
+		
+		// Delete the file from the filesystem
+		Log::debug($file_paths[0]->pagetext);
+		unlink($file_paths[0]->pagetext);
+		
+		echo json_encode([
+			'status' => 200,
+			'message' => 'File deleted successfully'
+		]);
+		exit();
 	}
 }

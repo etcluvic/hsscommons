@@ -258,6 +258,9 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 				case 'events':
 					$this->events();
 					break;
+				case 'serveRespondentFile':
+					$arr['html'] = $this->serveRespondentFile();
+					break;
 				default:
 					$arr['html'] = $this->display();
 					break;
@@ -1319,12 +1322,83 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$eventsRespondent->dietary_needs    = (isset($dietary['needs']) && strtolower($dietary['needs']) == 'yes') ? $dietary['specific'] : null;
 		$eventsRespondent->attending_dinner = (isset($dinner) && $dinner == 'yes') ? 1 : 0;
 		$eventsRespondent->bind($register);
+		if (isset($register['open_question']) && $register['open_question']) {
+			$eventsRespondent->comment .= '<openquestion>' . $register['open_question'] . '</openquestion>'; 
+		}
+		Log::debug(get_object_vars($eventsRespondent));
 
 		//did we save properly
 		if (!$eventsRespondent->save($eventsRespondent))
 		{
 			$this->setError($eventsRespondent->getError());
 			return $this->register();
+		}
+
+		// Save supporting file if one was uploaded
+		$file = isset($_FILES['register_file']) ? $_FILES['register_file'] : null;
+		if (isset($file['name']) && $file['name']) {
+			$name = $file['name'];
+
+			// Get the file extension
+			$ext = strtolower(Filesystem::extension($name));
+
+			// Check for allowed file extensions
+			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
+			{
+				$this->setError(Lang::txt('Invalid file type'));
+				return $this->register();
+			}
+
+			// Get the file size
+			$size = $file['size'];
+
+			// Check for allowed file size
+			if ($size > 5242880)
+			{
+				$this->setError(Lang::txt('File too large'));
+				return $this->register();
+			}
+
+			// Get the file tmp name
+			$tmp_name = $file['tmp_name'];
+
+			// Get the file type
+			$type = $file['type'];
+
+			// Get the file error
+			$error = $file['error'];
+			if ($error > 0) {
+				$this->setError(Lang::txt('File upload error'));
+				return $this->register();
+			}
+
+			// Create the target directory if it doesn't exist
+			$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $eventsRespondent->id . DS . 'uploads';
+			if (!is_dir($target_dir))
+			{
+				if (!Filesystem::makeDirectory($target_dir))
+				{
+					$this->setError(Lang::txt('Could not create directory'));
+					return $this->register();
+				}
+			}
+
+			// Get the file path
+			$target_path = $target_dir . DS . $name;
+
+			// Check if file already exists
+			if (file_exists($target_path))
+			{
+				$this->setError(Lang::txt('File already exists'));
+				return false;
+			}
+
+			// Upload the file
+			if (!move_uploaded_file($tmp_name, $target_path))
+			{
+				$this->setError(Lang::txt('File upload error - could not move file to destination'));
+				return $this->register();
+			}
 		}
 
 		// Archie: Comment this code out as we already disabled race
@@ -1476,7 +1550,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$registrants = $eventsRespondent->getRecords();
 
 		//var to hold output
-		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,Comments,Register Date' . "\n";
+		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Open Question Answer,Comments,Register Date' . "\n";
 
 		$fields = array(
 			'first_name',
@@ -1501,6 +1575,8 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			'dietary_needs',
 			'attending_dinner',
 			'abstract',
+			'file',
+			'open_question',
 			'comment',
 			'registered'
 		);
@@ -1513,6 +1589,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			$this->database->setQuery($sql);
 			$race = $this->database->loadResult();
 
+			$openQuestion = '';
 			foreach ($fields as $field)
 			{
 				switch ($field)
@@ -1528,6 +1605,31 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 						break;
 					case 'registered':
 						$output .= $this->escapeCsv(Date::of($registrant->registered)->toLocal('Y-m-d H:i:s'));
+						break;
+					case 'file':
+						$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $registrant->event_id . DS . 'respondents' . DS . $registrant->id . DS . 'uploads';
+						if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
+						{
+							$fileUrl = Route::url('index.php?option=' . $this->option . '&cn=' . $this->group->get('cn') . '&active=calendar&action=serveRespondentFile&event_id=' . $registrant->event_id . '&respondent_id=' . $registrant->id);
+							$output .= $this->escapeCsv(rtrim(Request::base(), '/') . $fileUrl) . ',';
+						} else {
+							$output .= ','; // empty file
+						}
+						break;
+					case 'open_question':
+						if (strpos($registrant->comment, '<openquestion>') !== false) {
+							// Extract open question answer from comment (open question is opened and closed by an <optionquestion> tag)
+							$openQuestion = substr($registrant->comment, strpos($registrant->comment, '<openquestion>') + 14);
+							$openQuestion = substr($openQuestion, 0, strpos($openQuestion, '</openquestion>'));
+							$output .= $this->escapeCsv($openQuestion) . ',';
+						} else {
+							$output .= ','; // empty open question
+						}
+						break;
+					case 'comment':
+						// Remove open question answer from comment
+						$comment = str_replace('<openquestion>' . $openQuestion . '</openquestion>', '', $registrant->comment);
+						$output .= $this->escapeCsv($comment) . ',';
 						break;
 					default:
 						$output .= $this->escapeCsv($registrant->$field) . ',';
@@ -1940,5 +2042,60 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 
 		// add good
 		return true;
+	}
+
+	/**
+	 * Serve respondent's supporting file
+	 *
+	 * @return  void
+	 */
+	private function serveRespondentFile()
+	{
+		// Get the event id
+		$event_id = Request::getInt('event_id', 0, 'get');
+
+		// Get the file id
+		$respondent_id = Request::getInt('respondent_id', 0, 'get');
+
+		// Need to have an event id
+		if (!$event_id)
+		{
+			$this->setError(Lang::txt('Missing event id'));
+			return false;
+		}
+
+		// Need to have a respondent id
+		if (!$respondent_id)
+		{
+			$this->setError(Lang::txt('Missing file id'));
+			return false;
+		}
+
+		// User must be logged in
+		if (User::isGuest()) {
+			$this->setError(Lang::txt('User must be logged in to download file'));
+			return false;
+		}
+
+		// User must be a member of this group
+		if (!in_array(strval(User::get('id')), $this->members)) {
+			$this->setError(Lang::txt('User must be a member of this group to download file'));
+			return false;
+		}
+
+		$target_dir = PATH_APP . DS . 'site' . DS . 'events' . DS . $event_id . DS . 'respondents' . DS . $respondent_id . DS . 'uploads';
+		if (is_dir($target_dir) && $files = Filesystem::files($target_dir))
+		{
+			$server = new \Hubzero\Content\Server;
+			$server->filename($target_dir . DS . $files[0]);
+			$server->disposition('attachment');
+			$server->saveas($files[0]);
+			$server->serve();
+		} else {
+			$this->setError(Lang::txt('File not found'));
+			return false;
+		}
+
+		return $this->details();
 	}
 }

@@ -39,7 +39,8 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
-$this->css('publications.css', 'plg_projects_publications');
+$this->css('publications.css', 'plg_projects_publications')
+		->js('stats.js', 'plg_members_repository');
 
 function getStatus($status = null)
 {
@@ -74,8 +75,12 @@ function getStatus($status = null)
 ?>
 
 	<h2><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_TITLE'); ?></h2>
-	<div style="margin-bottom: 10px;">
+	<div style="margin-bottom: 10px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
 		<a class="icon-add btn" href="/publications/submit"><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ADD_BTN_TEXT'); ?></a>
+		<a class="btn" href="#orcid-pub-modal" id="show-orcid-pub-btn">
+			<img src="/core/components/com_members/site/assets/img/orcid_16x16.png" class="logo" width="20" height="20" alt="iD">
+			Import existing publications from ORCID
+		</a>
 	</div>
 	<table>
 		<thead>
@@ -112,7 +117,68 @@ function getStatus($status = null)
 	<?php } ?>
 	</table>
 <?php } else { ?>
-	<p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> right now!</p>
+	<!-- <p><?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATS_NO_INFO'); ?> <a href="/publications/submit">Upload one </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import one from ORCID</a> right now!</p> -->
+	<div class="introduction">
+		<div class="introduction-message">
+			<p>Your repository is currently empty.</p>
+		</div>
+		<div class="introduction-questions">
+			<p><strong>What is a repository?</strong></p>
+			<p>A repository contains all publications that you're an author of. It is a place to manage your publications, view the necessary information and make important decisions.</p>
+
+			<p><strong>How do I get started?</strong></p>
+			<p><p><a href="/publications/submit">Add a new publication </a> or <a id="show-orcid-pub-btn" href="#orcid-pub-modal">Import existing ones from ORCID</a> right now!</p></p>
+		</div>
+	</div><!-- / .introduction -->
 <?php } ?>
+
+<!-- Modal displays for ORCID publications -->
+<div style="display:none;">
+	<div class="modal pub-modal" id="orcid-pub-modal">
+		<?php if (!$this->orcid) { ?>
+			<a href="<?php echo DS . "members" . DS . User::get('id') . DS . "account";  ?>">Connect your account to ORCID</a> to start importing publications
+		<?php } else if (count($this->orcidWorks) === 0 ) { ?>
+			You don't have any publication on ORCID to import
+		<?php } else { ?>
+			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
+			<i>Click on each publication container to select/deselect that publication for importation</i>
+			<form action="<?php echo Route::url('index.php?option=com_publications&task=orcidImport') ?>" method="post" class="pub-modal-item-container" >
+				<div class="control-bar">
+					<label class="btn select-all-btn">Select all (<?php echo count($this->orcidWorks); ?>)</label>
+					<label class="btn deselect-all-btn">Deselect all</label>
+				</div>
+				<?php
+				$count = 0;
+				foreach($this->orcidWorks as $work) {
+				?>
+					<div class='<?php echo "pub-modal-item" . (in_array($work->putCode, $this->orcidImportedPutCodes) ? " prev-imported" : "") . " orcid-pub-" . (floor($count / 5) + 1)?>' data-putcode="<?php echo $work->putCode; ?>">
+						<?php if (in_array($work->putCode, $this->orcidImportedPutCodes)) { ?>
+							<div>
+								<input type="checkbox" class="selected-checkbox">
+								<?php echo $work->title ?> | <?php echo $work->type ?>
+								<strong>(Previously imported)</strong>
+							</div>
+						<?php } else { ?>
+							<div>
+								<input type="checkbox" class="selected-checkbox">
+								<?php echo $work->title ?> | <?php echo $work->type ?>
+							</div>
+						<?php } ?>
+					</div>
+				<?php $count++; } ?>
+				<div class="pub-modal-paginator" data-total-pages="<?php echo (floor(($this->totalOrcidWorks - 1) / 5) + 1); ?>">
+					<div class="page-navigator previous disabled">&#60;</div>
+					<div class="page-text">Page <span id="current-page">1</span> of <?php echo (floor(($this->totalOrcidWorks - 1) / 5) + 1); ?></div>
+					<div class="page-navigator next">&#62;</div>
+				</div>
+				<input name="putCodes" type="text" class="selected-putcodes-input hidden">
+				<fieldset class="hidden">
+					<input name="redirectUrl" value="<?php echo base64_encode(Request::current()); ?>">
+				</fieldset>
+				<input type="submit" value="Import selected publications" id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;"></button>
+			</form>
+		<?php } ?>
+	</div>
+</div>
 
 </div>

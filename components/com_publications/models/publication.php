@@ -1008,6 +1008,43 @@ class Publication extends Obj
 	}
 
 	/**
+	 * Get the attachment that is previewed. Return null if there is no attachment found for the publication.
+	 *
+	 * @return  mixed
+	 */
+	public function getPreviewAttachment() {
+		if ($this->_attachments && count($this->_attachments) > 0) {
+			$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4'];
+			$firstFile = null;
+			// Preview first primary file by default
+			if (count($this->_attachments[1]) > 0) {
+				$firstFile = $this->_attachments[1][0];
+			// Preview first supporting file if there is no primary file
+			} else if (count($this->_attachments[2]) > 0) {
+				$firstFile = $this->_attachments[2][0];
+			// Preview gallery file is there is no primary or supporting file
+			} else if (count($this->_attachments[3]) > 0) {
+				$firstFile = $this->_attachments[3][0];
+			}
+
+			// Only allow certain file types to be previewed
+			if ($firstFile) {
+				$splittedFilePath = explode('.', $firstFile->path);
+				$fileExtension = strtolower($firstFile->path ? end($splittedFilePath) : '');
+				if (in_array($fileExtension, $allowedFileExtensions)) {
+					return $firstFile;
+				} else {
+					return null;
+				}
+			}
+
+			return $firstFile;
+		}
+		
+		return null;
+	}
+
+	/**
 	 * Get publication license
 	 *
 	 * @return  mixed

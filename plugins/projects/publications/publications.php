@@ -124,7 +124,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// Check if our area is in the array of areas we want to return results for
 		if (is_array($areas))
 		{
-			if (empty($this->_area) || !in_array($this->_area['name'], $areas))
+			if (empty($this->_area) || !in_array($this->_area['name'], $areas) && $action !== 'create')
 			{
 				return;
 			}
@@ -162,7 +162,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			// Contribute process outside of projects
 			$this->model->set('provisioned', 1);
 
-			$ajax_tasks  = array('showoptions', 'save', 'showitem');
+			$ajax_tasks  = array('showoptions', 'save', 'showitem', 'create');
 			$this->_task = $action == 'start' ? 'start' : 'contribute';
 			if ($action == 'publication')
 			{
@@ -183,7 +183,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		\Hubzero\Document\Assets::addPluginStylesheet('projects', 'publications', 'curation');
 		\Hubzero\Document\Assets::addPluginScript('projects', 'publications', 'curation');
 
-		Log::debug($this->_task);
 
 		// Actions
 		switch ($this->_task)
@@ -294,6 +293,9 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			case 'retrieve':
 				$this->retrieveDraft();
 				break;
+			// Create
+			case 'create':
+				return $this->createDraft();
 		}
 
 		// Return data
@@ -834,11 +836,12 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				// Remove members who aren't authors for standalone publication's project
 				if (gettype($this->model->get('id')) == "string" && strpos($this->model->get('title'), 'pub-') === 0)
 				{
+					$submitter = $pub->submitter();
 					$authors = $pub->authors($overwrite=true);
 					$owners = $this->model->_tblOwner->getOwners($this->model->get('id'));
 					foreach ($owners as $k => $owner)
 					{
-						if (!in_array($owner->userid, $authors)) {
+						if (!in_array($owner->userid, $authors) && $owner->userid !== $submitter->user_id) {
 							$this->model->_tblOwner->removeOwners($this->model->get('id'), array($owner->userid), 0, 1);
 							$removed_owners[] = $owner->userid;
 						}
@@ -2344,6 +2347,32 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_PUBLISH_MSG')
 		);
 
+		// Notify all followers of the authors
+		$followerIds = [];
+		foreach($authors as $author) {
+			$query = new \Hubzero\Database\Query;
+			$authorFollowers = $query->select('*')
+							->from('#__collections_following')
+							->whereEquals('follower_type', 'member')
+							->whereEquals('following_type', 'member')
+							->whereEquals('following_id', $author)
+							->fetch();
+			foreach($authorFollowers as $follower) {
+				if (!in_array($follower->follower_id, $followerIds)) {
+					$followerIds[] = $follower->follower_id;
+				}
+			}
+		}
+
+		\Components\Publications\Helpers\Html::notify(
+			$pub,
+			$followerIds,
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_FOLLOWER_PUBLISH_SUB'),
+			Lang::txt('PLG_PROJECTS_PUBLICATIONS_EMAIL_FOLLOWER_PUBLISH_MSG'),
+			false,
+			true
+		);
+
 		// Redirect
 		$link = $pub->link('editversion');
 
@@ -3129,10 +3158,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$pid		= Request::getInt('pid', 0);
 		$vid		= Request::getInt('vid', 0);
 		$doi 		= Request::getString('doi', '');
-		Log::debug('Calling retrieve');
-		Log::debug("Pid: " . $pid);
-		Log::debug("Vid: " . $vid);
-		Log::debug("DOI: " . $doi);
 
 		// Enforce publication id
 		if (!$pid) {

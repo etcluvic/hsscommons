@@ -173,13 +173,99 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 			}
 		}
 
+		$isUserFollowing = false;
+		// Get all user ids and names that is currently logged in user is following 
+		$followings = [];
+		$query = new \Hubzero\Database\Query;
+		$followingsResult = $query->select('*')
+						->from('#__collections_following')
+						->whereEquals('follower_type', 'member')
+						->whereEquals('following_type', 'member')
+						->whereEquals('follower_id', $this->member->id)
+						->fetch();
+		foreach($followingsResult as $result) {
+			$query = new \Hubzero\Database\Query;
+			$followingMemberResult = $query->select('*')
+									->from('#__users')
+									->whereEquals('id', $result->following_id)
+									->fetch();
+			$followingMember = new stdClass();
+			$followingMember->id = $followingMemberResult[0]->id;
+			$followingMember->name = $followingMemberResult[0]->name;
+			$followings[] = $followingMember;
+		}
+
+		// Get all user ids and names that are followers of the currently logged in user
+		$followers = [];
+		$query = new \Hubzero\Database\Query;
+		$followersResult = $query->select('*')
+						->from('#__collections_following')
+						->whereEquals('follower_type', 'member')
+						->whereEquals('following_type', 'member')
+						->whereEquals('following_id', $this->member->id)
+						->fetch();
+		foreach($followersResult as $result) {
+			if (User::get('id') != $this->member->id && $result->follower_id == User::get('id')) {
+				$isUserFollowing = true;
+			}
+			$query = new \Hubzero\Database\Query;
+			$followerMemberResult = $query->select('*')
+									->from('#__users')
+									->whereEquals('id', $result->follower_id)
+									->fetch();
+			$followerMember = new stdClass();
+			$followerMember->id = $followerMemberResult[0]->id;
+			$followerMember->name = $followerMemberResult[0]->name;
+			$followers[] = $followerMember;
+		}
+
+		// Sort followings and followers
+		usort($followings, function($a, $b) {
+			return strcmp($a->name, $b->name);
+		});
+
+		usort($followers, function($a, $b) {
+			return strcmp($a->name, $b->name);
+		});
+		
+		// Get user ORCID profile to render the ORCID auto-populate modal
+		$orcidProfile = new stdClass;
+		if (User::get('id') == $this->member->id) {
+			// Get profile's ORCID from database
+			$orcidRow = \Hubzero\Auth\Link::all()
+			->whereEquals('user_id', User::get('id'))
+			->row();
+			$orcid = $orcidRow->username;
+
+			if ($orcid) {
+				// Get user access token
+				$query = new \Hubzero\Database\Query;
+				$accessTokens = $query->select('*')
+									->from('#__xprofiles_tokens')
+									->whereEquals('user_id', User::get('id'))
+									->fetch();
+
+				// Get user ORCID profile
+				if (count($accessTokens) > 0) {
+					$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+					$orcidHandler->setAccessToken($accessTokens[0]->token);
+					$orcidHandler->setOrcid($orcid);
+					$orcidProfile = $orcidHandler->getProfile();
+				}
+			}
+		}
+
 		$view = $this->view('default', 'index')
 			->set('params', $params)
 			->set('option', 'com_members')
 			->set('profile', $this->member)
 			->set('fields', $fields)
 			->set('completeness', $this->getProfileCompleteness($fields, $this->member))
-			->set('registration_update', $xreg);
+			->set('registration_update', $xreg)
+			->set('followings', $followings)
+			->set('followers', $followers)
+			->set('isUserFollowing', $isUserFollowing)
+			->set('orcidProfile', $orcidProfile);
 
 		return $view
 			->setErrors($this->getErrors())

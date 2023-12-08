@@ -37,6 +37,14 @@
 	.about.even {
 		background: #fafafa;
 	}
+	.about h3 a {
+		color: #666;
+		transition-duration: 0.25s;
+		border: none;
+	}
+	.about h3 a:hover {
+		color: #000;
+	}
 
 @media (min-width: 40em) {
 	.tagline {

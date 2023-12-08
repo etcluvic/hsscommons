@@ -595,7 +595,7 @@ class Html
 						: 'index.php?option=com_projects&alias='
 						. $publication->project()->get('alias') . '&active=publications';
 
-				$msg .= ' <a href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
+				$msg .= ' <a class="manage-text" href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
 			}
 		}
 
@@ -1151,7 +1151,7 @@ class Html
 	 * @param   boolean  $hubMessage
 	 * @return  boolean
 	 */
-	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false)
+	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false, $overwriteEmailConfig=false)
 	{
 		if (!$subject || !$message || empty($addressees))
 		{
@@ -1159,7 +1159,7 @@ class Html
 		}
 
 		// Is messaging turned on?
-		if ($publication->config('email') != 1)
+		if ($publication->config('email') != 1 && !$overwriteEmailConfig)
 		{
 			return false;
 		}

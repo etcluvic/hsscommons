@@ -12,6 +12,8 @@ use Orcid\Profile;
 use Orcid\Oauth;
 use Orcid\Http\Curl;
 
+include_once PATH_APP . DS . 'components' . DS . 'com_members' . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
+
 class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 {
 	/**
@@ -158,43 +160,25 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 			// Create a Commons-based account with ORCID iD
 			if (Session::get('orcid_disconnect', null)) {
-				$activitiesProp = "activities-summary";
-				$employmentProp = "employment-summary";
-				$roleProp = "role-title";
+				// Read ORCID profile record
+				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+				$orcidHandler->setAccessToken($oauth->getAccessToken());
+				$orcidHandler->setOrcid($username);
+				$orcidProfile = $orcidHandler->getProfile();
 
-				$employments = null;
-				if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
-					$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
-				}
-				
-
-				$email = null;
-				if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
-					$email = $person->emails->email[0]->email;
+				// Failed to get an ORCID profile
+				if (isset($orcidProfile->error)) {
+					$response->status = 400;
+					$response->error_message = $orcidProfile->error;
+					return;
 				}
 
-				$bio = null;
-				if (isset($person->biography->content)) {
-					$bio = $person->biography->content;
+				// Save ORCID profile in the session to use for registration
+				foreach($orcidProfile as $profile_key => $profile_value) {
+					Session::set('auth_link.tmp_' . $profile_key, $profile_value);
 				}
-				
-				$title = null;
-				$affiliation = null;
-				if (isset($employments) && is_array($employments) && count($employments) > 0) {
-					$title = $employments[0]->$roleProp;
-					$affiliation = $employments[0]->organization->name;
-				}
-
-				// Session::set('auth_link.username', $username);
-				$details = $person->name;
-
 				Session::set('auth_link.tmp_orcid', $username);
-				Session::set('auth_link.tmp_name', $orcid->fullName());
-				Session::set('auth_link.tmp_email', $email);
-				Session::set('auth_link.tmp_bio', $bio);
-				Session::set('auth_link.tmp_title', $title);
-				Session::set('auth_link.tmp_affiliation', $affiliation);
-			
+
 				App::redirect('/register?autofill=orcid');
 			}
 
@@ -209,38 +193,25 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				return;
 			}
 
-			$activitiesProp = "activities-summary";
-			$employmentProp = "employment-summary";
-			$roleProp = "role-title";
+			// Read ORCID profile record
+			$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
+			$orcidHandler->setAccessToken($oauth->getAccessToken());
+			$orcidHandler->setOrcid($username);
+			$orcidProfile = $orcidHandler->getProfile();
 
-			$employments = null;
-			if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
-				$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
-			}
-			
-
-			$email = null;
-			if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
-				$email = $person->emails->email[0]->email;
+			// Failed to get an ORCID profile
+			if (isset($orcidProfile->error)) {
+				$response->status = 400;
+				$response->error_message = $orcidProfile->error;
+				return;
 			}
 
-			$bio = null;
-			if (isset($person->biography->content)) {
-				$bio = $person->biography->content;
+			// Save ORCID profile in the session to use for registration
+			foreach($orcidProfile as $profile_key => $profile_value) {
+				Session::set('auth_link.tmp_' . $profile_key, $profile_value);
 			}
 			
-			$title = null;
-			$affiliation = null;
-			if (isset($employments) && is_array($employments) && count($employments) > 0) {
-				$title = $employments[0]->$roleProp;
-				$affiliation = $employments[0]->organization->name;
-			}
-			
-			// Temporarily set some session info to autofill the registration form
-			$hzal->set('email', $email);
-			Session::set('auth_link.tmp_bio', $bio);
-			Session::set('auth_link.tmp_title', $title);
-			Session::set('auth_link.tmp_affiliation', $affiliation);
+			$hzal->set('email', $orcidProfile->email);
 
 			// Set response variables
 			$response->auth_link = $hzal;
@@ -327,6 +298,9 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				$lifetime  = time() + 365*24*60*60;
 
 				\Hubzero\Utility\Cookie::bake($namespace, $lifetime, $prefs);
+			} else {				
+				// Temporarily store the ORCID access token into the session until the account is fully registered
+				Session::set('tmp_orcid_access_tokens', $oauth->getAccessToken());
 			}
 		}
 		else
@@ -381,42 +355,6 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 			// Set username to ORCID iD
 			$username = $orcid->id();
 
-			// Archie: Temporarily comment this out and come back to this later
-			// TODO: Need to see if we need to update user info from ORCID when they link their account
-
-			// $activitiesProp = "activities-summary";
-			// $employmentProp = "employment-summary";
-			// $roleProp = "role-title";
-
-			// $employments = null;
-			// if (isset($orcid->raw()->$activitiesProp->employments->$employmentProp)) {
-			// 	$employments = $orcid->raw()->$activitiesProp->employments->$employmentProp;
-			// }
-			
-
-			// $email = null;
-			// if (isset($person->emails->email) && is_array($person->emails->email) && count($person->emails->email) > 0) {
-			// 	$email = $person->emails->email[0]->email;
-			// }
-
-			// $bio = null;
-			// if (isset($person->biography->content)) {
-			// 	$bio = $person->biography->content;
-			// }
-			
-			// $title = null;
-			// $affiliation = null;
-			// if (isset($employments) && is_array($employments)) {
-			// 	$title = $employments[0]->$roleProp;
-			// 	$affiliation = $employments[0]->organization->name;
-			// }
-			
-			// Temporarily set some session info to autofill the registration form
-			// Session::set('auth_link.tmp_email', $email);
-			// Session::set('auth_link.tmp_bio', $bio);
-			// Session::set('auth_link.tmp_title', $title);
-			// Session::set('auth_link.tmp_affiliation', $affiliation);
-
 			$hzad = \Hubzero\Auth\Domain::getInstance('authentication', 'orcid', '');
 
 			// Create the link
@@ -453,6 +391,51 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				{
 					Log::error(sprintf('Hubzero\Auth\Link::find_or_create("authentication", "orcid", null, %s) returned false', $username));
 				}
+			}
+
+			// Get the previous ORCID access token of this user
+			$query = new \Hubzero\Database\Query;
+			
+			$accessTokens = $query->select('*')
+								->from('#__xprofiles_tokens')
+								->whereEquals('user_id', User::get('id'))
+								->fetch();
+
+			// Revoke the previous access token
+			// Archie: Have to write the revoke code out here as we can't override Oauth.php file
+			if (count($accessTokens) > 0) {
+				$accessToken = $accessTokens[0]->token;
+				$http = new Curl;
+				$revokeUrl = '';
+				
+				if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+					$revokeUrl = 'https://sandbox.orcid.org/oauth/revoke';
+				} else {
+					$revokeUrl = 'https://orcid.org/oauth/revoke';
+				}
+
+				$revokeFields = [
+					'client_id'     => $this->params->get('client_id'),
+					'client_secret' => $this->params->get('client_secret'),
+					'token'			=> $accessToken
+				];
+
+				$http->setUrl($revokeUrl)
+					->setPostFields($revokeFields)
+					->setHeader(['Accept' => 'application/json']);
+
+				$data = json_decode($http->execute());
+
+				if (!$data) {
+					Log::debug('No data returned after revoking ORCID access token');
+				} else {
+					Log::debug(get_object_vars($data));
+				}
+
+				$query->alter('#__xprofiles_tokens', 'user_id', User::get('id'), ['token' => $oauth->getAccessToken(), 'created' => date('y-m-d h:i:s')]); 
+			} else {
+				// Store the new access token into the database and relates it to the current logged in user
+				$query->push('#__xprofiles_tokens', ['token' => $oauth->getAccessToken(), 'user_id' => User::get('id'), 'created' => date('y-m-d h:i:s')]);
 			}
 		}
 		else

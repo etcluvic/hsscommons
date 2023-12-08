@@ -150,7 +150,7 @@ $legacy = array(
 
 // Get profile's ORCID from database
 $orcidRow = \Hubzero\Auth\Link::all()
-	-> whereEquals('user_id', $this->profile->get('id'))
+	->whereEquals('user_id', $this->profile->get('id'))
 	->row();
 $profileOrcid = $orcidRow->username;
 ?>
@@ -158,6 +158,106 @@ $profileOrcid = $orcidRow->username;
 <?php if ($this->getError()) { ?>
 	<p class="error"><?php echo $this->getError(); ?></p>
 <?php } ?>
+
+<!-- Display number of followings and followers -->
+<div class="followings-display">
+	<a id="followings-link" href="#followings-modal"><?php echo count($this->followings); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWINGS"); ?></a>
+	<a id="followers-link" href="#followers-modal"><?php echo count($this->followers); ?> <?php echo Lang::txt("COM_MEMBERS_FOLLOWERS"); ?></a>
+	<!-- Help icon for following -->
+	<div class="following-help-container">
+		<span class="icon-info" id="following-help-icon"></span>
+		<div id="following-help">If you follow someone, you will receive an email every time that person publishes a publication.</div>
+	</div>
+	<!-- Button to auto populate profile with ORCID -->
+	<?php if ($isUser && $profileOrcid) { ?>
+		<a id="orcid-autopopulate-link" href="#orcid-autopopulate-modal" class="btn" style="margin-left: auto;">Auto populate profile with ORCID</a>
+	<?php } ?>
+	<!-- Follow button -->
+	<?php if (!User::isGuest() && !$isUser) { ?>
+		<?php if ($this->isUserFollowing) { ?>
+			<a class="btn message-member" style="margin-left: auto;" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=unfollow&unfollowingId=' . $this->profile->get('id') . '&unfollowingName=' . $this->profile->get('name') . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($this->profile->get('name'))); ?>">
+				<?php echo Lang::txt('UNFOLLOW'); ?>
+			</a>
+		<?php } else { ?>
+			<a class="btn message-member" style="margin-left: auto;" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=follow&followingId=' . $this->profile->get('id') . '&followingName=' . $this->profile->get('name') . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($this->profile->get('name'))); ?>">
+				<?php echo Lang::txt('FOLLOW'); ?>
+			</a>
+		<?php } ?>
+	<?php } ?>
+</div>
+
+<!-- Modal to display members that this user is following -->
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="followings-modal">
+		<?php if (count($this->followings) > 0) { ?>
+			<h1><?php echo Lang::txt("COM_MEMBERS_USER_FOLLOWING_FOLLOW_MODAL"); ?></h1>
+			<div class="follow-members-display">
+				<?php foreach($this->followings as $following) {
+					echo "<a href='/members/" . $following->id . "'>" .  $following->name . "</a>";
+				} ?>
+			</div>
+		<?php } else { ?>
+			<h1><?php echo Lang::txt("COM_MEMBERS_USER_NO_FOLLOWING_FOLLOW_MODAL"); ?></h1>
+		<?php } ?>
+	</div>
+</div>
+
+<!-- Modal to display members that are followers of this user -->
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="followers-modal">
+		<?php if (count($this->followers) > 0) { ?>
+			<h1><?php echo Lang::txt("COM_MEMBERS_USER_FOLLOWER_FOLLOW_MODAL"); ?></h1>
+			<div class="follow-members-display">
+				<?php foreach($this->followers as $follower) {
+					echo "<a href='/members/" . $follower->id . "'>" .  $follower->name . "</a>";
+				} ?>
+			</div>
+		<?php } else { ?>
+			<h1><?php echo Lang::txt("COM_MEMBERS_USER_NO_FOLLOWER_FOLLOW_MODAL"); ?></h1>
+		<?php } ?>
+	</div>
+</div>
+
+<!-- Modal to get user confirmation to auto-populate profile with ORCID -->
+<div style="display:none;">
+	<div class="modal follow-members-modal" id="orcid-autopopulate-modal">
+		<h1><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_CONFIRMATION_TEXT"); ?></h1>
+		<?php if (!isset($this->orcidProfile->error)) { ?>
+			<p><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_DOUBLE_CHECK_ORCID"); ?> <a href="<?php echo "https://orcid.org/" . $profileOrcid; ?>" target="_blank"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_PROFILE_LINK"); ?></a></p>
+			<p>If you select <strong>Yes, I'm sure</strong>, the following fields will be updated:</p>
+			<ul style="margin-bottom: 20px;">
+				<?php 
+				$defaultFields = ["name", "username", "email"];
+				foreach ($this->orcidProfile as $profile_key => $profile_value) {
+					if ($profile_key != "surname" && $profile_key != "givenName") {
+						// If the updating field is not a profile field created from the backend, set the label to the key capitalized
+						if (in_array($profile_key, $defaultFields)) {
+							echo "<li>" . ucfirst($profile_key) . ": " . $profile_value . "</li>";
+						} else {
+							// Get the label for the profile field
+							$query = new \Hubzero\Database\Query;
+							$profileLabelQuery = $query->select('*')
+														->from('#__user_profile_fields')
+														->whereEquals('name', $profile_key)
+														->fetch();
+
+							if (count($profileLabelQuery) > 0) {
+								$profile_label = $profileLabelQuery[0]->label;
+								echo "<li>" . $profile_label . ": " . $profile_value . "</li>";
+							}
+						}
+					}
+				} 
+				?>
+			</ul>
+			<div>
+				<a href="<?php echo DS . "members" . DS . $this->profile->get('id') . DS . "profile" . DS . "orcidpopulate" ?>" class="btn" style="margin-left: auto;"><?php echo Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_ORCID_YES"); ?></a>
+			</div>
+		<?php } else { ?>
+			<p>Oops, we can't retrieve your ORCID profile for some reason. Error received: <strong><?php echo $this->orcidProfile->error; ?></strong>. Please contact our team for further support. Thank you!</p>
+		<?php } ?>
+	</div>
+</div>
 
 <div id="profile-page-content" data-url="<?php echo Route::url('index.php?option=com_members&id=' . $this->profile->get('uidNumber') . '&active=profile'); ?>">
 	<h3 class="section-header">

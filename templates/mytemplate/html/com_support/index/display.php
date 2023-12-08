@@ -48,18 +48,18 @@ $this->css('index.css');
 
 	<?php if (Component::isEnabled('com_kb')) { ?>
 	<div class="about odd kb">
-		<h3><?php echo Lang::txt('COM_SUPPORT_KNOWLEDGE_BASE'); ?></h3>
+		<h3><a href="<?php echo Route::url('index.php?option=com_kb'); ?>"><?php echo Lang::txt('COM_SUPPORT_KNOWLEDGE_BASE'); ?></a></h3>
 		<p><a href="<?php echo Route::url('index.php?option=com_kb'); ?>"><?php echo Lang::txt('COM_SUPPORT_FIND'); ?></a> <?php echo Lang::txt('COM_SUPPORT_KNOWLEDGE_BASE_TAGLINE'); ?></p>
 	</div>
 	<?php } ?>
 
 	<div class="about even report">
-		<h3><?php echo Lang::txt('COM_SUPPORT_REPORT_PROBLEMS'); ?></h3>
+		<h3><a href="<?php echo Route::url('index.php?option=com_support&task=new'); ?>"><?php echo Lang::txt('COM_SUPPORT_REPORT_PROBLEMS'); ?></a></h3>
 		<p><a href="<?php echo Route::url('index.php?option=com_support&task=new'); ?>"><?php echo Lang::txt('COM_SUPPORT_REPORT_PROBLEMS'); ?></a> <?php echo Lang::txt('COM_SUPPORT_REPORT_PROBLEMS_TAGLINE'); ?> <a href="<?php echo Route::url('index.php?option=com_support&task=tickets'); ?>"><?php echo Lang::txt('COM_SUPPORT_TICKET_TRACKING_SYSTEM'); ?></a>. <?php echo Lang::txt('COM_SUPPORT_REPORT_PROBLEMS_GUARANTEE_RESPONSE'); ?></p>
 	</div>
 
 	<div class="about odd tickets">
-		<h3><?php echo Lang::txt('COM_SUPPORT_TRACK_TICKETS'); ?></h3>
+		<h3><a href="<?php echo Route::url('index.php?option=com_support&task=tickets'); ?>"><?php echo Lang::txt('COM_SUPPORT_TRACK_TICKETS'); ?></a></h3>
 		<p><?php echo Lang::txt('COM_SUPPORT_TRACK_TICKETS_PART_ONE'); ?> <a href="<?php echo Route::url('index.php?option=com_support&task=tickets'); ?>"><?php echo Lang::txt('COM_SUPPORT_TICKET_TRACKING_SYSTEM'); ?></a>? <?php echo Lang::txt('COM_SUPPORT_TRACK_TICKETS_PART_TWO'); ?></p>
 	</div>
 </section>

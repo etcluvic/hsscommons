@@ -257,17 +257,26 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 </div><!-- / .pubabout -->
 
 <div id="file-preview" style="padding-top: 200px; margin-top: -150px; margin-bottom: 50px; margin-left: 15px;">
-<h4><?php echo Lang::txt('COM_PUBLICATIONS_PREVIEW'); ?></h4>
 <?php
 // Provide a preview of primary document if exists
-$attachments = $this->publication->attachments();
-if ($attachments && count($attachments) > 0) {
-	$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
-	$firstFile = $attachments[1][0];
-	$fileExtension = strtolower($firstFile->path ? explode('.', $firstFile->path)[1] : '');
-	if (intval($firstFile->role) === 1 && in_array($fileExtension, $allowedFileExtensions)) {
-		echo "<iframe width='600' height='700' src='" . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $firstFile->id) . "' </iframe>"; 
-	}
+$previewAttachment = $this->publication->getPreviewAttachment();
+if ($previewAttachment) {
+	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
+	$splittedFilePath = explode('.', $previewAttachment->path);
+	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
+	if ($fileExtension === 'mp4') { ?>
+		<video width="100%" height="auto" controls>
+			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp4">
+			Your browser does not support the video tag.
+		</video>
+	<?php } else if ($fileExtension === 'mp3') { ?>
+		<video width="100%" height="auto" controls>
+			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp3">
+			Your browser does not support the video tag.
+		</video>
+	<?php } else { ?>
+		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
+	<?php }
 }
 ?>
 </div>

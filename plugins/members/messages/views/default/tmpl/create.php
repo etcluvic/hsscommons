@@ -7,7 +7,7 @@
 
 // No direct access
 defined('_HZEXEC_') or die();
-
+Log::debug('Call this template');
 //is the autocompleter disabled
 $disabled = ($this->tos) ? true : false;
 
@@ -40,7 +40,7 @@ $this->css();
 			</label>
 			<label>
 				<?php echo Lang::txt('PLG_MEMBERS_MESSAGES_MESSAGE'); ?> <span class="required"><?php echo Lang::txt('JOPTION_REQUIRED'); ?></span>
-				<textarea name="message" id="msg-message" rows="12" cols="50"></textarea>
+				<textarea name="message" id="msg-message" rows="12" cols="50"><?php echo $this->body; ?></textarea>
 			</label>
 			<p class="submit">
 				<input type="submit" class="btn" value="<?php echo Lang::txt('PLG_MEMBERS_MESSAGES_SEND'); ?>" />

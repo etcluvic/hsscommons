@@ -365,7 +365,7 @@ $styles .= '
 	a,
 	a:active,
 	a:visited {
-		color: ' . ($opacity2 ? 'rgba(' . hex2rgb($color2) . ', ' . $opacity2 . ')' : '#' . $color2) . ';
+		color: #2677B5;
 	}
 	a.btn,
 	a.btn:active,

@@ -54,6 +54,12 @@ HUB.Members.Profile = {
 
 		// Show completeness instruction modal when clicking on "How can I improve my score?" link
 		HUB.Members.Profile.showCompletenessInstructionModal();
+
+		// Show followings and followers modal
+		HUB.Members.Profile.showFollowingsFollowersModal();
+
+		// Show ORCID auto populate modal
+		HUB.Members.Profile.showOrcidPopulateModal();
 	},
 
 	//-------------------------------------------------------------
@@ -855,7 +861,6 @@ HUB.Members.Profile = {
 
 	showCompletenessInstructionModal: function()
 	{
-		console.log("Showing completeness instruction modal");
 		$('a#instruction-link').fancybox({
 			'transitionIn'	:	'elastic',
 			'transitionOut'	:	'elastic',
@@ -864,6 +869,44 @@ HUB.Members.Profile = {
 			'overlayShow'	:	false
 		});
 	},
+
+	showFollowingsFollowersModal: function()
+	{
+		$('a#followings-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+
+		$('a#followers-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+
+		// Display following help when hovering on following icon
+		$('#following-help').hide();
+		$('#following-help-icon').hover(function() {
+			$('#following-help').show();
+		}, function() {
+			$('#following-help').hide();
+		});
+	},
+
+	showOrcidPopulateModal: function()
+	{
+		$('a#orcid-autopopulate-link').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+	}
 };
 
 //-------------------------------------------------------------

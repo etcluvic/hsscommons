@@ -229,6 +229,9 @@
 	transform: translate(-50%, -50%);
 	font-family: 'Fontcons';
 }
+.module-links .remove.confirm:before {
+	left: 20% !important;
+}
 .module-links .remove.confirm,
 .module-links .remove.confirm:hover {
 	color: #FFF;
@@ -517,7 +520,7 @@
 	margin-right: 4em;
 }
 .module-content .compactlist li span {
-	color: #999;
+	color: #555555;
 	margin-left: 20px;
 }
 .module-content .compactlist li span span {
@@ -552,7 +555,7 @@
 	display: block;
 }
 .module-content .expandedlist li span span {
-	color: #999;
+	color: #555555;
 	margin-left: 0;
 	margin-right: 1.5em;
 	font-size: 1em;

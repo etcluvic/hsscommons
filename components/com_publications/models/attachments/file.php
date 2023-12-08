@@ -791,7 +791,11 @@ class File extends Base
 				// Initiate a new content server and serve up the file
 				$server = new \Hubzero\Content\Server();
 				$server->filename($download);
-				$server->disposition('attachment');
+				if ($serveInline) {
+					$server->disposition('inline');
+				} else {
+					$server->disposition('attachment');
+				}
 				$server->acceptranges(true);
 				$server->saveas(basename($download));
 
