@@ -237,6 +237,8 @@ class OrcidHandler extends Orcid\Oauth
         // Add email
         if (isset($person->emails->email) && count($person->emails->email) > 0 && $person->emails->email[0]->visibility === "PUBLIC") {
             $profile->email = $person->emails->email[0]->email;
+        } else {
+            $profile->email = null;
         }
 
         // Add education
