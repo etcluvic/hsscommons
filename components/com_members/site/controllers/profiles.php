@@ -2138,22 +2138,24 @@ class Profiles extends SiteController
 		// Replace Commons profile with ORCID profile
 		foreach($orcidProfile as $profile_key => $profile_value) {
 			Log::debug($profile_key . ": " . $profile_value);
-			$query = new \Hubzero\Database\Query;
+			if ($profile_value) {
+				$query = new \Hubzero\Database\Query;
 
-			$profile_field = $query->select('*')
-									->from('#__user_profiles')
-									->whereEquals('user_id', User::get('id'))
-									->whereEquals('profile_key', $profile_key)
-									->fetch();
-			if (count($profile_field) > 0) {
-				$query->alter('#__user_profiles', 'id', $profile_field[0]->id, ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
-			} else {
-				$query->push('#__user_profiles', ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
+				$profile_field = $query->select('*')
+										->from('#__user_profiles')
+										->whereEquals('user_id', User::get('id'))
+										->whereEquals('profile_key', $profile_key)
+										->fetch();
+				if (count($profile_field) > 0) {
+					$query->alter('#__user_profiles', 'id', $profile_field[0]->id, ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
+				} else {
+					$query->push('#__user_profiles', ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
+				}
 			}
 		}
 
 
 		// Redirect to profile page
-		App::redirect($redirectUrl);
+		App::redirect($redirectUrl, 'Update profile with ORCID successfully', 'success');
 	}
 }

@@ -231,19 +231,21 @@ $profileOrcid = $orcidRow->username;
 				foreach ($this->orcidProfile as $profile_key => $profile_value) {
 					if ($profile_key != "surname" && $profile_key != "givenName") {
 						// If the updating field is not a profile field created from the backend, set the label to the key capitalized
-						if (in_array($profile_key, $defaultFields)) {
+						if (in_array($profile_key, $defaultFields) && $profile_value) {
 							echo "<li>" . ucfirst($profile_key) . ": " . $profile_value . "</li>";
 						} else {
-							// Get the label for the profile field
-							$query = new \Hubzero\Database\Query;
-							$profileLabelQuery = $query->select('*')
-														->from('#__user_profile_fields')
-														->whereEquals('name', $profile_key)
-														->fetch();
+							if ($profile_value) {
+								// Get the label for the profile field
+								$query = new \Hubzero\Database\Query;
+								$profileLabelQuery = $query->select('*')
+															->from('#__user_profile_fields')
+															->whereEquals('name', $profile_key)
+															->fetch();
 
-							if (count($profileLabelQuery) > 0) {
-								$profile_label = $profileLabelQuery[0]->label;
-								echo "<li>" . $profile_label . ": " . $profile_value . "</li>";
+								if (count($profileLabelQuery) > 0) {
+									$profile_label = $profileLabelQuery[0]->label;
+									echo "<li>" . $profile_label . ": " . $profile_value . "</li>";
+								}
 							}
 						}
 					}
