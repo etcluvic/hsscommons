@@ -424,12 +424,30 @@ class OrcidHandler extends Orcid\Oauth
 
             // Add authors
             $authors = [];
-            foreach($workData->contributors->contributor as $author) {
-                $authorOrcid = "";
-                $authorName = $author->$creditName->value;
-                if (isset($author->$contributorOrcid) && $author->$contributorOrcid && $author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
-                    $authorOrcid = $author->$contributorOrcid->path;
+            if (isset($workData->contributors->contributor) && count($workData->contributors->contributor) > 0) {
+                foreach($workData->contributors->contributor as $author) {
+                    $authorOrcid = "";
+                    $authorName = $author->$creditName->value;
+                    if (isset($author->$contributorOrcid) && $author->$contributorOrcid && $author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
+                        $authorOrcid = $author->$contributorOrcid->path;
+                    }
+                    $authorNameSegments = explode(" ", $authorName);
+                    $authors[] = array(
+                                    "orcid" => $authorOrcid, 
+                                    "name" => $authorName, 
+                                    "givenname" => $authorNameSegments[0], 
+                                    "surname" => count($authorNameSegments) >= 2 ? $authorNameSegments[count($authorNameSegments) - 1] : ""
+                                );
                 }
+            } 
+            else if (isset($workData->source) && $workData->source) {
+                $sourceOrcid = "source-orcid";
+                $sourceName = "source-name";
+                $authorOrcid = "";
+                if (isset($workData->source->$sourceOrcid) && $workData->source->$sourceOrcid && $workData->source->$sourceOrcid->path && $workData->source->$sourceOrcid->path !== "null") {
+                    $authorOrcid = $workData->source->$sourceOrcid->path;
+                }
+                $authorName = $workData->source->$sourceName->value;
                 $authorNameSegments = explode(" ", $authorName);
                 $authors[] = array(
                                 "orcid" => $authorOrcid, 
