@@ -189,7 +189,7 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 									->from('#__users')
 									->whereEquals('id', $result->following_id)
 									->fetch();
-			if (count($followingsMemberResult) > 0) {
+			if (count($followingMemberResult) > 0) {
 				$followingMember = new stdClass();
 				$followingMember->id = $followingMemberResult[0]->id;
 				$followingMember->name = $followingMemberResult[0]->name;
