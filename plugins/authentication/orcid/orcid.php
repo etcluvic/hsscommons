@@ -99,7 +99,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		// if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		if (strpos(Request::base(), 'hsscommons.ca') === false) {
 			$oauth->useSandboxEnvironment();
 		} else {
 			$oauth->useProductionEnvironment();
@@ -135,7 +136,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 	{	
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		// if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		if (strpos(Request::base(), 'hsscommons.ca') === false) {
 			Log::debug('Use ORCID sandbox environment');
 			$oauth->useSandboxEnvironment();
 		} else {
@@ -257,7 +259,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 					$http = new Curl;
 					$revokeUrl = '';
 					
-					if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+					// if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+					if (strpos(Request::base(), 'hsscommons.ca') === false) {
 						$revokeUrl = 'https://sandbox.orcid.org/oauth/revoke';
 					} else {
 						$revokeUrl = 'https://orcid.org/oauth/revoke';
@@ -324,7 +327,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 
 		// Set up the config for the ORCID api instance
 		$oauth = new Oauth;
-		if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		// if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+		if (strpos(Request::base(), 'hsscommons.ca') === false) {
 			$oauth->useSandboxEnvironment();
 		} else {
 			$oauth->useProductionEnvironment();
@@ -408,7 +412,8 @@ class plgAuthenticationOrcid extends \Hubzero\Plugin\OauthClient
 				$http = new Curl;
 				$revokeUrl = '';
 				
-				if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+				// if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+				if (strpos(Request::base(), 'hsscommons.ca') === false) {
 					$revokeUrl = 'https://sandbox.orcid.org/oauth/revoke';
 				} else {
 					$revokeUrl = 'https://orcid.org/oauth/revoke';
