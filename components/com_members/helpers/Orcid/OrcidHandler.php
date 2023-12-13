@@ -144,8 +144,9 @@ class OrcidHandler extends Orcid\Oauth
      */
     public function selectEnvironment()
     {
-        if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
-			$this->environment = 'sandbox';
+        // if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+        if (strpos(Request::base(), 'hsscommons.ca') === false) {
+            $this->environment = 'sandbox';
 		} else {
 			$this->environment = '';
 		}
@@ -423,12 +424,30 @@ class OrcidHandler extends Orcid\Oauth
 
             // Add authors
             $authors = [];
-            foreach($workData->contributors->contributor as $author) {
-                $authorOrcid = "";
-                $authorName = $author->$creditName->value;
-                if ($author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
-                    $authorOrcid = $author->$contributorOrcid->path;
+            if (isset($workData->contributors->contributor) && count($workData->contributors->contributor) > 0) {
+                foreach($workData->contributors->contributor as $author) {
+                    $authorOrcid = "";
+                    $authorName = $author->$creditName->value;
+                    if (isset($author->$contributorOrcid) && $author->$contributorOrcid && $author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
+                        $authorOrcid = $author->$contributorOrcid->path;
+                    }
+                    $authorNameSegments = explode(" ", $authorName);
+                    $authors[] = array(
+                                    "orcid" => $authorOrcid, 
+                                    "name" => $authorName, 
+                                    "givenname" => $authorNameSegments[0], 
+                                    "surname" => count($authorNameSegments) >= 2 ? $authorNameSegments[count($authorNameSegments) - 1] : ""
+                                );
                 }
+            } 
+            else if (isset($workData->source) && $workData->source) {
+                $sourceOrcid = "source-orcid";
+                $sourceName = "source-name";
+                $authorOrcid = "";
+                if (isset($workData->source->$sourceOrcid) && $workData->source->$sourceOrcid && $workData->source->$sourceOrcid->path && $workData->source->$sourceOrcid->path !== "null") {
+                    $authorOrcid = $workData->source->$sourceOrcid->path;
+                }
+                $authorName = $workData->source->$sourceName->value;
                 $authorNameSegments = explode(" ", $authorName);
                 $authors[] = array(
                                 "orcid" => $authorOrcid, 
@@ -438,6 +457,34 @@ class OrcidHandler extends Orcid\Oauth
                             );
             }
             $work->authors = $authors;
+
+            // Add URL
+            $work->url = "";
+            if (isset($workData->url) && $workData->url) {
+                $work->url = $workData->url->value;
+            }
+
+            // Add type
+            $work->type = null;
+            if (isset($workData->type) && $workData->type) {
+                $type = $workData->type;
+                $type = str_replace("_", " ", $type);
+                $type = ucfirst(strtolower($type));
+                Log::debug('Type: ' . $type);
+
+                // Search if this type is in the Commons system. If yes, set the type
+                $query = new \Hubzero\Database\Query;
+
+                $types = $query->select('*')
+                                ->from('#__publication_categories')
+                                ->whereEquals('name', $type)
+                                ->whereEquals('contributable', 1)
+                                ->whereEquals('state', 1)
+                                ->fetch();
+                if (count($types) > 0) {
+                    $work->type = $types[0]->id;
+                }
+            }
             
             $works[] = $work;
         }
