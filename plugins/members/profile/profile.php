@@ -183,10 +183,9 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 						->whereEquals('following_type', 'member')
 						->whereEquals('follower_id', $this->member->id)
 						->fetch();
-		Log::debug('followingsResult');
-		Log::debug($followingsResult);
 		foreach($followingsResult as $result) {
 			$query = new \Hubzero\Database\Query;
+			Log::debug($result->following_id);
 			$followingMemberResult = $query->select('*')
 									->from('#__users')
 									->whereEquals('id', $result->following_id)
