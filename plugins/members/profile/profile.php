@@ -185,15 +185,16 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 						->fetch();
 		foreach($followingsResult as $result) {
 			$query = new \Hubzero\Database\Query;
-			Log::debug($result->following_id);
 			$followingMemberResult = $query->select('*')
 									->from('#__users')
 									->whereEquals('id', $result->following_id)
 									->fetch();
-			$followingMember = new stdClass();
-			$followingMember->id = $followingMemberResult[0]->id;
-			$followingMember->name = $followingMemberResult[0]->name;
-			$followings[] = $followingMember;
+			if (count($followingsMemberResult) > 0) {
+				$followingMember = new stdClass();
+				$followingMember->id = $followingMemberResult[0]->id;
+				$followingMember->name = $followingMemberResult[0]->name;
+				$followings[] = $followingMember;
+			}
 		}
 
 		// Get all user ids and names that are followers of the currently logged in user
