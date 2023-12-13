@@ -2556,9 +2556,9 @@ class Publications extends SiteController
 				$version->description		= $work->description;
 				$version->doi				= $work->doi;
 				if ($work->url) {
-					$version->release_notes		= "Original publication source: " . $work->journalTitle . " (<a href='" . $work->url . "'>" . $work->url . "</a>)<br><br>" . "Citation: " . $work->citation;
+					$version->release_notes		= "<p>Original publication source: " . $work->journalTitle . " (<a href='" . $work->url . "'>" . $work->url . "</a>)</p><p>" . "Citation: " . $work->citation . "</p>";
 				} else {
-					$version->release_notes		= "Original publication source: " . $work->journalTitle . "<br><br>Citation: " . $work->citation;
+					$version->release_notes		= "<p>Original publication source: " . $work->journalTitle . "</p><p>Citation: " . $work->citation . "</p>";
 				}
 				
 				// This publication has been published previously
