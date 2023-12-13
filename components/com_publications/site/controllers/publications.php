@@ -2496,14 +2496,15 @@ class Publications extends SiteController
 				);
 				$plugin_responses = Event::trigger('projects.onProject', $plugin_params);
 				$pub = $plugin_responses[0];
-				// $query = new \Hubzero\Database\Query;
-				// $versions = $query->select('*')
-				// 					->from('#__publication_versions')
-				// 					->whereEquals('publication_id', $pub->id)
-				// 					->fetch();
-				// $vid = $versions[0]->id;
 				$version = $pub->get('version');
 				$vid = $version->id;
+
+				// Set publication category
+				if (isset($work->type) && $work->type) {
+					$query = new \Hubzero\Database\Query;
+
+					$query->alter('#__publications', 'id', $pub->get('id'), ['category' => $work->type]);
+				}
 
 				// Set authors of publication
 				$ordering = 1;
@@ -2554,7 +2555,11 @@ class Publications extends SiteController
 				// $version->abstract 			= $work->abstract;
 				$version->description		= $work->description;
 				$version->doi				= $work->doi;
-				$version->release_notes		= $work->journalTitle . "<br>" . $work->citation;
+				if ($work->url) {
+					$version->release_notes		= "Original publication source: " . $work->journalTitle . " (<a href='" . $work->url . "'>" . $work->url . "</a>)<br><br>" . "Citation: " . $work->citation;
+				} else {
+					$version->release_notes		= "Original publication source: " . $work->journalTitle . "<br><br>Citation: " . $work->citation;
+				}
 				
 				// This publication has been published previously
 				$version->forked_from		= $vid;

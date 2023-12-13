@@ -439,6 +439,34 @@ class OrcidHandler extends Orcid\Oauth
                             );
             }
             $work->authors = $authors;
+
+            // Add URL
+            $work->url = "";
+            if (isset($workData->url) && $workData->url) {
+                $work->url = $workData->url->value;
+            }
+
+            // Add type
+            $work->type = null;
+            if (isset($workData->type) && $workData->type) {
+                $type = $workData->type;
+                $type = str_replace("_", " ", $type);
+                $type = ucwords(strtolower($type));
+                Log::debug('Type: ' . $type);
+
+                // Search if this type is in the Commons system. If yes, set the type
+                $query = new \Hubzero\Database\Query;
+
+                $types = $query->select('*')
+                                ->from('#__publication_categories')
+                                ->whereEquals('name', $type)
+                                ->whereEquals('contributable', 1)
+                                ->whereEquals('state', 1)
+                                ->fetch();
+                if (count($types) > 0) {
+                    $work->type = $types[0]->id;
+                }
+            }
             
             $works[] = $work;
         }
