@@ -427,7 +427,7 @@ class OrcidHandler extends Orcid\Oauth
             foreach($workData->contributors->contributor as $author) {
                 $authorOrcid = "";
                 $authorName = $author->$creditName->value;
-                if ($author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
+                if (isset($author->$contributorOrcid) && $author->$contributorOrcid && $author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
                     $authorOrcid = $author->$contributorOrcid->path;
                 }
                 $authorNameSegments = explode(" ", $authorName);
