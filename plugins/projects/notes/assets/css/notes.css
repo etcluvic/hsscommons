@@ -256,6 +256,10 @@
 	#file-uploader-list #content-header-extra {
 		display: none;
 	}
+	h1 {
+		font-size: 250%;
+		font-weight: 500;
+	}
 /* Search */
 	.page-search {
 		position: relative;
