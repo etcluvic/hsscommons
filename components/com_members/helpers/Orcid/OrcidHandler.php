@@ -144,8 +144,9 @@ class OrcidHandler extends Orcid\Oauth
      */
     public function selectEnvironment()
     {
-        if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
-			$this->environment = 'sandbox';
+        // if (strpos(Request::base(), 'hsscommons.ca') === false || strpos(Request::base(), 'test.hsscommons.ca') !== false) {
+        if (strpos(Request::base(), 'hsscommons.ca') === false) {
+            $this->environment = 'sandbox';
 		} else {
 			$this->environment = '';
 		}
