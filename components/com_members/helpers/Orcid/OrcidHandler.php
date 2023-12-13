@@ -469,7 +469,7 @@ class OrcidHandler extends Orcid\Oauth
             if (isset($workData->type) && $workData->type) {
                 $type = $workData->type;
                 $type = str_replace("_", " ", $type);
-                $type = ucwords(strtolower($type));
+                $type = ucfirst(strtolower($type));
                 Log::debug('Type: ' . $type);
 
                 // Search if this type is in the Commons system. If yes, set the type
