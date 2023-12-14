@@ -138,7 +138,7 @@ function getStatus($status = null)
 		<?php if (!$this->orcid) { ?>
 			<a href="<?php echo DS . "members" . DS . User::get('id') . DS . "account";  ?>">Connect your account to ORCID</a> to start importing publications
 		<?php } else if (count($this->orcidWorks) === 0 ) { ?>
-			You don't have any publication on ORCID to import
+			You don't have any publication on ORCID to import or there might be an error retrieving your publications. Please contact our team for support.
 		<?php } else { ?>
 			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
 			<i>Click on each publication container to select/deselect that publication for importation</i>
