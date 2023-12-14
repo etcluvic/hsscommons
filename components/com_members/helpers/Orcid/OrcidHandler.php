@@ -228,6 +228,8 @@ class OrcidHandler extends Orcid\Oauth
                         $profile->facebook = $urlValue;
                     } else if (strpos($urlValue, "linkedin") !== false) {
                         $profile->linkedin = $urlValue;
+                    } else if (strpos($urlValue, "instagram") !== false) {
+                        $profile->instagram = $urlValue;
                     } else {
                         $profile->url = $urlValue;
                     }
