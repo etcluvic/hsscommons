@@ -304,7 +304,6 @@ class OrcidHandler extends Orcid\Oauth
         }
 
         $worksJSON = json_decode($this->http->execute());
-        $worksGroup = $worksJSON->group;
 
          // Fetch to ORCID API failed
          if (isset($worksJSON->error)) {
@@ -317,14 +316,15 @@ class OrcidHandler extends Orcid\Oauth
         // Another type of error
         $errorCode = "error-code";
         $developerMessage = "developer-message";
-        if (isset($profileJSON->$errorCode)) {
+        if (isset($worksJSON->$errorCode)) {
             $error = new stdClass;
-            $error->error = $profileJSON->$errorCode;
-            $error->errorDescription = $profileJSON->$developerMessage;
+            $error->error = $worksJSON->$errorCode;
+            $error->errorDescription = $worksJSON->$developerMessage;
             return $error;
         }
 
         // Define some string constants
+        $worksGroup = $worksJSON->group;
         $workSummary = "work-summary";
         $publicationDate = "publication-date";
         $putCode = "put-code";
@@ -385,7 +385,6 @@ class OrcidHandler extends Orcid\Oauth
 
         $worksJSON = json_decode($this->http->execute());
         Log::debug(get_object_vars($worksJSON));
-        $worksBulk = $worksJSON->bulk;
 
          // Fetch to ORCID API failed
          if (isset($worksJSON->error)) {
@@ -398,14 +397,15 @@ class OrcidHandler extends Orcid\Oauth
         // Another type of error
         $errorCode = "error-code";
         $developerMessage = "developer-message";
-        if (isset($profileJSON->$errorCode)) {
+        if (isset($worksJSON->$errorCode)) {
             $error = new stdClass;
-            $error->error = $profileJSON->$errorCode;
-            $error->errorDescription = $profileJSON->$developerMessage;
+            $error->error = $worksJSON->$errorCode;
+            $error->errorDescription = $worksJSON->$developerMessage;
             return $error;
         }
 
         // Define some string constants
+        $worksBulk = $worksJSON->bulk;
         $publicationDate = "publication-date";
         $putCode = "put-code";
         $shortDescription = "short-description";
