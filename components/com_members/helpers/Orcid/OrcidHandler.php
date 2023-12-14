@@ -314,6 +314,16 @@ class OrcidHandler extends Orcid\Oauth
             return $error;
         }
 
+        // Another type of error
+        $errorCode = "error-code";
+        $developerMessage = "developer-message";
+        if (isset($profileJSON->$errorCode)) {
+            $error = new stdClass;
+            $error->error = $profileJSON->$errorCode;
+            $error->errorDescription = $profileJSON->$developerMessage;
+            return $error;
+        }
+
         // Define some string constants
         $workSummary = "work-summary";
         $publicationDate = "publication-date";
@@ -382,6 +392,16 @@ class OrcidHandler extends Orcid\Oauth
             $error = new stdClass;
             $error->error = $worksJSON->error;
             $error->errorDescription = $worksJSON->error_description;
+            return $error;
+        }
+
+        // Another type of error
+        $errorCode = "error-code";
+        $developerMessage = "developer-message";
+        if (isset($profileJSON->$errorCode)) {
+            $error = new stdClass;
+            $error->error = $profileJSON->$errorCode;
+            $error->errorDescription = $profileJSON->$developerMessage;
             return $error;
         }
 
