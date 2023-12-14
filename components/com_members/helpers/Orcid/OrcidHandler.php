@@ -184,12 +184,23 @@ class OrcidHandler extends Orcid\Oauth
         }
 
         $profileJSON = json_decode($this->http->execute());
+        Log::debug(get_object_vars($profileJSON));
         
         // Fetch to ORCID API failed
         if (isset($profileJSON->error)) {
             $error = new stdClass;
             $error->error = $profileJSON->error;
             $error->errorDescription = $profileJSON->error_description;
+            return $error;
+        }
+
+        // Another type of error
+        $errorCode = "error-code";
+        $developerMessage = "developer-message";
+        if (isset($profileJSON->$errorCode)) {
+            $error = new stdClass;
+            $error->error = $profileJSON->$errorCode;
+            $error->errorDescription = $profileJSON->$developerMessage;
             return $error;
         }
 
@@ -228,6 +239,8 @@ class OrcidHandler extends Orcid\Oauth
                         $profile->facebook = $urlValue;
                     } else if (strpos($urlValue, "linkedin") !== false) {
                         $profile->linkedin = $urlValue;
+                    } else if (strpos($urlValue, "instagram") !== false) {
+                        $profile->instagram = $urlValue;
                     } else {
                         $profile->url = $urlValue;
                     }
