@@ -194,6 +194,16 @@ class OrcidHandler extends Orcid\Oauth
             return $error;
         }
 
+        // Another type of error
+        $errorCode = "error-code";
+        $developerMessage = "developer-message";
+        if (isset($profileJSON->$errorCode)) {
+            $error = new stdClass;
+            $error->error = $profileJSON->$errorCode;
+            $error->errorDescription = $profileJSON->$developerMessage;
+            return $error;
+        }
+
         $person = $profileJSON->person;
         $givenNameField = "given-names";
         $familyNameField = "family-name";
