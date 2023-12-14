@@ -310,7 +310,7 @@ class OrcidHandler extends Orcid\Oauth
             $error = new stdClass;
             $error->error = $worksJSON->error;
             $error->errorDescription = $worksJSON->error_description;
-            return $error;
+            return [];
         }
 
         // Another type of error
@@ -320,7 +320,7 @@ class OrcidHandler extends Orcid\Oauth
             $error = new stdClass;
             $error->error = $worksJSON->$errorCode;
             $error->errorDescription = $worksJSON->$developerMessage;
-            return $error;
+            return [];
         }
 
         // Define some string constants
@@ -391,7 +391,7 @@ class OrcidHandler extends Orcid\Oauth
             $error = new stdClass;
             $error->error = $worksJSON->error;
             $error->errorDescription = $worksJSON->error_description;
-            return $error;
+            return [];
         }
 
         // Another type of error
@@ -401,7 +401,7 @@ class OrcidHandler extends Orcid\Oauth
             $error = new stdClass;
             $error->error = $worksJSON->$errorCode;
             $error->errorDescription = $worksJSON->$developerMessage;
-            return $error;
+            return [];
         }
 
         // Define some string constants
