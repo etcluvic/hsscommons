@@ -47,10 +47,15 @@ $max    = $this->manifest->params->max;
 
 // Get side text
 $aboutText = $this->manifest->about ? $this->manifest->about : null;
-if ($this->pub->_project->isProvisioned() && isset($this->manifest->aboutProv))
-{
-	$aboutText = $this->manifest->aboutProv;
-}
+
+// Archie: Comment this out so both project and individual publications have the same 
+// about text that can be set from the backend
+// if ($this->pub->_project->isProvisioned() && isset($this->manifest->aboutProv))
+// {
+// 	$aboutText = $this->manifest->aboutProv;
+// }
+
+
 // Wrap text in a paragraph
 if (strlen($aboutText) == strlen(strip_tags($aboutText)))
 {
