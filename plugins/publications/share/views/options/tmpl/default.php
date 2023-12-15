@@ -20,7 +20,7 @@ $metadata  = '<div class="share">'."\n";
 $metadata .= "\t".Lang::txt('PLG_PUBLICATION_SHARE').': ';
 
 // Available options
-$sharing = array('facebook', 'twitter', 'google', 'pinterest', 'linkedin', 'delicious', 'reddit', 'email');
+$sharing = array('facebook', 'twitter', 'google', 'pinterest', 'linkedin', 'delicious', 'reddit', 'email', 'copy-url');
 
 foreach ($sharing as $shared)
 {
