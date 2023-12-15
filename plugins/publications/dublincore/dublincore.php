@@ -61,10 +61,8 @@ class plgPublicationsDublincore extends \Hubzero\Plugin\Plugin
 			Document::setMetaData('dc.identifier', $view->escape($doi));
 		}
 
-		$publicationDescription = '';
-		if ($publication->abstract) {
-			$publicationDescription = $view->escape($publication->abstract);
-		} else if ($publication->description) {
+		$publicationDescription = $view->escape($publication->title);
+		if ($publication->description) {
 			$publicationDescription = strip_tags($publication->description);
 		}
 		Document::setMetaData('dcterms.description', $publicationDescription);
