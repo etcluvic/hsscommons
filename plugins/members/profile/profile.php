@@ -215,10 +215,12 @@ class plgMembersProfile extends \Hubzero\Plugin\Plugin
 									->from('#__users')
 									->whereEquals('id', $result->follower_id)
 									->fetch();
-			$followerMember = new stdClass();
-			$followerMember->id = $followerMemberResult[0]->id;
-			$followerMember->name = $followerMemberResult[0]->name;
-			$followers[] = $followerMember;
+			if (count($followerMemberResult) > 0) {
+				$followerMember = new stdClass();
+				$followerMember->id = $followerMemberResult[0]->id;
+				$followerMember->name = $followerMemberResult[0]->name;
+				$followers[] = $followerMember;
+			}
 		}
 
 		// Sort followings and followers
