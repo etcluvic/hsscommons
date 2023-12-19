@@ -2054,7 +2054,7 @@ class Profiles extends SiteController
 		$mailer->setSubject('New follow on the HSS Commons');
 
 		// Set the body of the email
-		$mailer->addPart("Hi " . $followedUser->get('name') . ",\r\n\r\n" . $currentUser->get('name') . " is now following you on the HSS Commons.\r\n\r\nRegards,\r\n" . Config::get('sitename') . " Administrator", "text/plain");
+		$mailer->addPart("<p>Hi " . $followedUser->get('name') . ",</p><p>" . $currentUser->get('name') . " has started following you on the Canadian HSS Commons. Please click <a href='" . Request::base() . "members" . DS . User::get('id') . "'>here</a> to view their profile.</p>Regards,<br>" . Config::get('sitename') . " Administrator", "text/html");
 
 		// Optionally add CC, BCC, attachments, etc.
 		// $mailer->addCc('cc@example.com');
