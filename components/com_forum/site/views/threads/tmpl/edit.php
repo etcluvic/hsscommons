@@ -209,14 +209,16 @@ else
 				<?php echo Html::input('token'); ?>
 			</form>
 		</div><!-- / .subject -->
-		<aside class="aside">
-		<div class="container">
-			<p><strong><?php echo Lang::txt('COM_FORUM_WHAT_IS_STICKY'); ?></strong><br />
-			<?php echo Lang::txt('COM_FORUM_STICKY_EXPLANATION'); ?></p>
+		<?php if ($this->config->get('access-manage-thread') && !$this->post->get('parent')) { ?>
+			<aside class="aside">
+				<div class="container">
+					<p><strong><?php echo Lang::txt('COM_FORUM_WHAT_IS_STICKY'); ?></strong><br />
+					<?php echo Lang::txt('COM_FORUM_STICKY_EXPLANATION'); ?></p>
 
-			<p><strong><?php echo Lang::txt('COM_FORUM_WHAT_IS_LOCKING'); ?></strong><br />
-			<?php echo Lang::txt('COM_FORUM_LOCKING_EXPLANATION'); ?></p>
-		</div>
-	</aside><!-- /.aside -->
+					<p><strong><?php echo Lang::txt('COM_FORUM_WHAT_IS_LOCKING'); ?></strong><br />
+					<?php echo Lang::txt('COM_FORUM_LOCKING_EXPLANATION'); ?></p>
+				</div>
+			</aside><!-- /.aside -->
+		<?php } ?>
 	</div>
 </section><!-- / .below section -->

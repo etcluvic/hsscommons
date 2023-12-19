@@ -1550,7 +1550,7 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 		$registrants = $eventsRespondent->getRecords();
 
 		//var to hold output
-		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Gender,Race,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Open Question Answer,Comments,Register Date' . "\n";
+		$output = 'First Name,Last Name,Title,Affiliation,Email,Website,Telephone,Fax,City,State,Zip,Country,Current Position,Highest Degree Earned,Arrival Info,Departure Info,Disability Needs,Dietary Needs,Attending Dinner,Abstract,File,Open Question Answer,Comments,Register Date' . "\n";
 
 		$fields = array(
 			'first_name',
@@ -1567,8 +1567,6 @@ class plgGroupsCalendar extends \Hubzero\Plugin\Plugin
 			'country',
 			'position_description',
 			'highest_degree',
-			'gender',
-			'race',
 			'arrival',
 			'departure',
 			'disability_needs',
