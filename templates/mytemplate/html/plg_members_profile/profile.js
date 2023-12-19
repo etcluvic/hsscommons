@@ -179,7 +179,7 @@ HUB.Members.Profile = {
 			const profileURLInput = $(profileURLInputs[i]);
 			const profileURLForm = profileURLInput.closest('form');
 			const profileURLSubmitBtn = profileURLForm.find('input[type="submit"]');
-			if (!(/^https?:\/\/.+$/.test(profileURLInput.val())) && profileURL !== '') {
+			if (!(/^https?:\/\/.+$/.test(profileURLInput.val()))) {
 				profileURLSubmitBtn.attr('disabled', true);
 			}
 			profileURLInput.on("keyup", function(e) {
