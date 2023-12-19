@@ -1352,6 +1352,18 @@ class plgGroupsForum extends \Hubzero\Plugin\Plugin
 			App::redirect(Route::url($this->base . '&scope=' . $section . '/' . $category));
 		}
 
+		// Check if this user is a manager
+		$isManager = false;
+		$query = new \Hubzero\Database\Query;
+		$managers = $query->select('*')  
+						->from('#__xgroups_managers')  
+						->whereEquals('gidNumber', $this->group->get('gidNumber'))
+						->whereEquals('uidNumber', User::get('id'))
+						->fetch();
+		if (count($managers) > 0) {
+			$isManager = true;
+		}
+
 		return $this->view('edit', 'threads')
 			->set('option', $this->option)
 			->set('group', $this->group)
@@ -1360,6 +1372,7 @@ class plgGroupsForum extends \Hubzero\Plugin\Plugin
 			->set('section', $section)
 			->set('category', $category)
 			->set('post', $post)
+			->set('isManager', $isManager)
 			->setErrors($this->getErrors())
 			->loadTemplate();
 	}

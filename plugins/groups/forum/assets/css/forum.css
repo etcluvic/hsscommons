@@ -372,11 +372,28 @@
 		float: none;
 	}
 	.group_forum .aside {
-		display: none;
+		display: none !important;
 	}
 	.group_forum .subject {
 		padding-left: 0;
 		padding-right: 0;
 		margin-right: 0;
 	}
+}
+/* Aside */
+.group-forum-container {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+.group-forum-container #commentform {
+	flex-grow: 1;
+}
+.group_forum .aside {
+	background: #f1f1f1 !important;
+	background: rgba(0, 0, 0, 0.05) !important;
+	padding: 1em !important;
+	border: none !important;
+	color: inherit !important;
+	max-width: 300px;
 }
