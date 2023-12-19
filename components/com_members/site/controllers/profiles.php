@@ -2039,6 +2039,33 @@ class Profiles extends SiteController
 				->values(['follower_type' => 'member', 'follower_id' => User::get('id'), 'following_type' => 'member', 'following_id' => $followingId, 'created' => date("Y-m-d H:M:s")])
 				->execute();
 
+		// Notify the user that they are being followed
+		$currentUser = User::getInstance();
+		$followedUser = User::getInstance($followingId);
+		$mailer = new \Hubzero\Mail\Message();
+
+		// Set the sender
+		$mailer->addFrom(Config::get('mailfrom'), Config::get('sitename') . ' Administrator');
+
+		// Add a recipient
+		$mailer->addTo($followedUser->get('email'), $followedUser->get('name'));
+
+		// Set the subject
+		$mailer->setSubject('New follow on the HSS Commons');
+
+		// Set the body of the email
+		$mailer->addPart("Hi " . $followedUser->get('name') . ",\r\n\r\n" . $currentUser->get('name') . " is now following you on the HSS Commons.\r\n\r\nRegards,\r\n" . Config::get('sitename') . " Administrator", "text/plain");
+
+		// Optionally add CC, BCC, attachments, etc.
+		// $mailer->addCc('cc@example.com');
+		// $mailer->addAttachment('/path/to/file');
+
+		// Send the email
+		if (!$mailer->send()) {
+			// Handle error
+			App::redirect(base64_decode($redirectUrl), Lang::txt("Follow user %s successfully but failed to notify that user", $followingName), "warning");
+		}
+
 		// Redirect to the page that made the request
 		App::redirect(base64_decode($redirectUrl), Lang::txt("Follow user %s successfully", $followingName), "success");
 	}
