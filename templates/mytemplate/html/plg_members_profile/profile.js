@@ -179,12 +179,12 @@ HUB.Members.Profile = {
 			const profileURLInput = $(profileURLInputs[i]);
 			const profileURLForm = profileURLInput.closest('form');
 			const profileURLSubmitBtn = profileURLForm.find('input[type="submit"]');
-			if (!(/^https?:\/\/.+$/.test(profileURLInput.val()))) {
+			if (!(/^https?:\/\/.+$/.test(profileURLInput.val())) && profileURL !== '') {
 				profileURLSubmitBtn.attr('disabled', true);
 			}
 			profileURLInput.on("keyup", function(e) {
 				const profileURL = profileURLInput.val();
-				if (/^https?:\/\/.+$/.test(profileURL)) {
+				if (/^https?:\/\/.+$/.test(profileURL) || profileURL === '') {
 					profileURLSubmitBtn.attr('disabled', false);
 				} else {
 					profileURLSubmitBtn.attr('disabled', true);
