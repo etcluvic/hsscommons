@@ -38,8 +38,17 @@ HUB.Members.Repository = {
         $('.pub-modal-item').hide();
         $('.orcid-pub-1').show();
 
-        // Show ORCID publications modal
+        // Show ORCID publications import modal
         $('a#show-orcid-pub-btn').fancybox({
+			'transitionIn'	:	'elastic',
+			'transitionOut'	:	'elastic',
+			'speedIn'		:	600, 
+			'speedOut'		:	200, 
+			'overlayShow'	:	false
+		});
+
+        // Show ORCID publications export modal
+        $('a.show-orcid-export-modal-btn').fancybox({
 			'transitionIn'	:	'elastic',
 			'transitionOut'	:	'elastic',
 			'speedIn'		:	600, 
@@ -161,6 +170,68 @@ HUB.Members.Repository = {
             $('.pub-modal-item').hide();
             $('.orcid-pub-' + nextPage).show();
         })
+
+        // Display information on ORCID export modal
+        $('.show-orcid-export-modal-btn').on('click', function() {
+            const pubId = $(this).data('pubid');
+            
+            // Send an ajax request to get the publication information
+            $.ajax({
+                url: window.location.href + '/getPubInfo?pubId=' + pubId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    console.log('Get publication information successfully');
+                    console.log(data);
+                    const pubData = data.work;
+                    // Display publication information on export modal
+                    const container = $('#orcid-export-modal .information-container');
+                    container.empty();
+                    container.append('<h3>Work details</h3>');
+                    container.append('<p><strong>Work type</strong>: ' + pubData.type + '</p>');
+                    container.append('<p><strong>Work title</strong>: ' + pubData.title.title + '</p>');
+                    container.append('<p><strong>Work subtitle</strong>: ' + pubData.title.subtitle + '</p>');
+                    container.append('<p><strong>Work translated title</strong>: ' + pubData.title['translated-title'] + '</p>');
+                    container.append('<p><strong>Journal title</strong>: ' + pubData['journal-title'] + '</p>');
+
+                    const pubDate = pubData['publication-date'];
+                    container.append('<p><strong>Publication date</strong>: ' + pubDate.year + '-' + pubDate.month + '-' + pubDate.day + '</p>');
+                    container.append('<p><strong>Link</strong>: ' + pubData.url + '</p>');
+                    
+                    container.append('<h3>Citation</h3>');
+                    container.append('<p><strong>Citation type</strong>: ' + pubData.citation['citation-type'] + '</p>');
+                    container.append('<p><strong>Citation</strong>: ' + pubData.citation['citation-value'] + '</p>');
+                    container.append('<p><strong>Citation description</strong>: ' + pubData['short-description'] + '</p>');
+                
+                    container.append('<h3>Work identifiers</h3>');
+                    for(let i = 0; i < pubData['external-ids']['external-id'].length; i++) {
+                        const externalId = pubData['external-ids']['external-id'][i];
+                        container.append('<p><strong>Type</strong>: ' + externalId['external-id-type'] + '</p>');
+                        container.append('<p><strong>Value</strong>: ' + externalId['external-id-value'] + '</p>');
+                        container.append('<p><strong>Url</strong>: ' + externalId['external-id-url'] + '</p>');
+                        container.append('<p><strong>Relationship</strong>: ' + externalId['external-id-relationship'] + '</p>');
+                    }
+
+                    container.append('<h3>Contributors</h3>');
+                    for(let i = 0; i < pubData['contributors']['contributor'].length; i++) {
+                        const contributor = pubData['contributors']['contributor'][i];
+                        container.append('<p><strong>ORCID</strong>: ' + contributor['contributor-orcid'].path + '</p>');
+                        container.append('<p><strong>Name</strong>: ' + contributor['credit-name'] + '</p>');
+                        container.append('<p><strong>Role</strong>: ' + contributor['contributor-attributes']['contributor-role'] + '</p>');
+                    }
+
+                    container.append('<h3>Other information</h3>');
+                    container.append('<p><strong>Language code</strong>: ' + pubData['language-code'] + '</p>');
+                    container.append('<p><strong>Country</strong>: ' + pubData.country + '</p>');
+
+                    container.append('<a href="' + window.location.href + '/getPubInfo?pubId=' + pubId + '&confirm=1' + '" class="btn">Export this publication to ORCID</a>')
+                },
+                error: function(error) {
+                    console.log('Failed to get publication information');
+                    console.log(error);
+                }
+            });
+        });
     }
 }
 

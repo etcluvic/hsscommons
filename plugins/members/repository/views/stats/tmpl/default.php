@@ -85,34 +85,40 @@ function getStatus($status = null)
 	<table>
 		<thead>
 		<tr>
-		        <th>
-                                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_PUBTITLE'); ?>
-                        </th>
-                        <th>
-                               <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_CREATED'); ?>
-                        </th>
+		    <th>
+                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_PUBTITLE'); ?>
+            </th>
+            <th>
+                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_CREATED'); ?>
+            </th>
 			<th>
 				<?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_VERSION'); ?>	
 			</th>
-	                <th>
-                                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATUS'); ?>
-                        </th>	
+	        <th>
+                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_STATUS'); ?>
+			</th>
+			<th>
+                <?php echo Lang::txt('PLG_MEMBERS_REPOSITORY_ACTIONS'); ?>
+            </th>	
 		</tr>
 		</thead>
 	<?php foreach ($this->pubstats as $stat) { ?>
 		<tr>
-		<td>
-			<span><a href="<?php echo Route::url('index.php?option=com_publications' . '&id=' . $stat->publication_id) . '?version=' . $stat->version_number; ?>"><?php echo $stat->title; ?></a></span>
-		</td>
-                <td>
-                         <span class="block mini faded"><?php echo Date::of($stat->created)->toLocal(Lang::txt('DATE_FORMAT_HZ1')); ?></span>
-               </td>
-               <td>
-			 <span> <?php echo $stat->version_label; ?> </span></span>
-               </td>	      
-               <td>
-                       	<span class="<?php echo getStatus($stat->state); ?> major_status"><?php echo getStatus($stat->state); ?></span>
-               </td> 
+			<td>
+				<span><a href="<?php echo Route::url('index.php?option=com_publications' . '&id=' . $stat->publication_id) . '?version=' . $stat->version_number; ?>"><?php echo $stat->title; ?></a></span>
+			</td>
+			<td>
+				<span class="block mini faded"><?php echo Date::of($stat->created)->toLocal(Lang::txt('DATE_FORMAT_HZ1')); ?></span>
+			</td>
+			<td>
+				<span> <?php echo $stat->version_label; ?> </span></span>
+			</td>	      
+			<td>
+				<span class="<?php echo getStatus($stat->state); ?> major_status"><?php echo getStatus($stat->state); ?></span>
+			</td>
+			<td>
+				<a class="show-orcid-export-modal-btn" href="#orcid-export-modal" data-pubid="<?php echo $stat->publication_id; ?>">Export publication to ORCID</a>
+			</td>
 	       </tr>	
 	<?php } ?>
 	</table>
@@ -178,6 +184,15 @@ function getStatus($status = null)
 				<input type="submit" value="Import selected publications" id="orcid-pub-modal-submit-btn" class="btn disabled" style="margin-top: 20px; width: fit-content; margin-left: auto;"></button>
 			</form>
 		<?php } ?>
+	</div>
+</div>
+
+<!-- Modal to display information for an exporting publication to ORCID -->
+<div style="display:none;">
+	<div class="modal pub-modal" id="orcid-export-modal">
+		<h2 style="margin-bottom: 5px; font-weight: 500;">Export publication to ORCID</h2>
+		<i>Here is the information of your publication once exported to ORCID</i>
+		<div class="information-container"></div>
 	</div>
 </div>
 

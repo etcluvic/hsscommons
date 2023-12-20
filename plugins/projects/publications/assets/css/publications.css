@@ -2018,6 +2018,7 @@
 	max-width: 700px;
 	min-width: 300px;
 	height: fit-content;
+	min-height: 700px;
 	padding: 30px;
 }
 

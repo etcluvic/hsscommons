@@ -180,6 +180,9 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 
 			switch ($task)
 			{
+				case 'getPubInfo':
+					$this->_getPubInfo();
+					exit;
 				case 'view':
 				default:        $arr['html'] = $this->_view($member->get('id'));   break;
 			}
@@ -465,5 +468,159 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		}
 		$html .= "\t" . '</li>' . "\n";
 		return $html;
+	}
+
+	/**
+	 * Get publication info
+	 *
+	 * @return  void
+	 */
+	protected function _getPubInfo()
+	{
+		// Get publication ID
+		$pubId = Request::getInt('pubId', 0);
+		// If confirm is true, publication is exported. Otherwise, only return publication info in JSON format
+		$confirm = Request::getInt('confirm', 0);
+
+		// Get all versions of this publication
+		$query = new \Hubzero\Database\Query;
+		$publicationVersions = $query->select('*')
+									->from('#__publication_versions')
+									->whereEquals('publication_id', $pubId)
+									->fetch();
+		
+		// Get the last version to export
+		$lastVersion = end($publicationVersions);
+		Log::debug(get_object_vars($lastVersion));
+
+		$pubResponse = new stdClass;
+		$pubResponse->work = new stdClass;
+		
+		// Title
+		$translatedTitle = 'translated-title';
+		$journalTitle = 'journal-title';
+		$pubResponse->work->title = new StdClass;
+		$pubResponse->work->title->title = $lastVersion->title;
+		$pubResponse->work->title->subtitle = '';
+		$pubResponse->work->title->$translatedTitle = '';
+
+		// Journal title
+		$pubResponse->work->$journalTitle = '';
+
+		// Short description
+		$shortDescription = 'short-description';
+		$pubResponse->work->shortDescription = $lastVersion->description;
+
+		// Citation
+		$citationType = 'citation-type';
+		$citationValue = 'citation-value';
+		$pubResponse->work->citation = new stdClass;
+		$pubResponse->work->citation->$citationType = 'bibtex';
+		$pubResponse->work->citation->$citationValue = $lastVersion->release_notes;
+
+		// Type
+		$pubResponse->work->type = 'journal-article';
+		
+		// Publication date
+		$publicationDate = 'publication-date';
+		$pubResponse->work->$publicationDate = new stdClass;
+	
+		$publishedUp = $lastVersion->published_up;
+		if (!$publishedUp) {
+			$pubResponse->work->$publicationDate->year = '';
+			$pubResponse->work->$publicationDate->month = '';
+			$pubResponse->work->$publicationDate->day = '';
+		} else {
+			$publishedUpArray = explode(' ', $publishedUp);
+			$publishedUpDate = $publishedUpArray[0];
+			$publishedUpDate = explode('-', $publishedUpDate);
+			$pubResponse->work->$publicationDate->year = intval($publishedUpDate[0]);
+			$pubResponse->work->$publicationDate->month = intval($publishedUpDate[1]);
+			$pubResponse->work->$publicationDate->day = intval($publishedUpDate[2]);
+		}
+
+		// External identifiers
+		$externalIds = 'external-ids';
+		$externalId = 'external-id';
+		$externalIdType = 'external-id-type';
+		$externalIdValue = 'external-id-value';
+		$externalIdUrl = 'external-id-url';
+		$externalIdRelationship = 'external-id-relationship';
+		$pubResponse->work->$externalIds = new stdClass;
+		$pubResponse->work->$externalIds->$externalId = [];
+		
+		if ($lastVersion->doi) {
+			$pubResponse->work->$externalIds->{$externalId}[] = new stdClass;
+			$pubResponse->work->$externalIds->$externalId[0]->$externalIdType = 'doi';
+			$pubResponse->work->$externalIds->$externalId[0]->$externalIdValue = $lastVersion->doi;
+			$pubResponse->work->$externalIds->$externalId[0]->$externalIdUrl = 'https://doi.org/' . $lastVersion->doi;
+			$pubResponse->work->$externalIds->$externalId[0]->$externalIdRelationship = 'self';
+		}
+
+		// URL
+		$pubResponse->work->url = 'https://hsscommons.ca/publications/' . $pubId;
+
+		// Contributors
+		$contributorOrcid = 'contributor-orcid';
+		$creditName = 'credit-name';
+		$contributorAttributes = 'contributor-attributes';
+		$contributorSequence = 'contributor-sequence';
+		$contributorRole = 'contributor-role';
+		$pubResponse->work->contributors = new stdClass;
+		$pubResponse->work->contributors->contributor = [];
+
+		// Get all authors of this publication
+		$query = new \Hubzero\Database\Query;
+		$publicationAuthors = $query->select('*')
+									->from('#__publication_authors')
+									->whereEquals('publication_version_id', $lastVersion->id)
+									->fetch();
+		
+		$addedContributors = [];
+		foreach($publicationAuthors as $author) {
+			if (!in_array($author->user_id, $addedContributors))
+			{
+				// $pubResponse->work->contributors->contributor[] = new stdClass;
+				$newContributor = new stdClass;
+
+				// Check if this author has ORCID
+				$query = new \Hubzero\Database\Query;
+				$orcids = $query->select('username')
+								->from('#__auth_link')
+								->whereEquals('user_id', $author->user_id)
+								->fetch();
+				if (count($orcids) > 0) {
+					$orcid = $orcids[0]->username;
+					$newContributor->$contributorOrcid = new stdClass;
+					$newContributor->$contributorOrcid->uri = 'https://orcid.org/' . $orcid;
+					$newContributor->$contributorOrcid->path = $orcid;
+					$newContributor->$contributorOrcid->host = "orcid.org";
+				}
+
+				// Add names
+				$newContributor->$creditName = $author->name;
+				
+				// Add attributes
+				$newContributor->$contributorAttributes = new stdClass;
+				$newContributor->$contributorAttributes->$contributorSequence = 'first';
+				$newContributor->$contributorAttributes->$contributorRole = 'author';
+
+				// Add this contributor to the list
+				$pubResponse->work->contributors->contributor[] = $newContributor;
+
+				// Add this contributor to the list of added contributors
+				$addedContributors[] = $author->user_id;
+			}
+		}
+
+		// Language code
+		$languageCode = 'language-code';
+		$pubResponse->work->$languageCode = 'en';
+
+		// Country
+		$pubResponse->work->country = "CA";
+
+		echo json_encode($pubResponse);
+		exit;
 	}
 }
