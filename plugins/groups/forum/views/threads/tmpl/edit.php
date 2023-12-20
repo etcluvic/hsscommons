@@ -232,13 +232,7 @@ $this->css()
 
 				<?php echo Html::input('token'); ?>
 			</form>
-		<?php
-		if ($this->config->get('access-plugin') == 'anyone' || $this->config->get('access-plugin') == 'registered') { ?>
-			</div><!-- / .subject -->
-			<aside class="aside">
-				<p><?php echo Lang::txt('PLG_GROUPS_FORUM_EDIT_HINT'); ?></p>
-			</aside><!-- /.aside -->
-		<?php } else if ($this->isManager) { ?>
+		<?php if ($this->isManager) { ?>
 			<aside class="aside">
 				<div class="container">
 					<p><strong><?php echo Lang::txt('PLG_GROUPS_FORUM_WHAT_IS_STICKY'); ?></strong><br />

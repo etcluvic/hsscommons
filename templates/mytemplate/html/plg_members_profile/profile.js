@@ -184,7 +184,7 @@ HUB.Members.Profile = {
 			}
 			profileURLInput.on("keyup", function(e) {
 				const profileURL = profileURLInput.val();
-				if (/^https?:\/\/.+$/.test(profileURL)) {
+				if (/^https?:\/\/.+$/.test(profileURL) || profileURL === '') {
 					profileURLSubmitBtn.attr('disabled', false);
 				} else {
 					profileURLSubmitBtn.attr('disabled', true);
