@@ -2063,11 +2063,11 @@ class Profiles extends SiteController
 		// Send the email
 		if (!$mailer->send()) {
 			// Handle error
-			App::redirect(base64_decode($redirectUrl), Lang::txt("Follow user %s successfully but failed to notify that user", $followingName), "warning");
+			App::redirect(base64_decode($redirectUrl), Lang::txt("Followed user %s successfully but failed to notify that user", $followingName), "warning");
 		}
 
 		// Redirect to the page that made the request
-		App::redirect(base64_decode($redirectUrl), Lang::txt("Follow user %s successfully", $followingName), "success");
+		App::redirect(base64_decode($redirectUrl), Lang::txt("Followed user %s successfully", $followingName), "success");
 	}
 
 	/**
@@ -2112,7 +2112,7 @@ class Profiles extends SiteController
 				->execute();
 
 		// Redirect to the page that made the request
-		App::redirect(base64_decode($redirectUrl), Lang::txt("Unfollow user %s successfully", $unfollowingName), "success");
+		App::redirect(base64_decode($redirectUrl), Lang::txt("Unfollowed user %s successfully", $unfollowingName), "success");
 	}
 
 	/**
@@ -2181,6 +2181,6 @@ class Profiles extends SiteController
 
 
 		// Redirect to profile page
-		App::redirect($redirectUrl, 'Update profile with ORCID successfully', 'success');
+		App::redirect($redirectUrl, 'Updated profile with ORCID successfully', 'success');
 	}
 }
