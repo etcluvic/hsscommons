@@ -30,7 +30,7 @@ $this->css('register')
 <?php } else { ?>
 	<p class="passed">The account has been created or updated successfully.</p>
 	<?php if ($this->updateEmail) { ?>
-		<p>TThank you for creating or updating your account. In order to continue to use it you will need to verify your new email address.</p>
+		<p>Thank you for creating or updating your account. In order to continue to use it you will need to verify your new email address.</p>
 		<?php if ($this->getError()) { ?>
 			<p class="error"><?php echo $this->getError(); ?></p>
 		<?php } else { ?>
