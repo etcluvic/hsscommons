@@ -8,7 +8,7 @@
 /**
  * fr-FR localise class
  */
-abstract class fr_FRLocalise
+abstract class hiLocalise
 {
 	/**
 	 * Returns the potential suffixes for a specific number of items
