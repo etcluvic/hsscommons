@@ -495,15 +495,15 @@ class OrcidHandler extends Orcid\Oauth
             }
 
             // Add self as author if not already in the list
-            if (!$addSelf) {
-                // Other fields are empty as user is searched by ORCID
-                $authors[] = array(
-                                "orcid" => $this->getOrcid(), 
-                                "name" => "", 
-                                "givenname" => "",
-                                "surname" => ""
-                            );
-            }
+            // if (!$addSelf) {
+            //     // Other fields are empty as user is searched by ORCID
+            //     $authors[] = array(
+            //                     "orcid" => $this->getOrcid(), 
+            //                     "name" => "", 
+            //                     "givenname" => "",
+            //                     "surname" => ""
+            //                 );
+            // }
 
             $work->authors = $authors;
 
