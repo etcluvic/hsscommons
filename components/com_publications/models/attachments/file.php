@@ -560,13 +560,13 @@ class File extends Base
 			}
 			else
 			{
-				$label = Lang::txt('Download');
+				$label = Lang::txt('COM_PUBLICATIONS_DOWNLOAD');
 				// Link to bundle
 				if ($showArchive == 1 || ($showArchive == 2 && count($attachments) > 1))
 				{
 					$url = Route::url('index.php?option=com_publications&id=' . $pub->id . '&task=serve&v=' . $pub->version_number . '&render=archive');
-					$label .= ' ' . Lang::txt('Bundle');
-					$title = $pub->title . ' ' . Lang::txt('Bundle');
+					$label .= ' ' . Lang::txt('COM_PUBLICATIONS_BUNDLE');
+					$title = $pub->title . ' ' . Lang::txt('COM_PUBLICATIONS_BUNDLE');
 
 					$path = $pub->path('base', true) . DS . $pub->_curationModel->getBundleName();
 
