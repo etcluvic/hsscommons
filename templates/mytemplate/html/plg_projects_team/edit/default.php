@@ -52,17 +52,23 @@ $roles = [
 				<input class="option" data-action="syncall" name="sync_group" id="membership_sync" type="radio" value="1" <?php if ($this->model->get('sync_group') != 0) { echo ' checked="checked"'; } ?> />
 				<span class="label-text"><?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_LABEL_SYNC'); ?></span>
 			</label>
-
-			<select id="sync-role-selector" name="syncRole" hidden>
-				<?php foreach ($roles as $description => $value): ?>
-					<option value="" selected disabled hidden>
-						<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
-					</option>
-					<option value="<?php echo $value; ?>">
-						<?php echo Lang::txt("PLG_PROJECTS_TEAM_SYNCING_$description"); ?>
-					</option>
-				<?php endforeach; ?>
-			</select>
+			
+			<div style="display: flex; flex-direction: row; gap: 10px;">
+				<select id="sync-role-selector" name="syncRole" hidden>
+					<?php foreach ($roles as $description => $value): ?>
+						<option value="" selected disabled hidden>
+							<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
+						</option>
+						<option value="<?php echo $value; ?>">
+							<?php echo Lang::txt("PLG_PROJECTS_TEAM_SYNCING_$description"); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+			
+				<?php if (!$this->setup) { ?>
+				<button>Sync group members</button>
+				<?php } ?>
+			</div>
 
 			<div class="group-action group-action-syncall">
 				<?php if (count($notteam)) { ?>

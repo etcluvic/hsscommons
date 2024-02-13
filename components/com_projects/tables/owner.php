@@ -753,7 +753,7 @@ class Owner extends Table
 			{
 				foreach ($owners_to_add as $newcomer)
 				{
-					$added = $this->saveOwners($projectid, 0, $newcomer, $array_member_groups[$newcomer], 5, 1, $array_groups_native[$array_member_groups[$newcomer]]);
+					$added = $this->saveOwners($projectid, 0, $newcomer, $array_member_groups[$newcomer], 0, 1, $array_groups_native[$array_member_groups[$newcomer]]);
 				}
 			}
 
