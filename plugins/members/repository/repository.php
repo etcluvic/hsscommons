@@ -212,7 +212,8 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"sortby" => "title",		// Default
 			"dev" => 1,
 			"status" => array(0,1,3,4,5,6),
-			"author" => $uid
+			"author" => $uid,
+			"mine"	=> 1
 		));
 
 		// Output HTML
