@@ -273,7 +273,16 @@ HUB.ProjectTeam = {
 			$('#' + form).addClass('hidden');
 			$(el).removeClass('hidden');
 		});
-		var formAction = '/projects/' + $('#pid').val() + '/team/assignrole/?1=1' + window.location.search;
+
+		const languages = ['en', 'fr']
+		var urlFirstPath = window.location.pathname.split('/')[1];
+		var formAction = '';
+
+		if (languages.includes(urlFirstPath)) {
+			formAction = '/' + urlFirstPath + '/projects/' + $('#pid').val() + '/team/assignrole/?1=1' + window.location.search;
+		} else {
+			var formAction = '/projects/' + $('#pid').val() + '/team/assignrole/?1=1' + window.location.search;
+		}
 
 		$('#' + save).on('click', function(e){
 			e.preventDefault();
