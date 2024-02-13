@@ -208,13 +208,29 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		// $view->pubstats = $this->_stats ? $this->_stats : $pubLog->getPubVersions($uid);
 
 		$pubLog = new \Components\Publications\Tables\Publication($this->_database);
-		$view->pubstats = $pubLog->getRecords(array(
+		// $view->pubstats = $pubLog->getRecords(array(
+		// 	"sortby" => "title",		// Default
+		// 	"dev" => 1,
+		// 	"status" => array(0,1,3,4,5,6),
+		// 	"author" => $uid
+		// ));
+		
+		// Archie: Display publications that this user is an author of or a creator of
+		$authorPubstats = $pubLog->getRecords(array(
 			"sortby" => "title",		// Default
 			"dev" => 1,
 			"status" => array(0,1,3,4,5,6),
-			"author" => $uid,
-			"mine"	=> $uid
+			"author" => $uid
 		));
+
+		$creatorPubstats = $pubLog->getRecords(array(
+			"sortby" => "title",		// Default
+			"dev" => 1,
+			"status" => array(0,1,3,4,5,6),
+			"mine" => $uid
+		));
+
+		$view->pubstats = array_merge($authorPubstats, $creatorPubstats);
 
 		// Output HTML
 		$view->option    = $this->_option;
