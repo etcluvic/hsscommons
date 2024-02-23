@@ -682,7 +682,6 @@
 	.follow-members-display {
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
 	}
 
 	.following-help-container {
@@ -706,4 +705,21 @@
 		border-bottom-left-radius: 20px;
 		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 		padding: 15px;
+	}
+
+	/* Custom style changes for anchor tags in list of followers and following */
+	.follow-members-display a {
+		padding: 7px;
+		border:none;
+	}
+
+	.follow-members-display a:hover,
+	.follow-members-display a:visited:hover {
+		background-color: #59a2c9c4;
+		color: #484848;
+		padding: 7px;
+		text-decoration: none;
+		border:none;
+		font-weight: 600;
+		border-radius: 4px;
 	}
