@@ -222,7 +222,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"status" => array(0,1,3,4,5,6),
 			"author" => $uid
 		));
-		Log::debug($authorPubstats)
+		Log::debug($authorPubstats);
 
 		$creatorPubstats = $pubLog->getRecords(array(
 			"sortby" => "title",		// Default
