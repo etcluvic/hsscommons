@@ -246,6 +246,11 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			}
 		}
 
+		// Sort the list of publications by title
+		usort($view->pubstats, function($a, $b) {
+			return strcmp($a->title, $b->title);
+		});
+
 		// Output HTML
 		$view->option    = $this->_option;
 		$view->database  = $this->_database;
