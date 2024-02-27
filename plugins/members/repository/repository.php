@@ -242,7 +242,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 					Log::debug($authorPub);
 				}
 				
-				if ($pub->id == $authorPub->id) {
+				if (gettype($authorPub) == "object" && $pub->id == $authorPub->id) {
 					$pub = true;
 					break;
 				}
