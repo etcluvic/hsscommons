@@ -246,37 +246,38 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		// ));
 		
 		// Archie: Display publications that this user is an author of or a creator of
-		$authorPubstats = $pubLog->getRecords(array(
-			"sortby" => "title",		// Default
-			"dev" => 1,
-			"status" => array(0,1,3,4,5,6),
-			"author" => $uid
-		));
+		// $authorPubstats = $pubLog->getRecords(array(
+		// 	"sortby" => "title",		// Default
+		// 	"dev" => 1,
+		// 	"status" => array(0,1,3,4,5,6),
+		// 	"author" => $uid
+		// ));
 
-		$creatorPubstats = $pubLog->getRecords(array(
-			"sortby" => "title",		// Default
-			"dev" => 1,
-			"status" => array(0,1,3,4,5,6),
-			"mine" => $uid
-		));
+		// $creatorPubstats = $pubLog->getRecords(array(
+		// 	"sortby" => "title",		// Default
+		// 	"dev" => 1,
+		// 	"status" => array(0,1,3,4,5,6),
+		// 	"mine" => $uid
+		// ));
 
 		// Archie: Add publications that this user is a creator of but not an author of
 		// to the displayed list of publications
-		$view->pubstats = array_slice($authorPubstats, 0);
-		foreach ($creatorPubstats as $pub) {
-			$pubFound = false;
-			foreach ($authorPubstats as $authorPub) {				
-				if ($pub->id == $authorPub->id) {
-					$pubFound = true;
-					break;
-				}
-			}
-			if (!$pubFound) {
-				$view->pubstats[] = $pub;
-			}
-		}
+		// $view->pubstats = array_slice($authorPubstats, 0);
+		// foreach ($creatorPubstats as $pub) {
+		// 	$pubFound = false;
+		// 	foreach ($authorPubstats as $authorPub) {				
+		// 		if ($pub->id == $authorPub->id) {
+		// 			$pubFound = true;
+		// 			break;
+		// 		}
+		// 	}
+		// 	if (!$pubFound) {
+		// 		$view->pubstats[] = $pub;
+		// 	}
+		// }
 
 		// Sort the list of publications by title
+		$view->pubstats = array_slice($this->_stats, 0);
 		usort($view->pubstats, function($a, $b) {
 			return strcmp($a->title, $b->title);
 		});
