@@ -222,7 +222,6 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"status" => array(0,1,3,4,5,6),
 			"author" => $uid
 		));
-		Log::debug($authorPubstats);
 
 		$creatorPubstats = $pubLog->getRecords(array(
 			"sortby" => "title",		// Default
@@ -230,7 +229,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"status" => array(0,1,3,4,5,6),
 			"mine" => $uid
 		));
-		Log::debug($creatorPubstats);
+		Log::debug($creatorPubstats[0]);
 
 		$view->pubstats = array_merge($authorPubstats, $creatorPubstats);
 
