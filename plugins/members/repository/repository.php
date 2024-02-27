@@ -125,13 +125,43 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			// $this->_stats = $pubLog->getPubVersions($member->get('id'));
 			
 			$pubLog = new \Components\Publications\Tables\Publication($this->_database);
-			$this->_stats = $pubLog->getRecords(array(
+			// $this->_stats = $pubLog->getRecords(array(
+			// 	"sortby" => "title",		// Default
+			// 	"dev" => 1,
+			// 	"status" => array(0,1,3,4,5,6),
+			// 	"author" => $member->get('id')
+			// ));
+
+			// Archie: Display publications that this user is an author of or a creator of
+			$authorPubstats = $pubLog->getRecords(array(
 				"sortby" => "title",		// Default
 				"dev" => 1,
 				"status" => array(0,1,3,4,5,6),
 				"author" => $member->get('id')
 			));
 
+			$creatorPubstats = $pubLog->getRecords(array(
+				"sortby" => "title",		// Default
+				"dev" => 1,
+				"status" => array(0,1,3,4,5,6),
+				"mine" => $member->get('id')
+			));
+
+			// Archie: Add publications that this user is a creator of but not an author of
+			// to the displayed list of publications
+			$this->_stats = array_slice($authorPubstats, 0);
+			foreach ($creatorPubstats as $pub) {
+				$pubFound = false;
+				foreach ($authorPubstats as $authorPub) {				
+					if ($pub->id == $authorPub->id) {
+						$pubFound = true;
+						break;
+					}
+				}
+				if (!$pubFound) {
+					$this->_stats[] = $pub;
+				}
+			}
 
 			$areas['repository'] = Lang::txt('PLG_MEMBERS_REPOSITORY_MENU_TITLE');
 			$areas['icon']   = 'f02d';
