@@ -229,8 +229,21 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			"status" => array(0,1,3,4,5,6),
 			"mine" => $uid
 		));
-		Log::debug(get_class($creatorPubstats[0]));
-		Log::debug(get_object_vars($creatorPubstats[0]));
+
+		// Archie: Add publications that this user is a creator of but not an author of
+		// to the displayed list of publications
+		foreach ($creatorPubstats as $pub) {
+			$pubFound = false;
+			foreach ($authorPubstats as $authorPub) {
+				if ($pub->id == $authorPub->id) {
+					$pub = true;
+					break;
+				}
+			}
+			if (!$pubFound) {
+				$authorPubstats[] = $pub;
+			}
+		}
 
 		$view->pubstats = array_merge($authorPubstats, $creatorPubstats);
 
