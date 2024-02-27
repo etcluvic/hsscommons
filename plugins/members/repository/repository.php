@@ -235,6 +235,8 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		foreach ($creatorPubstats as $pub) {
 			$pubFound = false;
 			foreach ($authorPubstats as $authorPub) {
+				Log::debug(get_object_vars($pub));
+				Log::debug(get_object_vars($authorPub));
 				if ($pub->id == $authorPub->id) {
 					$pub = true;
 					break;
