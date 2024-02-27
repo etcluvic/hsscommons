@@ -232,25 +232,25 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 
 		// Archie: Add publications that this user is a creator of but not an author of
 		// to the displayed list of publications
-		foreach ($creatorPubstats as $pub) {
-			$pubFound = false;
-			foreach ($authorPubstats as $authorPub) {
-				Log::debug(get_object_vars($pub));
-				if (gettype($authorPub) == "object") {
-					Log::debug(get_object_vars($authorPub));
-				} else {
-					Log::debug($authorPub);
-				}
+		// foreach ($creatorPubstats as $pub) {
+		// 	$pubFound = false;
+		// 	foreach ($authorPubstats as $authorPub) {
+		// 		Log::debug(get_object_vars($pub));
+		// 		if (gettype($authorPub) == "object") {
+		// 			Log::debug(get_object_vars($authorPub));
+		// 		} else {
+		// 			Log::debug($authorPub);
+		// 		}
 				
-				if (gettype($authorPub) == "object" && $pub->id == $authorPub->id) {
-					$pub = true;
-					break;
-				}
-			}
-			if (!$pubFound) {
-				$authorPubstats[] = $pub;
-			}
-		}
+		// 		if (gettype($authorPub) == "object" && $pub->id == $authorPub->id) {
+		// 			$pub = true;
+		// 			break;
+		// 		}
+		// 	}
+		// 	if (!$pubFound) {
+		// 		$authorPubstats[] = $pub;
+		// 	}
+		// }
 
 		$view->pubstats = array_merge($authorPubstats, $creatorPubstats);
 
