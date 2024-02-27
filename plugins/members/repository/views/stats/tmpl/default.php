@@ -142,7 +142,7 @@ function getStatus($status = null)
 		<?php } else { ?>
 			<h3 style="margin-bottom: 5px; font-weight: 500;">You have the following publications on your ORCID profile:</h3>
 			<i>Click on each publication container to select/deselect that publication for importation</i>
-			<p class="warning">Imported ORCID publications will appear below in draft form. To publish a draft and make it publicly accessible, click on the "manage" link and follow the instructions that are provided, carefully reviewing the information imported from ORCID for any errors. Please pay particular attention to Authors tab; where possible, links to corresponding authors' HSS Commons accounts will be added automatically, but you may need to manually correct some details to ensure accuracy.</p>
+			<p class="warning">Imported ORCID publications will be added to your repository as drafts. To publish a draft and make it publicly accessible, click on the "manage" link and follow the provided instructions, carefully reviewing the information imported from ORCID for any errors. Please pay particular attention to Authors tab. Where possible, links to corresponding authors' HSS Commons accounts will be added automatically, but you may need to manually correct some details to ensure accuracy.</p>
 			<form action="<?php echo Route::url('index.php?option=com_publications&task=orcidImport') ?>" method="post" class="pub-modal-item-container" >
 				<div class="control-bar">
 					<label class="btn select-all-btn">Select all (<?php echo count($this->orcidWorks); ?>)</label>
