@@ -248,17 +248,19 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		// Sort the list of publications by title
 		$view->pubstats = array_slice($this->_stats, 0);
 		usort($view->pubstats, function($a, $b) {
+			$aTitle = $a->title;
+			$bTitle = $b->title;
 			// Check if the first character is not a letter
-			if (!ctype_alpha($a->title[0])) {
+			if (!ctype_alpha($aTitle[0])) {
 				// If not a letter, slice off the first character
-				$a->title = substr($a->title, 1);
+				$aTitle = substr($aTitle, 1);
 			}
 
-			if (!ctype_alpha($b->title[0])) {
-				$b->title = substr($b->title, 1);
+			if (!ctype_alpha($bTitle[0])) {
+				$bTitle = substr($bTitle, 1);
 			}
 
-			return strcmp($a->title, $b->title);
+			return strcmp($aTitle, $bTitle);
 		});
 
 		// Output HTML
