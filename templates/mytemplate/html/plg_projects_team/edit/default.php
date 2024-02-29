@@ -64,10 +64,6 @@ $roles = [
 						</option>
 					<?php endforeach; ?>
 				</select>
-			
-				<?php if (!$this->setup) { ?>
-				<button>Sync group members</button>
-				<?php } ?>
 			</div>
 
 			<div class="group-action group-action-syncall">
@@ -84,6 +80,10 @@ $roles = [
 				<input class="option" data-action="selective" name="sync_group" id="membership_custom" type="radio" value="0" <?php if ($this->model->get('sync_group') == 0) { echo ' checked="checked"'; } ?> />
 				<span class="label-text"><?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_LABEL_SELECT'); ?></span>
 			</label>
+
+			<?php if (!$this->setup) { ?>
+				<button>Save</button>
+			<?php } ?>
 
 			<div class="group-action group-action-selective">
 				<?php if (count($notteam)) { ?>
