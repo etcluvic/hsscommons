@@ -60,6 +60,14 @@ HUB.ProjectTeam = {
 		// Activate team management buttons
 		HUB.ProjectTeam.activateOptions();
 
+		const $syncMembersRadio = $('#membership_sync')
+		const membersSynced = $syncMembersRadio.prop('checked')
+		const $syncRoleSelector = $('#sync-role-selector')
+
+		if (membersSynced) {
+			$syncRoleSelector.show()
+		}
+
 	}, // end initialize
 
 	checkMembers: function ()
