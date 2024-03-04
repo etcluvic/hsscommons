@@ -253,19 +253,18 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			$firstCharATitle = mb_substr($aTitle, 0, 1);
 			$firstCharBTitle = mb_substr($bTitle, 0, 1);
 
-			Log::debug("firstCharATitle: " . $firstCharATitle);
-			Log::debug("firstCharBTitle: " . $firstCharBTitle);
-
 			$curlySingleQuotes = array('‘', '’');
 			$curlyDoubleQuotes = array('“', '”');
 
 			// Check if the first character is not a letter
 			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
+				Log::debug("firstCharATitle: " . $firstCharATitle);
 				// If not a letter, slice off the first character
 				$aTitle = substr($aTitle, 1);
 			}
 
 			if (!ctype_alpha($firstCharBTitle) || in_array($firstCharBTitle, $curlySingleQuotes) || in_array($firstCharBTitle, $curlyDoubleQuotes)) {
+				Log::debug("firstCharBTitle: " . $firstCharBTitle);
 				$bTitle = substr($bTitle, 1);
 			}
 
