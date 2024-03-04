@@ -253,7 +253,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			$firstCharATitle = mb_substr($aTitle, 0, 1);
 			$firstCharBTitle = mb_substr($bTitle, 0, 1);
 
-			$curlySingleQuotes = array('’', '‘');
+			$curlySingleQuotes = array('‘', '’');
 			$curlyDoubleQuotes = array('“', '”');
 
 			// Check if the first character is not a letter
