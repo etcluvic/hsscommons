@@ -786,8 +786,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 				if ($this->model->get('sync_group'))
 				{
 					$objO = $this->model->table('Owner');
-					Log::debug('Call this block');
-					Log::debug($syncRole);
 					$objO->saveOwners($this->model->get('id'), User::get('id'), 0, $this->model->get('owned_by_group'), $syncRole, 1, 1, '', $split_group_roles = 0);
 				}
 			}
