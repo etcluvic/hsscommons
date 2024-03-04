@@ -125,7 +125,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			$this->_database = App::get('db');
 			$this->_uid      = User::get('id');
 			$this->_config   = $model->config();
-			\Hubzero\Log::debug($this->_task);
+
 			switch ($this->_task)
 			{
 				case 'edit':
@@ -494,7 +494,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 	 */
 	protected function _save()
 	{
-		\Hubzero\Log::debug("Calling save() in team plugin");
 		// Incoming
 		$newm    = Request::getVar('newmember', '', 'post');
 		if (is_string($newm))
@@ -545,6 +544,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			// Do we have new authors?
 			if (!empty($newm))
 			{
+				Log::debug('Block 1');
 				// This will be coming from the "choose group members" form
 				//
 				// Hackish and ugly but needed a way to specify that the incoming
@@ -658,6 +658,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 
 			if ($groups)
 			{
+				Log::debug('Block 2');
 				// Save new authors from group
 				$g_added = $objO->saveOwners($this->model->get('id'), $this->_uid, 0, $groups, $role, $status = 1, $native = 0);
 				if ($objO->getError())
@@ -676,6 +677,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 		$uids = array_unique($uids);
 		if (count($uids) > 0)
 		{
+			Log::debug('Block 3');
 			$this->_msg = Lang::txt('PLG_PROJECTS_TEAM_SUCCESS_ADDED_OR_INVITED') . ' ' . count($uids) . ' ' . Lang::txt('PLG_PROJECTS_TEAM_NEW') . ' ' . Lang::txt('PLG_PROJECTS_TEAM_MEMBERS');
 
 			if (count($invalid) > 0)
@@ -685,6 +687,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 
 			if (!$setup)
 			{
+				Log::debug('Block 4');
 				$note  = strtolower(Lang::txt('PLG_PROJECTS_TEAM_SUCCESS_ADDED_OR_INVITED')) . ' ';
 				for ($i=0; $i< count($uids); $i++)
 				{
@@ -742,6 +745,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 		$syncRole = Request::getInt('syncRole', -1);
 		if ($syncRole !== -1)
 		{
+			Log::debug('Block 5');
 			$this->sync($syncRole);
 		}
 
