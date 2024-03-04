@@ -256,20 +256,13 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			$curlySingleQuotes = array('‘', '’');
 			$curlyDoubleQuotes = array('“', '”');
 
-			if (in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
-				Log::debug($aTitle);
-				Log::debug("Found curly quote in aTitle");
-			}
-
 			// Check if the first character is not a letter
 			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
-				Log::debug("firstCharATitle: " . $firstCharATitle);
 				// If not a letter, slice off the first character
 				$aTitle = str_replace($firstCharATitle, '', $aTitle);
 			}
 
 			if (!ctype_alpha($firstCharBTitle) || in_array($firstCharBTitle, $curlySingleQuotes) || in_array($firstCharBTitle, $curlyDoubleQuotes)) {
-				Log::debug("firstCharBTitle: " . $firstCharBTitle);
 				// If not a letter, slice off the first character
 				$bTitle = str_replace($firstCharBTitle, '', $bTitle);
 			}
