@@ -253,6 +253,9 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			$firstCharATitle = mb_substr($aTitle, 0, 1);
 			$firstCharBTitle = mb_substr($bTitle, 0, 1);
 
+			Log::debug("firstCharATitle: " . $firstCharATitle);
+			Log::debug("firstCharBTitle: " . $firstCharBTitle);
+
 			$curlySingleQuotes = array('‘', '’');
 			$curlyDoubleQuotes = array('“', '”');
 
