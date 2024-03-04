@@ -125,7 +125,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			$this->_database = App::get('db');
 			$this->_uid      = User::get('id');
 			$this->_config   = $model->config();
-
+			\Hubzero\Log::debug($this->_task);
 			switch ($this->_task)
 			{
 				case 'edit':
@@ -494,6 +494,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 	 */
 	protected function _save()
 	{
+		\Hubzero\Log::debug("Calling save() in team plugin");
 		// Incoming
 		$newm    = Request::getVar('newmember', '', 'post');
 		if (is_string($newm))
