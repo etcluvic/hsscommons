@@ -257,6 +257,7 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			$curlyDoubleQuotes = array('“', '”');
 
 			if (in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
+				Log::debug($aTitle);
 				Log::debug("Found curly quote in aTitle");
 			}
 
