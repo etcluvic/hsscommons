@@ -250,11 +250,15 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		usort($view->pubstats, function($a, $b) {
 			$aTitle = $a->title;
 			$bTitle = $b->title;
-			$firstCharATitle = mb_substr($aTitle, 0, 1);
-			$firstCharBTitle = mb_substr($bTitle, 0, 1);
+			$firstCharATitle = mb_substr($aTitle, 0, 1, "UTF-8");
+			$firstCharBTitle = mb_substr($bTitle, 0, 1, "UTF-8");
 
 			$curlySingleQuotes = array('‘', '’');
 			$curlyDoubleQuotes = array('“', '”');
+
+			if (in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
+				Log::debug("Found curly quote in aTitle");
+			}
 
 			// Check if the first character is not a letter
 			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
