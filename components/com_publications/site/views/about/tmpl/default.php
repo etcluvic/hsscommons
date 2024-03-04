@@ -7,7 +7,7 @@
 
 // No direct access
 defined('_HZEXEC_') or die();
-Log::debug('Call this template');
+\Hubzero\Log::debug('Call about template');
 $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');

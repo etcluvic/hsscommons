@@ -28,7 +28,7 @@
 
 // No direct access
 defined('_HZEXEC_') or die();
-
+\Hubzero\Log::debug('Call view template');
 $this->css()
 	->css('jquery.fancybox.css', 'system')
 	->js();
