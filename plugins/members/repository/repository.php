@@ -265,12 +265,13 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
 				Log::debug("firstCharATitle: " . $firstCharATitle);
 				// If not a letter, slice off the first character
-				$aTitle = substr($aTitle, 1);
+				$aTitle = str_replace($firstCharATitle, '', $aTitle);
 			}
 
 			if (!ctype_alpha($firstCharBTitle) || in_array($firstCharBTitle, $curlySingleQuotes) || in_array($firstCharBTitle, $curlyDoubleQuotes)) {
 				Log::debug("firstCharBTitle: " . $firstCharBTitle);
-				$bTitle = substr($bTitle, 1);
+				// If not a letter, slice off the first character
+				$bTitle = str_replace($firstCharBTitle, '', $bTitle);
 			}
 
 			return strcmp($aTitle, $bTitle);
