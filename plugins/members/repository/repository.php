@@ -250,16 +250,19 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		usort($view->pubstats, function($a, $b) {
 			$aTitle = $a->title;
 			$bTitle = $b->title;
+			$firstCharATitle = mb_substr($aTitle, 0, 1);
+			$firstCharBTitle = mb_substr($bTitle, 0, 1);
+
 			$curlySingleQuotes = array('’', '‘');
 			$curlyDoubleQuotes = array('“', '”');
 
 			// Check if the first character is not a letter
-			if (!ctype_alpha($aTitle[0]) || in_array($aTitle[0], $curlySingleQuotes) || in_array($aTitle[0], $curlyDoubleQuotes)) {
+			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
 				// If not a letter, slice off the first character
 				$aTitle = substr($aTitle, 1);
 			}
 
-			if (!ctype_alpha($bTitle[0]) || in_array($bTitle[0], $curlySingleQuotes) || in_array($bTitle[0], $curlyDoubleQuotes)) {
+			if (!ctype_alpha($firstCharBTitle) || in_array($firstCharBTitle, $curlySingleQuotes) || in_array($firstCharBTitle, $curlyDoubleQuotes)) {
 				$bTitle = substr($bTitle, 1);
 			}
 
