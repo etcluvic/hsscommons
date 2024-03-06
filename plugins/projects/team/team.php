@@ -815,23 +815,17 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						// Add owner group's members to the project if not already
 						foreach ($syncedMembers as $member) {
 							$query = new \Hubzero\Database\Query;
-							$foundMember = $query->select('*')
+							$projectMember = $query->select('*')
 												->from('#__project_owners')
 												->whereEquals('userid', $member)
 												->whereEquals('projectid', $this->model->get('id'))
 												->fetch();
-							Log::debug($foundMember);
-							if (count($foundMember) == 0) {
+							if ($projectMember->status == 2) {
 								$query = new \Hubzero\Database\Query;
-								$query->insert('#__project_owners')  
-									->values([
-										'projectid' => $this->model->get('id'),
-										'userid' => $member,
-										'status' => 1,
-										'num_visits' => 0,
-										'role' => $syncRole ? $syncRole : 0,
-										'native' => 1
-									])  
+								$query->update('#__project_owners')  
+									->set(['status' => 1])
+									>whereEquals('userid', $member)
+									->whereEquals('projectid', $this->model->get('id'))
 									->execute();
 							}
 						}
