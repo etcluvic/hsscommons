@@ -68,7 +68,7 @@ $roles = [
 
 			<div class="group-action group-action-syncall">
 				<?php if (count($notteam)) { ?>
-					<p><input type="submit" class="btn option" value="<?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_SYNC'); ?>" /></p>
+					<!-- <p><input type="submit" class="btn option" value="<?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_SYNC'); ?>" /></p> -->
 				<?php } else { ?>
 					<p class="icon-success"><?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_MEMBERS_TEAM'); ?></p>
 				<?php } ?>
