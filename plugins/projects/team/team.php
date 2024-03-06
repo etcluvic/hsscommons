@@ -819,6 +819,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 												->from('#__project_owners')
 												->whereEquals('userid', $member)
 												->fetch();
+							Log::debug($foundMember);
 							if (count($foundMember) == 0) {
 								$query = new \Hubzero\Database\Query;
 								$query->insert('#__project_owners')  
