@@ -824,7 +824,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 								$query = new \Hubzero\Database\Query;
 								$query->update('#__project_owners')  
 									->set(['status' => 1])
-									>whereEquals('userid', $member)
+									->whereEquals('userid', $member)
 									->whereEquals('projectid', $this->model->get('id'))
 									->execute();
 							}
