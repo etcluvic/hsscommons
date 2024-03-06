@@ -794,7 +794,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 					} else {
 						// Get all the members that are in this project and in the owner group
 						$groupOwnerMembers = $this->model->groupOwner()->get('members');
-						Log::debug($groupOwnerMembers);
 
 						// Get the project's creator and owner and remove him/her from the syncing list
 						$query = new \Hubzero\Database\Query;
