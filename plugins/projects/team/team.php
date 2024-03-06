@@ -793,8 +793,8 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 					// When edit team. Once hit "Sync member as", sync all group members to that role, except for the project creator
 					} else {
 						// Get the group id of the project
-						Log::debug(get_class($this->model->groupOwner()));
-						Log::debug(get_object_vars($this->model->groupOwner()));
+						Log::debug($this->model->groupOwner()->id);
+						Log::debug($this->model->groupOwner()->is_member_of("members", User::get('id')));
 					}
 				}
 			}
