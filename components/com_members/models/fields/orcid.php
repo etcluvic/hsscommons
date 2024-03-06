@@ -62,17 +62,17 @@ class Orcid extends Text
 		$html = array();
 
 		$html[] = '<div class="grid">';
-		$html[] = '	<div class="col span9">';
+		$html[] = '	<div class="col span6" style="min-width: 300px;">';
 		$html[] = '		<input ' . $attr . ' placeholder="####-####-####-####" />';
 		$html[] = '		<input type="hidden" name="base_uri" id="base_uri" value="' . rtrim(Request::base(true), '/') . '" />';
 		$html[] = '	</div>';
-		$html[] = '	<div class="col span3 omega">';
+		$html[] = '	<div class="col span6 omega" style="min-width: 300px; margin-top:5px;">';
 		// Build the ORCID Create or Connect hyperlink
 		$config = Component::params('com_members');
 		$srv = $config->get('orcid_service', 'members');
 		$clientID = $config->get('orcid_' . $srv . '_client_id', '');
 		$redirectURI = $config->get('orcid_' . $srv . '_redirect_uri', '');
-		$html[] = '     <a id="create-orcid" class="btn" href="https://';
+		$html[] = '     <a id="create-orcid" class="btn" style="width: 100%;" href="https://';
 		if ($config->get('orcid_service', 'members') == 'sandbox')
 		{
 			$html[] = 'sandbox.';
