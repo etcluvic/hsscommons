@@ -817,7 +817,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						$query->update('#__project_owners')  
 							->set(['role' => $syncRole])
 							->whereEquals('projectid', $this->model->get('id'))
-							->whereIn('userid', $syncedOwnerMembers)
+							->whereIn('userid', $syncedMembers)
 							->execute();
 					}
 				}
