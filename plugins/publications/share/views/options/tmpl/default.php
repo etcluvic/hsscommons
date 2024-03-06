@@ -16,8 +16,9 @@ $limit = intval($this->_params->get('icons_limit')) ? $this->_params->get('icons
 
 $popup = '<ol class="sharelinks">';
 $title = Lang::txt('PLG_PUBLICATION_SHARE_VIEWING', Config::get('sitename'), stripslashes($this->publication->title));
-$metadata  = '<div class="share">'."\n";
+$metadata  = '<div class="share" style="display: flex; justify-content: start;">'."\n";
 $metadata .= "\t".Lang::txt('PLG_PUBLICATION_SHARE').': ';
+$metadata .= '<div class="icon-wrapper" style="display: flex; justify-content: space-evenly; width: 100%;">';
 
 // Available options
 $sharing = array('facebook', 'twitter', 'google', 'pinterest', 'linkedin', 'delicious', 'reddit', 'email', 'copy-url');
@@ -62,6 +63,6 @@ if ($limit > 0)
 	$metadata .= "\t".'</dd>'."\n";
 	$metadata .= '</dl>'."\n";
 }
-$metadata .= '</div>'."\n";
+$metadata .= '</div></div>'."\n";
 
 echo $metadata;
