@@ -792,10 +792,17 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 					
 					// When edit team. Once hit "Sync member as", sync all group members to that role, except for the project creator
 					} else {
-						// Get the group id of the project
-						$groupOwner = $this->model->groupOwner();
-						Log::debug($groupOwner->get('members'));
-						Log::debug($groupOwner->is_member_of("members", User::get('id')));
+						// Get all the members that are in this project and in the owner group
+						$groupOwnerMembers = $this->model->groupOwner()->get('members');
+
+						// Sync them to the selected role
+						Log::debug($this->model->get('id'));
+						// $query = new Query;
+						// $query->alter('#__project_owners', '', 1, ['name' => 'you']); 
+						// $query->update('#__project_owners')  
+						// 	->set(['role' => $syncRole])
+						// 	->whereEquals('projectid', $this->model->get('id'))
+						// 	->execute();
 					}
 				}
 			}
