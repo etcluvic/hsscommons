@@ -818,6 +818,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 							$foundMember = $query->select('*')
 												->from('#__project_owners')
 												->whereEquals('userid', $member)
+												->whereEquals('projectid', $this->model->get('id'))
 												->fetch();
 							Log::debug($foundMember);
 							if (count($foundMember) == 0) {
