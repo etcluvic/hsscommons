@@ -85,8 +85,7 @@ $roles = [
 			</label>
 
 			<p class="info">
-				Clicking <strong>&quot;Save&quot;</strong> with the option <strong>&quot;Include all group members&quot;</strong> selected the first time will display a dropdown for you to select a role for the owning group members to be synced to. Doing it the second time will add all group members to this project with the role selected in the <strong>&quot;<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>&quot;</strong> dropdown.
-				If no role is selected, the group members will be assigned the <strong>&quot;Collaborator&quot;</strong> role by default. In addition, any new member added to the group will be added to the project with the same role. 
+				If switching to the <strong>“Include all group members”</strong> option, <strong>you must click Save twice</strong>: the first time will display a drop-down menu, which allows you select the role that you would like to assign to members added to the group that owns this project; the second time will add all group members to the project with that role and also change the role for all existing project members (with the exception of project creators and managers). 
 			</p>
 
 			<?php if (!$this->setup) { ?>
