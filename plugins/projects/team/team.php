@@ -806,8 +806,8 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						$syncedMembers = array();
 						if (count($users) > 0) {
 							for ($i = 0; $i < count($groupOwnerMembers); $i++) {
-								if ($groupOwnerMembers[i] !== $users[0]->owned_by_user || $groupOwnerMembers[i] !== $users[0]->created_by_user) {
-									$syncedMembers[] = $groupOwnerMembers[i];
+								if ($groupOwnerMembers[$i] !== $users[0]->owned_by_user || $groupOwnerMembers[$i] !== $users[0]->created_by_user) {
+									$syncedMembers[] = $groupOwnerMembers[$i];
 								}
 							}
 						}
