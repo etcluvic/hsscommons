@@ -785,8 +785,17 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 				// Are we syncing group membership?
 				if ($this->model->get('sync_group'))
 				{
-					$objO = $this->model->table('Owner');
-					$objO->saveOwners($this->model->get('id'), User::get('id'), 0, $this->model->get('owned_by_group'), $syncRole, 1, 1, '', $split_group_roles = 0);
+					// In set up, add new members from group and sync the group's members to a role
+					if ($setup) {
+						$objO = $this->model->table('Owner');
+						$objO->saveOwners($this->model->get('id'), User::get('id'), 0, $this->model->get('owned_by_group'), $syncRole, 1, 1, '', $split_group_roles = 0);
+					
+					// When edit team. Once hit "Sync member as", sync all group members to that role, except for the project creator
+					} else {
+						// Get the group id of the project
+						Log::debug(get_class($this->model->groupOwner()));
+						Log::debug(get_object_vars($this->model->groupOwner()));
+					}
 				}
 			}
 		}
