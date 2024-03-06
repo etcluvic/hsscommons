@@ -794,7 +794,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 					} else {
 						// Get the group id of the project
 						$groupOwner = $this->model->groupOwner();
-						Log::debug($groupOwner->id);
+						Log::debug($groupOwner->get('members'));
 						Log::debug($groupOwner->is_member_of("members", User::get('id')));
 					}
 				}
