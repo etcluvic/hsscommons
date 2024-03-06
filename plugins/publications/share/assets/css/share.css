@@ -180,7 +180,13 @@
 	height: 16px;
 	font-size: 16px;
 }
-.share_twitter:before         { content: "\f010"; color: #46b1e8; }
+.share_twitter:before { 
+	content: "𝕏";
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0.9);
+	border-radius: 5px;
+	padding: 0.5px;
+}
 .share_facebook:before        { content: "\f012"; color: #49659d; }
 .share_google:before          { content: "\f014"; color: black }
 .share_linkedin:before        { content: "\f016"; color: #2875b7; }
@@ -193,7 +199,8 @@
 	background: url("../img/reddit.gif") 0 -18px no-repeat;
 }
 .share_email {
-	background: url("../img/email.gif") 0 -18px no-repeat;
+	background: url("../img/email.gif") 0 0 no-repeat;
+	width: 200px;
 }
 #copy-url-btn {
 	border: 1px solid rgb(203 213 225);
