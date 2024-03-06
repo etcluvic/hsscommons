@@ -796,7 +796,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						$groupOwnerMembers = $this->model->groupOwner()->get('members');
 
 						// Get the project's creator and owner and remove him/her from the syncing list
-						$query = new Query;
+						$query = new \Hubzero\Database\Query;
 						$users = $query->select('owned_by_user, created_by_user')  
 							->from('#__projects')  
 							->whereEquals('id', $this->model->get('id'))  
@@ -813,7 +813,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						}
 
 						// Sync them to the selected role
-						$query = new Query;
+						$query = new \Hubzero\Database\Query;
 						$query->update('#__project_owners')  
 							->set(['role' => $syncRole])
 							->whereEquals('projectid', $this->model->get('id'))
