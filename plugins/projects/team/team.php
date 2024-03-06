@@ -820,7 +820,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 												->whereEquals('userid', $member)
 												->whereEquals('projectid', $this->model->get('id'))
 												->fetch();
-							if ($projectMember->status == 2) {
+							if (count($projectMember) > 0 && $projectMember[0]->status == 2) {
 								$query = new \Hubzero\Database\Query;
 								$query->update('#__project_owners')  
 									->set(['status' => 1])
