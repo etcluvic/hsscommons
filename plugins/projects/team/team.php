@@ -795,14 +795,30 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						// Get all the members that are in this project and in the owner group
 						$groupOwnerMembers = $this->model->groupOwner()->get('members');
 
+						// Get the project's creator and owner and remove him/her from the syncing list
+						$query = new Query;
+						$users = $query->select('owned_by_user, created_by_user')  
+							->from('#__projects')  
+							->whereEquals('id', $this->model->get('id'))  
+							->fetch();
+						Log::debug($users);
+
+						$syncedMembers = array();
+						if (count($users) > 0) {
+							for ($i = 0; $i < count($groupOwnerMembers); $i++) {
+								if ($groupOwnerMembers[i] !== $users[0]->owned_by_user || $groupOwnerMembers[i] !== $users[0]->created_by_user) {
+									$syncedMembers[] = $groupOwnerMembers[i]
+								}
+							}
+						}
+
 						// Sync them to the selected role
-						Log::debug($this->model->get('id'));
-						// $query = new Query;
-						// $query->alter('#__project_owners', '', 1, ['name' => 'you']); 
-						// $query->update('#__project_owners')  
-						// 	->set(['role' => $syncRole])
-						// 	->whereEquals('projectid', $this->model->get('id'))
-						// 	->execute();
+						$query = new Query;
+						$query->update('#__project_owners')  
+							->set(['role' => $syncRole])
+							->whereEquals('projectid', $this->model->get('id'))
+							->whereIn('userid', $syncedOwnerMembers)
+							->execute();
 					}
 				}
 			}
