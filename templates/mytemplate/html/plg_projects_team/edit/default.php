@@ -59,7 +59,7 @@ $roles = [
 						<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
 					</option>
 					<?php foreach ($roles as $description => $value): ?>
-						<option value="<?php echo $value; ?>" <?php if ($value == $this->group_synced_role) { echo "selected" } ?>>
+						<option value="<?php echo $value; ?>" <?php if ($value == $this->group_synced_role) { echo "selected"; } ?>>
 							<?php echo Lang::txt("PLG_PROJECTS_TEAM_SYNCING_$description"); ?>
 						</option>
 					<?php endforeach; ?>
