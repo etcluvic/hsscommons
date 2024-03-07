@@ -126,6 +126,8 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			$this->_uid      = User::get('id');
 			$this->_config   = $model->config();
 
+			Log::debug($this->_task);
+
 			switch ($this->_task)
 			{
 				case 'edit':
