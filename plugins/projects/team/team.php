@@ -796,6 +796,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 							$paramArray[1] = $syncRole;
 							$groupSyncedRoleFound = true;
 						}
+						$param = implode("=", $paramArray);
 					}
 					if (!$groupSyncedRoleFound) {
 						$paramsArray[] = "group_synced_role=" . $syncRole;
