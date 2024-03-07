@@ -1704,7 +1704,7 @@ class Project extends Model
 		foreach ($paramsArray as $param) {
 			$paramArray = explode("=", $param);
 			if ($paramArray[0] == "group_synced_role") {
-				return $paramArray[1];
+				return (int)$paramArray[1];
 			}
 		}
 

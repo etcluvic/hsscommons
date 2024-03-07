@@ -803,7 +803,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						$paramsArray[] = "group_synced_role=" . $syncRole;
 					}
 					$params = implode("\n", $paramsArray);
-					Log::debug($params);
 					$query = new \Hubzero\Database\Query;
 					$query->update('#__projects')  
 						->set(['params' => $params])
