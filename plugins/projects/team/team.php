@@ -296,6 +296,9 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 		{
 			$view->filters['start'] = 0;
 		}
+
+		Log::debug(get_class($this->model));
+
 		// Get all active team members
 		$view->team = $this->model->team($view->filters, true);
 
