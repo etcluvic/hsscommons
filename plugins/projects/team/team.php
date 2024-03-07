@@ -785,6 +785,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 				// Are we syncing group membership?
 				if ($this->model->get('sync_group'))
 				{
+					Log::debug($this->model->get('params'));
 					// In set up, add new members from group and sync the group's members to a role
 					if ($setup) {
 						$objO = $this->model->table('Owner');
