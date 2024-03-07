@@ -55,11 +55,11 @@ $roles = [
 			
 			<div style="display: flex; flex-direction: row; gap: 10px;">
 				<select id="sync-role-selector" name="syncRole" hidden>
+					<option value="" selected disabled hidden>
+						<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
+					</option>
 					<?php foreach ($roles as $description => $value): ?>
-						<option value="" selected disabled hidden>
-							<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
-						</option>
-						<option value="<?php echo $value; ?>">
+						<option value="<?php echo $value; ?>" <?php if ($value == $this->group_synced_role) { echo "selected" } ?>>
 							<?php echo Lang::txt("PLG_PROJECTS_TEAM_SYNCING_$description"); ?>
 						</option>
 					<?php endforeach; ?>

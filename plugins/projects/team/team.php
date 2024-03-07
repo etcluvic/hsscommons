@@ -296,9 +296,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 		{
 			$view->filters['start'] = 0;
 		}
-
-		Log::debug(get_class($this->model));
-
+		
 		// Get all active team members
 		$view->team = $this->model->team($view->filters, true);
 
@@ -322,6 +320,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 		$view->task     = $this->_task;
 		$view->edit     = $edit;
 		$view->title    = $this->_area['title'];
+		$view->group_synced_role = $this->model->getGroupSyncedRole();
 
 		// Get messages	and errors
 		$view->msg = $this->_msg;
