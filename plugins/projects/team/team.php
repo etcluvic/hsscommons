@@ -786,6 +786,23 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 				if ($this->model->get('sync_group'))
 				{
 					Log::debug($this->model->get('params'));
+					// Change the role that we are syncing group membership to
+					$paramsArray = explode(" ", $this->model->get('params'));
+					Log::debug($paramsArray);
+					$groupSyncedRoleFound = false;
+					foreach ($paramsArray as $param) {
+						$paramArray = explode("=", $param);
+						if ($paramArray[0] == "group_synced_role") {
+							$paramArray[1] = $syncRole;
+							$groupSyncedRoleFound = true;
+						}
+					}
+					if (!$groupSyncedRoleFound) {
+						$paramsArray[] = "group_synced_role=" . $syncRole;
+					}
+					$params = implode(" ", $paramsArray);
+					Log::debug($params);
+
 					// In set up, add new members from group and sync the group's members to a role
 					if ($setup) {
 						$objO = $this->model->table('Owner');
