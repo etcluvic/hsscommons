@@ -53,6 +53,7 @@ $roles = [
 				<span class="label-text"><?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_LABEL_SYNC'); ?></span>
 			</label>
 			
+			<?php if ($this->model->get('sync_role')) { ?>
 			<div style="display: flex; flex-direction: row; gap: 10px;">
 				<select id="sync-role-selector" name="syncRole" hidden>
 					<option value="" selected disabled hidden>
@@ -65,6 +66,7 @@ $roles = [
 					<?php endforeach; ?>
 				</select>
 			</div>
+			<?php } ?>
 
 			<div class="group-action group-action-syncall">
 				<?php if (count($notteam)) { ?>
