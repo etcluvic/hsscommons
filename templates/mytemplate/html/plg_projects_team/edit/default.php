@@ -55,7 +55,7 @@ $roles = [
 			
 			<?php if ($this->model->get('sync_group')) { ?>
 			<div style="display: flex; flex-direction: row; gap: 10px;">
-				<label for="sync-role-selector"><?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?></label>
+				<label for="sync-role-selector"><?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>:</label>
 				<select id="sync-role-selector" name="syncRole" hidden>
 					<option value="" selected disabled hidden>
 						<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>
@@ -85,8 +85,8 @@ $roles = [
 			</label>
 
 			<p class="info">
-				Clicking <strong>Save</strong> with the option <strong><?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_LABEL_SYNC'); ?></strong> selected will add all group members to this project with the role selected in the <strong><?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?></strong> dropdown.
-				If no role is selected, the group members will be assigned the <strong>Collaborat</strong> role by default. In addition, any new member added to the group will be added to the project with the same role. 
+				Clicking <strong>&quot;Save&quot;</strong> with the option <strong>&quot;<?php echo Lang::txt('PLG_PROJECTS_TEAM_GROUP_LABEL_SYNC'); ?>&quot;</strong> selected will add all group members to this project with the role selected in the <strong>&quot;<?php echo Lang::txt('PLG_PROJECTS_TEAM_SYNCING_DEFAULT'); ?>&quot;</strong> dropdown.
+				If no role is selected, the group members will be assigned the <strong>&quot;Collaborator&quot;</strong> role by default. In addition, any new member added to the group will be added to the project with the same role. 
 			</p>
 
 			<?php if (!$this->setup) { ?>
