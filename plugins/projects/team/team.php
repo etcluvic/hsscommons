@@ -126,8 +126,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			$this->_uid      = User::get('id');
 			$this->_config   = $model->config();
 
-			Log::debug($this->_task);
-
 			switch ($this->_task)
 			{
 				case 'edit':
@@ -741,13 +739,19 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 			$this->setError(Lang::txt('PLG_PROJECTS_TEAM_MEMBERS_INVALID_NAMES') . '<br />' . Lang::txt('PLG_PROJECTS_TEAM_MEMBERS_INVALID_NAMES_EXPLAIN'));
 		}
 
-		// Sync group members' roles if we receive a request
-		$syncRole = Request::getInt('syncRole', -1);
-		if ($syncRole !== -1)
-		{
-			$this->sync($syncRole);
-		}
+		// Change setting of syncing group members or not
+		$syncGroup = Request::getInt('sync_group', 0);
+		$this->model->set('sync_group', $syncGroup);
 
+		// Sync group members' roles if we receive a request
+		if ($syncGroup) {
+			$syncRole = Request::getInt('syncRole', -1);
+			if ($syncRole !== -1)
+			{
+				$this->sync($syncRole);
+			}
+		}
+		
 		// Pass error or success message
 		if ($this->getError())
 		{
@@ -772,7 +776,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 	 */
 	protected function sync($syncRole=0)
 	{
-		Log::debug('Calling sync');
 		// Setup stage?
 		$setup = $this->model->inSetup();
 
