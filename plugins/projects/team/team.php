@@ -772,6 +772,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 	 */
 	protected function sync($syncRole=0)
 	{
+		Log::debug('Calling sync');
 		// Setup stage?
 		$setup = $this->model->inSetup();
 
