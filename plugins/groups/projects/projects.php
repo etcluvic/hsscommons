@@ -239,11 +239,9 @@ class plgGroupsProjects extends \Hubzero\Plugin\Plugin
 		// Project-group sync
 		if ($projects)
 		{
-			Log::debug('Got here');
 			foreach ($projects as $project)
 			{
 				$projectModel = new Components\Projects\Models\Project($project->id);
-				Log::debug($projectModel->getGroupSyncedRole());
 				$this->model->table('Owner')->reconcileGroups($project->id, $project->owned_by_group, $project->sync_group, $projectModel->getGroupSyncedRole());
 				$this->model->table('Owner')->sysGroup($project->alias, $this->_config->get('group_prefix', 'pr-'));
 			}
