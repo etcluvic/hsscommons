@@ -239,6 +239,7 @@ class plgGroupsProjects extends \Hubzero\Plugin\Plugin
 		// Project-group sync
 		if ($projects)
 		{
+			Log::debug('Got here');
 			foreach ($projects as $project)
 			{
 				$projectModel = new Components\Projects\Models\Project($project->id);
