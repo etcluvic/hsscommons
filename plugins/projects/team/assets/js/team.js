@@ -60,14 +60,6 @@ HUB.ProjectTeam = {
 		// Activate team management buttons
 		HUB.ProjectTeam.activateOptions();
 
-		const $syncMembersRadio = $('#membership_sync')
-		const membersSynced = $syncMembersRadio.prop('checked')
-		const $syncRoleSelector = $('#sync-role-selector')
-
-		if (membersSynced) {
-			$syncRoleSelector.show()
-		}
-
 	}, // end initialize
 
 	checkMembers: function ()
@@ -281,16 +273,7 @@ HUB.ProjectTeam = {
 			$('#' + form).addClass('hidden');
 			$(el).removeClass('hidden');
 		});
-
-		const languages = ['en', 'fr']
-		var urlFirstPath = window.location.pathname.split('/')[1];
-		var formAction = '';
-
-		if (languages.includes(urlFirstPath)) {
-			formAction = '/' + urlFirstPath + '/projects/' + $('#pid').val() + '/team/assignrole/?1=1' + window.location.search;
-		} else {
-			var formAction = '/projects/' + $('#pid').val() + '/team/assignrole/?1=1' + window.location.search;
-		}
+		var formAction = '/projects/' + $('#pid').val() + '/team/assignrole/?1=1';
 
 		$('#' + save).on('click', function(e){
 			e.preventDefault();
@@ -324,6 +307,26 @@ HUB.ProjectTeam = {
 		}
 	}
 }
+
+// Sync Groups Radio Buttons. Toggling the sync/custom button between the 2 radio button. 
+$(document).ready(function () {
+	const membershipSyncRadio = $('#membership_sync');
+	const membershipCustomRadio = $('#membership_custom');
+	const syncRoleSelector = $('#sync-role-selector')
+
+	membershipSyncRadio.click(function() {
+		membershipSyncRadio.closest('div[class^="input-wrap"]').addClass('active');
+		membershipCustomRadio.closest('div[class^="input-wrap"]').removeClass('active');
+		syncRoleSelector.show()
+	});
+
+	membershipCustomRadio.click(function() {
+		membershipCustomRadio.closest('div[class^="input-wrap"]').addClass('active');
+		membershipSyncRadio.closest('div[class^="input-wrap"]').removeClass('active');
+		syncRoleSelector.hide()
+	});
+});
+
 
 jQuery(document).ready(function($){
 	HUB.ProjectTeam.initialize();

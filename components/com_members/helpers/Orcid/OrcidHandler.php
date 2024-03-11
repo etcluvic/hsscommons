@@ -456,6 +456,7 @@ class OrcidHandler extends Orcid\Oauth
             }
 
             // Add authors
+            $addSelf = false;
             $authors = [];
             if (isset($workData->contributors->contributor) && count($workData->contributors->contributor) > 0) {
                 foreach($workData->contributors->contributor as $author) {
@@ -463,6 +464,9 @@ class OrcidHandler extends Orcid\Oauth
                     $authorName = $author->$creditName->value;
                     if (isset($author->$contributorOrcid) && $author->$contributorOrcid && $author->$contributorOrcid->path && $author->$contributorOrcid->path !== "null") {
                         $authorOrcid = $author->$contributorOrcid->path;
+                        if ($authorOrcid == $this->getOrcid()) {
+                            $addSelf = true;
+                        }
                     }
                     $authorNameSegments = explode(" ", $authorName);
                     $authors[] = array(
@@ -489,6 +493,18 @@ class OrcidHandler extends Orcid\Oauth
                                 "surname" => count($authorNameSegments) >= 2 ? $authorNameSegments[count($authorNameSegments) - 1] : ""
                             );
             }
+
+            // Add self as author if not already in the list
+            // if (!$addSelf) {
+            //     // Other fields are empty as user is searched by ORCID
+            //     $authors[] = array(
+            //                     "orcid" => $this->getOrcid(), 
+            //                     "name" => "", 
+            //                     "givenname" => "",
+            //                     "surname" => ""
+            //                 );
+            // }
+
             $work->authors = $authors;
 
             // Add URL

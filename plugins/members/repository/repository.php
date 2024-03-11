@@ -125,13 +125,43 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 			// $this->_stats = $pubLog->getPubVersions($member->get('id'));
 			
 			$pubLog = new \Components\Publications\Tables\Publication($this->_database);
-			$this->_stats = $pubLog->getRecords(array(
+			// $this->_stats = $pubLog->getRecords(array(
+			// 	"sortby" => "title",		// Default
+			// 	"dev" => 1,
+			// 	"status" => array(0,1,3,4,5,6),
+			// 	"author" => $member->get('id')
+			// ));
+
+			// Archie: Display publications that this user is an author of or a creator of
+			$authorPubstats = $pubLog->getRecords(array(
 				"sortby" => "title",		// Default
 				"dev" => 1,
 				"status" => array(0,1,3,4,5,6),
 				"author" => $member->get('id')
 			));
 
+			$creatorPubstats = $pubLog->getRecords(array(
+				"sortby" => "title",		// Default
+				"dev" => 1,
+				"status" => array(0,1,3,4,5,6),
+				"mine" => $member->get('id')
+			));
+
+			// Archie: Add publications that this user is a creator of but not an author of
+			// to the displayed list of publications
+			$this->_stats = array_slice($authorPubstats, 0);
+			foreach ($creatorPubstats as $pub) {
+				$pubFound = false;
+				foreach ($authorPubstats as $authorPub) {				
+					if ($pub->id == $authorPub->id) {
+						$pubFound = true;
+						break;
+					}
+				}
+				if (!$pubFound) {
+					$this->_stats[] = $pub;
+				}
+			}
 
 			$areas['repository'] = Lang::txt('PLG_MEMBERS_REPOSITORY_MENU_TITLE');
 			$areas['icon']   = 'f02d';
@@ -208,12 +238,37 @@ class plgMembersRepository extends \Hubzero\Plugin\Plugin
 		// $view->pubstats = $this->_stats ? $this->_stats : $pubLog->getPubVersions($uid);
 
 		$pubLog = new \Components\Publications\Tables\Publication($this->_database);
-		$view->pubstats = $pubLog->getRecords(array(
-			"sortby" => "title",		// Default
-			"dev" => 1,
-			"status" => array(0,1,3,4,5,6),
-			"author" => $uid
-		));
+		// $view->pubstats = $pubLog->getRecords(array(
+		// 	"sortby" => "title",		// Default
+		// 	"dev" => 1,
+		// 	"status" => array(0,1,3,4,5,6),
+		// 	"author" => $uid
+		// ));
+
+		// Sort the list of publications by title
+		$view->pubstats = array_slice($this->_stats, 0);
+		usort($view->pubstats, function($a, $b) {
+			$aTitle = $a->title;
+			$bTitle = $b->title;
+			$firstCharATitle = mb_substr($aTitle, 0, 1, "UTF-8");
+			$firstCharBTitle = mb_substr($bTitle, 0, 1, "UTF-8");
+
+			$curlySingleQuotes = array('‘', '’');
+			$curlyDoubleQuotes = array('“', '”');
+
+			// Check if the first character is not a letter
+			if (!ctype_alpha($firstCharATitle) || in_array($firstCharATitle, $curlySingleQuotes) || in_array($firstCharATitle, $curlyDoubleQuotes)) {
+				// If not a letter, slice off the first character
+				$aTitle = str_replace($firstCharATitle, '', $aTitle);
+			}
+
+			if (!ctype_alpha($firstCharBTitle) || in_array($firstCharBTitle, $curlySingleQuotes) || in_array($firstCharBTitle, $curlyDoubleQuotes)) {
+				// If not a letter, slice off the first character
+				$bTitle = str_replace($firstCharBTitle, '', $bTitle);
+			}
+
+			return strcmp($aTitle, $bTitle);
+		});
 
 		// Output HTML
 		$view->option    = $this->_option;
