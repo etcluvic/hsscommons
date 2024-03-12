@@ -18,7 +18,7 @@ $popup = '<ol class="sharelinks">';
 $title = Lang::txt('PLG_PUBLICATION_SHARE_VIEWING', Config::get('sitename'), stripslashes($this->publication->title));
 $metadata  = '<div class="share" style="display: flex; justify-content: start;">'."\n";
 $metadata .= "\t".Lang::txt('PLG_PUBLICATION_SHARE').': ';
-$metadata .= '<div class="icon-wrapper" style="display: flex; justify-content: space-evenly; width: 100%; margin-top:3px">';
+$metadata .= '<div class="icon-wrapper" style="display: flex; justify-content: space-evenly; width: 100%; margin-top:3px; flex-wrap: wrap;">';
 
 // Available options
 $sharing = array('facebook', 'twitter', 'google', 'pinterest', 'linkedin', 'delicious', 'reddit', 'email', 'copy-url');
