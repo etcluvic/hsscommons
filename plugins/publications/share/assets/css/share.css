@@ -175,7 +175,7 @@
 	font-variant: normal;
 	text-transform: none;
 	content: "";
-	width: 30px;
+	width: 25.7px;
 	height: 16px;
 	font-size: 16px;
 }
@@ -189,10 +189,10 @@
     height: 26px;
     font-size: xx-large;
 }
-.share_facebook:before        { content: "\f012"; color: #304879; font-size: xx-large; line-height: initial; }
-.share_google:before          { content: "\f014"; color: black; font-size: xx-large; line-height: initial; }
-.share_linkedin:before        { content: "\f016"; color: #2875b7; font-size: xx-large; line-height: initial; }
-.share_pinterest:before       { content: "\f01a"; color: #ba1325; font-size: xx-large; line-height: initial; }
+.share_facebook:before        { content: "\f012"; color: #304879; font-size: xx-large; line-height: initial; font-size: 35px; margin-top: -2px; }
+.share_google:before          { content: "\f014"; color: black; font-size: xx-large; line-height: initial; font-size: 35px; margin-top: -2px; }
+.share_linkedin:before        { content: "\f016"; color: #2875b7; font-size: xx-large; line-height: initial; font-size: 35px; margin-top: -2px; }
+.share_pinterest:before       { content: "\f01a"; color: #ba1325; font-size: xx-large; line-height: initial; font-size: 35px;  margin-top: -2px; }
 .share_delicious,
 .share_delicious {
 	background: url("../img/delicious.gif") 0 -18px no-repeat;
@@ -200,20 +200,22 @@
 .share_reddit {
 	background: url("../img/reddit.gif") 0 -18px no-repeat;
 }
-.share_email {
-	background: url("../img/email.png") 0 no-repeat;
-	width: 200px;
-}
+.share_email:before { content: "\2709"; color: #223b4a; background-color: white; width: 37px; height: auto; font-size: 45px; }
+
+/* Make sure to fix the images and then combine CSSS NOte###############################*/
 #copy-url-btn {
-	border: 1px solid rgb(203 213 225);
+	border: 1px solid #223b4a;
+	color: #223b4a;
+	background-color: whitesmoke;
 	padding: 2px;
 	padding-left: 5px;
     padding-right: 5px;
     border-radius: 5px;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 70%;
 	cursor: default;
 	transition-duration: 0.25s;
+	margin-top: -1px;
 }
 
 #copy-url-btn:hover {
