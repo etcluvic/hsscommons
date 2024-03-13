@@ -242,10 +242,10 @@
 }
 
 .share_email:before {
-	content: "\1F4E7";
+	content: "✉️";
 	width: auto; 
 	height: auto; 
-	font-size: 37px; 
+	font-size: 34px; 
 	margin-top: 1px; 
 }
 
