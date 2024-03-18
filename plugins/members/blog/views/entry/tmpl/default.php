@@ -46,7 +46,7 @@ $this->css()
 		?>
 		<div class="share" style="padding-top: 10px; padding-bottom: 10px; display: flex; flex-wrap: wrap;">
 			Share: 
-			<div style="display: flex; flex-wrap: wrap;">
+			<div style="display: flex; flex-wrap: wrap; gap: 5px;">
 				<a href="<?php echo 'https://www.facebook.com/sharer/sharer.php?u=' . $url . '&t=' . $title; ?>" target="_blank" style="border: none;">
 					<span class="share_facebook"></span>
 				</a>
