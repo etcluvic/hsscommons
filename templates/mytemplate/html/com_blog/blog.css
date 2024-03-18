@@ -415,8 +415,27 @@
 	margin-right: 18px;
 	margin-left: 5px;
 }
-.share_google:before          { content: "\f014"; color: black }
-.share_linkedin:before        { content: "\f016"; color: #2875b7; }
+
+.share_google:before {
+	content: "\f014";
+	color: black;
+	font-size: xx-large;
+	line-height: initial;
+	font-size: 39px;
+	margin-top: -1.7px;
+	margin-right: 18px;
+	margin-left: 5px;
+}
+.share_linkedin:before {
+	content: "\f016";
+	color: #2875b7; 
+	font-size: xx-large;
+	line-height: initial;
+	font-size: 39px;
+	margin-top: -1.7px;
+	margin-right: 18px;
+	margin-left: 5px;
+}
 .share_pinterest:before       { content: "\f01a"; color: #ba1325; }
 .share_email:before {
 	content: "✉️";
