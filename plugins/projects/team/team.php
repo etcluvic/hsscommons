@@ -832,7 +832,6 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 							->whereEquals('id', $this->model->get('id'))  
 							->fetch();
 
-						Log::debug($groupOwnerMembers);
 						$syncedMembers = array();
 						if (count($users) > 0) {
 							for ($i = 0; $i < count($groupOwnerMembers); $i++) {
@@ -843,6 +842,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						}
 
 						// Add owner group's members to the project if not already
+						$nonManagerSyncedMembers = array();
 						foreach ($syncedMembers as $member) {
 							$query = new \Hubzero\Database\Query;
 							$projectMember = $query->select('*')
@@ -858,6 +858,11 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 									->whereEquals('projectid', $this->model->get('id'))
 									->execute();
 							}
+
+							// Only synced non-managers members
+							if (count($projectMember) > 0 && $projectMember[0]->role != 1) {
+								$nonManagerSyncedMembers[] = $member;
+							}
 						}
 
 						// Sync them to the selected role
@@ -865,7 +870,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 						$query->update('#__project_owners')  
 							->set(['role' => $syncRole])
 							->whereEquals('projectid', $this->model->get('id'))
-							->whereIn('userid', $syncedMembers)
+							->whereIn('userid', $nonManagerSyncedMembers)
 							->execute();
 					}
 				}
