@@ -832,6 +832,7 @@ class plgProjectsTeam extends \Hubzero\Plugin\Plugin
 							->whereEquals('id', $this->model->get('id'))  
 							->fetch();
 
+						Log::debug($groupOwnerMembers);
 						$syncedMembers = array();
 						if (count($users) > 0) {
 							for ($i = 0; $i < count($groupOwnerMembers); $i++) {
