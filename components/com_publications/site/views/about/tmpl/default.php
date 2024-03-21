@@ -291,7 +291,7 @@ if ($previewAttachment) {
 				csv_options: {separator: \',\', delimiter: \'"\'},
 				datatables_options: {
 					"paging": true,
-					"pageLength": 25,
+					"pageLength": 10,
 					"scrollX": true,
 					"scrollCollapse": true,
 					"fixedColumns": {
