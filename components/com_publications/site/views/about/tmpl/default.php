@@ -290,9 +290,10 @@ if ($previewAttachment) {
 				allow_download: true,
 				csv_options: {separator: \',\', delimiter: \'"\'},
 				datatables_options: {
-					"paging": false,
+					"paging": true,
+					"pageLength": 10,
 					"scrollX": true,
-					"scrollY": true,
+					"scrollY": "700px",
 					"scrollCollapse": true,
 					"fixedColumns": {
 						"left": 0,
