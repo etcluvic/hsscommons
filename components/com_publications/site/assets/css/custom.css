@@ -104,6 +104,7 @@ h2 {
   opacity: 0.7;
 }
 
-.dataTables_scroll table:first-of-type {
-  width: 100%;
+.dataTables_scroll > div,
+.dataTables_scroll > table {
+    width: 100%;
 }
