@@ -279,7 +279,7 @@ if ($previewAttachment) {
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
 			Your browser does not support the audio tag.
 		</audio>
-	<?php } else if (($fileExtension === 'csv') || ($fileExtension === 'xlsx')) { ?>
+	<?php } else if ($fileExtension === 'csv') { ?>
 		<?php echo '<div id="csv-table-container" style="width: 600px; overflow-x: auto; overflow-y: auto;"></div>';
 					
 		// Initialize CSV to HTML Table functionality
