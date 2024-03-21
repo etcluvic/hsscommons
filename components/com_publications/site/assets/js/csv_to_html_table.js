@@ -53,7 +53,8 @@ CsvToHtmlTable = {
                 $table.DataTable(datatables_options);
 
                 if (allow_download) {
-                    $containerElement.append("<p><a href='" + csv_path + "' style='color: #777; background-color: #ddd; border: none; padding: 15px; border-radius: 10px;'>Download as CSV</a></p>");
+                    let downloadPath = csv_path+'&download=1';
+                    $containerElement.append("<p><a href='" + downloadPath + "' style='color: #777; background-color: #ddd; border: none; padding: 15px; border-radius: 10px;'>Download as CSV</a></p>");
                 }
             });
     }
