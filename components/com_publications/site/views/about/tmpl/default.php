@@ -281,7 +281,6 @@ if ($previewAttachment) {
 		</audio>
 	<?php } else if ($fileExtension === 'csv') {?>
 		<?php echo "<p> Inside the csv loop</p>"; ?>
-		<p>The file extension is CSV</p>
 		<?php echo '<div id="csv-table-container-1"></div>';
 							
 		// Initialize CSV to HTML Table functionality
