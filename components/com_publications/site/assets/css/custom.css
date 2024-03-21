@@ -57,17 +57,17 @@ DePaul IHS
 
     
 body { 
-  font: 18px/1.3em Arial, Helvetica, sans-serif;
+  font: 18px/1.3em 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 h1 {
-  font: 32px/1em Arial, Helvetica, sans-serif;
+  font: 32px/1em 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   color: #827E7E;
 }
 
 h2 {
-  font: 22px/1em Arial, Helvetica, sans-serif;
+  font: 22px/1em 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   color: #827E7E;
 }
@@ -80,7 +80,7 @@ h2 {
 
 .info {
   padding: 6px 8px;
-  font: 14px/16px Arial, Helvetica, sans-serif;
+  font: 14px/16px 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: white;
   background: rgba(255,255,255,0.8);
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
