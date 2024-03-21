@@ -104,7 +104,7 @@ h2 {
   opacity: 0.7;
 }
 
-.dataTables_scroll > div,
-.dataTables_scroll > table {
+.dataTables_scrollHeadInner,
+.dataTables_scrollHeadInner > table {
     width: 100% !important;
 }
