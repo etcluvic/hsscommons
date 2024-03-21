@@ -308,6 +308,7 @@ if ($previewAttachment) {
 		</script>';
 		?>
 	<?php } else { ?>
+		<?php echo "<p> Inside the last else</p>"; ?>
 		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
 	<?php }
 }
