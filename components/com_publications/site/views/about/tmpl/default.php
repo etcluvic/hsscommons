@@ -8,6 +8,9 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
+$this->css('custom')
+	->js('csv_to_html_table')
+	->js('jquery.csv.min');
 $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
@@ -260,7 +263,9 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 <?php
 // Provide a preview of primary document if exists
 $previewAttachment = $this->publication->getPreviewAttachment();
+Log::debug($previewAttachment);
 if ($previewAttachment) {
+	
 	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
 	$splittedFilePath = explode('.', $previewAttachment->path);
 	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
@@ -274,6 +279,34 @@ if ($previewAttachment) {
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
 			Your browser does not support the audio tag.
 		</audio>
+	<?php } else if ($fileExtension === 'csv') {?>
+		<p>The file extension is CSV</p>
+		<?php echo '<div id="csv-table-container-1"></div>';
+							
+		// Initialize CSV to HTML Table functionality
+		echo '<script>
+			CsvToHtmlTable.init({
+				csv_path: \'' . $previewAttachment->path . '\', 
+				element: \'csv-table-container-1\', 
+				allow_download: true,
+				csv_options: {separator: \',\', delimiter: \'"\'},
+				datatables_options: {"paging": false}
+			});
+		</script>';
+
+		echo '<div id="csv-table-container-2"></div>';
+							
+		// Initialize CSV to HTML Table functionality
+		echo '<script>
+			CsvToHtmlTable.init({
+				csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', 
+				element: \'csv-table-container-2\', 
+				allow_download: true,
+				csv_options: {separator: \',\', delimiter: \'"\'},
+				datatables_options: {"paging": false}
+			});
+		</script>';
+		?>
 	<?php } else { ?>
 		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
 	<?php }
