@@ -291,9 +291,10 @@ if ($previewAttachment) {
 			$csvHtml .= 'datatables_options: {"paging": false}';
 			$csvHtml .= '});';
 			$csvHtml .= '</script>';
-
+		
 			// Encode HTML content for safe embedding in URL
-			$encodedCsvHtml = urlencode($csvHtml);
+			$encodedCsvHtml = htmlspecialchars($csvHtml);
+	
 		?>
     	<iframe width="600" height="700" frameborder="0" src="data:text/html;charset=utf-8,<?php echo $encodedCsvHtml; ?>"></iframe>
 	<?php } else { ?>
