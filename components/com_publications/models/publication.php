@@ -1014,7 +1014,7 @@ class Publication extends Obj
 	 */
 	public function getPreviewAttachment() {
 		if ($this->_attachments && count($this->_attachments) > 0) {
-			$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'csv'];
+			$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'csv', 'xlsx'];
 			$firstFile = null;
 			// Preview first primary file by default
 			if (count($this->_attachments[1]) > 0) {
