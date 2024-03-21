@@ -9,6 +9,10 @@
 defined('_HZEXEC_') or die();
 
 $this->css('custom')
+	->css('bootstrap.min.css')
+	->css('jquery.dataTables.min.css')
+	->js('bootstrap.min.js')
+	->js('jquery.dataTables.min.js')
 	->js('csv_to_html_table')
 	->js('jquery.csv.min');
 $webpath = $this->config->get('webpath');
