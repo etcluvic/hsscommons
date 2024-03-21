@@ -105,6 +105,7 @@ h2 {
 }
 
 .dataTables_scrollHeadInner,
-.dataTables_scrollHeadInner > table {
+.dataTables_scrollHeadInner > table,
+.dataTables_scrollBody > table {
     width: 100% !important;
 }
