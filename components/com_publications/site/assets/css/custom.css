@@ -103,3 +103,7 @@ h2 {
   margin-right: 8px;
   opacity: 0.7;
 }
+
+.dataTables_scroll table:first-of-type {
+  width: 100%;
+}
