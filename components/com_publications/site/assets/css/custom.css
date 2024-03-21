@@ -106,5 +106,5 @@ h2 {
 
 .dataTables_scroll > div,
 .dataTables_scroll > table {
-    width: 100%;
+    width: 100% !important;
 }
