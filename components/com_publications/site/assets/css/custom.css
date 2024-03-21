@@ -78,3 +78,7 @@ DePaul IHS
 .dataTables_scrollBody > table {
     width: 100% !important;
 }
+
+td {
+  vertical-align: baseline !important;
+}
