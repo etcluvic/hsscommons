@@ -279,20 +279,23 @@ if ($previewAttachment) {
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
 			Your browser does not support the audio tag.
 		</audio>
-	<?php } else if ($fileExtension === 'csv') { ?>
-		<?php echo '<div id="csv-table-container"></div>';
-					
-		// Initialize CSV to HTML Table functionality
-		echo '<script>
-			CsvToHtmlTable.init({
-				csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', 
-				element: \'csv-table-container\', 
-				allow_download: true,
-				csv_options: {separator: \',\', delimiter: \'"\'},
-				datatables_options: {"paging": false}
-			});
-		</script>';
+		<?php } else if ($fileExtension === 'csv') {
+			// Initialize CSV to HTML Table functionality
+			$csvHtml = '<div id="csv-table-container"></div>';
+			$csvHtml .= '<script>';
+			$csvHtml .= 'CsvToHtmlTable.init({';
+			$csvHtml .= 'csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', ';
+			$csvHtml .= 'element: \'csv-table-container\', ';
+			$csvHtml .= 'allow_download: true,';
+			$csvHtml .= 'csv_options: {separator: \',\', delimiter: \'"\'},';
+			$csvHtml .= 'datatables_options: {"paging": false}';
+			$csvHtml .= '});';
+			$csvHtml .= '</script>';
+
+			// Encode HTML content for safe embedding in URL
+			$encodedCsvHtml = urlencode($csvHtml);
 		?>
+    	<iframe width="600" height="700" frameborder="0" src="data:text/html;charset=utf-8,<?php echo $encodedCsvHtml; ?>"></iframe>
 	<?php } else { ?>
 		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
 	<?php }
