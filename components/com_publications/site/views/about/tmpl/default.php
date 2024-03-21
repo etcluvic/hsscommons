@@ -263,9 +263,9 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 <?php
 // Provide a preview of primary document if exists
 $previewAttachment = $this->publication->getPreviewAttachment();
-Log::debug($previewAttachment);
+echo "<p> Outside the loop</p>";
 if ($previewAttachment) {
-	
+	echo "<p> Inside the loop</p>";
 	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
 	$splittedFilePath = explode('.', $previewAttachment->path);
 	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
@@ -280,6 +280,7 @@ if ($previewAttachment) {
 			Your browser does not support the audio tag.
 		</audio>
 	<?php } else if ($fileExtension === 'csv') {?>
+		<?php echo "<p> Inside the csv loop</p>"; ?>
 		<p>The file extension is CSV</p>
 		<?php echo '<div id="csv-table-container-1"></div>';
 							
