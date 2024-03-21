@@ -103,3 +103,11 @@ h2 {
   margin-right: 8px;
   opacity: 0.7;
 }
+
+.dataTables_scrollHeadInner {
+  width: 100%;
+}
+
+#csv-table-container-table {
+  width: 100%;
+}
