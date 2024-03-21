@@ -293,7 +293,6 @@ if ($previewAttachment) {
 					"paging": true,
 					"pageLength": 25,
 					"scrollX": true,
-					"scrollY": "700px",
 					"scrollCollapse": true,
 					"fixedColumns": {
 						"left": 0,
