@@ -280,7 +280,7 @@ if ($previewAttachment) {
 			Your browser does not support the audio tag.
 		</audio>
 	<?php } else if ($fileExtension === 'csv') { ?>
-		<?php echo '<div id="csv-table-container" style="overflow-x: auto; overflow-y: auto;"></div>';
+		<?php echo '<div id="csv-table-container" style="width: 600px; overflow-x: auto; overflow-y: auto;"></div>';
 					
 		// Initialize CSV to HTML Table functionality
 		echo '<script>
@@ -298,8 +298,7 @@ if ($previewAttachment) {
 					"fixedColumns": {
 						"left": 0,
 						"right": 0
-					},
-					"autoWidth": true,
+					}
 				}
 			});
 		</script>';
