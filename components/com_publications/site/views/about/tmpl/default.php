@@ -298,7 +298,11 @@ if ($previewAttachment) {
 					"fixedColumns": {
 						"left": 0,
 						"right": 0
-					}
+					},
+					"autoWidth": true, // Set autoWidth to true to make columns and header take 100% width
+					"columnDefs": [
+						{ "width": "auto", "targets": "_all" } // Set column width to auto for all columns
+					]
 				}
 			});
 		</script>';
