@@ -263,9 +263,7 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 <?php
 // Provide a preview of primary document if exists
 $previewAttachment = $this->publication->getPreviewAttachment();
-echo "<p> Outside the loop</p>";
 if ($previewAttachment) {
-	echo "<p> Inside the loop</p>";
 	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
 	$splittedFilePath = explode('.', $previewAttachment->path);
 	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
@@ -279,28 +277,14 @@ if ($previewAttachment) {
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
 			Your browser does not support the audio tag.
 		</audio>
-	<?php } else if ($fileExtension === 'csv') {?>
-		<?php echo "<p> Inside the csv loop</p>"; ?>
-		<?php echo '<div id="csv-table-container-1"></div>';
-							
-		// Initialize CSV to HTML Table functionality
-		echo '<script>
-			CsvToHtmlTable.init({
-				csv_path: \'' . $previewAttachment->path . '\', 
-				element: \'csv-table-container-1\', 
-				allow_download: true,
-				csv_options: {separator: \',\', delimiter: \'"\'},
-				datatables_options: {"paging": false}
-			});
-		</script>';
-
-		echo '<div id="csv-table-container-2"></div>';
-							
+	<?php } else if ($fileExtension === 'csv') { ?>
+		<?php echo '<div id="csv-table-container"></div>';
+					
 		// Initialize CSV to HTML Table functionality
 		echo '<script>
 			CsvToHtmlTable.init({
 				csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', 
-				element: \'csv-table-container-2\', 
+				element: \'csv-table-container\', 
 				allow_download: true,
 				csv_options: {separator: \',\', delimiter: \'"\'},
 				datatables_options: {"paging": false}
@@ -308,7 +292,6 @@ if ($previewAttachment) {
 		</script>';
 		?>
 	<?php } else { ?>
-		<?php echo "<p> Inside the last else</p>"; ?>
 		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
 	<?php }
 }
