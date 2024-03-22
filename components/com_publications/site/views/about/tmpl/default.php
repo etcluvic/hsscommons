@@ -8,6 +8,11 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
+$this->css('custom')
+	->css('jquery.dataTables.min.css')
+	->js('jquery.dataTables.min.js')
+	->js('csv_to_html_table')
+	->js('jquery.csv.min');
 $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
@@ -274,6 +279,29 @@ if ($previewAttachment) {
 			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
 			Your browser does not support the audio tag.
 		</audio>
+	<?php } else if ($fileExtension === 'csv') { ?>
+		<?php echo '<div id="csv-table-container" style="overflow-x: auto; overflow-y: auto;"></div>';
+					
+		// Initialize CSV to HTML Table functionality
+		echo '<script>
+			CsvToHtmlTable.init({
+				csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', 
+				element: \'csv-table-container\', 
+				allow_download: true,
+				csv_options: {separator: \',\', delimiter: \'"\'},
+				datatables_options: {
+					"paging": true,
+					"pageLength": 10,
+					"scrollX": true,
+					"scrollCollapse": true,
+					"fixedColumns": {
+						"left": 0,
+						"right": 0
+					}
+				}
+			});
+		</script>';
+		?>
 	<?php } else { ?>
 		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
 	<?php }
