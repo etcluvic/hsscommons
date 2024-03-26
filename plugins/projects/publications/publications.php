@@ -185,7 +185,6 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 
 		// Actions
-		Log::debug($this->_task);
 		switch ($this->_task)
 		{
 			case 'browse':
