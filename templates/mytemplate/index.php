@@ -187,7 +187,10 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
               
               <div id="trail">
                 <?php if ($menu->getActive() == $menu->getDefault()) : ?>
-                  <span class="pathway"><?php echo Lang::txt('TPL_MYTEMPLATE_TAGLINE'); ?></span>
+                  <div style="display: flex; flex-direction: row; gap: 50px; justify-content: space-between; width: 100%;">
+                    <span class="pathway"><?php echo Lang::txt('TPL_MYTEMPLATE_TAGLINE'); ?></span>
+                    <div style="display: flex; flex-direction: column; justify-content: center; width: 100px;"><?php echo \Hubzero\Module\Helper::renderModule("mod_languages"); ?></div>
+                </div>
                 <?php else: ?>
                   <div style="display: flex; flex-direction: row; gap: 50px; justify-content: space-between; width: 100%;">
                     <jdoc:include type="modules" name="breadcrumbs" />
