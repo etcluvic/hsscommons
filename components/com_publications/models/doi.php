@@ -583,7 +583,6 @@ class Doi extends Obj
 	 */
 	public function registerMetadata($doi = null)
 	{
-		Log::debug('registerMetadata');
 		if (!$this->on())
 		{
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
@@ -609,7 +608,6 @@ class Doi extends Obj
 	 */
 	public function registerURL($doi)
 	{
-		Log::debug("registerURL");
 		if (!$this->on())
 		{
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
@@ -642,7 +640,6 @@ class Doi extends Obj
 	 */
 	public function dataciteMetadataUpdate($doi)
 	{
-		Log::debug("dataciteMetadataUpdate");
 		$doi = $doi ? $doi : $this->get('doi');
 
 		if (!$doi)
