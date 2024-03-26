@@ -200,6 +200,7 @@ class Publications extends SiteController
 		}
 		elseif (Pathway::count() <= 1 && $this->_task)
 		{
+			Log::debug($this->_task);
 			switch ($this->_task)
 			{
 				case 'browse':
