@@ -642,6 +642,7 @@ class Doi extends Obj
 	 */
 	public function dataciteMetadataUpdate($doi)
 	{
+		Log::debug("dataciteMetadataUpdate");
 		$doi = $doi ? $doi : $this->get('doi');
 
 		if (!$doi)
@@ -652,7 +653,6 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
-			Log::debug("dataciteMetadataUpdate - No service available");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -706,7 +706,6 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
-			Log::debug("delete - No service available");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -804,7 +803,6 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
-			Log::debug("register EZID - No service available");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -865,7 +863,6 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
-			Log::debug("ezidMetadataUpdate - No service available");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -1121,7 +1118,6 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
-			Log::debug("revert");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
