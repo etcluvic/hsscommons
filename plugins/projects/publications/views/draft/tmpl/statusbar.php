@@ -100,7 +100,23 @@ $i = 1;
 			}
 		?>
 		<li<?php if ($blockId == $activenum) { echo ' class="active"'; } ?>>
-			<a href="<?php echo Route::url( $this->pub->link('editversion') . '&section=' . $blockname . '&step=' . $blockId . '&move=continue'); ?>" <?php echo $class ? 'class="' . $class . '"' : '' ; ?>><?php echo $block->manifest->label; ?></a>
+			<a href="<?php echo Route::url( $this->pub->link('editversion') . '&section=' . $blockname . '&step=' . $blockId . '&move=continue'); ?>" <?php echo $class ? 'class="' . $class . '" onclick="clickNextBtn(event);"' : 'onclick="clickNextBtn(event);"'; ?>><?php echo $block->manifest->label; ?></a>
 		</li>
 	<?php } ?>
 	</ul>
+
+<script>
+
+function clickNextBtn(e){
+	// Find the next button by its ID
+	e.preventDefault();
+	var nextButton = document.getElementById('c-next');
+
+	// Check if the next button exists
+	if (nextButton) {
+		// Trigger a click event on the next button
+		nextButton.click();
+	}
+
+}
+</script>
