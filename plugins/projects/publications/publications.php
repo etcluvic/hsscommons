@@ -2018,6 +2018,8 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		$task = Request::getString('task', '');
 
+		Log::debug($this->_task);
+
 		// Check permission
 		if (!$this->model->access('content'))
 		{
