@@ -2302,6 +2302,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		if ($this->_task == 'publish' && $pub->version->doi && $originalStatus == 4)
 		{
+			Log::debug('Block 1');
 			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_DRAFTREADY_TO_PUBLISHED);
 
 			if ($doiService->getError())
