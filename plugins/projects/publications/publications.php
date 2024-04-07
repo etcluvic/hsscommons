@@ -2268,6 +2268,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		// When dataset is automatically approved.
 		if (!$review && ($autoApprove || $this->_pubconfig->get('autoapprove') == 1) && $pub->version->get('doi') && !$pub->version->get('forked_from') == $pub->version->get('id'))
 		{
+			Log::debug('Block 2');
 			// Update DOI metadata
 			$doiService->update($pub->version->get('doi'), true);
 
