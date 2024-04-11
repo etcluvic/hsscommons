@@ -585,6 +585,7 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
+			Log::debug("registerMetadata");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -610,6 +611,7 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
+			Log::debug("registerURL");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -650,6 +652,7 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
+			Log::debug("dataciteMetadataUpdate");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -703,6 +706,7 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
+			Log::debug("delete");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -800,6 +804,7 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
+			Log::debug("registerEZID");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -860,6 +865,7 @@ class Doi extends Obj
 
 		if (!$this->on())
 		{
+			Log::debug("ezidMetadataUpdate");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
@@ -1115,6 +1121,7 @@ class Doi extends Obj
 	{
 		if (!$this->on())
 		{
+			Log::debug("revert");
 			$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_DOI_NO_SERVICE'));
 			return false;
 		}
