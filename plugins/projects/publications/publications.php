@@ -749,7 +749,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		$new     				= false;
 		$props   				= Request::getString('p', '');
 		$parts   				= explode('-', $props);
-		$publishedPreviously	= Request::getInt('published_previously', 0);
+		$publishedPreviously	= Request::getInt('published_previously', -1);
 
 		// Check permission
 		if ($this->model->exists() && !$this->model->access('content'))
@@ -810,7 +810,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		Log::debug($this->_task);
 		Log::debug($publishedPreviously);
 		Log::debug($pubVersion->forked_from);
-		if ($block == 'content') {
+		if ($block == 'content' && $publishedPreviously !== -1) {
 			if ($publishedPreviously && !$pubVersion->forked_from) {
 				$pubVersion->forked_from = $pubVersion->id;
 			} else if (!$publishedPreviously) {
