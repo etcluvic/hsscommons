@@ -162,7 +162,6 @@ HUB.ProjectPublicationsSelector = {
 
 	enableSave: function()
 	{
-		console.log('enableSave');
 		var $ = this.jQuery;
 		var btn  = $('#b-filesave');
 		var form = $('#select-form');
@@ -176,17 +175,13 @@ HUB.ProjectPublicationsSelector = {
 		btn.on('click', function(e)
 		{
 			e.preventDefault();
-			console.log('Clicked save button');
 
-			// if (!btn.hasClass('disabled'))
-			// {
-			// 	selections = HUB.ProjectPublicationsSelector.collectSelections(false);
-			// 	$('#selecteditems').val(selections);
-			// 	// Add a field to form
-			// 	const publishedPreviously = $('input[name="published_previously"]:checked').val();
-			// 	console.log(publishedPreviously);
-			// 	// form.submit();
-			// }
+			if (!btn.hasClass('disabled'))
+			{
+				selections = HUB.ProjectPublicationsSelector.collectSelections(false);
+				$('#selecteditems').val(selections);
+				form.submit();
+			}
 
 		});
 	},
