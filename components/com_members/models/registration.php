@@ -515,7 +515,10 @@ class Registration
 			}
 
 			// system username check
+			Log::debug($login);
 			$puser = posix_getpwnam($login);
+			Log::debug($puser);
+			Log::debug($uid);
 			if (!empty($puser) && $uid && $uid != $puser['uid'])
 			{
 				// log error and display error to user
