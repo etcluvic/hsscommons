@@ -180,7 +180,10 @@ HUB.ProjectPublicationsSelector = {
 			{
 				selections = HUB.ProjectPublicationsSelector.collectSelections(false);
 				$('#selecteditems').val(selections);
-				form.submit();
+				// Add a field to form
+				const publishedPreviously = $('input[name="published_previously"]:checked').val();
+				console.log(publishedPreviously);
+				// form.submit();
 			}
 
 		});
