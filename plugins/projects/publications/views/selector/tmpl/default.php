@@ -30,10 +30,11 @@
 
 // No direct access
 defined('_HZEXEC_') or die();
-Log::debug("Call template");
+
 
 // Get requirements
 $manifest = $this->publication->curation('blocks', $this->blockId, 'manifest');
+\Hubzero\Log::debug("Call template");
 ?>
 <script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/publications/assets/js/jquery.infinitescroll.min.js"></script>
 <script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/publications/assets/js/selector.js"></script>
