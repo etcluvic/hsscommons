@@ -31,10 +31,8 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
-
 // Get requirements
 $manifest = $this->publication->curation('blocks', $this->blockId, 'manifest');
-\Hubzero\Log::debug("Call template");
 ?>
 <script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/publications/assets/js/jquery.infinitescroll.min.js"></script>
 <script src="<?php echo rtrim(Request::base(true), '/'); ?>/core/plugins/projects/publications/assets/js/selector.js"></script>
@@ -61,7 +59,6 @@ $manifest = $this->publication->curation('blocks', $this->blockId, 'manifest');
 			<input type="hidden" name="el" value="<?php echo $this->element; ?>" />
 			<input type="hidden" id="selecteditems" name="selecteditems" value="" />
 			<input type="hidden" name="active" value="publications" />
-			<input type="hidden" name="published_previously" value="<?php echo $this->publication->get('forked_from') == $this->publication->get('id') ? "1" : "0" ?>" />
 
 			<input type="hidden" name="move" value="continue" />
 			<?php if ($this->project->isProvisioned()) { ?>
