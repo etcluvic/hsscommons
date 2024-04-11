@@ -2244,10 +2244,11 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		// Get DOI service
 		$doiService = new \Components\Publications\Models\Doi($pub);
-
+		Log::debug('Block 1');
 		// Issue DOI
 		if ($requireDoi > 0 && $this->_task == 'publish' && !$pub->version->doi)
 		{
+			Log::debug('Block 2');
 			$extended = $state == 5 ? false : true;
 			$status   = $state == 5 ? 'reserved' : 'public';
 
@@ -2264,10 +2265,12 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				$doiErr = true;
 			}
 		}
+		Log::debug('Block 3');
 
 		// When dataset is automatically approved.
 		if (!$review && ($autoApprove || $this->_pubconfig->get('autoapprove') == 1) && $pub->version->get('doi') && !$pub->version->get('forked_from') == $pub->version->get('id'))
 		{
+			Log::debug('Block 4');
 			// Update DOI metadata
 			$doiService->update($pub->version->get('doi'), true);
 
@@ -2288,9 +2291,11 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 				}
 			}
 		}
+		Log::debug('Block 5');
 
 		if ($this->_task == 'revert' && $pub->version->doi && $originalStatus == 1)
 		{
+			Log::debug('Block 6');
 			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_PUBLISHED_TO_DRAFTREADY);
 
 			if ($doiService->getError())
@@ -2302,6 +2307,7 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 
 		if ($this->_task == 'publish' && $pub->version->doi && $originalStatus == 4)
 		{
+			Log::debug('Block 7');
 			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_DRAFTREADY_TO_PUBLISHED);
 
 			if ($doiService->getError())
