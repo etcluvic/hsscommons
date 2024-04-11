@@ -2270,28 +2270,25 @@ class plgProjectsPublications extends \Hubzero\Plugin\Plugin
 		{
 			// Update DOI metadata
 			$doiService->update($pub->version->get('doi'), true);
-			Log::debug('Block 1');
+
 			if ($doiService->getError())
 			{
-				Log::debug('Block 2');
 				$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_UPDATE_DOI') . ' ' . $doiService->getError());
 				$doiErr = true;
 			}
 			else
 			{
-				Log::debug('Block 3');
 				// Register DOI name and target URL for DataCite DOI
 				$doiService->register(false, true, $pub->version->get('doi'));
-				Log::debug('Block 4');
+
 				if ($doiService->getError())
 				{
-					Log::debug('Block 5');
 					$this->setError(Lang::txt('PLG_PROJECTS_PUBLICATIONS_ERROR_REGISTER_NAME_URL') . ' ' . $doiService->getError());
 					$doiErr = true;
 				}
 			}
 		}
-		Log::debug('Block 6');
+
 		if ($this->_task == 'revert' && $pub->version->doi && $originalStatus == 1)
 		{
 			$doiService->revert($pub->version->doi, $doiService::STATE_FROM_PUBLISHED_TO_DRAFTREADY);
