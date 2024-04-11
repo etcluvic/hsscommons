@@ -1019,11 +1019,8 @@ class Doi extends Obj
 	{
 		if ($this->_configs->dataciteEZIDSwitch == self::SWITCH_OPTION_DATACITE)
 		{
-			Log::debug('DOI: Block 1');
 			$result = $this->dataciteMetadataUpdate($doi);
-			Log::debug('DOI: Block 2');
-			Log::debug('DOI result:');
-			Log::debug($result);
+
 			if (!$result)
 			{
 				$this->setError(Lang::txt('COM_PUBLICATIONS_ERROR_UPDATE_DATACITE_DOI_METADATA'));
