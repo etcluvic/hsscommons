@@ -30,6 +30,7 @@
 
 // No direct access
 defined('_HZEXEC_') or die();
+Log::debug("Call template");
 
 // Get requirements
 $manifest = $this->publication->curation('blocks', $this->blockId, 'manifest');
