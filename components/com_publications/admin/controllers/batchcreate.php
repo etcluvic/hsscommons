@@ -555,11 +555,21 @@ class Batchcreate extends AdminController
 			$doiService = new \Components\Publications\Models\Doi($pubInstance);
 			if (!$pubInstance->version->doi)
 			{
+				// Issue DOI
 				$doi = $doiService->register(true, false, null, false, 'public');
-				// Store DOI
+
 				if ($doi)
 				{
+					// Store DOI
 					$pubInstance->version->set('doi', $doi);
+
+					// Update DOI metadata
+					$doiService->update($pubInstance->version->get('doi'), true);
+
+					// Register DOI name and target URL for DataCite DOI
+					$doiService->register(false, true, $pubInstance->version->get('doi'));
+
+					// Store version
 					$pubInstance->version->store();
 				}
 				else
