@@ -100,7 +100,30 @@ $i = 1;
 			}
 		?>
 		<li<?php if ($blockId == $activenum) { echo ' class="active"'; } ?>>
-			<a href="<?php echo Route::url( $this->pub->link('editversion') . '&section=' . $blockname . '&step=' . $blockId . '&move=continue'); ?>" <?php echo $class ? 'class="' . $class . '"' : '' ; ?>><?php echo $block->manifest->label; ?></a>
+			<a href="<?php echo Route::url( $this->pub->link('editversion') . '&section=' . $blockname . '&step=' . $blockId . '&move=continue'); ?>" <?php echo $class ? 'class="' . $class . '" onclick="clickNextBtn(event, this.href);"' : 'onclick="clickNextBtn(event, this.href);"'; ?>><?php echo $block->manifest->label; ?></a>
 		</li>
 	<?php } ?>
 	</ul>
+
+<script>
+
+// Function to make the status bar in publishing save form
+function clickNextBtn(e, href) {
+    e.preventDefault();
+    // Serialize the form data
+    var formData = $('#plg-form').serialize();
+    // Make an AJAX request to submit the form data
+    $.ajax({
+        type: 'POST', // or 'GET' depending on your form method
+        url: $('#plg-form').attr('action'),
+        data: formData,
+        success: function(response) {
+            window.location.href = href;
+        },
+        error: function(xhr, status, error) {
+            // Handle errors if needed
+            console.error(error);
+        }
+    });
+}
+</script>
