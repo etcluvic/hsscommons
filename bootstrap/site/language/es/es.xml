@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metafile version="2.0" client="site">
+	<name>Spanish</name>
+	<version>1.0.0</version>
+	<creationDate>2024-04-18</creationDate>
+	<author>Graham Jensen</author>
+	<authorEmail>ghjensen@uvic.ca</authorEmail>
+	<authorUrl>hubzero.org</authorUrl>
+	<copyright>Copyright (c) 2005-2020 The Regents of the University of California.</copyright>
+	<license>http://opensource.org/licenses/MIT MIT</license>
+	<description>es site language</description>
+	<files>
+		<filename>es.ini</filename>
+		<filename>es.lib_hubzero.ini</filename>
+		<filename>es.lib_hubzero.sys.ini</filename>
+		<filename>es.localise.php</filename>
+	</files>
+	<metadata>
+		<name>Spanish</name>
+		<tag>es</tag>
+		<rtl>0</rtl>
+		<locale>es.utf8, es.UTF-8, es, es, es, spanish, spanish, mexico</locale>
+		<firstDay>0</firstDay>
+	</metadata>
+	<params />
+</metafile>
