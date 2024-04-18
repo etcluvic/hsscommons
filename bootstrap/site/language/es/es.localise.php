@@ -6,9 +6,9 @@
  */
 
 /**
- * fr-FR localise class
+ * es localise class
  */
-abstract class fr_FRLocalise
+abstract class esLocalise
 {
 	/**
 	 * Returns the potential suffixes for a specific number of items
