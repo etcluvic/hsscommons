@@ -34,7 +34,7 @@
 		top: 0;
 		left: 0;
 		background-color: #000;
-		opacity: 70%;
+		opacity: 50%;
 		z-index: 0;
 	}
 	.slide-content {
@@ -89,6 +89,7 @@
 		font-size: 200%;
 		font-weight: 500;
 		color: #ffffff;
+		margin: 0.7em 0;
 	}
 	.slide p {
 		font-size: 1.2em;
@@ -137,3 +138,15 @@
 		left: 15px;
 		top: 15px;
 	}
+/* Custom CTA button styling */
+	.slide .button {
+		background-color: #dd861e;
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		font-size: 16px;
+		margin: 4px 2px;
+		cursor: pointer;
+ 	}
