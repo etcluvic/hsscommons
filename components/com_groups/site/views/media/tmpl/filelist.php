@@ -175,7 +175,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 							</li>
 						<?php endif; ?>
 						<li class="path">
-							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <span><?php echo $downloadPath; ?></span>
+							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <p><?php echo $downloadPath; ?></p>
 						</li>
 						<li>
 							<?php if ($this->authorized && isset($ckeditor) && $ckeditor != '') : ?>
