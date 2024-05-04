@@ -134,6 +134,10 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 
 				// build paths
 				$downloadPath = $baseURI . DS . 'File:' . $relFilePath;
+				
+				// Relative file download path to be displayed in the File Details section under the path field
+				$relDownloadPath = rtrim($baseURI, '/') . $relFilePath;
+
 				$viewPath = 'app' . DS . 'site' . DS . 'groups' . DS . $this->group->get('gidNumber') . DS . 'uploads' . DS . $file;
 				$movePath     = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=movefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
 				$renamePath   = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=renamefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
@@ -175,7 +179,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 							</li>
 						<?php endif; ?>
 						<li class="path">
-							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <p><?php echo $downloadPath; ?></p>
+							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <p style="cursor: default;"><?php echo $relDownloadPath; ?></p>
 						</li>
 						<li>
 							<?php if ($this->authorized && isset($ckeditor) && $ckeditor != '') : ?>
