@@ -1,0 +1,35 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>Ayuda: Colecciones</h1>
+
+	<p class="tagline">Las colecciones son una forma r&aacute;pida y sencilla de guardar, compartir y organizar informaci&oacute;n en el sitio de Canadian HSS Commons.</p>
+
+	<section class="acerca de las publicaciones">
+		<h2>Publicaci&oacute;n</h2>
+		<p>Una publicaci&oacute;n comienza con una imagen, enlace o archivo que quieras compartir. Puedes agregar una publicaci&oacute;n al recolectar contenido del sitio o cargar un archivo desde tu computadora. Cualquier publicaci&oacute;n se puede volver a publicar y todas las publicaciones enlazan a su fuente.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>">Saber m&aacute;s</a></p>
+	</section>
+
+	<section class="acerca de las publicaciones">
+		<h2>Guardar</h2>
+		<p>Una colecci&oacute;n es el espacio donde organizas tus publicaciones por tema. Por ejemplo, puedes guardar recursos para crear una introducci&oacute;n a un tema. Las colecciones pueden ser secretas o p&uacute;blicas e incluso puedes agregar una colecci&oacute;n dentro de otra colecci&oacute;n.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>">Saber m&aacute;s</a></p>
+	</section>
+
+	<section class="acerca de seguir">
+		<h2>Seguir</h2>
+		<p>Cuando sigues a alguien, sus publicaciones aparecen en tu p&aacute;gina de inicio. Puedes seguir todas las colecciones de alguien o s&oacute;lo las que te gusten. Para gestionar a qui&eacute;n sigues, ve a tu perfil, accede a las colecciones y da clic en Siguiendo.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>">Saber m&aacute;s</a></p>
+	</section>
+</article>
