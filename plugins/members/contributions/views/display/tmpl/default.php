@@ -56,7 +56,7 @@ foreach ($this->cats as $cat)
 					$blob = ($subcat['category']) ? $subcat['category'] : '';
 
 					// Build the HTML
-					$k[] = "\t\t\t" . '<li' . $a . '><a href="' . Route::url($this->member->link() . '&active=contributions&area=' . urlencode(stripslashes($blob)) . '&sort=' . $this->sort) . '">' . $this->escape(stripslashes($subcat['title'])) . ' <span class="item-count">' . $this->escape($subcat['total']) . '</span></a></li>';
+					$k[] = "\t\t\t" . '<li' . $a . '><a href="' . Route::url($this->member->link() . '&active=contributions&area='.urlencode(strToLower($this->cats[$k]['category']))) . '">'.Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_MORE').'</a></li>';
 				}
 			}
 			// Do we actually have any links?
