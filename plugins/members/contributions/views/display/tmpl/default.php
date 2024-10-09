@@ -173,7 +173,9 @@ foreach ($this->results as $category)
 			$html .= call_user_func(array($obj, 'documents'));
 		}
 
-		$ttl = ($total > 5) ? 5 : $total;
+		// $ttl = ($total > 5) ? 5 : $total;
+		// $ttl = $total is a trivial way of making the contributions page open to all results
+		$ttl = $total;
 		if (!$dopaging)
 		{
 			$num = '1-' . $ttl . ' of ';
@@ -195,7 +197,7 @@ foreach ($this->results as $category)
 		$html .= $name.' <span>('.$num.$total.')</span>';
 		if (!$dopaging)
 		{
-			$html .= '<span class="more">' . Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_MORE') . '</span></a> ';
+			// $html .= '<span class="more">' . Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_MORE') . '</span></a> ';
 		}
 		$html .= '</h4>'."\n";
 		$html .= '<div class="category-wrap" id="' . $divid . '">'."\n";
