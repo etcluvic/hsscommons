@@ -28,17 +28,17 @@ if (!function_exists('modifyLanguageLink')) {
 		// Remove the lang query parameter
 		$languageLink = preg_replace('/\?lang=[^&]+/', '', $languageLink);
 
-		// Extract the parts of the path
-		$pathParts = explode('/', $languageLink);
+		// // Extract the parts of the path
+		// $pathParts = explode('/', $languageLink);
 
-		// Replace the content between the first set of slashes with $language->link
-		if (count($pathParts) >= 2) {
-			$language->link = trim($language->link, '/');
-			$pathParts[1] = $language->link;
-		}
+		// // Replace the content between the first set of slashes with $language->link
+		// if (count($pathParts) >= 2) {
+		// 	$language->link = trim($language->link, '/');
+		// 	$pathParts[1] = $language->link;
+		// }
 
-		// Rebuild the path
-		$languageLink = '/' . implode('/', array_filter($pathParts));
+		// // Rebuild the path
+		// $languageLink = '/' . implode('/', array_filter($pathParts));
 
 		// Return the modified language link
 		return htmlspecialchars($languageLink);
