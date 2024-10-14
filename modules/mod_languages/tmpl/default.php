@@ -32,9 +32,17 @@ if (!function_exists('modifyLanguageLink')) {
 		$pathParts = explode('/', $languageLink);
 
 		// Replace the content between the first set of slashes with $language->link
+<<<<<<< HEAD
+		// and remove anything else that comes after it
 		if (count($pathParts) >= 2) {
 			$language->link = trim($language->link, '/');
 			$pathParts[1] = $language->link;
+			$pathParts = array_slice($pathParts, 0, 2);
+=======
+		if (count($pathParts) >= 2) {
+			$language->link = trim($language->link, '/');
+			$pathParts[1] = $language->link;
+>>>>>>> test
 		}
 
 		// Rebuild the path
