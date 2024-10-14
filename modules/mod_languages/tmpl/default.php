@@ -19,38 +19,37 @@ $this->css('template.css');
 // Check if the function exists before declaring it
 if (!function_exists('modifyLanguageLink')) {
 	function modifyLanguageLink($language, $params)
-	{
-		// Create a new Uri and modify the language parameter
-		$uri = Hubzero\Utility\Uri::getInstance(Request::current());
-		$uri->setVar('lang', $language->sef);
-		$languageLink = $uri->toString(array('path', 'query', 'fragment'));
+    {
+        // Create a new Uri and modify the language parameter
+        $uri = Hubzero\Utility\Uri::getInstance(Request::current());
+        $uri->setVar('lang', $language->sef);
+        $languageLink = $uri->toString(array('path', 'query', 'fragment'));
 
-		// Remove the lang query parameter
-		$languageLink = preg_replace('/\?lang=[^&]+/', '', $languageLink);
+        // Remove the lang query parameter
+        $languageLink = preg_replace('/\?lang=[^&]+/', '', $languageLink);
 
-		// Extract the parts of the path
-		$pathParts = explode('/', $languageLink);
+        // Extract the parts of the path
+        $pathParts = explode('/', $languageLink);
 
-		// Replace the content between the first set of slashes with $language->link
-<<<<<<< HEAD
-		// and remove anything else that comes after it
-		if (count($pathParts) >= 2) {
-			$language->link = trim($language->link, '/');
-			$pathParts[1] = $language->link;
-			$pathParts = array_slice($pathParts, 0, 2);
-=======
-		if (count($pathParts) >= 2) {
-			$language->link = trim($language->link, '/');
-			$pathParts[1] = $language->link;
->>>>>>> test
-		}
+        // Replace the content between the first set of slashes with $language->link
+        if (count($pathParts) >= 2) {
+            // Set the first part to the language code
+            $language->link = trim($language->link, '/');
+            $pathParts[1] = $language->link;
 
-		// Rebuild the path
-		$languageLink = '/' . implode('/', array_filter($pathParts));
+            // If there is a second part, check if it matches the language code
+            if (isset($pathParts[2]) && in_array($pathParts[2], ['fr', 'es', 'en'])) {
+                // Remove the extra part if it matches a known language code
+                unset($pathParts[2]);
+            }
+        }
 
-		// Return the modified language link
-		return htmlspecialchars($languageLink);
-	}
+        // Rebuild the path
+        $languageLink = '/' . implode('/', array_filter($pathParts));
+
+        // Return the modified language link
+        return htmlspecialchars($languageLink);
+    }
 }
 
 if ($params->get('dropdown', 1)) : ?>
