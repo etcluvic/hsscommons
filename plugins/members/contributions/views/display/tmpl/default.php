@@ -83,7 +83,9 @@ foreach ($this->cats as $cat)
 
 	<div class="container">
 		<nav class="entries-filters" aria-label="<?php echo Lang::txt('JGLOBAL_FILTER_AND_SORT_RESULTS'); ?>">
-			<?php if (count($links) > 0) { ?>
+			<?php 
+			/* 
+			if (count($links) > 0) { ?>
 				<ul class="entries-menu filter-options">
 					<li>
 						<a href="<?php echo Route::url($this->member->link() . '&active=contributions&sort=date'); ?>"><?php echo Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_CATEGORIES'); ?></a>
@@ -92,8 +94,9 @@ foreach ($this->cats as $cat)
 						</ul>
 					</li>
 				</ul>
-			<?php } ?>
-
+			<?php } 
+			*/ 
+			?>
 			<ul class="entries-menu order-options">
 				<li><a<?php echo ($this->sort == 'date') ? ' class="active"' : ''; ?> href="<?php echo Route::url($this->member->link() . '&active=contributions&area=' . urlencode(stripslashes($this->active)) . '&sort=date') . '&limit=' . $this->limit . '&limitstart=' . $this->start; ?>"  title="<?php echo Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_SORT_BY_DATE'); ?>"><?php echo Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_SORT_DATE'); ?></a></li>
 				<li><a<?php echo ($this->sort == 'title') ? ' class="active"' : ''; ?> href="<?php echo Route::url($this->member->link() . '&active=contributions&area=' . urlencode(stripslashes($this->active)) . '&sort=title') . '&limit=' . $this->limit . '&limitstart=' . $this->start; ?>" title="<?php echo Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_SORT_BY_TITLE'); ?>"><?php echo Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_SORT_TITLE'); ?></a></li>
@@ -170,7 +173,9 @@ foreach ($this->results as $category)
 			$html .= call_user_func(array($obj, 'documents'));
 		}
 
-		$ttl = ($total > 5) ? 5 : $total;
+		// $ttl = ($total > 5) ? 5 : $total;
+		// $ttl = $total is a trivial way of making the contributions page open to all results
+		$ttl = $total;
 		if (!$dopaging)
 		{
 			$num = '1-' . $ttl . ' of ';
@@ -192,7 +197,7 @@ foreach ($this->results as $category)
 		$html .= $name.' <span>('.$num.$total.')</span>';
 		if (!$dopaging)
 		{
-			$html .= '<span class="more">' . Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_MORE') . '</span></a> ';
+			// $html .= '<span class="more">' . Lang::txt('PLG_MEMBERS_CONTRIBUTIONS_MORE') . '</span></a> ';
 		}
 		$html .= '</h4>'."\n";
 		$html .= '<div class="category-wrap" id="' . $divid . '">'."\n";
