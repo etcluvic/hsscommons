@@ -32,7 +32,7 @@ $this->css()
 					</fieldset>
 					<div>
                         <label for="filter-primary-files">
-                            <input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" <?php echo ($this->filters['primary_files']) ? 'checked="checked"' : ''; ?>>
+                            <input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" >
                             <?php echo Lang::txt('Only display publications with primary files'); ?>
                         </label>
                     </div>
