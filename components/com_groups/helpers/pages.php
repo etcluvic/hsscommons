@@ -134,14 +134,7 @@ class Pages
 			$base = substr($base, strlen($root));
 		}
 
-		$currentLanguageCode = explode('-', App::get('language')->getLanguage())[0];
-		$newPath = Request::path();
-		$basePathSegments = explode('/', Request::path());
-		if ($currentLanguageCode === $basePathSegments[1]) {
-			array_splice($basePathSegments, 1, 1);
-			$newPath = implode(DS, $basePathSegments);
-		}
-		if (preg_match("/^\/?groups\/(.*?)/i", $newPath))
+		if (preg_match("/^\/?groups\/(.*?)/i", Request::path()))
 		{
 			// remove /groups/{group_cname} from path
 			$path = trim(str_replace($base, '', Request::path()), '/');
@@ -388,8 +381,8 @@ class Pages
 			'layout'    => $type
 		));
 
-		$eview->option     = Request::getCmd('option', 'com_groups');
-		$eview->controller = Request::getCmd('controller', 'groups');
+		$eview->set('option', Request::getCmd('option', 'com_groups'));
+		$eview->set('controller', Request::getCmd('controller', 'groups'));
 		$eview->group      = $group;
 		$eview->object     = $object;
 		$html = $eview->loadTemplate();
@@ -472,7 +465,7 @@ class Pages
 					'ftp_',
 					'ini_',
 					'inject_code',
-					'mysql_',
+					'mysqli_',
 					'php_uname',
 					'phpAds_',
 					'system',
@@ -657,13 +650,13 @@ class Pages
 		$version->set('content', trim($content));
 
 		// set vars to view
-		$view->user       = User::getInstance();
-		$view->group      = $group;
-		$view->page       = $page;
-		$view->version    = $version;
-		$view->authorized = $authorized;
-		$view->config     = Component::params('com_groups');
-		$view->option     = 'com_groups';
+		$view->set('user', User::getInstance());
+		$view->set('group', $group);
+		$view->set('page', $page);
+		$view->set('version', $version);
+		$view->set('authorized', $authorized);
+		$view->set('config', Component::params('com_groups'));
+		$view->set('option ', 'com_groups');
 
 		// return rendered template
 		return $view->loadTemplate();

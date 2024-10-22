@@ -21,7 +21,6 @@ use Lang;
 use User;
 use Date;
 use App;
-use stdClass;
 
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'registration.php';
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'member.php';
@@ -175,8 +174,8 @@ class Register extends SiteController
 					'name'   => 'emails',
 					'layout' => 'update'
 				));
-				$eview->option     = $this->_option;
-				$eview->controller = $this->_controller;
+				$eview->set('option', $this->_option);
+				$eview->set('controller', $this->_controller);
 				$eview->sitename   = Config::get('sitename');
 				$eview->xprofile   = $xprofile;
 				$eview->baseURL    = $this->baseURL;
@@ -204,8 +203,8 @@ class Register extends SiteController
 				'name'   => 'emails',
 				'layout' => 'adminupdate'
 			));
-			$eaview->option     = $this->_option;
-			$eaview->controller = $this->_controller;
+			$eaview->set('option', $this->_option);
+			$eaview->set('controller', $this->_controller);
 			$eaview->sitename   = Config::get('sitename');
 			$eaview->xprofile   = $xprofile;
 			$eaview->baseURL    = $this->baseURL;
@@ -242,8 +241,8 @@ class Register extends SiteController
 					'name'   => 'emails',
 					'layout' => 'updateproxy'
 				));
-				$eview->option     = $this->_option;
-				$eview->controller = $this->_controller;
+				$eview->set('option', $this->_option);
+				$eview->set('controller', $this->_controller);
 				$eview->sitename   = Config::get('sitename');
 				$eview->xprofile   = $xprofile;
 				$eview->baseURL    = $this->baseURL;
@@ -271,8 +270,8 @@ class Register extends SiteController
 				'name'   => 'emails',
 				'layout' => 'adminupdateproxy'
 			));
-			$eaview->option     = $this->_option;
-			$eaview->controller = $this->_controller;
+			$eaview->set('option', $this->_option);
+			$eaview->set('controller', $this->_controller);
 			$eaview->sitename   = Config::get('sitename');
 			$eaview->xprofile   = $xprofile;
 			$eaview->baseURL    = $this->baseURL;
@@ -368,6 +367,19 @@ class Register extends SiteController
 					unset($profile[$key . '_other']);
 				}
 			}
+
+			$emailState = Field::state('registrationEmail', 'RRRR', $this->_task);
+
+			if ($emailState == \Components\Members\Models\Profile\Field::STATE_HIDDEN)
+			{
+				$username = User::get('username');
+			
+				if ($username[0] == '-' && is_object($hzal))
+				{
+					$xregistration->set('email', $hzal->email);
+				}
+			}
+
 		}
 		else
 		{
@@ -555,14 +567,6 @@ class Register extends SiteController
 					// The profile info, however, may have issues. But, it's not crucial.
 					//$result = false;
 				}
-
-				// Save user ORCID access token if user authenticated with ORCID
-				$orcidAccessToken = Session::get('tmp_orcid_access_tokens', '');
-				if ($orcidAccessToken) {
-					$query = new \Hubzero\Database\Query;
-					$query->push('#__xprofiles_tokens', ['token' => $orcidAccessToken, 'user_id' => User::get('id'), 'created' => date('y-m-d h:i:s')]);
-					Session::set('tmp_orcid_access_tokens', null);
-				}
 			}
 
 			// Update current session if appropriate
@@ -604,8 +608,8 @@ class Register extends SiteController
 					'name'   => 'emails',
 					'layout' => 'adminupdate'
 				));
-				$eaview->option     = $this->_option;
-				$eaview->controller = $this->_controller;
+				$eaview->set('option', $this->_option);
+				$eaview->set('controller', $this->_controller);
 				$eaview->sitename   = Config::get('sitename');
 				$eaview->xprofile   = $xprofile;
 				$eaview->baseURL    = $this->baseURL;
@@ -657,22 +661,6 @@ class Register extends SiteController
 	 */
 	public function createTask()
 	{
-		if (!Request::getString('autofill', '')) {
-			Session::set('auth_link.tmp_orcid', null);
-			Session::set('auth_link.tmp_name', null);
-			Session::set('auth_link.tmp_given_name', null);
-			Session::set('auth_link.tmp_family_name', null);
-			Session::set('auth_link.tmp_email', null);
-			Session::set('auth_link.tmp_bio', null);
-			Session::set('auth_link.tmp_title', null);
-			Session::set('auth_link.tmp_affiliation', null);
-			Session::set('auth_link.tmp_education', null);
-			Session::set('auth_link.tmp_twitter', null);
-			Session::set('auth_link.tmp_facebook', null);
-			Session::set('auth_link.tmp_linkedin', null);
-			Session::set('auth_link.tmp_url', null);
-		}
-
 		if (!User::isGuest() && !User::get('tmp_user'))
 		{
 			App::redirect(
@@ -717,6 +705,14 @@ class Register extends SiteController
 
 			// Incoming profile edits
 			$profile = Request::getArray('profile', array(), 'post');
+
+			// Querying the organization id on ror.org
+			// If RoR Api is turned off because of failed API or if key doesn't exist, don't retrieve list from Api.
+			$useRorApi = \Component::params('com_members')->get('rorApi');
+			if (isset($profile['organization']) && !empty($profile['organization']) && $useRorApi){
+				$id = $this->getOrganizationId($profile['organization']);
+				$profile['orgid'] = $id;
+			}
 
 			// Compile profile data
 			foreach ($profile as $key => $data)
@@ -945,41 +941,6 @@ class Register extends SiteController
 						\Components\Members\Helpers\Utility::sendConfirmEmail($user, $xregistration);
 					}
 
-					// Check off some default settings for the user's personal message to encourage engagement with the Commons
-					$defaultMessageSettings = new stdClass;
-					$defaultMessageSettingsTypes = [
-						'answers_reply_submitted',
-						'answers_reply_comment',
-						'groups_requests_membership',
-						'groups_approved_denied',
-						'groups_invite',
-						'group_message',
-						'groups_cancelled_me',
-						'groups_status_changed',
-						'member_message',
-						'projects_member_added',
-						'projects_admin_message',
-						'support_reply_submitted',
-						'resources_new_comment'
-					];
-					$defaultMessageSettings->email = $defaultMessageSettingsTypes;
-					$defaultMessageSettings->internal = $defaultMessageSettingsTypes;
-					
-					// Create the entry in the database
-					foreach ($defaultMessageSettings->email as $type) {
-						$query = new \Hubzero\Database\Query;
-						$query->insert('#__xmessage_notify')  
-							->values(['uid' => $user->get('id'), 'method' => 'email', 'type' => $type, 'priority' => 1]) 
-							->execute();
-					}
-
-					foreach ($defaultMessageSettings->internal as $type) {
-						$query = new \Hubzero\Database\Query;
-						$query->insert('#__xmessage_notify')  
-							->values(['uid' => $user->get('id'), 'method' => 'internal', 'type' => $type, 'priority' => 1]) 
-							->execute();
-					}
-
 					// Instantiate a new view
 					$this->view
 						->set('title', Lang::txt('COM_MEMBERS_REGISTER_CREATE_ACCOUNT'))
@@ -1024,11 +985,6 @@ class Register extends SiteController
 					$xregistration->set('email', $hzal->email);
 					$xregistration->set('confirmEmail', $hzal->email);
 				}
-			} else {
-				$xregistration->set('email', Session::get('auth_link.tmp_email', ''));
-				$xregistration->set('confirmEmail', Session::get('auth_link.tmp_email', ''));
-				$xregistration->set('name', Session::get('auth_link.tmp_name', ''));
-				$xregistration->set('orcid', Session::get('auth_link.tmp_orcid', ''));
 			}
 		}
 
@@ -1121,21 +1077,6 @@ class Register extends SiteController
 			->where('action_' . ($task == 'update' ? 'create' : $task), '!=', Field::STATE_HIDDEN)
 			->ordered()
 			->rows();
-		
-		// Autofill registration form if there are corresponding info in the session
-		$orcidField = null;
-		foreach ($fields as $field) {
-			$fieldName = $field->get('name');
-			$defaultValue = $field->get('default_value');
-			if ($tmpVal = Session::get('auth_link.tmp_' . $fieldName, null)) {
-				$field->set('default_value', $tmpVal);
-			}
-
-			// Save ORCID field
-			if ($fieldName === 'orcid') {
-				$orcidField = $field;
-			}
-		}
 
 		// Display the view
 		$this->view
@@ -1149,7 +1090,6 @@ class Register extends SiteController
 			->set('password_rules', $password_rules)
 			->set('xregistration', $xregistration)
 			->set('registration', $xregistration->_registration)
-			->set('orcidField', $orcidField)
 			->setLayout('default')
 			->setErrors($this->getErrors())
 			->display();
@@ -1540,11 +1480,6 @@ class Register extends SiteController
 
 		if ($xprofile->get('id') != $user->get('id'))
 		{
-			// Redirect to member dashboard if email is already confirmed
-			if ($xprofile->get('id') === 0) {
-				App::redirect("/members/myaccount", "Email is already confirmed. No need to do it again!", "warning");
-			}
-
 			// Profile and logged in user does not match
 			$this->setError('login mismatch');
 
@@ -1737,5 +1672,55 @@ class Register extends SiteController
 			$title = Lang::txt('COM_MEMBERS_REGISTER');
 		}
 		\Document::setTitle($title);
+	}
+
+	/**
+	 * Perform querying of research organization id on ror.org
+	 * @param   string   $organization
+	 *
+	 * @return  string   organization id
+	 */
+	public function getOrganizationId($organization){
+		$org = trim($organization);
+		$id = "none";
+
+		if (strpos($org, ' ') !== false){
+			$org = str_replace(' ', '+', $org);
+		}
+
+		$queryURL = "https://api.ror.org/organizations?query=" . $org;
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $queryURL);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$result = curl_exec($ch);
+
+		if (!$result){
+			return false;
+		}
+
+		$info = curl_getinfo($ch);
+
+		$code = $info['http_code'];
+
+		if (($code != 201) && ($code != 200)){
+			return false;
+		}
+
+		$resultObj = json_decode($result);
+
+		$org = str_replace('+', ' ', $org);
+
+		foreach ($resultObj->items as $orgObj){
+			if ($org == $orgObj->name){
+				$id = $orgObj->id;
+				break;
+			}
+		}
+
+		curl_close($ch);
+
+		return $id;
 	}
 }

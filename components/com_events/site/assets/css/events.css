@@ -321,31 +321,3 @@
 		border-color: #999;
 		border-bottom: 1px solid #fff;
 	}
-/* Files */
-	#event-files-container {
-		margin-top: 10px;
-	}
-	.event-file {
-		border-bottom: 1px solid #ddd;
-		margin-top: 0;
-		margin-bottom: 0;
-		padding-top: 5px;
-		padding-bottom: 5px;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-	}
-	.event-file-remove {
-		color: rgb(100 116 139);
-		transition-duration: 0.25s;
-		cursor: default;
-	}
-	.event-file-remove:hover {
-		color: #000;
-	}
-	.event-files-cal {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		column-gap: 20px;
-	}

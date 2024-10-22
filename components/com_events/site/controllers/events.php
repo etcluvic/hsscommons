@@ -50,7 +50,6 @@ class Events extends SiteController
 		$this->yearFormat  = "Y";
 		$this->monthFormat = "m";
 		$this->dayFormat   = "d";
-		$this->filesRoot   = PATH_APP . DS . 'site' . DS . 'events';
 
 		$this->_setup();
 
@@ -58,6 +57,8 @@ class Events extends SiteController
 		{
 			Request::setVar('task', $this->config->getCfg('startview', 'month'));
 		}
+
+		$this->_task = strtolower(Request::getCmd('task', Request::getWord('layout', '')));
 
 		$this->registerTask('__default', $this->_task);
 		$this->registerTask('register', 'eventregister');
@@ -299,63 +300,6 @@ class Events extends SiteController
 	}
 
 	/**
-	 * Written by Archie: Select proper events to display on the front page
-	 *
-	 * @param   array   $rows - Rows of Event object
-	 * @return  array	$displayEvents - Selected rows of Event object to be displayed
-	 */
-	public function selectDisplayedEvents($rows)
-	{
-		// Select events to display on the "/events" page
-		$displayEvents = array();
-		foreach ($rows as $row) {
-			// Display all standlone events
-			if ($row->scope === "event") {
-				$displayEvents[] = $row;
-			// Display events from groups based on the group's calendar setting
-			} else if ($row->scope === "group") {
-				$groupId = $row->scope_id;
-
-				// Retrieve group information
-				$query = new \Hubzero\Database\Query;
-				$groups = $query->select('*')
-								->from('#__xgroups')
-								->whereEquals('gidNumber', $groupId)
-								->fetch();
-				
-				// Do not show the event if there is no group has the scope id as its gidNumber
-				if (count($groups) === 0) {
-					continue;
-				}
-				$group = $groups[0];
-				$calendarSetting = explode('=', explode(',', $group->plugins)[4])[1];
-				
-				// Group canlendar is set to 'Any HUB Visitor'
-				if ($calendarSetting === 'anyone') {
-					$displayEvents[] = $row;
-				// Group canlendar is set to 'Registered HUB Users'
-				} else if ($calendarSetting === 'registered' && !User::isGuest()) {
-					$displayEvents[] = $row;
-				// Group canlendar is set to 'Group members only'
-				} else if ($calendarSetting === 'members') {
-					// Display if the user is in this group
-					$query = new \Hubzero\Database\Query;
-					$members = $query->select('*')
-									->from('#__xgroups_members')
-									->whereEquals('gidNumber', $groupId)
-									->whereEquals('uidNumber', User::get('id'))
-									->fetch();
-					if (count($members) > 0) {
-						$displayEvents[] = $row;
-					}
-				}
-			}
-		}
-
-		return $displayEvents;
-	}
-
-	/**
 	 * List events for a given year
 	 *
 	 * @return     void
@@ -375,12 +319,11 @@ class Events extends SiteController
 		$filters['gid'] = $gid;
 		$filters['year'] = $year;
 		$filters['category'] = $this->category;
-		// $filters['scope'] = 'event';
+		$filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('year', $filters);
-		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -404,18 +347,20 @@ class Events extends SiteController
 
 		// Output HMTL
 		$this->view->setLayout('year')->setName('browse');
-		$this->view->option = $this->_option;
-		$this->view->title = $this->_title;
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->rows = $rows;
-		$this->view->authorized = $authorized;
-		$this->view->fields = $this->config->getCfg('fields');
-		$this->view->category = $this->category;
-		$this->view->categories = $categories;
-		$this->view->offset = $offset;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => $this->_title,
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'rows' => $rows,
+			'authorized' => $authorized,
+			'fields' => $this->config->getCfg('fields'),
+			'category' => $this->category,
+			'categories' => $categories,
+			'offset' => $offset,
+		));
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -452,12 +397,11 @@ class Events extends SiteController
 		$filters['select_date'] = $select_date->toSql();
 		$filters['select_date_fin'] = $select_date_fin->toSql();
 		$filters['category'] = $this->category;
-		// $filters['scope'] = 'event';
+		$filters['scope'] = 'event';
 
 		// Retrieve records
 		$ee = new Event($this->database);
 		$rows = $ee->getEvents('month', $filters);
-		$rows = $this->selectDisplayedEvents($rows);
 
 		// Everyone has access unless restricted to admins in the configuration
 		$authorized = true;
@@ -481,18 +425,20 @@ class Events extends SiteController
 
 		// Output HTML
 		$this->view->setLayout('month')->setName('browse');
-		$this->view->option = $this->_option;
-		$this->view->title = $this->_title;
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->rows = $rows;
-		$this->view->authorized = $authorized;
-		$this->view->fields = $this->config->getCfg('fields');
-		$this->view->category = $this->category;
-		$this->view->categories = $categories;
-		$this->view->offset = $offset;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => $this->_title,
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'rows' => $rows,
+			'authorized' => $authorized,
+			'fields' => $this->config->getCfg('fields'),
+			'category' => $this->category,
+			'categories' => $categories,
+			'offset' => $offset,
+		));
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -525,7 +471,7 @@ class Events extends SiteController
 		$week_start = mktime(0, 0, 0, $month, ($day - $numday), $year);
 
 		$this_date = new EventsDate();
-		$this_date->setDate(strftime("%Y", $week_start), strftime("%m", $week_start), strftime("%d", $week_start));
+		$this_date->setDate(date("Y", $week_start), date("m", $week_start), date("d", $week_start));
 		$this_enddate = clone($this_date);
 		$this_enddate->addDays(+6);
 
@@ -539,7 +485,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		// $filters['scope'] = 'event';
+		$filters['scope'] = 'event';
 
 		$ee = new Event($this->database);
 
@@ -565,8 +511,6 @@ class Events extends SiteController
 
 			$rows[$d] = array();
 			$rows[$d]['events'] = $ee->getEvents('day', $filters);
-			$rows[$d]['events'] = $this->selectDisplayedEvents($rows[$d]['events']);
-
 			$rows[$d]['week']   = $week;
 		}
 
@@ -589,21 +533,23 @@ class Events extends SiteController
 
 		// Output HTML;
 		$this->view->setLayout('week')->setName('browse');
-		$this->view->option = $this->_option;
-		$this->view->title = $this->_title;
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->rows = $rows;
-		$this->view->authorized = $authorized;
-		$this->view->fields = $this->config->getCfg('fields');
-		$this->view->category = $this->category;
-		$this->view->categories = $categories;
-		$this->view->offset = $offset;
-		$this->view->startdate = $sdt;
-		$this->view->enddate = $edt;
-		$this->view->week = $week;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => $this->_title,
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'rows' => $rows,
+			'authorized' => $authorized,
+			'fields' => $this->config->getCfg('fields'),
+			'category' => $this->category,
+			'categories' => $categories,
+			'offset' => $offset,
+			'startdate' => $sdt,
+			'enddate' => $edt,
+			'week' => $week,
+		));
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -631,7 +577,7 @@ class Events extends SiteController
 		$filters = array();
 		$filters['gid'] = $this->gid;
 		$filters['category'] = $this->category;
-		// $filters['scope'] = 'event';
+		$filters['scope'] = 'event';
 
 		$select_date     = sprintf("%4d-%02d-%02d 00:00:00", $year, $month, $day);
 		$select_date_fin = sprintf("%4d-%02d-%02d 23:59:59", $year, $month, $day);
@@ -643,7 +589,6 @@ class Events extends SiteController
 
 		$ee = new Event($this->database);
 		$events = $ee->getEvents('day', $filters);
-		$events = $this->selectDisplayedEvents($events);
 
 		// Go through each event and ensure it should be displayed
 		// $events = array();
@@ -681,18 +626,20 @@ class Events extends SiteController
 
 		// Output HTML
 		$this->view->setLayout('day')->setName('browse');
-		$this->view->option = $this->_option;
-		$this->view->title = $this->_title;
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->rows = $events;
-		$this->view->authorized = $authorized;
-		$this->view->fields = $this->config->getCfg('fields');
-		$this->view->category = $this->category;
-		$this->view->categories = $categories;
-		$this->view->offset = $offset;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => $this->_title,
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'rows' => $events,
+			'authorized' => $authorized,
+			'fields' => $this->config->getCfg('fields'),
+			'category' => $this->category,
+			'categories' => $categories,
+			'offset' => $offset,
+		));
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -885,22 +832,24 @@ class Events extends SiteController
 		{
 			$this->view->setLayout('modal');
 		}
-		$this->view->option = $this->_option;
-		$this->view->title = Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt(strtoupper($this->_name) . '_' . strtoupper($this->_task));
-		$this->view->task = $this->_task;
-		$this->view->year = $eyear;
-		$this->view->month = $emonth;
-		$this->view->day = $eday;
-		$this->view->row = $row;
-		$this->view->authorized = $authorized;
-		$this->view->fields = $fields;
-		$this->view->config = $this->config;
-		$this->view->categories = $categories;
-		$this->view->offset = $offset;
-		$this->view->tags = $tags;
-		$this->view->auth = $auth;
-		$this->view->page = $page;
-		$this->view->pages = $pages;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt(strtoupper($this->_name) . '_' . strtoupper($this->_task)),
+			'task' => $this->_task,
+			'year' => $eyear,
+			'month' => $emonth,
+			'day' => $eday,
+			'row' => $row,
+			'authorized' => $authorized,
+			'fields' => $fields,
+			'config' => $config,
+			'categories' => $categories,
+			'offset' => $offset,
+			'tags' => $tags,
+			'auth' => $auth,
+			'page' => $page,
+			'pages' => $pages,
+		));
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -1047,45 +996,48 @@ class Events extends SiteController
 				{
 					// Instantiate a view
 					$this->view->setLayout('default');
-					$this->view->state = 'open';
+					$this->view->set('state', 'open');
 				}
 				else
 				{
 					// Instantiate a view
 					$this->view->setLayout('restricted');
-					$this->view->state = 'restricted';
+					$this->view->set('state', 'restricted');
 				}
 			}
 			else
 			{
 				// Instantiate a view
 				$this->view->setLayout('default');
-				$this->view->state = 'open';
+				$this->view->set('state', 'open');
 			}
 		}
 		else
 		{
 			// Instantiate a view
 			$this->view->setLayout('closed');
-			$this->view->state = 'closed';
+			$this->view->set('state', 'closed');
 		}
 
 		// Output HTML
 		$this->view->setName('register');
-		$this->view->option = $this->_option;
-		$this->view->title = Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt('EVENTS_REGISTER');
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->offset = $offset;
-		$this->view->event = $event;
-		$this->view->authorized = $auth;
-		$this->view->page = $page;
-		$this->view->pages = $pages;
-		$this->view->register = $register;
-		$this->view->arrival = null;
-		$this->view->departure = null;
+		$this->view->setProperties(array(
+			'option' => $this->_option,
+			'title' => Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt('EVENTS_REGISTER'),
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'offset' => $offset,
+			'event' => $event,
+			'authorized' => $auth,
+			'page' => $page,
+			'pages' => $pages,
+			'register' => $register,
+			'arrival' => null,
+			'departure' => null,
+		));
+
 
 		foreach ($this->getErrors() as $error)
 		{
@@ -1230,7 +1182,7 @@ class Events extends SiteController
 			);
 
 			$eview = new \Hubzero\Component\View(array('name'=>'register','layout'=>'email'));
-			$eview->option = $this->_option;
+			$eview->set('option', $this->_option);
 			$eview->sitename = Config::get('sitename');
 			$eview->register = $register;
 			$eview->race = $race;
@@ -1288,21 +1240,23 @@ class Events extends SiteController
 			$this->view->setLayout('default');
 		}
 		$this->view->setName('register');
-		$this->view->state = 'open';
-		$this->view->option = $this->_option;
-		$this->view->title = Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt('EVENTS_REGISTER');
-		$this->view->task = $this->_task;
-		$this->view->year = $year;
-		$this->view->month = $month;
-		$this->view->day = $day;
-		$this->view->offset = $offset;
-		$this->view->event = $event;
-		$this->view->authorized = $auth;
-		$this->view->page = $page;
-		$this->view->pages = $pages;
-		$this->view->register = $register;
-		$this->view->arrival = $arrival;
-		$this->view->departure = $departure;
+		$this->view->setProperties(array(
+			'state' => 'open',
+			'option' => $this->_option,
+			'title' => Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt('EVENTS_REGISTER'),
+			'task' => $this->_task,
+			'year' => $year,
+			'month' => $month,
+			'day' => $day,
+			'offset' => $offset,
+			'event' => $event,
+			'authorized' => $auth,
+			'page' => $page,
+			'pages' => $pages,
+			'register' => $register,
+			'arrival' => $arrival,
+			'departure' => $departure,
+		));
 		if ($this->getError())
 		{
 			$this->view->setError($this->getError());
@@ -1383,7 +1337,7 @@ class Events extends SiteController
 					break;
 				case 'dinner':
 					$dinner = Request::getString('dinner', null, 'post');
-					$rv[] = is_null($dinner) ? 'null' : $dinner ? '1' : '0';
+					$rv[] = is_null($dinner) ? 'null' : ($dinner ? '1' : '0');
 					break;
 				case 'dietary':
 					$rv[] = (($dietary = Request::getArray('dietary', null, 'post')))
@@ -1405,7 +1359,7 @@ class Events extends SiteController
 					break;
 			}
 		}
-		return implode($rv, ',');
+		return implode(',', $rv);
 	}
 
 	/**
@@ -1540,9 +1494,9 @@ class Events extends SiteController
 				{
 					$offset = $this->offset;
 
-					$start_publish = strftime("%Y-%m-%d", time()+($offset*60*60)); //date("Y-m-d");
-					$stop_publish = strftime("%Y-%m-%d", time()+($offset*60*60));  //date("Y-m-d");
-					$registerby_date = strftime("%Y-%m-%d", time()+($offset*60*60));  //date("Y-m-d");
+					$start_publish = date("Y-m-d", time()+($offset*60*60)); //date("Y-m-d");
+					$stop_publish = date("Y-m-d", time()+($offset*60*60));  //date("Y-m-d");
+					$registerby_date = date("Y-m-d", time()+($offset*60*60));  //date("Y-m-d");
 				}
 
 				$start_time = "08:00";
@@ -1692,14 +1646,6 @@ class Events extends SiteController
 			$lists['tags'] = $this->tags;
 		}
 
-		// Get files of this event
-		$query = new \Hubzero\Database\Query;
-		$files = $query->select('id, title')
-						->from('#__events_pages')
-						->whereEquals('event_id', $row->id)
-						->whereEquals('alias', 'event_' . $row->id . '_file')
-						->fetch();
-
 		// Set the title
 		Document::setTitle(Lang::txt(strtoupper($this->_name)) . ': ' . Lang::txt(strtoupper($this->_name) . '_' . strtoupper($this->_task)));
 
@@ -1740,7 +1686,6 @@ class Events extends SiteController
 		$this->view->lists = $lists;
 		$this->view->gid = $this->gid;
 		$this->view->admin = $this->_authorize();
-		$this->view->files = $files;
 		if ($this->getError())
 		{
 			$this->view->setError($this->getError());
@@ -1816,7 +1761,7 @@ class Events extends SiteController
 			'name'   => 'emails',
 			'layout' => 'deleted'
 		));
-		$eview->option = $this->_option;
+		$eview->set('option', $this->_option);
 		$eview->sitename = Config::get('sitename');
 		$eview->user = User::getInstance();
 		$eview->event = $event;
@@ -1846,7 +1791,7 @@ class Events extends SiteController
 
 		// good ol' form validation
 		Request::checkToken();
-		// Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
+		Request::checkHoneypot() or die('Invalid Field Data Detected. Please try again.');
 
 		$offset = $this->offset;
 
@@ -1873,7 +1818,7 @@ class Events extends SiteController
 			$state = 'edit';
 
 			// Existing - update modified info
-			$row->modified = strftime("%Y-%m-%d %H:%M:%S", time()+($offset*60*60));
+			$row->modified = date("Y-m-d h:i:s", time()+($offset*60*60));
 			if (User::get('id'))
 			{
 				$row->modified_by = User::get('id');
@@ -1884,7 +1829,7 @@ class Events extends SiteController
 			$state = 'add';
 
 			// New - set created info
-			$row->created = strftime("%Y-%m-%d %H:%M:%S", time()+($offset*60*60));
+			$row->created = date("Y-m-d h:i:s", time()+($offset*60*60));
 			if (User::get('id'))
 			{
 				$row->created_by = User::get('id');
@@ -2043,7 +1988,7 @@ class Events extends SiteController
 				$tz = 'Pacific/Kiritimati';
 				break;
 			default:
-				$tz = timezone_name_from_abbr('', $row->time_zone * 3600, null);
+				$tz = timezone_name_from_abbr('', $row->time_zone * 3600, -1);
 		}
 
 		// create publish up date time string
@@ -2112,12 +2057,6 @@ class Events extends SiteController
 		}
 		$row->checkin();
 
-		// Handle event files upload
-		$files = $_FILES['files'];
-		if ($files && count($files) > 0) {
-			$this->_uploadFiles($event_id=$row->id);
-		}
-
 		// Save the tags
 		$rt = new Tags($row->id);
 		$rt->setTags($tags, User::get('id'));
@@ -2135,7 +2074,7 @@ class Events extends SiteController
 
 			$eview = new View(array('name'=>'emails','layout'=>'edited'));
 		}
-		$eview->option = $this->_option;
+		$eview->set('option', $this->_option);
 		$eview->sitename = Config::get('sitename');
 		$eview->user = User::getInstance();
 		$eview->row = $row;
@@ -2310,232 +2249,5 @@ class Events extends SiteController
 		}
 
 		return false;
-	}
-
-	/**
-	 * Handle files upload for events
-	 * @param  int $event_id
-	 * 
-	 * @return  bool
-	 */
-	private function _uploadFiles($event_id=null)
-	{
-		if (!$event_id)
-		{
-			$this->setError(Lang::txt('Missing event id'));
-			return false;
-		}
-
-		// Load event object
-		$event = new Event($this->database);
-		$event->load($event_id);
-
-		// Are they authorized to edit this event? Do they own it? Own it!
-		if (!$this->_authorize($event->created_by)
-			&& !(User::get('id') == $event->created_by))
-		{
-			$this->setError(Lang::txt('User not authorized to upload files for this event'));
-			return false;
-		}
-
-		// Get the file upload
-		$files = $_FILES['files'];
-
-		// Loop through the files
-		foreach ($files['name'] as $i => $name)
-		{
-			// Skip if no file
-			if (!$name)
-			{
-				continue;
-			}
-
-			// Get the file extension
-			$ext = strtolower(Filesystem::extension($name));
-
-			// Check for allowed file extensions
-			if (!in_array($ext, array('jpg','jpeg','png','pdf')))
-			{
-				$this->setError(Lang::txt('Invalid file type'));
-				return false;
-			}
-
-			// Get the file size
-			$size = $files['size'][$i];
-
-			// Check for allowed file size
-			if ($size > 5242880)
-			{
-				$this->setError(Lang::txt('File too large'));
-				return false;
-			}
-
-			// Get the file name
-			$name = $files['name'][$i];
-
-			// Get the file tmp name
-			$tmp_name = $files['tmp_name'][$i];
-
-			// Get the file type
-			$type = $files['type'][$i];
-
-			// Get the file error
-			$error = $files['error'][$i];
-			if ($error > 0) {
-				$this->setError(Lang::txt('File upload error'));
-				return false;
-			}
-
-			// Create the target directory if it doesn't exist
-			$target_dir = $this->filesRoot . DS . $event_id . DS . 'uploads';
-			if (!is_dir($target_dir))
-			{
-				if (!Filesystem::makeDirectory($target_dir))
-				{
-					$this->setError(Lang::txt('Could not create directory'));
-					return false;
-				}
-			}
-
-			// Get the file path
-			$target_path = $this->filesRoot . DS . $event_id . DS . 'uploads' . DS . $name;
-
-			// Check if file already exists
-			if (file_exists($target_path))
-			{
-				$this->setError(Lang::txt('File already exists'));
-				return false;
-			}
-
-			// Upload the file
-			if (!move_uploaded_file($tmp_name, $target_path))
-			{
-				$this->setError(Lang::txt('File upload error - could not move file to destination'));
-				return false;
-			}
-
-			// Save file info into the database
-			$query = new \Hubzero\Database\Query;
-			$query->push('#__events_pages', ['event_id' => $event_id, 'title' => $name, 'pagetext' => $target_path, 'created_by' => User::get('id'), 'alias' => 'event_' . $event_id . '_file']);
-		}
-	}
-
-	/**
-	 * Serve a file for an event
-	 *
-	 * 
-	 * @return  void
-	 */
-	public function serveFileTask()
-	{
-		// Get the event id
-		$event_id = Request::getInt('id', 0, 'get');
-
-		// Get the file id
-		$file_id = Request::getInt('file_id', 0, 'get');
-
-		if (!$event_id)
-		{
-			$this->setError(Lang::txt('Missing event id'));
-			return false;
-		}
-
-		if (!$file_id)
-		{
-			$this->setError(Lang::txt('Missing file id'));
-			return false;
-		}
-
-		$query = new \Hubzero\Database\Query;
-		$files = $query->select('title, pagetext')
-						->from('#__events_pages')
-						->whereEquals('id', $file_id)
-						->whereEquals('event_id', $event_id)
-						->fetch();
-		if (count($files) == 0)
-		{
-			$this->setError(Lang::txt('File not found'));
-			return false;
-		}
-		$file = $files[0];
-
-		$server = new \Hubzero\Content\Server;
-		$server->filename($file->pagetext);
-		$server->disposition('attachment');
-		$server->saveas($file->title);
-		$server->serve();
-	}
-	/**
-	 * Remove a file for an event (Can only be called via ajax)
-	 *
-	 * 
-	 * @return  void
-	 */
-	public function removeFileTask()
-	{
-		// Get the event id
-		$event_id = Request::getInt('id', 0, 'get');
-
-		// Get the file id
-		$file_id = Request::getInt('file_id', 0, 'get');
-
-		if (!$event_id)
-		{
-			echo json_encode([
-				'status' => 400,
-				'message' => 'Missing event id'
-			]);
-			exit();
-		}
-
-		if (!$file_id)
-		{
-			echo json_encode([
-				'status' => 400,
-				'message' => 'Missing file id'
-			]);
-			exit();
-		}
-
-		// Load event object
-		$event = new Event($this->database);
-		$event->load($event_id);
-
-		// Are they authorized to remove this file? Do they own event? Own it!
-		if (!$this->_authorize($event->created_by)
-			&& !(User::get('id') == $event->created_by))
-		{
-			echo json_encode([
-				'status' => 403,
-				'message' => 'User not authorized to remove files for this event'
-			]);
-			exit();
-		}
-
-		// Get the file path
-		$query = new \Hubzero\Database\Query;
-		$file_paths = $query->select('pagetext')
-						->from('#__events_pages')
-						->whereEquals('id', $file_id)
-						->whereEquals('event_id', $event_id)
-						->fetch();
-
-		// Delete the file from the database
-		$query = new \Hubzero\Database\Query;
-		$query->delete('#__events_pages')
-				->whereEquals('id', $file_id)
-				->whereEquals('event_id', $event_id)
-				->whereEquals('alias', 'event_' . $event_id . '_file')
-				->execute();
-		
-		// Delete the file from the filesystem
-		Log::debug($file_paths[0]->pagetext);
-		unlink($file_paths[0]->pagetext);
-		
-		echo json_encode([
-			'status' => 200,
-			'message' => 'File deleted successfully'
-		]);
-		exit();
 	}
 }

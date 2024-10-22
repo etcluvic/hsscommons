@@ -105,7 +105,7 @@ class Publication extends Table
 
 		if (!isset($filters['all_versions']) || !$filters['all_versions'])
 		{
-			$groupby = ' GROUP BY C.id ';
+			$groupby = ' GROUP BY C.id, V.id ';
 		}
 
 		$project  = isset($filters['project']) && intval($filters['project']) ? $filters['project'] : "";
@@ -466,12 +466,7 @@ class Publication extends Table
 
 		if ($sortby == 'popularity')
 		{
-			// Archie: Sort by popularity using total page_views of table jos_publication_logs, as usage is currently not used
-			$sql .= ", (SELECT SUM(page_views)
-			FROM `#__publication_logs`
-			WHERE `publication_id`=C.id AND `publication_version_id`=V.id
-			ORDER BY `year` ASC, `month` ASC) as stat ";
-			// $sql .= ", (SELECT S.users FROM `#__publication_stats` AS S WHERE S.publication_id=C.id AND S.period=14 ORDER BY S.datetime DESC LIMIT 1) as stat ";
+			$sql .= ", (SELECT S.users FROM `#__publication_stats` AS S WHERE S.publication_id=C.id AND S.period=14 ORDER BY S.datetime DESC LIMIT 1) as stat ";
 		}
 
 		$sql .= (isset($filters['tag']) && $filters['tag'] != '') ? ", TA.tag, COUNT(DISTINCT TA.tag) AS uniques " : " ";
@@ -536,7 +531,7 @@ class Publication extends Table
 		}
 
 		$now = Date::toSql();
-		$alias = str_replace(':', '-', $alias);
+		$alias = $alias ? str_replace(':', '-', $alias) : '';
 
 		$sql  = "SELECT V.*, C.id as id, C.category, C.master_type,
 				C.project_id, C.access as master_access, C.master_doi,
@@ -642,13 +637,6 @@ class Publication extends Table
 			$id = $this->id;
 		}
 
-		// Delete tag associations
-		$this->_db->setQuery("DELETE FROM `#__tags_object` WHERE tbl='publications' AND objectid=". $this->_db->quote($id));
-		if (!$this->_db->query())
-		{
-			echo $this->_db->getErrorMsg();
-			exit;
-		}
 		// Delete ratings
 		$this->_db->setQuery("DELETE FROM `#__publication_ratings` WHERE publication_id=" . $this->_db->quote($id));
 		if (!$this->_db->query())

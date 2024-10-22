@@ -140,11 +140,6 @@ class Asset extends Base
 			$UrlPtn  = "(?:https?:|mailto:|ftp:|gopher:|news:|file:)"
 					 . "(?:[^ |\\/\"\']*\\/)*[^ |\\t\\n\\/\"\']*[A-Za-z0-9\\/?=&~_]";
 
-			// Archie: Link is internal if it starts with the app base URL
-			if (strpos($this->get('filename'), Request::root()) === 0) {
-				return false;
-			}
-
 			if (preg_match("/$UrlPtn/", $this->get('filename')))
 			{
 				return true;
@@ -413,7 +408,7 @@ class Asset extends Base
 			$file = $this->get('_file');
 
 			// Make the filename safe
-			$file['name'] = urldecode($files['name']);
+			$file['name'] = urldecode($file['name']);
 			$file['name'] = Filesystem::clean($file['name']);
 			$file['name'] = str_replace(' ', '_', $file['name']);
 

@@ -283,9 +283,6 @@ foreach ($this->fields as $field)
 
 						foreach ($this->rows as $row)
 						{
-							if (in_array($row->id, $this->hidden_member_ids)) {
-								continue;
-							}
 							$cls = '';
 							if ($row->get('access') != 1)
 							{
@@ -305,11 +302,12 @@ foreach ($this->fields as $field)
 							{
 								$cls .= ($cls) ? ' me' : 'me';
 							}
-							
+
 							// User name
 							if (!$row->get('surname'))
 							{
 								$bits = explode(' ', $row->get('name'));
+
 								$row->set('surname', array_pop($bits));
 								if (count($bits) >= 1)
 								{
@@ -326,10 +324,7 @@ foreach ($this->fields as $field)
 							{
 								$name .= ($row->get('surname')) ? ', ' : '';
 								$name .= stripslashes($row->get('givenName'));
-								if($row->get('middleName') && strpos($name, $row->get('middleName')) === false)
-								{
-									$name .= ($row->get('middleName')) ? ' ' . stripslashes($row->get('middleName')) : '';
-								}
+								$name .= ($row->get('middleName')) ? ' ' . stripslashes($row->get('middleName')) : '';
 							}
 							if (!trim($name))
 							{
@@ -419,7 +414,7 @@ foreach ($this->fields as $field)
 											if ($val = $row->get($c->get('name'))) {
 												$val = (is_array($val) ? implode(', ', $val) : $val);
 											?>
-												<div class="result-snippet-<?php echo $this->escape($c->get('name')); ?>" <?php if ($this->escape($c->get('name')) !== $this->sortBy) { ?>style="display: none;"<?php } ?>>
+												<div class="result-snippet-<?php echo $this->escape($c->get('name')); ?>">
 													<?php echo $this->escape(Hubzero\Utility\Str::truncate(strip_tags(stripslashes($val)), 150)); ?>
 												</div>
 											<?php } ?>
@@ -427,20 +422,6 @@ foreach ($this->fields as $field)
 									</div>
 									<?php if ($extras || $messageuser) { ?>
 										<div class="result-options">
-											
-											<!-- Follow button -->
-											<?php if (!User::isGuest() && User::get('id') != $row->get('id')) { ?>
-												<?php if (in_array($row->get('id'), $this->following_member_ids)) { ?>
-													<a class="btn message-member" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=unfollow&unfollowingId=' . $row->get('id') . '&unfollowingName=' . $name . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($name)); ?>">
-														<?php echo Lang::txt('UNFOLLOW'); ?>
-													</a>
-												<?php } else { ?>
-													<a class="btn message-member" href="<?php echo Route::url('index.php?option=' . $this->option . '&active=follow&followingId=' . $row->get('id') . '&followingName=' . $name . '&redirect=' . base64_encode(Request::current(true))); ?>" title="<?php echo Lang::txt('COM_MEMBERS_FOLLOW_BUTTON_TITLE', $this->escape($name)); ?>">
-														<?php echo Lang::txt('FOLLOW'); ?>
-													</a>
-												<?php } ?>
-											<?php } ?>
-
 											<?php if ($messageuser) { ?>
 												<a class="icon-email btn message-member" href="<?php echo Route::url('index.php?option=' . $this->option . '&id=' . User::get('id') . '&active=messages&task=new&to[]=' . $row->get('id')); ?>" title="<?php echo Lang::txt('COM_MEMBERS_BROWSE_SEND_MESSAGE_TO_TITLE', $this->escape($name)); ?>">
 													<?php echo Lang::txt('COM_MEMBERS_BROWSE_SEND_MESSAGE'); ?>

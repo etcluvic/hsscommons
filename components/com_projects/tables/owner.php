@@ -621,7 +621,7 @@ class Owner extends Table
 	 * @param   integer  $synced
 	 * @return  boolean  True if any updates were required, false if nothing to change
 	 */
-	public function reconcileGroups($projectid = null, $owned_by_group = 0, $synced = 1, $synced_role = 0)
+	public function reconcileGroups($projectid = null, $owned_by_group = 0, $synced = 1)
 	{
 		if ($projectid === null)
 		{
@@ -753,7 +753,7 @@ class Owner extends Table
 			{
 				foreach ($owners_to_add as $newcomer)
 				{
-					$added = $this->saveOwners($projectid, 0, $newcomer, $array_member_groups[$newcomer], $synced_role, 1, $array_groups_native[$array_member_groups[$newcomer]]);
+					$added = $this->saveOwners($projectid, 0, $newcomer, $array_member_groups[$newcomer], 0, 1, $array_groups_native[$array_member_groups[$newcomer]]);
 				}
 			}
 

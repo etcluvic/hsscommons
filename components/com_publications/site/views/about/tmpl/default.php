@@ -8,19 +8,12 @@
 // No direct access
 defined('_HZEXEC_') or die();
 
-$this->css('custom')
-	->css('jquery.dataTables.min.css')
-	->js('jquery.dataTables.min.js')
-	->js('csv_to_html_table')
-	->js('jquery.csv.min');
 $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
 
 $abstract = $this->publication->abstract;
-
-$unsanitized_description = $this->publication->describe('parsed');
-$description = preg_replace('/(<[^>]+) style\s?=\s?".*?"/i', '$1', $unsanitized_description);
+$description = $this->publication->describe('parsed');
 
 $this->publication->authors();
 $this->publication->attachments();
@@ -223,7 +216,7 @@ $schema = $metaElements->getSchema();
 	</div>
 <?php } ?>
 <?php if ($this->publication->params->get('show_tags')) {
-	$this->publication->getTagCloud( $this->authorized );
+	$this->publication->getTagCloud(User::authorise('core.admin')?1:0);
 	?>
 	<?php if ($this->publication->_tagCloud) { ?>
 		<h4><?php echo Lang::txt('COM_PUBLICATIONS_TAGS'); ?></h4>
@@ -247,7 +240,6 @@ $schema = $metaElements->getSchema();
 // Show version notes
 if (($this->publication->params->get('show_notes')) && $this->publication->get('release_notes'))
 {
-	// $notes = $this->publication->notes('clean');
 	$notes = $this->publication->notes('parsed');
 	?>
 	<h4><?php echo Lang::txt('COM_PUBLICATIONS_NOTES'); ?></h4>
@@ -260,54 +252,6 @@ if (($this->publication->params->get('show_notes')) && $this->publication->get('
 }
 ?>
 </div><!-- / .pubabout -->
-
-<div id="file-preview" style="padding-top: 200px; margin-top: -150px; margin-bottom: 50px; margin-left: 15px;">
-<?php
-// Provide a preview of primary document if exists
-$previewAttachment = $this->publication->getPreviewAttachment();
-if ($previewAttachment) {
-	echo "<h4>" . Lang::txt('COM_PUBLICATIONS_PREVIEW') . "</h4>";
-	$splittedFilePath = explode('.', $previewAttachment->path);
-	$fileExtension = strtolower($previewAttachment->path ? end($splittedFilePath) : '');
-	if ($fileExtension === 'mp4') { ?>
-		<video width="100%" height="auto" controls>
-			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="video/mp4">
-			Your browser does not support the video tag.
-		</video>
-	<?php } else if ($fileExtension === 'mp3') { ?>
-		<audio width="100%" height="auto" controls>
-			<source src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>" type="audio/mpeg">
-			Your browser does not support the audio tag.
-		</audio>
-	<?php } else if ($fileExtension === 'csv') { ?>
-		<?php echo '<div id="csv-table-container" style="overflow-x: auto; overflow-y: auto;"></div>';
-					
-		// Initialize CSV to HTML Table functionality
-		echo '<script>
-			CsvToHtmlTable.init({
-				csv_path: \'' . Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) . '\', 
-				element: \'csv-table-container\', 
-				allow_download: true,
-				csv_options: {separator: \',\', delimiter: \'"\'},
-				datatables_options: {
-					"paging": true,
-					"pageLength": 10,
-					"scrollX": true,
-					"scrollCollapse": true,
-					"fixedColumns": {
-						"left": 0,
-						"right": 0
-					}
-				}
-			});
-		</script>';
-		?>
-	<?php } else { ?>
-		<iframe width='600' height='700' src="<?php echo Route::url($this->publication->link('serve') . '&el=1' . '&a=' . $previewAttachment->id) ?>"></iframe>
-	<?php }
-}
-?>
-</div>
 
 <?php
 	/* Temporarily removing this from the main view in favor of an overlay

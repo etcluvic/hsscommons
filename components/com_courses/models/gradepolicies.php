@@ -9,9 +9,9 @@ namespace Components\Courses\Models;
 
 use Component;
 
-require_once dirname(__DIR__) . DS . 'tables' . DS . 'grade.policies.php';
-require_once dirname(__DIR__) . DS . 'models' . DS . 'offering.php';
-require_once dirname(__DIR__) . DS . 'models' . DS . 'section.php';
+require_once PATH_CORE . DS . 'components' . DS . 'com_courses' . DS . 'tables' . DS . 'grade.policies.php';
+require_once PATH_CORE . DS . 'components' . DS . 'com_courses' . DS . 'models' . DS . 'offering.php';
+require_once PATH_CORE . DS . 'components' . DS . 'com_courses' . DS . 'models' . DS . 'section.php';
 
 /**
  * Courses model class for grade book

@@ -136,7 +136,7 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 				</div>
 				<fieldset>
 					<legend>Connect With</legend>
-					<div id="providers" class="auth" style="margin-top: 20px;">
+					<div id="providers" class="auth">
 						<?php
 							echo $provider_html;
 						?>
@@ -190,51 +190,6 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 
 			<fieldset>
 				<legend><?php echo Lang::txt('COM_MEMBERS_REGISTER_LOGIN_INFORMATION'); ?></legend>
-					<?php 
-					// Convert to XML so we can use the Form processor
-					$xml = Field::toXml($this->fields, 'create');
-
-					// Gather data to pass to the form processor
-					$data = new Hubzero\Config\Registry();
-
-					// Create a new form
-					Hubzero\Form\Form::addFieldPath(Component::path('com_members') . DS . 'models' . DS . 'fields');
-
-					$form = new Hubzero\Form\Form('profile', array('control' => 'profile'));
-					$form->load($xml);
-					$form->bind($data);
-
-					$orcidFormField = $form->getField($this->orcidField->get('name'));
-
-					if (isset($this->registration['_profile'][$this->orcidField->get('name')]))
-					{
-						$orcidFormField->setValue($this->registration['_profile'][$this->orcidField->get('name')]);
-					} else {
-						$orcidFormField->setValue($this->orcidField->get('default_value'));
-					}
-
-					$errors = (!empty($this->xregistration->_invalid[$this->orcidField->get('name')])) ? '<span class="error">' . $this->xregistration->_invalid[$this->orcidField->get('name')] . '</span>' : '';
-					?>
-					<div class="form-group<?php echo $errors ? ' fieldWithErrors' : ''; ?>" id="input-<?php echo $this->orcidField->get('name'); ?>">
-						<?php
-						echo $orcidFormField->label;
-						echo $orcidFormField->input;
-						echo $errors;
-						?>
-					</div>
-					<script type="text/javascript">
-						const orcidBtn = document.getElementById('create-orcid');
-						orcidBtn.setAttribute('href', '/login?authenticator=orcid&disconnect=1');
-						orcidBtn.removeAttribute('target');
-						orcidBtn.removeAttribute('rel');
-
-						const orcidInput = document.getElementById('profile_orcid');
-						orcidInput.readOnly = true;
-
-						if (orcidInput.value) {
-							orcidBtn.classList.add('disabled');
-						}
-					</script>
 
 					<?php if ($this->registrationUsername == Field::STATE_READONLY) { ?>
 						<div class="form-group">
@@ -318,7 +273,7 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 			<div class="clear"></div>
 		<?php } ?>
 
-		<?php if ($this->registrationFullname != Field::STATE_HIDDEN) { ?>
+		<?php if ($this->registrationFullname != Field::STATE_HIDDEN || $this->registrationEmail != Field::STATE_HIDDEN) { ?>
 			<div class="explaination">
 				<?php if ($this->task == 'create') { ?>
 					<p><?php echo Lang::txt('COM_MEMBERS_REGISTER_ACTIVATION_EMAIL_HINT'); ?></p>
@@ -432,17 +387,17 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 
 		<?php
 		// Convert to XML so we can use the Form processor
-		// $xml = Field::toXml($this->fields, 'create');
+		$xml = Field::toXml($this->fields, 'create');
 
 		// Gather data to pass to the form processor
-		// $data = new Hubzero\Config\Registry();
+		$data = new Hubzero\Config\Registry();
 
 		// Create a new form
-		// Hubzero\Form\Form::addFieldPath(Component::path('com_members') . DS . 'models' . DS . 'fields');
+		Hubzero\Form\Form::addFieldPath(Component::path('com_members') . DS . 'models' . DS . 'fields');
 
-		// $form = new Hubzero\Form\Form('profile', array('control' => 'profile'));
-		// $form->load($xml);
-		// $form->bind($data);
+		$form = new Hubzero\Form\Form('profile', array('control' => 'profile'));
+		$form->load($xml);
+		$form->bind($data);
 
 		$scripts = array();
 		$toggle = array();
@@ -453,9 +408,13 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 
 				<?php foreach ($this->fields as $field): ?>
 					<?php
-					if ($field->get('name') === 'orcid') {
-						continue;
+
+                    // Add in class for JS selector to conditionally retrieve data from RoR Api based on members option 'rorApi'
+					$rorApiBoolean = \Component::params('com_members')->get('rorApi');
+					if (strtolower($field->get('name')) == "organization" && strtolower($field->get('type')) == "text" && $rorApiBoolean) {
+						echo "<span class='hidden rorApiAvailable'></span>";
 					}
+
 					$formfield = $form->getField($field->get('name'));
 
 					if ($field->options->count())

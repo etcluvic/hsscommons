@@ -310,7 +310,6 @@ class Media extends Base
 		$this->view->files   = array();
 		$this->view->type    = \Hubzero\Utility\Sanitize::paranoid(Request::getWord('type', ''));
 		$this->view->relpath = Request::getString('path', '/');
-		// $this->view->relpath = 'app' . DS . 'site' . DS . 'groups' . DS . 'uploads' . DS;
 
 		// make sure we default to uploads folder for non-super groups
 		if ($this->group->get('type') != 3 && (!$this->view->relpath || $this->view->relpath == '/'))
@@ -322,7 +321,7 @@ class Media extends Base
 		$this->view->relpath = explode('/', $this->view->relpath);
 		foreach ($this->view->relpath as $i => $p)
 		{
-			$this->view->relpath[$i] = preg_replace('/[^a-zA-Z0-9_\-\s]/', '', $p);
+			$this->view->relpath[$i] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $p);
 		}
 		$this->view->relpath = implode(DS, $this->view->relpath);
 
@@ -711,7 +710,7 @@ class Media extends Base
 		// clean file path
 		$filename = urldecode($filename);
 		$filename = Filesystem::clean($filename);
-		// $filename = str_replace(' ', '_', $filename);
+		$filename = str_replace(' ', '_', $filename);
 
 		while (file_exists($uploadDirectory . DS . $filename . '.' . $ext))
 		{
@@ -1055,8 +1054,7 @@ class Media extends Base
 		Request::checkToken(['get', 'post']);
 
 		//get request vars
-		// $name   = Request::getCmd('name', '');
-		$name   = Request::getString('name', '');
+		$name   = Request::getCmd('name', '');
 		$folder = Request::getString('folder', '');
 
 		//create return folder

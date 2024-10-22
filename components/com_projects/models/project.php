@@ -97,10 +97,15 @@ class Project extends Model
 		$this->params = $paramsRegistry;
 	}
 
+	/**
+	 * Get params as an array
+	 *
+	 * @return array
+	 */
 	protected function _getParsedParams()
 	{
 		$parsedParams = [];
-		$splitParams = explode("\n", $this->_tbl->get('params'));
+		$splitParams = explode("\n", $this->_tbl->get('params', ''));
 
 		foreach ($splitParams as $param)
 		{
@@ -1690,25 +1695,5 @@ class Project extends Model
 		}
 
 		return $src;
-	}
-
-	/**
-	 * Get the project's group synced role
-	 *
-	 * @return  int
-	 */
-	public function getGroupSyncedRole() {
-		$paramsArray = array_filter(explode("\n", $this->get('params')));
-		
-		// Find the group_synced_role param
-		foreach ($paramsArray as $param) {
-			$paramArray = explode("=", $param);
-			if ($paramArray[0] == "group_synced_role") {
-				return (int)$paramArray[1];
-			}
-		}
-
-		// If the param is not found, return the default value (0 for collaborator)
-		return 0;
 	}
 }

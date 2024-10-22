@@ -125,7 +125,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 				}
 
 				$formattedFilesize   = \Hubzero\Utility\Number::formatBytes($filesize);
-				$formattedDimensions = $dimensions[0] . 'px &times; ' . $dimensions[1] . 'px';
+				$formattedDimensions = $dimensions ? $dimensions[0] . 'px &times; ' . $dimensions[1] . 'px' : '';
 				$formattedModified   = Date::of($modified)->toLocal('m/d/Y g:ia');
 
 				// is this file an image
@@ -134,11 +134,6 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 
 				// build paths
 				$downloadPath = $baseURI . DS . 'File:' . $relFilePath;
-				
-				// Relative file download path to be displayed in the File Details section under the path field
-				$relDownloadPath = rtrim($baseURI, '/') . $relFilePath;
-
-				$viewPath = 'app' . DS . 'site' . DS . 'groups' . DS . $this->group->get('gidNumber') . DS . 'uploads' . DS . $file;
 				$movePath     = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=movefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
 				$renamePath   = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=renamefile&file=' .  $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
 				$extractPath  = Route::url('index.php?option=com_groups&cn='.$this->group->get('cn').'&controller=media&task=extractfile&file=' . $relFilePath . '&format=raw&' . Session::getFormToken() . '=1'); //tmpl=component');
@@ -179,7 +174,7 @@ $ckeditorQuery = '&type=' . $type . '&CKEditor=' . $ckeditor . '&CKEditorFuncNum
 							</li>
 						<?php endif; ?>
 						<li class="path">
-							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <p style="cursor: default;"><?php echo $relDownloadPath; ?></p>
+							<strong><?php echo Lang::txt('COM_GROUPS_MEDIA_FILE_PATH'); ?>: </strong> <span><?php echo $downloadPath; ?></span>
 						</li>
 						<li>
 							<?php if ($this->authorized && isset($ckeditor) && $ckeditor != '') : ?>

@@ -107,7 +107,7 @@ class Page extends Table
 		{
 			return false;
 		}
-		$this->_db->setQuery("SELECT title, alias, id FROM $this->_tbl WHERE event_id=" . $this->_db->quote(intval($event_id)) . " AND alias != 'event_" . $event_id . "_file' ORDER BY ordering ASC");
+		$this->_db->setQuery("SELECT title, alias, id FROM $this->_tbl WHERE event_id=" . $this->_db->quote(intval($event_id)) . " ORDER BY ordering ASC");
 		return $this->_db->loadObjectList();
 	}
 

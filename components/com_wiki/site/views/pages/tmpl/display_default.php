@@ -78,14 +78,7 @@ $this->js();
 <?php } ?>
 
 		<article class="wikipage">
-			<?php 
-			$currentUrl = Request::current();
-			if (strpos($currentUrl, 'projects') !== false && strpos($currentUrl, 'notes') !== false) {
-				echo $this->revision->get('pagetext'); 
-			} else {
-				echo $this->revision->get('pagehtml'); 
-			}
-			?>
+			<?php echo $this->revision->get('pagehtml'); ?>
 
 			<p class="timestamp">
 				<?php echo Lang::txt('COM_WIKI_PAGE_CREATED') . ' <time datetime="' . $this->page->created() . '">'.$this->page->created('date') . '</time>, ' . Lang::txt('COM_WIKI_PAGE_LAST_MODIFIED') . ' <time datetime="' . $this->revision->created() . '">' . $this->revision->created('date') . '</time>'; ?>

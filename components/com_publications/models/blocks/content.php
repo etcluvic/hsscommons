@@ -209,7 +209,7 @@ class Content extends Base
 	 *
 	 * @return  string  HTML
 	 */
-	public function buildContent( $pub = null, $viewname = 'edit', $status, $master )
+	public function buildContent( $pub, $viewname, $status, $master )
 	{
 		$html = '';
 
@@ -454,7 +454,7 @@ class Content extends Base
 			'name'		=> 'dataselector',
 			'type' 		=> 'attachment',
 			'label'		=> 'Add file(s)',
-			'about'		=> '<p>If multiple primary files are uploaded, only the first one can be previewed on the publication landing page. Previewable file formats include .pdf, .png, .jpg and .jpeg</p>',
+			'about'		=> '<p>Select a file or a number of files from the project repository</p>',
 			'aboutProv'	=> '<p>Attach a file or a number of files to be bundled together</p>',
 			'adminTips'	=> '',
 			'params' 	=> array (
@@ -506,7 +506,7 @@ class Content extends Base
 						'name'		=> 'dataselector',
 						'type' 		=> 'attachment',
 						'label'		=> 'Primary File(s)',
-						'about'		=> '<p>If multiple primary files are uploaded, only the first one can be previewed on the publication landing page. Previewable file formats include .pdf, .png, .jpg and .jpeg</p>',
+						'about'		=> '<p>Select a file or a number of files from the project repository</p>',
 						'aboutProv'	=> '<p>Attach a file or a number of files to be bundled together</p>',
 						'adminTips'	=> '',
 						'params' 	=> array (

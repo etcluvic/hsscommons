@@ -132,28 +132,17 @@ class Event extends Table
 				$select_date = $filters['select_date'];
 				$select_date_fin = $filters['select_date_fin'];
 
-				// $sql = "SELECT $this->_tbl.*
-				// 	FROM #__categories AS b, $this->_tbl
-				// 	WHERE $this->_tbl.catid = b.id
-				// 	AND (
-				// 	(
-				// 			(publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_up <= " . $this->_db->quote($select_date_fin . '%') . " AND publish_down IS NOT NULL AND publish_down != '0000-00-00 00:00:00')
-				// 		OR (publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date . '%') . " AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
-				// 		OR (publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
-				// 		OR (publish_up <= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date_fin . '%') . ")
-				// 	)
-				// 	AND $this->_tbl.state = '1'";
-
-				// Change made by Archie to fetch from the "#__events" table only instead of joining with the "#__events_categories" table
-				$sql = "SELECT * FROM $this->_tbl
-				WHERE (
-				(
-						(publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_up <= " . $this->_db->quote($select_date_fin . '%') . " AND publish_down IS NOT NULL AND publish_down != '0000-00-00 00:00:00')
-					OR (publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date . '%') . " AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
-					OR (publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
-					OR (publish_up <= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date_fin . '%') . ")
-				)
-				AND $this->_tbl.state = '1'";
+				$sql = "SELECT $this->_tbl.*
+					FROM #__categories AS b, $this->_tbl
+					WHERE $this->_tbl.catid = b.id
+					AND (
+					(
+							(publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_up <= " . $this->_db->quote($select_date_fin . '%') . " AND publish_down IS NOT NULL AND publish_down != '0000-00-00 00:00:00')
+						OR (publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date . '%') . " AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
+						OR (publish_up >= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down <= " . $this->_db->quote($select_date_fin . '%') . ")
+						OR (publish_up <= " . $this->_db->quote($select_date . '%') . " AND publish_down IS NOT NULL AND publish_down !='0000-00-00 00:00:00' AND publish_down >= " . $this->_db->quote($select_date_fin . '%') . ")
+					)
+					AND $this->_tbl.state = '1'";
 
 				$sql .= ($filters['category'] != 0) ? " AND b.id=" . intval($filters['category']) . ")" : ")";
 
@@ -182,15 +171,9 @@ class Event extends Table
 			case 'year':
 				$year = $filters['year'];
 
-				// Change made by Archie to prevent wrong formatting of year
-				// $sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
-				// 	WHERE $this->_tbl.catid = b.id
-				// 	AND publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year . '-01-01 00:00:00') . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
-				// 	AND $this->_tbl.state = '1'";
-
-				// Change made by Archie to fetch from the "#__events" table only instead of joining with the "#__events_categories" table
-				$sql = "SELECT * FROM $this->_tbl 
-					WHERE publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year . '-01-01 00:00:00') . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
+				$sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
+					WHERE $this->_tbl.catid = b.id
+					AND publish_up LIKE " . $this->_db->quote($year . '%') . " AND (publish_down >= " . $this->_db->quote($year . '%') . " OR publish_down = '0000-00-00 00:00:00' OR publish_down IS NULL)
 					AND $this->_tbl.state = '1'";
 
 				//did we pass in a scope filter
@@ -254,19 +237,9 @@ class Event extends Table
 				$select_date     = $filters['select_date'];
 				$select_date_fin = $filters['select_date_fin'];
 
-				// $sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
-				// 	WHERE $this->_tbl.catid = b.id AND
-				// 		((publish_up >= " . $this->_db->quote($select_date) . " AND publish_up <= " . $this->_db->quote($select_date_fin) . ") 
-				// 		OR (publish_down >= " . $this->_db->quote($select_date) . " AND publish_down <= " . $this->_db->quote($select_date_fin) . ") 
-				// 		OR (publish_up <= " . $this->_db->quote($select_date) . " AND publish_down >= " . $this->_db->quote($select_date_fin) . ") 
-				// 		OR (publish_up >= " . $this->_db->quote($select_date) . " AND publish_down <= " . $this->_db->quote($select_date_fin) . "))";
-
-				// $sql .= ($filters['category'] != 0) ? " AND b.id=" . $filters['category'] : "";
-				// $sql .= " AND $this->_tbl.state = '1'";
-
-				// Change made by Archie to fetch from the "#__events" table only instead of joining with the "#__events_categories" table
-				$sql = "SELECT * FROM $this->_tbl
-					WHERE ((publish_up >= " . $this->_db->quote($select_date) . " AND publish_up <= " . $this->_db->quote($select_date_fin) . ") 
+				$sql = "SELECT $this->_tbl.* FROM #__categories AS b, $this->_tbl
+					WHERE $this->_tbl.catid = b.id AND
+						((publish_up >= " . $this->_db->quote($select_date) . " AND publish_up <= " . $this->_db->quote($select_date_fin) . ") 
 						OR (publish_down >= " . $this->_db->quote($select_date) . " AND publish_down <= " . $this->_db->quote($select_date_fin) . ") 
 						OR (publish_up <= " . $this->_db->quote($select_date) . " AND publish_down >= " . $this->_db->quote($select_date_fin) . ") 
 						OR (publish_up >= " . $this->_db->quote($select_date) . " AND publish_down <= " . $this->_db->quote($select_date_fin) . "))";

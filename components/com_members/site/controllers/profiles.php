@@ -30,7 +30,6 @@ use App;
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'registration.php';
 include_once dirname(dirname(__DIR__)) . DS . 'models' . DS . 'member.php';
 include_once dirname(dirname(__DIR__)) . DS . 'helpers' . DS . 'filters.php';
-include_once dirname(dirname(__DIR__)) . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
 
 /**
  * Members controller class for profiles
@@ -58,6 +57,7 @@ class Profiles extends SiteController
 
 		//$this->registerTask('__default', 'browse');
 		$this->registerTask('promo-opt-out', 'incremOptOut');
+		$this->registerTask('queryorganization', 'getOrganizations');
 
 		parent::execute();
 	}
@@ -439,8 +439,7 @@ class Profiles extends SiteController
 			}])
 			->whereEquals($a . '.block', 0)
 			->where($a . '.activation', '>', 0)
-			->where($a . '.approved', '>', 0)
-			->whereEquals('usageAgreement', 1);
+			->where($a . '.approved', '>', 0);
 
 		// Tags
 		if ($filters['tags'])
@@ -582,23 +581,6 @@ class Profiles extends SiteController
 			->paginated('limitstart', 'limit')
 			->rows();
 
-		// Remove users from sorted display list if they set their sorting field to private
-		$hiddenMemberIds = [];
-		foreach($rows as $row) {
-			$sortBy = $filters['sort'];
-			if ($sortBy && $sortBy !== "name") {
-				$query = new \Hubzero\Database\Query;
-				$memberFields = $query->select('*')
-										->from('#__user_profiles')
-										->whereEquals('user_id', $row->id)
-										->whereEquals('profile_key', $sortBy)
-										->fetch();
-				if (!in_array($memberFields[0]->access, $access)) {
-					$hiddenMemberIds[] = $row->id;
-				}
-			}
-		}
-
 		// Set the page title
 		$title  = Lang::txt('COM_MEMBERS');
 		$title .= ($this->_task) ? ': ' . Lang::txt(strtoupper($this->_task)) : '';
@@ -627,19 +609,6 @@ class Profiles extends SiteController
 			Cache::put('members.stats', $stats, intval($this->config->get('cache_time', 15)));
 		}
 
-		// Get all users that this currently logged in user is following
-		$query = new \Hubzero\Database\Query;
-		$followings = $query->select('*')
-							->from('#__collections_following')
-							->whereEquals('follower_type', 'member')
-							->whereEquals('following_type', 'member')
-							->whereEquals('follower_id', User::get('id'))
-							->fetch();
-		$followingIds = [];
-		foreach ($followings as $following) {
-			$followingIds[] = $following->following_id;
-		}
-
 		// Instantiate the view
 		$this->view
 			->set('config', $this->config)
@@ -651,9 +620,6 @@ class Profiles extends SiteController
 			->set('past_month_members', $stats->past_month_members)
 			->set('total_members', $stats->total_members)
 			->set('total_public_members', $stats->total_public_members)
-			->set('sortBy', $filters['sort'])
-			->set('hidden_member_ids', $hiddenMemberIds)
-			->set('following_member_ids', $followingIds)
 			->display();
 	}
 
@@ -1542,14 +1508,9 @@ class Profiles extends SiteController
 		if ($name && !empty($name))
 		{
 			$member->set('givenName', trim($name['first']));
-			$middle = '';
-			if( trim($name['middle']) && strpos( trim($name['first']), trim($name['middle']) ) === FALSE )
-			{
-				$middle = trim($name['middle']);
-			}
-			$member->set('middleName', $middle);
+			$member->set('middleName', trim($name['middle']));
 			$member->set('surname', trim($name['last']));
-			
+
 			$name = implode(' ', $name);
 			$name = preg_replace('/\s+/', ' ', $name);
 
@@ -1634,6 +1595,14 @@ class Profiles extends SiteController
 		// Incoming profile edits
 		$profile = Request::getArray('profile', array(), 'post');
 		$field_to_check = Request::getArray('field_to_check', array());
+
+		// Querying the organization id on ror.org
+		// If RoR Api is turned off because of failed API or if key doesn't exist, don't retrieve list from Api.
+        $useRorApi = \Component::params('com_members')->get('rorApi');
+		if (isset($profile['organization']) && !empty($profile['organization']) && $useRorApi){
+			$id = $this->getOrganizationId($profile['organization']);
+			$profile['orgid'] = $id;
+		}
 
 		$old = Profile::collect($member->profiles);
 		$profile = array_merge($old, $profile);
@@ -2002,185 +1971,99 @@ class Profiles extends SiteController
 	}
 
 	/**
-	 * Follow an user
-	 * 
-	 * @return void
+	 * Perform querying of research organization based on the input value
+	 *
+	 * @return  array   matched research organization names
 	 */
-	public function followTask()
-	{
-		// Only logged-in users should ever get to this page
-		if (User::isGuest())
-		{
-			App::redirect(
-				Route::url('index.php?option=com_users&view=login&return=' . base64_encode(Request::current(true)), false)
-			);
+	public function getOrganizationsTask() {
+		$term = trim(Request::getString('term', ''));
+
+		if (strpos($term, ' ') !== false){
+			$term = str_replace(' ', '+', $term);
 		}
 
-		$followingId = Request::getInt('followingId', 0);
-		$followingName = Request::getString('followingName', '');
-		$redirectUrl = Request::getString('redirect', '');
+		$queryURL = 'https://api.ror.org/organizations?query=' . $term;
 
-		// Users cannot follow users that they already followed
-		$query = new \Hubzero\Database\Query;
-		$followings = $query->select('*')
-							->from('#__collections_following')
-							->whereEquals('follower_type', 'member')
-							->whereEquals('following_type', 'member')
-							->whereEquals('follower_id', User::get('id'))
-							->whereEquals('following_id', $followingId)
-							->fetch();
-		if (count($followings) > 0) {
-			App::redirect(base64_decode($redirectUrl), Lang::txt("You already follow user %s", $followingName), "warning");
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $queryURL);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$result = curl_exec($ch);
+
+		if (!$result){
+			return false;
 		}
 
-		// Add a following entry into the database
-		$query = new \Hubzero\Database\Query;
-		$query->insert('#__collections_following')
-				->values(['follower_type' => 'member', 'follower_id' => User::get('id'), 'following_type' => 'member', 'following_id' => $followingId, 'created' => date("Y-m-d H:M:s")])
-				->execute();
+		$info = curl_getinfo($ch);
 
-		// Notify the user that they are being followed
-		$currentUser = User::getInstance();
-		$followedUser = User::getInstance($followingId);
-		$mailer = new \Hubzero\Mail\Message();
+		$code = $info['http_code'];
 
-		// Set the sender
-		$mailer->addFrom(Config::get('mailfrom'), Config::get('sitename') . ' Administrator');
-
-		// Add a recipient
-		$mailer->addTo($followedUser->get('email'), $followedUser->get('name'));
-
-		// Set the subject
-		$mailer->setSubject('New follow on the HSS Commons');
-
-		// Set the body of the email
-		$mailer->addPart("<p>Hi " . $followedUser->get('name') . ",</p><p>" . $currentUser->get('name') . " has started following you on the Canadian HSS Commons. Please click <a href='" . Request::base() . "members" . DS . User::get('id') . "'>here</a> to view their profile.</p>Regards,<br>" . Config::get('sitename') . " Administrator", "text/html");
-
-		// Optionally add CC, BCC, attachments, etc.
-		// $mailer->addCc('cc@example.com');
-		// $mailer->addAttachment('/path/to/file');
-
-		// Send the email
-		if (!$mailer->send()) {
-			// Handle error
-			App::redirect(base64_decode($redirectUrl), Lang::txt("Followed user %s successfully but failed to notify that user", $followingName), "warning");
+		if (($code != 201) && ($code != 200)){
+			return false;
 		}
 
-		// Redirect to the page that made the request
-		App::redirect(base64_decode($redirectUrl), Lang::txt("Followed user %s successfully", $followingName), "success");
+		$organizations = [];
+
+		$resultObj = json_decode($result);
+
+		foreach ($resultObj->items as $orgObj){
+			$organizations[] = $orgObj->name;
+		}
+
+		curl_close($ch);
+
+		echo json_encode($organizations);
+		exit();
 	}
 
 	/**
-	 * Unfollow an user
-	 * 
-	 * @return void
+	 * Perform querying of research organization id on ror.org
+	 * @param   string   $organization
+	 *
+	 * @return  string   organization id
 	 */
-	public function unfollowTask()
-	{
-		// Only logged-in users should ever get to this page
-		if (User::isGuest())
-		{
-			App::redirect(
-				Route::url('index.php?option=com_users&view=login&return=' . base64_encode(Request::current(true)), false)
-			);
+	public function getOrganizationId($organization){
+		$org = trim($organization);
+		$id = "none";
+
+		if (strpos($org, ' ') !== false){
+			$org = str_replace(' ', '+', $org);
 		}
 
-		$unfollowingId = Request::getInt('unfollowingId', 0);
-		$unfollowingName = Request::getString('unfollowingName', '');
-		$redirectUrl = Request::getString('redirect', '');
+		$queryURL = "https://api.ror.org/organizations?query=" . $org;
 
-		// Users cannot unfollow users that they haven't followed
-		$query = new \Hubzero\Database\Query;
-		$followings = $query->select('*')
-							->from('#__collections_following')
-							->whereEquals('follower_type', 'member')
-							->whereEquals('following_type', 'member')
-							->whereEquals('follower_id', User::get('id'))
-							->whereEquals('following_id', $unfollowingId)
-							->fetch();
-		if (count($followings) == 0) {
-			App::redirect(base64_decode($redirectUrl), Lang::txt("You haven't followed user %s", $unfollowingName), "warning");
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $queryURL);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$result = curl_exec($ch);
+
+		if (!$result){
+			return false;
 		}
 
-		// Add a following entry into the database
-		$query = new \Hubzero\Database\Query;
-		$query->delete('#__collections_following')
-				->whereEquals('follower_type', 'member')
-				->whereEquals('follower_id', User::get('id')) 
-				->whereEquals('following_type', 'member')
-				->whereEquals('following_id', $unfollowingId)
-				->execute();
+		$info = curl_getinfo($ch);
 
-		// Redirect to the page that made the request
-		App::redirect(base64_decode($redirectUrl), Lang::txt("Unfollowed user %s successfully", $unfollowingName), "success");
-	}
+		$code = $info['http_code'];
 
-	/**
-	 * Auto-populate a member profile with ORCID
-	 * 
-	 * @return void
-	 */
-	public function orcidpopulateTask()
-	{
-		$id = Request::getInt('id', 0);
-		$redirectUrl = DS . "members" . DS . $id . DS . "profile";
-
-		// User can only auto populate their own profile
-		if (User::get('id') != $id) {
-			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NOT_AUTHORIZE"), "warning");
+		if (($code != 201) && ($code != 200)){
+			return false;
 		}
 
-		// Get profile's ORCID from database
-		$orcidRow = \Hubzero\Auth\Link::all()
-		->whereEquals('user_id', User::get('id'))
-		->row();
-		$orcid = $orcidRow->username;
+		$resultObj = json_decode($result);
 
-		if (!$orcid) {
-			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NO_ORCID"), "warning");
-		}
+		$org = str_replace('+', ' ', $org);
 
-		// Get user access token
-		$query = new \Hubzero\Database\Query;
-		$accessTokens = $query->select('*')
-							->from('#__xprofiles_tokens')
-							->whereEquals('user_id', User::get('id'))
-							->fetch();
-		if (count($accessTokens) == 0) {
-			App::redirect($redirectUrl, Lang::txt("COM_MEMBERS_ORCID_AUTO_POPULATE_NO_ACCESS_TOKEN"), "warning");
-		}
-
-		// Read ORCID profile record
-		$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
-		$orcidHandler->setAccessToken($accessTokens[0]->token);
-		$orcidHandler->setOrcid($orcid);
-		$orcidProfile = $orcidHandler->getProfile();
-
-		// Failed to get an ORCID profile
-		if (isset($orcidProfile->error)) {
-			App::redirect($redirectUrl, $orcidProfile->errorDescription, "error");
-		}
-		
-		// Replace Commons profile with ORCID profile
-		foreach($orcidProfile as $profile_key => $profile_value) {
-			if ($profile_value) {
-				$query = new \Hubzero\Database\Query;
-
-				$profile_field = $query->select('*')
-										->from('#__user_profiles')
-										->whereEquals('user_id', User::get('id'))
-										->whereEquals('profile_key', $profile_key)
-										->fetch();
-				if (count($profile_field) > 0) {
-					$query->alter('#__user_profiles', 'id', $profile_field[0]->id, ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
-				} else {
-					$query->push('#__user_profiles', ['user_id' => User::get('id'), 'profile_key' => $profile_key, 'profile_value' => $profile_value]);
-				}
+		foreach ($resultObj->items as $orgObj){
+			if ($org == $orgObj->name){
+				$id = $orgObj->id;
+				break;
 			}
 		}
 
+		curl_close($ch);
 
-		// Redirect to profile page
-		App::redirect($redirectUrl, 'Updated profile with ORCID successfully', 'success');
+		return $id;
 	}
+
 }

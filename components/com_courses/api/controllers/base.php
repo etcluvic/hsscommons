@@ -28,7 +28,7 @@ class base extends ApiController
 	protected function authorizeOrFail($action='manage')
 	{
 		// Make sure we have a valid user
-		// $this->requiresAuthentication();
+		$this->requiresAuthentication();
 
 		// Get the course id
 		$this->course_id      = Request::getInt('course_id', 0);

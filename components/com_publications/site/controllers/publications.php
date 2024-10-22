@@ -10,7 +10,6 @@ namespace Components\Publications\Site\Controllers;
 $componentPath = Component::path('com_publications');
 
 require_once "$componentPath/models/bundle.php";
-include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' . DS . 'Orcid' . DS . 'OrcidHandler.php';
 
 use Hubzero\Component\SiteController;
 use Hubzero\Pagination\Paginator;
@@ -31,7 +30,6 @@ use Event;
 use Lang;
 use User;
 use App;
-use stdClass;
 
 /**
  * Primary component controller
@@ -671,17 +669,17 @@ class Publications extends SiteController
 				'name'   => 'about',
 				'layout' => 'default'
 			));
-			$view->option      = $this->_option;
-			$view->controller  = $this->_controller;
-			$view->task        = $this->_task;
-			$view->config      = $this->config;
-			$view->database    = $this->database;
-			$view->publication = $this->model;
-			$view->authorized  = $authorized;
-			$view->restricted  = $restricted;
-			$view->version     = $publicationVersionId;
-			$view->bundle      = $bundle;
-			$view->sections    = $sections;
+			$view->set('option', $this->_option);
+			$view->set('controller', $this->_controller);
+			$view->set('task', $this->_task);
+			$view->set('config', $this->config);
+			$view->set('database', $this->database);
+			$view->set('publication', $this->model);
+			$view->set('authorized', $authorized);
+			$view->set('restricted', $restricted);
+			$view->set('version', $publicationVersionId);
+			$view->set('bundle', $bundle);
+			$view->set('sections', $sections);
 			$body              = $view->loadTemplate();
 
 			// Log page view (public pubs only)
@@ -714,19 +712,19 @@ class Publications extends SiteController
 		// Set the pathway
 		$this->_buildPathway();
 
-		$this->view->version        = $this->model->versionAlias;
-		$this->view->config         = $this->config;
-		$this->view->option         = $this->_option;
-		$this->view->publication    = $this->model;
-		$this->view->authorized     = $authorized;
-		$this->view->restricted     = $restricted;
-		$this->view->cats           = $cats;
-		$this->view->tab            = $tab;
-		$this->view->sections       = $sections;
-		$this->view->database       = $this->database;
-		$this->view->filters        = $filters;
-		$this->view->lastPubRelease = $lastPubRelease;
-		$this->view->contributable  = $this->_contributable;
+		$this->view->set('version', $this->model->versionAlias);
+		$this->view->set('config', $this->config);
+		$this->view->set('option', $this->_option);
+		$this->view->set('publication', $this->model);
+		$this->view->set('authorized', $authorized);
+		$this->view->set('restricted', $restricted);
+		$this->view->set('cats', $cats);
+		$this->view->set('tab', $tab);
+		$this->view->set('sections', $sections);
+		$this->view->set('database', $this->database);
+		$this->view->set('filters', $filters);
+		$this->view->set('lastPubRelease', $lastPubRelease);
+		$this->view->set('contributable', $this->_contributable);
 
 		if ($this->getError())
 		{
@@ -814,8 +812,8 @@ class Publications extends SiteController
 					'name'   => 'view',
 					'layout' => '_contents'
 				]);
-				$view->model  = $this->model;
-				$view->option = $this->_option;
+				$view->set('model', $this->model);
+				$view->set('option', $this->_option);
 				$view->display();
 
 				return;
@@ -1127,7 +1125,7 @@ class Publications extends SiteController
 	 * @param   string   $mime    Mimetype
 	 * @return  void
 	 */
-	protected function _serveup($inline = false, $p, $f, $mime)
+	protected function _serveup($inline, $p, $f, $mime)
 	{
 		$user_agent = (isset($_SERVER["HTTP_USER_AGENT"]))
 					? $_SERVER["HTTP_USER_AGENT"]
@@ -1213,7 +1211,6 @@ class Publications extends SiteController
 		$ajax    = Request::getInt('ajax', 0);
 		$doiErr  = Request::getInt('doierr', 0);
 
-
 		// Redirect if publishing is turned off
 		if (!$this->_contributable)
 		{
@@ -1232,8 +1229,8 @@ class Publications extends SiteController
 			'name'   => 'submit',
 			'layout' => 'default'
 		));
-		$this->view->option = $this->_option;
-		$this->view->config = $this->config;
+		$this->view->set('option', $this->_option);
+		$this->view->set('config', $this->config);
 
 		// Set page title
 		$this->_task_title = Lang::txt('COM_PUBLICATIONS_SUBMIT');
@@ -1272,9 +1269,8 @@ class Publications extends SiteController
 			}
 
 			// Block unauthorized access
-			if (!$project->access('owner') && !$project->access('member'))
+			if (!$project->access('owner') && !$project->access('content'))
 			{
-				return "Hello, world!";
 				$this->_blockAccess();
 				return;
 			}
@@ -1298,9 +1294,9 @@ class Publications extends SiteController
 				'name'   => 'error',
 				'layout' => 'restricted'
 			));
-			$this->view->error  = Lang::txt('COM_PUBLICATIONS_ERROR_NOT_FROM_CREATOR_GROUP');
-			$this->view->title  = $this->title;
-			$this->view->option = $this->_option;
+			$this->view->set('error', Lang::txt('COM_PUBLICATIONS_ERROR_NOT_FROM_CREATOR_GROUP'));
+			$this->view->set('title', $this->title);
+			$this->view->set('option', $this->_option);
 			$this->view->display();
 			return;
 		}
@@ -1319,8 +1315,8 @@ class Publications extends SiteController
 		);
 
 		$content = Event::trigger('projects.onProject', $plugin_params);
-		$this->view->content = (is_array($content) && isset($content[0]['html'])) ? $content[0]['html'] : '';
-		
+		$this->view->set('content', (is_array($content) && isset($content[0]['html'])) ? $content[0]['html'] : '');
+
 		if (isset($content[0]['msg']) && !empty($content[0]['msg']))
 		{
 			$this->setNotification($content[0]['msg']['message'], $content[0]['msg']['type']);
@@ -1350,12 +1346,12 @@ class Publications extends SiteController
 		}
 
 		// Output HTML
-		$this->view->project = $project;
-		$this->view->action  = $action;
-		$this->view->pid     = $pid;
-		$this->view->title   = $this->_title;
-		$this->view->msg     = $this->getNotifications('success');
-		$error               = $this->getError() ? $this->getError() : $this->getNotifications('error');
+		$this->view->set('project', $project);
+		$this->view->set('action', $action);
+		$this->view->set('pid', $pid);
+		$this->view->set('title', $this->_title);
+		$this->view->set('msg', $this->getNotifications('success'));
+		$error = $this->getError() ? $this->getError() : $this->getNotifications('error');
 		if ($error)
 		{
 			$this->view->setError($error);
@@ -2227,353 +2223,6 @@ class Publications extends SiteController
 			->set('diffs', $diffs)
 			->set('customFields', $customFields)
 			->display();
-	}
-
-	/*
-	* Written by Archie
-	* An API endpoint to fetch a publication from external APIs by DOI and update the current publication based on the data received
-	*/
-	public function retrieveTask()
-	{
-		$pid		= Request::getInt('pid', 0);
-		$vid		= Request::getInt('vid', 0);
-		$doi 		= Request::getString('doi', '');
-
-		// Enforce publication id
-		if (!$pid) {
-			echo json_encode(array(
-				"success" => 0,
-				"error" => "Missing publication Id"
-			));
-			exit();
-		}
-
-		// Enforce DOI
-		if (!$doi) {
-			echo json_encode(array(
-				"success" => 0,
-				"error" => "Missing DOI"
-			));
-			exit();
-		}
-
-		$curl = curl_init();
-
-		// Fetch publication info by DOI
-		curl_setopt_array($curl, [
-		CURLOPT_URL => 'https://api.crossref.org/works/' . $doi,
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_FOLLOWLOCATION => true,
-		CURLOPT_HTTPHEADER => [
-			'Content-Type: application/json'
-		]
-		]);
-
-		$response = curl_exec($curl);
-		$error = curl_error($curl);
-
-		curl_close($curl);
-
-		// Assign fetched information to the corresponding fields
-		$response = json_decode($response, true);
-
-		// Return "DOI not found" if response is empty
-		if (!$response) {
-			echo json_encode(array(
-				"success" => 0,
-				"error" => "DOI not found"
-			));
-			exit();
-		}
-		
-		$data = $response["message"];
-
-		$pub = new \Components\Publications\Models\Publication($pid, null, $vid);
-
-		// Get all authors by given and family names
-		if (isset($data['author']) && $data['author']) {
-			$authors = array();
-			foreach ($data['author'] as $author) {
-				$query = new \Hubzero\Database\Query;
-				$users = $query->select('*')  
-					->from('#__users')  
-					->whereEquals('givenName', $author['given'])
-					->whereEquals('surname', $author['family'])
-					->fetch();
-				if (count($users) > 0) {
-					$authors = array_merge($authors, $users);
-				} else {
-					$user 				= new stdClass;
-					$user->id			= 0;
-					$user->givenName	= $author['given'];
-					$user->surname		= $author['family'];
-					$authors[] = $user;
-				}
-			}
-		}
-
-		// Set authors of publication
-		$ordering = 1;
-		foreach ($authors as $author) {
-			$pAuthor = new Tables\Author($this->database);
-			if (!$pAuthor->loadAssociationByFirstLastName($author->id, $vid, $author->givenName, $author->surname)) {
-				$pAuthor->user_id      = $author->id;
-				$pAuthor->ordering     = $ordering;
-				$pAuthor->credit       = '';
-				$pAuthor->role         = '';
-				$pAuthor->status       = 1;
-				
-				$pAuthor->firstName    = $author->givenName;
-				$pAuthor->lastName     = $author->surname;
-				$pAuthor->name         = trim($pAuthor->firstName . ' ' . $pAuthor->lastName);
-
-				// Check if project member
-				$objO   = $pub->project()->table('Owner');
-				$owner  = $objO->getOwnerId($pub->project()->get('id'), $pAuthor->user_id, $pAuthor->name);
-
-				if ($owner) {
-					$pAuthor->project_owner_id = $owner;
-				} else {
-					$objO = new \Components\Projects\Tables\Owner($this->database);
-					$objO->projectid     = $pub->project()->get('id');
-					$objO->userid        = $pAuthor->user_id;
-					$objO->status        = $pAuthor->user_id ? 1 : 0;
-					$objO->added         = Date::toSql();
-					$objO->role          = 2;
-					$objO->invited_email = '';
-					$objO->invited_name  = $pAuthor->name;
-					$objO->store();
-					$pAuthor->project_owner_id = $objO->id;
-				}
-
-				$pAuthor->publication_version_id = $vid;
-				$pAuthor->created_by = User::getInstance()->get('id');
-				$pAuthor->created    = Date::toSql();
-
-				$pAuthor->store();
-
-				$ordering++;
-			}
-		}
-
-		// Build tags string
-		if (isset($data['subject']) && $data['subject'])
-		{
-			$tags = '';
-			$i = 0;
-			foreach ($data['subject'] as $tag)
-			{
-				$i++;
-				$tags .= trim($tag);
-				$tags .= $i == count($data['subject']) ? '' : ',';
-			}
-
-			// Add tags
-			$tagsHelper = new Helpers\Tags($this->database);
-			$tagsHelper->tag_object(User::getInstance()->get('id'), $vid, $tags, 1);
-		}
-
-		$version = $pub->get('version');
-		$version->title					= isset($data["title"])  && $data["title"] ? $data["title"][0] : "";
-		$version->description			= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
-		$version->abstract				= isset($data["abstract"]) && $data["abstract"] ? $data["abstract"] : "";
-		$version->doi					= $doi;
-		
-		// Previously published publications have the "forked_from" field set to its own version id
-		$version->forked_from			= $vid;
-		$version->store();
-
-
-		if ($error) {
-			echo json_encode(array(
-				"success" => 0,
-				"error" => $error
-			));
-		} else {
-			echo json_encode(array(
-				"success" => 1,
-				"data" => $data
-			));
-		}
-		
-		exit();
-	}
-
-	/*
-	* Written by Archie
-	* Import publications from selected ORCID publications of the currently logged in user
-	*/
-	public function orcidImportTask()
-	{
-		$redirectUrl = base64_decode(Request::getString('redirectUrl', '', 'post'));
-		$selectedPutCodes = Request::getString('putCodes', '', 'post');
-		Log::debug('Selected put codes: ' . $selectedPutCodes);
-
-		// Get current user's ORCID from database
-		$orcidRow = \Hubzero\Auth\Link::all()
-					->whereEquals('user_id', User::get('id'))
-					->row();
-		$orcid = $orcidRow->username;
-		$orcidWorks = [];
-		if ($selectedPutCodes && $orcid) {
-			// Get user access token
-			$query = new \Hubzero\Database\Query;
-			$accessTokens = $query->select('*')
-								->from('#__xprofiles_tokens')
-								->whereEquals('user_id', User::get('id'))
-								->fetch();
-
-			if (count($accessTokens) > 0) {
-				// Get information about the user's selected ORCID publications
-				$orcidHandler = new \Components\Members\Helpers\Orcid\OrcidHandler;
-				$orcidHandler->setAccessToken($accessTokens[0]->token);
-				$orcidHandler->setOrcid($orcid);
-				$orcidWorks = $orcidHandler->getMultipleWorks(null, $selectedPutCodes);
-			}
-			Log::debug($orcidWorks);
-
-			// Failed to get an ORCID works
-			if (isset($orcidWorks->error)) {
-				App::redirect($redirectUrl, $orcidWorks->errorDescription, "error");
-			}
-			
-			// Create new Commons publications
-			foreach($orcidWorks as $work) {
-				// $pub = new \Components\Publications\Models\Publication;
-
-				// Add authors
-				$authors = [];
-				foreach($work->authors as $author) {
-					$query = new \Hubzero\Database\Query;
-					
-					// Author has an ORCID
-					$userNotFound = true;
-					if ($author["orcid"]) {
-						$orcidUsers = $query->select('*')
-										->from('#__auth_link')
-										->whereEquals('username', $author["orcid"])
-										->fetch();
-						if (count($orcidUsers) > 0) {
-							$userId = $orcidUsers[0]->user_id;
-							$users = $query->select('*')  
-								->from('#__users')  
-								->whereEquals('id', $userId)
-								->fetch();
-							if (count($users) > 0) {
-								$userNotFound = false;
-								$authors = array_merge($authors, $users);
-							}
-						}
-					}
-					
-					// Can't find user in our system with ORCID or user doesn't ahve an ORCID
-					if ($userNotFound) {
-						// Search user by given name and surname
-						$users = $query->select('*')  
-							->from('#__users')  
-							->whereEquals('givenName', $author['givenname'])
-							->whereEquals('surname', $author['surname'])
-							->fetch();
-
-						if (count($users) > 0) {
-							$authors = array_merge($authors, $users);
-						} else {
-							$user 				= new StdClass();
-							$user->id			= 0;
-							$user->givenName	= $author['givenname'];
-							$user->surname		= $author['surname'];
-							$authors[] = $user;
-						}
-					}
-				}
-
-				// Create a new publication
-				$project = new \Components\Projects\Models\Project();
-				$plugin_params = array (
-					$project,
-					'create',
-					['publication']
-				);
-				$plugin_responses = Event::trigger('projects.onProject', $plugin_params);
-				$pub = $plugin_responses[0];
-				$version = $pub->get('version');
-				$vid = $version->id;
-
-				// Set publication category
-				if (isset($work->type) && $work->type) {
-					$query = new \Hubzero\Database\Query;
-
-					$query->alter('#__publications', 'id', $pub->get('id'), ['category' => $work->type]);
-				}
-
-				// Set authors of publication
-				$ordering = 1;
-				foreach ($authors as $author) {
-					$pAuthor = new \Components\Publications\Tables\Author($this->database);
-					if (!$pAuthor->loadAssociationByFirstLastName($author->id, $vid, $author->givenName, $author->surname)) {
-						$pAuthor->user_id      = $author->id;
-						$pAuthor->ordering     = $ordering;
-						$pAuthor->credit       = '';
-						$pAuthor->role         = '';
-						$pAuthor->status       = 1;
-						
-						$pAuthor->firstName    = $author->givenName;
-						$pAuthor->lastName     = $author->surname;
-						$pAuthor->name         = trim($pAuthor->firstName . ' ' . $pAuthor->lastName);
-
-						// Check if project member
-						$objO   = $pub->project()->table('Owner');
-						$owner  = $objO->getOwnerId($pub->project()->get('id'), $pAuthor->user_id, $pAuthor->name);
-
-						if ($owner) {
-							$pAuthor->project_owner_id = $owner;
-						} else {
-							$objO = new \Components\Projects\Tables\Owner($this->database);
-							$objO->projectid     = $pub->project()->get('id');
-							$objO->userid        = $pAuthor->user_id;
-							$objO->status        = $pAuthor->user_id ? 1 : 0;
-							$objO->added         = Date::toSql();
-							$objO->role          = 2;
-							$objO->invited_email = '';
-							$objO->invited_name  = $pAuthor->name;
-							$objO->store();
-							$pAuthor->project_owner_id = $objO->id;
-						}
-
-						$pAuthor->publication_version_id = $vid;
-						$pAuthor->created_by = User::getInstance()->get('id');
-						$pAuthor->created    = Date::toSql();
-
-						$pAuthor->store();
-
-						$ordering++;
-					}
-				}
-
-				// Set the rest of the information
-				$version->title 			= $work->title;
-				// $version->abstract 			= $work->abstract;
-				$version->description		= $work->description;
-				$version->doi				= $work->doi;
-				if ($work->url) {
-					$version->release_notes		= "<p>Original publication source: " . $work->journalTitle . " (<a href='" . $work->url . "'>" . $work->url . "</a>)</p><p>" . "Citation: " . $work->citation . "</p>";
-				} else {
-					$version->release_notes		= "<p>Original publication source: " . $work->journalTitle . "</p><p>Citation: " . $work->citation . "</p>";
-				}
-				
-				// This publication has been published previously
-				$version->forked_from		= $vid;
-				$version->store();
-
-				// Save ORCID info for this publication
-				$query = new \Hubzero\Database\Query;
-
-				$query->insert('#__publication_handler_assoc')
-					->values(['publication_version_id' => $vid, 'element_id' => $work->putCode, 'handler_id' => User::get('id'), 'params' => 'location=repo'])
-					->execute();
-			}
-		}
-		App::redirect($redirectUrl, 'Imported ORCID publications successfully', 'success');
 	}
 
 	/**

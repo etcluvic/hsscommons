@@ -471,10 +471,7 @@ class Log extends Table
 			$query .= " WHERE ";
 		}
 
-		// $query .= " V.state=1 AND V.main=1 AND V.published_up < '" . Date::toSql() . "'";
-
-		// Temporarily ignore published_up date as these were misinput when auto publishing
-		$query .= " V.state=1 AND V.main=1 AND (V.published_up < '" . Date::toSql() . "' OR V.published_up is NULL)";
+		$query .= " V.state=1 AND V.main=1 AND V.published_up < '" . Date::toSql() . "'";
 
 		$this->_db->setQuery($query);
 		$totals = $this->_db->loadObjectList();
@@ -644,19 +641,15 @@ class Log extends Table
 		$query .= ", (SELECT COALESCE(SUM(L.support_accesses) , 0) FROM $this->_tbl as L
 			WHERE L.publication_id=V.publication_id) AS total_support ";
 
-		// $query .= ", (SELECT VV.published_up FROM #__publication_versions as VV
-		// 	WHERE VV.publication_id=V.publication_id and VV.published_up IS NOT NULL
-		// 	ORDER BY VV.published_up ASC limit 1) AS first_published ";
-
-		// Temporarily ignore published_up date as these were misinput when auto publishing
 		$query .= ", (SELECT VV.published_up FROM #__publication_versions as VV
-			WHERE VV.publication_id=V.publication_id ORDER BY VV.published_up ASC limit 1) AS first_published ";
+			WHERE VV.publication_id=V.publication_id and VV.published_up IS NOT NULL
+			ORDER BY VV.published_up ASC limit 1) AS first_published ";
 
 		$query .= " FROM #__publications as C, #__publication_categories AS t, #__publication_versions as V ";
 		$query .= " LEFT JOIN #__publication_stats as S ON S.publication_id = V.publication_id AND period='14' AND datetime='" . $dthis . "-01 00:00:00' ";
 
 		$query .= " WHERE C.id=V.publication_id AND V.state=1 AND C.category = t.id
-					AND V.main=1 AND (V.published_up < '" . Date::toSql() . "' OR V.published_up is NULL) AND C.project_id=$projectid";
+					AND V.main=1 AND V.published_up < '" . Date::toSql() . "' AND C.project_id=$projectid";
 
 		$query .= $pubid ? " AND V.publication_id=" . $this->_db->quote($pubid) : "";
 		$query .= " GROUP BY V.publication_id ";

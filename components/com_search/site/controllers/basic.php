@@ -55,7 +55,6 @@ class Basic extends SiteController
 
 		// Get search results
 		$results = new Set($terms);
-		\Hubzero\Log::info($results);
 		$results->set_limit(Request::getState('global.list.limit', 'limit', Config::get('list_limit'), 'int'));
 		$results->set_offset(Request::getInt('limitstart', 0));
 		$results->collect(Request::getBool('force-generic'));

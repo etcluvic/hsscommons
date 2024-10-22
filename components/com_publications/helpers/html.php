@@ -219,7 +219,7 @@ class Html
 	 * @param   string  $c         Extra classes
 	 * @return  string  HTML
 	 */
-	public static function sections($sections, $cats, $active='about', $h, $c)
+	public static function sections($sections, $cats, $active, $h, $c)
 	{
 		$html = '';
 
@@ -441,8 +441,8 @@ class Html
 		// Show DOI if available
 		if ($publication->version->get('doi'))
 		{
-			$text .= "\t\t" . '<span class="doi">' . '<a href="https://doi.org/' . $publication->version->get('doi') . '">doi: ' . $publication->version->get('doi') . "</a>";
-			$text .= ' - <span><a href="' . Route::url($publication->link() . '&active=about') . '#citethis">' . Lang::txt('COM_PUBLICATION_CITE_THIS') . '</a></span></span>' . "\n";
+			$text .= "\t\t" . '<span class="doi">' . 'doi:' . $publication->version->get('doi');
+			$text .= ' - <span><a href="' . Route::url($publication->link() . '&active=about') . '#citethis">' . Lang::txt('cite this') . '</a></span></span>' . "\n";
 		}
 
 		// Show archival status (mkAIP)
@@ -595,7 +595,7 @@ class Html
 						: 'index.php?option=com_projects&alias='
 						. $publication->project()->get('alias') . '&active=publications';
 
-				$msg .= ' <a class="manage-text" href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
+				$msg .= ' <a href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
 			}
 		}
 
@@ -857,16 +857,16 @@ class Html
 			'name'      => 'view',
 			'layout'    => '_primary'
 		));
-		$view->option   = 'com_publications';
-		$view->disabled = $disabled;
-		$view->class    = $class;
-		$view->href     = $href;
-		$view->title    = $title;
-		$view->action   = $action;
-		$view->xtra     = $xtra;
-		$view->pop      = $pop;
-		$view->msg      = $msg;
-		$view->options  = $options;
+		$view->set('option', 'com_publications');
+		$view->set('disabled', $disabled);
+		$view->set('class', $class);
+		$view->set('href', $href);
+		$view->set('title', $title);
+		$view->set('action', $action);
+		$view->set('xtra', $xtra);
+		$view->set('pop', $pop);
+		$view->set('msg', $msg);
+		$view->set('options', $options);
 
 		return $view->loadTemplate();
 	}
@@ -890,21 +890,21 @@ class Html
 				'layout'  =>'statusbar'
 			)
 		);
-		$view->row           = $item->row;
-		$view->version       = $item->version;
-		$view->panels        = $item->panels;
-		$view->active        = isset($item->active) ? $item->active : null;
-		$view->move          = isset($item->move) ? $item->move : 0;
-		$view->step          = $step;
-		$view->lastpane      = $item->lastpane;
-		$view->option        = $item->option;
-		$view->project       = $item->project;
-		$view->current_idx   = $item->current_idx;
-		$view->last_idx      = $item->last_idx;
-		$view->checked       = $item->checked;
-		$view->url           = $item->url;
-		$view->review        = $review;
-		$view->show_substeps = $showSubSteps;
+		$view->set('row', $item->row);
+		$view->set('version', $item->version);
+		$view->set('panels', $item->panels);
+		$view->set('active', isset($item->active) ? $item->active : null);
+		$view->set('move', isset($item->move) ? $item->move : 0);
+		$view->set('step', $step);
+		$view->set('lastpane', $item->lastpane);
+		$view->set('option', $item->option);
+		$view->set('project', $item->project);
+		$view->set('current_idx', $item->current_idx);
+		$view->set('last_idx', $item->last_idx);
+		$view->set('checked', $item->checked);
+		$view->set('url', $item->url);
+		$view->set('review', $review);
+		$view->set('show_substeps', $showSubSteps);
 		$view->display();
 	}
 
@@ -1151,7 +1151,7 @@ class Html
 	 * @param   boolean  $hubMessage
 	 * @return  boolean
 	 */
-	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false, $overwriteEmailConfig=false)
+	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false)
 	{
 		if (!$subject || !$message || empty($addressees))
 		{
@@ -1159,7 +1159,7 @@ class Html
 		}
 
 		// Is messaging turned on?
-		if ($publication->config('email') != 1 && !$overwriteEmailConfig)
+		if ($publication->config('email') != 1)
 		{
 			return false;
 		}

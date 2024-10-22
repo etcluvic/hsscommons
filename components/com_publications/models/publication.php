@@ -760,7 +760,7 @@ class Publication extends Obj
 	 *
 	 * @return  mixed
 	 */
-	public function authors($overwrite = false)
+	public function authors()
 	{
 		if (!isset($this->_tblAuthors))
 		{
@@ -774,9 +774,6 @@ class Publication extends Obj
 		{
 			$this->_authors   = $this->_tblAuthors->getAuthors($this->version->id);
 			$this->_submitter = $this->_tblAuthors->getSubmitter($this->version->id, $this->version->created_by);
-		}
-		if ($overwrite) {
-			return $this->_tblAuthors->getAuthors($this->version->id, 1, 1, true);
 		}
 
 		return $this->_authors;
@@ -851,10 +848,10 @@ class Publication extends Obj
 						$contributor->firstName = array_shift($parts);
 						$contributor->middleName = implode(' ', $parts);
 					}
-					$name .= ', ' . substr(stripslashes($contributor->firstName), 0, 1) . '.';
+					$name .= ', ' . mb_substr(stripslashes($contributor->firstName), 0, 1) . '.';
 					if ($contributor->middleName)
 					{
-						$name .= ' ' . substr(stripslashes($contributor->middleName), 0, 1) . '.';
+						$name .= ' ' . mb_substr(stripslashes($contributor->middleName), 0, 1) . '.';
 					}
 				}
 				else
@@ -1005,43 +1002,6 @@ class Publication extends Obj
 		}
 
 		return $this->_attachments;
-	}
-
-	/**
-	 * Get the attachment that is previewed. Return null if there is no attachment found for the publication.
-	 *
-	 * @return  mixed
-	 */
-	public function getPreviewAttachment() {
-		if ($this->_attachments && count($this->_attachments) > 0) {
-			$allowedFileExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'csv'];
-			$firstFile = null;
-			// Preview first primary file by default
-			if (count($this->_attachments[1]) > 0) {
-				$firstFile = $this->_attachments[1][0];
-			// Preview first supporting file if there is no primary file
-			} else if (count($this->_attachments[2]) > 0) {
-				$firstFile = $this->_attachments[2][0];
-			// Preview gallery file is there is no primary or supporting file
-			} else if (count($this->_attachments[3]) > 0) {
-				$firstFile = $this->_attachments[3][0];
-			}
-
-			// Only allow certain file types to be previewed
-			if ($firstFile) {
-				$splittedFilePath = explode('.', $firstFile->path);
-				$fileExtension = strtolower($firstFile->path ? end($splittedFilePath) : '');
-				if (in_array($fileExtension, $allowedFileExtensions)) {
-					return $firstFile;
-				} else {
-					return null;
-				}
-			}
-
-			return $firstFile;
-		}
-		
-		return null;
 	}
 
 	/**
@@ -2420,22 +2380,5 @@ class Publication extends Obj
 		$series = $this->_tblAttachment->getSeries($this->version->id);
 
 		return $series;
-	}
-
-	/**
-	 * Check if an user is an author of the publication
-	 * 
-	 * @param	int		$userId
-	 * @return	bool	true if the user is an author, false otherwise
-	 */
-	public function isAuthor($userId) {
-		$pubAuthors = $this->authors();
-		foreach($pubAuthors as $author) {
-			if ($author->user_id === $userId) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

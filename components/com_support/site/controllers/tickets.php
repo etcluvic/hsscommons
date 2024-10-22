@@ -683,7 +683,7 @@ class Tickets extends SiteController
 		}
 
 		if (!$filters['show'] || ($filters['show'] > 0 && !$matchQuery))
-		{	
+		{
 			// Jump back to the beginning of the folders list
 			// and try to find the first query available
 			// to make it the current "active" query
@@ -801,14 +801,14 @@ class Tickets extends SiteController
 
 		if ($row->get('verified') && $this->acl->check('update', 'tickets') > 0)
 		{
-			if (trim($this->config->get('group')))
+			if (trim($this->config->get('group','')))
 			{
 				$lists['owner'] = $this->_userSelectGroup(
 					'problem[owner]',
 					'',
 					1,
 					'',
-					trim($this->config->get('group'))
+					trim($this->config->get('group',''))
 				);
 			}
 			else
@@ -1076,12 +1076,6 @@ class Tickets extends SiteController
 		{
 			$this->setError($row->getError());
 		}
-
-		// Make this user watch the ticket by default
-		$watching = Watching::blank();
-		$watching->set('user_id', User::get('id'));
-		$watching->set('ticket_id', $row->get('id'));
-		$watching->save();
 
 		$attachment = $this->uploadTask($row->get('id'));
 
@@ -1612,14 +1606,14 @@ class Tickets extends SiteController
 				$row->get('group_id')
 			);
 		}
-		elseif (trim($this->config->get('group')))
+		elseif (trim($this->config->get('group','')))
 		{
 			$lists['owner'] = $this->_userSelectGroup(
 				'ticket[owner]',
 				$row->get('owner'),
 				1,
 				'',
-				trim($this->config->get('group'))
+				trim($this->config->get('group',''))
 			);
 		}
 		else
@@ -2075,20 +2069,6 @@ class Tickets extends SiteController
 				],
 				'recipients' => $recipients
 			]);
-		}
-
-		// Email the owner of the ticket if they don't have an account
-		if ($old->get('email') && !$old->get('owner') && Request::getInt('email_submitter', 0) == 1) {
-			$email = $old->get('email');
-			$subject = "Comment on your ticket on HSSCommons";
-			$contents = "Your ticket:\n\n '" . $old->get('summary') . "'\n\n";
-			$contents .= User::get('name') . " commented:\n\n'" . $comment . "'";
-			$from = array(
-				'name'      => Lang::txt('COM_SUPPORT_EMAIL_FROM', Config::get('sitename')),
-				'email'     => Config::get('mailfrom'),
-				'multipart' => md5(date('U'))  // Html email
-			);
-			Utilities::sendEmail($email, $subject, $contents, $from);
 		}
 
 		// Display the ticket with changes, new comment

@@ -514,15 +514,7 @@ abstract class Result
 	 * @return     unknown Return description (if any) ...
 	 */
 	public function get_excerpt()
-	{	
-		// Added by Archie: Show members' bio in 300 characters
-		if ($this->get_plugin() === "members") {
-			$member = \Components\Members\Models\Member::one($this->id);
-			if ($member) {
-				$this->excerpt = $member->get("bio");
-				$this->excerpt = (strlen($this->excerpt) > 300) ? substr($this->excerpt, 0, 300) . '...' : $this->excerpt;
-			}
-		}
+	{
 		if (!$this->excerpt)
 		{
 			$descr = preg_replace('#(?:[{]xhub:.*?[}]|[{}]|[\#][!]html)#ixms', '', $this->description);

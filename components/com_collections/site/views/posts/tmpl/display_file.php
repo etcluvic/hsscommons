@@ -15,8 +15,7 @@ $content = ($content ?: $item->description('parsed'));
 
 if ($item->get('title')) { ?>
 		<h4>
-			<!-- <?php echo $this->escape(stripslashes($item->get('title'))); ?> -->
-			<?php echo $item->get('title'); ?>
+			<?php echo $this->escape(stripslashes($item->get('title'))); ?>
 		</h4>
 <?php }
 

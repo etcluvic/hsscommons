@@ -10,12 +10,8 @@ defined('_HZEXEC_') or die();
 
 $item = $this->row->item();
 
-// $content = $this->row->description('parsed');
-// $content = ($content ?: $item->description('parsed'));
-$content = "<strong>Repository item description:</strong>";
-$content .= $item->description('parsed');
-$extraNote = $this->row->description('parsed');
-$content .= ($extraNote ? "<strong>Notes:</strong> " . $extraNote : "");
+$content = $this->row->description('parsed');
+$content = ($content ?: $item->description('parsed'));
 ?>
 		<p class="link">
 			<a href="<?php echo stripslashes($item->get('url')); ?>" rel="external nofollow noreferrer">
