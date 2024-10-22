@@ -30,12 +30,6 @@ $this->css()
 						<input type="hidden" name="sortby" value="<?php echo $this->escape($this->filters['sortby']); ?>" />
 						<input type="hidden" name="tag" value="<?php echo $this->escape($this->filters['tag']); ?>" />
 					</fieldset>
-					<div>
-                        <label for="filter-primary-files">
-                            <input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" >
-                            <?php echo Lang::txt('Only display publications with primary files'); ?>
-                        </label>
-                    </div>
 					<?php if ($this->filters['tag']) { ?>
 						<div class="applied-tags">
 							<ol class="tags">
@@ -113,6 +107,12 @@ $this->css()
 											<option value="<?php echo $item->id; ?>"<?php echo ($this->filters['category'] == $item->id) ? ' selected="selected"' : ''; ?>><?php echo $this->escape(stripslashes($item->name)); ?></option>
 										<?php } ?>
 									</select>
+								</li>
+								<li>
+									<label for="filter-primary-files">
+										<input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" >
+										<?php echo Lang::txt('Only display publications with primary files'); ?>
+									</label>
 								</li>
 							</ul>
 						<?php } ?>
