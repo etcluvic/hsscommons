@@ -34,7 +34,7 @@ class File extends Obj
 	 * @param   string  $repoPath
 	 * @return  void
 	 */
-	public function __construct($localPath = null, $repoPath = null)
+	public function __construct($localPath = '', $repoPath = '')
 	{
 		$this->set('localPath', $localPath); // Path to item within repo
 
