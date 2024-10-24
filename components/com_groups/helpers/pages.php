@@ -388,8 +388,8 @@ class Pages
 			'layout'    => $type
 		));
 
-		$eview->option     = Request::getCmd('option', 'com_groups');
-		$eview->controller = Request::getCmd('controller', 'groups');
+		$eview->set('option', Request::getCmd('option', 'com_groups'));
+		$eview->set('controller', Request::getCmd('controller', 'groups'));
 		$eview->group      = $group;
 		$eview->object     = $object;
 		$html = $eview->loadTemplate();
@@ -657,13 +657,13 @@ class Pages
 		$version->set('content', trim($content));
 
 		// set vars to view
-		$view->user       = User::getInstance();
-		$view->group      = $group;
-		$view->page       = $page;
-		$view->version    = $version;
-		$view->authorized = $authorized;
-		$view->config     = Component::params('com_groups');
-		$view->option     = 'com_groups';
+		$view->set('user', User::getInstance());
+		$view->set('group', $group);
+		$view->set('page', $page);
+		$view->set('version', $version);
+		$view->set('authorized', $authorized);
+		$view->set('config', Component::params('com_groups'));
+		$view->set('option ', 'com_groups');
 
 		// return rendered template
 		return $view->loadTemplate();

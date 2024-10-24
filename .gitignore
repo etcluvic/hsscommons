@@ -6,19 +6,8 @@ migrations/
 /config/
 loglog.txt
 .DS_Store
-<<<<<<< HEAD
 
 # Generic and auto-generated files
 index.html
 /index.php
-=======
-bootstrap/administrator/
-bootstrap/api/*
-bootstrap/cli/*
-bootstrap/index.html
-bootstrap/site/index.html
-bootstrap/site/language/index.html
-bootstrap/site/language/overrides/index.html
-./index.php
->>>>>>> 9d478f6c6746fc14e7375f9b52c71e3a4f35d13f
 .vscode/launch.json
