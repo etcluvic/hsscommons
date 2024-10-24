@@ -93,7 +93,7 @@ class plgPublicationsDublincore extends \Hubzero\Plugin\Plugin
 			{
 				$contributor->organization = $contributor->p_organization;
 			}
-			$contributor->organization = stripslashes(trim($contributor->organization));
+			$contributor->organization = stripslashes(trim($contributor->organization ? $contributor->organization : ""));
 
 			Document::setMetaData('dcterms.creator', $view->escape($name . ($contributor->organization ? ', ' . $contributor->organization : '')));
 		}
