@@ -328,7 +328,7 @@ class plgSystemLanguageFilter extends \Hubzero\Plugin\Plugin
 
 			// Redirect only if not in post
 			$post = Request::get('POST');
-			if (!empty($lang_code) && (Request::method() != 'POST' || count($post) == 0))
+			if (!empty($lang_code) && (Request::method() != 'POST' || !$post || count($post) == 0))
 			{
 				if ($this->params->get('remove_default_prefix', 0) == 0)
 				{
