@@ -90,7 +90,7 @@ class plgPublicationsGooglescholar extends \Hubzero\Plugin\Plugin
 
 		foreach ($publication->_authors as $contributor)
 		{
-			if (strtolower($contributor->role) == 'submitter')
+			if ($contributor->role && strtolower($contributor->role) == 'submitter')
 			{
 				continue;
 			}
