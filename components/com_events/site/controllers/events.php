@@ -905,7 +905,7 @@ class Events extends SiteController
 			'row' => $row,
 			'authorized' => $authorized,
 			'fields' => $fields,
-			'config' => $config,
+			'config' => $this->config,
 			'categories' => $categories,
 			'offset' => $offset,
 			'tags' => $tags,
@@ -1898,6 +1898,7 @@ class Events extends SiteController
 		}
 		else
 		{
+			$row->id = null;
 			$state = 'add';
 
 			// New - set created info
