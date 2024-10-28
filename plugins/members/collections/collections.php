@@ -1015,6 +1015,11 @@ class plgMembersCollections extends \Hubzero\Plugin\Plugin
 			return $this->_edit($item);
 		}
 
+		// Update for PHP 8.2: id cannot by an emptry string. It has to be null.
+		if ($item->get("id") === "") {
+			$item->set("id", null);
+		}
+
 		// Add some data
 		if ($files  = Request::getArray('fls', '', 'files'))
 		{
