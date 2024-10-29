@@ -172,6 +172,12 @@ $profileOrcid = $orcidRow->username;
 					}
 					$name = $c[$key];
 					$url = Route::url($this->profile->link() . '&active=' . $key);
+					
+					// If we are on the contributions tab, we need to add the area to the URL
+					if ($key == 'contributions') 
+					{
+						$url = Route::url($this->profile->link() . '&active=' . $key . '&area=impact');
+					}
 					$cls = ($this->active == $key) ? 'active' : '';
 					$tab_name = ($this->active == $key) ? $name : $tab_name;
 
