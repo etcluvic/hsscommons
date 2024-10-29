@@ -316,7 +316,7 @@ class connections
 	public function browse()
 	{
 		// Set up view
-		$connection_params = json_decode($this->connection->params);
+		$connection_params = json_decode($this->connection->params ? $this->connection->params : "");
 		if (!Request::getString('disclosure_confirmed', 0) && !$connection_params) {
 			return $this->disclosure();
 		}
