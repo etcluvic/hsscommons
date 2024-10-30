@@ -92,7 +92,7 @@ $complete = $curatorStatus->status == 1 && $required ? $curatorStatus->status : 
 $updated  = $curatorStatus->updated && (($curatorStatus->status == 3 && !$complete)
 		|| $curatorStatus->status == 1 || $curatorStatus->status == 0) ? true : false;
 
-$handlerOptions = count($this->attachments) > 0 && $useHandles ? $modelHandler->showHandlers($this->pub, $this->elementId, $handlers, $handler, $this->attachments, $props) : null;
+$handlerOptions = count($this->attachments ? $this->attachments : []) > 0 && $useHandles ? $modelHandler->showHandlers($this->pub, $this->elementId, $handlers, $handler, $this->attachments, $props) : null;
 
 $elementUrl = Route::url($this->pub->link('editversion') . '&section=' . $this->master->block . '&step=' . $this->master->blockId . '&move=continue' . '&el=' . $this->elementId . '#' . $elName);
 
@@ -105,7 +105,7 @@ echo $complete == 1 ? ' el-complete' : ' el-incomplete'; ?> <?php if ($coming) {
 		<div class="block-subject withhandler">
 			<span class="checker">&nbsp;</span>
 			<h5 class="element-title">
-				<?php echo $this->manifest->label; ?> <?php if (count($this->attachments)) { echo '(' . count($this->attachments) .')'; } ?>
+				<?php echo $this->manifest->label; ?> <?php if (count($this->attachments ? $this->attachments : [])) { echo '(' . count($this->attachments ? $this->attachments : []) .')'; } ?>
 				<span class="element-options"><a href="<?php echo $elementUrl; ?>"><?php echo Lang::txt('[edit]'); ?></a></span>
 			</h5>
 		</div>
@@ -118,13 +118,13 @@ echo $complete == 1 ? ' el-complete' : ' el-incomplete'; ?> <?php if ($coming) {
 			<label id="<?php echo $elName; ?>-lbl">
 				<?php if ($required) { ?><span class="required"><?php echo Lang::txt('Required'); ?></span><?php } ?>
 				<?php if (!$required) { ?><span class="optional"><?php echo Lang::txt('Optional'); ?></span><?php } ?>
-				<?php echo $this->manifest->label; ?> <?php if (count($this->attachments)) { echo '(' . count($this->attachments) . ')'; }?>
+				<?php echo $this->manifest->label; ?> <?php if (count($this->attachments ? $this->attachments : [])) { echo '(' . count($this->attachments ? $this->attachments : []) . ')'; }?>
 			</label>
 			<?php echo $this->pub->_curationModel->drawCurationNotice($curatorStatus, $props, 'author', $elName); ?>
 			<div class="list-wrapper">
 				<ul class="itemlist">
 					<?php
-					if (count($this->attachments) > 0)
+					if (count($this->attachments ? $this->attachments : []) > 0)
 					{
 						$i = 1;
 
@@ -155,7 +155,7 @@ echo $complete == 1 ? ' el-complete' : ' el-incomplete'; ?> <?php if ($coming) {
 					?>
 				</ul>
 				<?php
-				if ($max > count($this->attachments))
+				if ($max > count($this->attachments ? $this->attachments : []))
 				{
 					// Draw link to select more items
 					$this->view('_select', 'attachments')
