@@ -5040,6 +5040,20 @@ ol.comments .time {
 .container .entries-menu select {
   margin-bottom: 0.5em;
 }
+/* Publication browse filters */
+.container .filter-options label[for="filter-primary-files"] {
+  font-size: 14px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.container .filter-options #filter-primary-files {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #007BFF;
+}
 .container .filter-options,
 .container .user-options {
   border: none;
