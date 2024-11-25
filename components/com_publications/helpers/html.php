@@ -441,8 +441,8 @@ class Html
 		// Show DOI if available
 		if ($publication->version->get('doi'))
 		{
-			$text .= "\t\t" . '<span class="doi">' . '<a href="https://doi.org/' . $publication->version->get('doi') . '">doi: ' . $publication->version->get('doi') . "</a>";
-			$text .= ' - <span><a href="' . Route::url($publication->link() . '&active=about') . '#citethis">' . Lang::txt('COM_PUBLICATION_CITE_THIS') . '</a></span></span>' . "\n";
+			$text .= "\t\t" . '<span class="doi">' . 'doi:' . $publication->version->get('doi');
+			$text .= ' - <span><a href="' . Route::url($publication->link() . '&active=about') . '#citethis">' . Lang::txt('cite this') . '</a></span></span>' . "\n";
 		}
 
 		// Show archival status (mkAIP)
@@ -595,7 +595,7 @@ class Html
 						: 'index.php?option=com_projects&alias='
 						. $publication->project()->get('alias') . '&active=publications';
 
-				$msg .= ' <a class="manage-text" href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
+				$msg .= ' <a href="' . Route::url($publication->link('editversion')) . '">' . Lang::txt('COM_PUBLICATIONS_STATUS_MSG_MANAGE_PUBLICATION') . '</a>.';
 			}
 		}
 
@@ -1151,7 +1151,7 @@ class Html
 	 * @param   boolean  $hubMessage
 	 * @return  boolean
 	 */
-	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false, $overwriteEmailConfig=false)
+	public static function notify($publication, $addressees = array(), $subject = null, $message = null, $hubMessage = false)
 	{
 		if (!$subject || !$message || empty($addressees))
 		{
@@ -1159,7 +1159,7 @@ class Html
 		}
 
 		// Is messaging turned on?
-		if ($publication->config('email') != 1 && !$overwriteEmailConfig)
+		if ($publication->config('email') != 1)
 		{
 			return false;
 		}
@@ -1250,6 +1250,178 @@ class Html
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Get files in data directory of database publication
+	 *
+	 * @param   int  $publication_id
+	 * @param   int  $publication_version_id
+	 *
+	 * @return  array or false
+	 */
+	public static function getdatabaseFiles($publication_id, $publication_version_id)
+	{
+		$path = self::buildPubPath($publication_id, $publication_version_id, '', '', 1);
+		$path .= DIRECTORY_SEPARATOR . "data";
+		
+		if (!opendir($path))
+		{
+			return false;
+		}
+		
+		return self::getFileNames($path);
+	}
+	
+	/**
+	 * Get file names in data directory of database publication
+	 *
+	 * @param   string  $path
+	 *
+	 * @return  array
+	 */
+	public static function getFileNames($path)
+	{
+		$files = [];
+		
+		$dirHandle = opendir($path);
+		
+		while (false !== ($fileName = readdir($dirHandle)))
+		{
+			$tnPattern = '/\_tn\.gif/';
+			$mediumPattern = '/\_medium\.gif/';
+			
+			if ($fileName == '.' || $fileName == '..'
+			|| preg_match($tnPattern, $fileName, $matches, PREG_OFFSET_CAPTURE)
+			|| preg_match($mediumPattern, $fileName, $matches, PREG_OFFSET_CAPTURE))
+			{
+				continue;
+			}
+			
+			$subDir = $path . DIRECTORY_SEPARATOR . $fileName;
+			if (is_dir($subDir))
+			{
+				self::getFileNames($subDir);
+			}
+			else
+			{
+				$files[] = $path . DIRECTORY_SEPARATOR . $fileName;
+			}
+		}
+		closedir($dirHandle);
+		
+		return $files;
+	}
+	
+	/**
+	 * Get MIME type of files in the publication
+	 *
+	 * @param   int  $pubType	publication type
+	 * @param   int  $publication_id	publication id
+	 * @param   int  $publication_version_id	publication version id
+	 * @param   string  $secret	publication secret
+	 * @param   object array  $attachments	publication attachments
+	 *
+	 * @return  array
+	 */
+	public static function getMimeTypes($pubType, $publication_id, $publication_version_id, $secret, $attachments)
+	{
+		$mimeTypes = [];
+		
+		if ($pubType == 1)
+		{
+			self::getMIMEtypesOfPrimarySupportFiles($publication_id, $publication_version_id, $secret, 1, $attachments, $mimeTypes);
+		}
+		
+		if (array_key_exists(2, $attachments))
+		{
+			self::getMIMEtypesOfPrimarySupportFiles($publication_id, $publication_version_id, $secret, 2, $attachments, $mimeTypes);
+		}
+		
+		if (array_key_exists(3, $attachments))
+		{
+			self::getMIMEtypesOfGalleryFile($publication_id, $publication_version_id, $mimeTypes);
+		}
+		
+		return $mimeTypes;
+	}
+	
+	/**
+	 * Get the MIME types for primary file and support file
+	 *
+	 * @param   object  $pub	publication model
+	 * @param   int  $role
+	 * @param   array  $attachments
+	 * @param   array  $mimeTypes
+	 *
+	 * @return  null or false
+	 */
+	public static function getMIMEtypesOfPrimarySupportFiles($publication_id, $publication_version_id, $secret, $role, $attachments, &$mimeTypes)
+	{
+		$path = self::buildPubPath($publication_id, $publication_version_id, '', '', 1);
+		$path .= DIRECTORY_SEPARATOR . $secret;
+		
+		if (!file_exists($path))
+		{
+			return false;
+		}
+		
+		foreach ($attachments[$role] as $attachment)
+		{
+			$file = $path . DIRECTORY_SEPARATOR . ltrim($attachment->path, '/');
+			if (file_exists($file))
+			{
+				$mimeType = mime_content_type($file);
+				if ($mimeType && !in_array($mimeType, $mimeTypes))
+				{
+					$mimeTypes[] = $mimeType;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get the MIME type for gallery files
+	 *
+	 * @param   object  $pub	publication model
+	 * @param   int  $role
+	 * @param   array  $attachments
+	 * @param   array  $mimeTypes
+	 *
+	 * @return  null or false
+	 */
+	public static function getMIMEtypesOfGalleryFile($publication_id, $publication_version_id, &$mimeTypes)
+	{
+		$path = self::buildPubPath($publication_id, $publication_version_id, '', '', 1);
+		$galleryDir = $path . DIRECTORY_SEPARATOR . "gallery";
+		
+		if (!file_exists($galleryDir))
+		{
+			return false;
+		}
+				
+		$dirHandle = opendir($galleryDir);
+		
+		while (false !== ($galleryFile = readdir($dirHandle)))
+		{
+			$tnPattern = '/\_tn\.png/';
+			$hashPattern = '/\.hash/';
+			
+			if ($galleryFile == '.' || $galleryFile == '..'
+				|| preg_match($tnPattern, $galleryFile, $matches, PREG_OFFSET_CAPTURE)
+				|| preg_match($hashPattern, $galleryFile, $matches, PREG_OFFSET_CAPTURE))
+			{
+				continue;
+			}
+
+			$file = $galleryDir . DIRECTORY_SEPARATOR . $galleryFile;
+			$mimeType = mime_content_type($file);
+			if ($mimeType && !in_array($mimeType, $mimeTypes))
+			{
+				$mimeTypes[] = $mimeType;
+			}
+		}
+		closedir($dirHandle);
 	}
 
 }
