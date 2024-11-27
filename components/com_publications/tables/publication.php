@@ -476,11 +476,15 @@ class Publication extends Table
 
 		$sql .= (isset($filters['tag']) && $filters['tag'] != '') ? ", TA.tag, COUNT(DISTINCT TA.tag) AS uniques " : " ";
 		$sql .= $this->buildQuery($filters, $admin);
+
 		$start = isset($filters['start']) ? $filters['start'] : 0;
 		$sql .= (isset($filters['limit']) && $filters['limit'] > 0) ? " LIMIT " . $start . ", " . $filters['limit'] : "";
 
 		$this->_db->setQuery($sql);
-		return $this->_db->loadObjectList();
+		// return $this->_db->loadObjectList();
+		$results = $this->_db->loadObjectList();
+
+    	return $results;
 	}
 
 	/**
