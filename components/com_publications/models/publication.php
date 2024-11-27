@@ -2235,33 +2235,7 @@ class Publication extends Obj
 				$results[$key] = new self($result);
 			}
 		}
-
-		// Initialize removedCount
-		$removedCount = 0;
-
-		// Filter results for primary files if specified
-		if (!empty($filters['filter_primary_files'])) {
-			$filteredResults = [];
-			foreach ($results as $result) {
-				$attachments = $result->attachments();
-				
-				// Check for primary attachments
-				if (isset($attachments[1]) && !empty($attachments[1][0])) {
-					$filteredResults[] = $result;
-				} else {
-					$removedCount++; // Increment counter if result is removed
-				}
-			}
-			$results = $filteredResults;
-		}
-	
-		// Prepare the return array
-		$returnData = [
-			'results' => new ItemList($results),
-			'removedCount' => $removedCount
-		];
-	
-		return $returnData;
+		return new ItemList($results);
 	}
 
 	/**
