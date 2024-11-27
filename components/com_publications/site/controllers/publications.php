@@ -14,6 +14,7 @@ include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' .
 
 use Hubzero\Component\SiteController;
 use Hubzero\Pagination\Paginator;
+use Hubzero\Base\ItemList;
 use Components\Projects\Tables\Project;
 use Components\Publications\Tables;
 use Components\Publications\Models\Bundle;
@@ -472,15 +473,27 @@ class Publications extends SiteController
 		$total = $model->entries('count', $filters);
 
 		// Run query with limit
-		$data = $model->entries('list', $filters);
-		$results = $data['results'];
+		$results = $model->entries('list', $filters);
 
-		// Get removed count (from priumary files filter)
-		$removedCount = $data['removedCount'];
-
-		// Update total count
-		$total = $total - $removedCount;
-
+		// Lee: Check that publication has an attachment
+		if ($filters['filter_primary_files']) 
+		{
+			$filteredResults = [];
+			foreach ($results as $result) 
+			{
+				$attachments = $result->attachments();
+				if (isset($attachments[1]) && !empty($attachments[1][0])) 
+				{
+					$filteredResults[] = $result;
+				} 
+				else 
+				{
+					$total--;
+				}
+			}
+			$results = new ItemList($filteredResults);
+		}
+		
 		// Initiate paging
 		$pageNav = new Paginator(
 			$total,
