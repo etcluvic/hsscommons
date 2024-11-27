@@ -420,7 +420,8 @@ class Publications extends SiteController
 			'start'       => Request::getInt('limitstart', 0),
 			'search'      => Request::getString('search', ''),
 			'tag'         => trim(Request::getString('tag', '', 'request')),
-			'tag_ignored' => []
+			'tag_ignored' => [],
+			'filter_primary_files' => Request::getInt('filter_primary_files', 0)
 		];
 
 		if (!in_array($filters['sortby'], ['date', 'title', 'id', 'rating', 'ranking', 'popularity']))
@@ -461,6 +462,9 @@ class Publications extends SiteController
 			}
 		}
 
+		// Add filter_primary_files to the filters array
+		$filters['filter_primary_files'] = Request::getInt('filter_primary_files', 0);
+
 		// Instantiate a publication object
 		$model = new Models\Publication();
 
@@ -468,7 +472,14 @@ class Publications extends SiteController
 		$total = $model->entries('count', $filters);
 
 		// Run query with limit
-		$results = $model->entries('list', $filters);
+		$data = $model->entries('list', $filters);
+		$results = $data['results'];
+
+		// Get removed count (from priumary files filter)
+		$removedCount = $data['removedCount'];
+
+		// Update total count
+		$total = $total - $removedCount;
 
 		// Initiate paging
 		$pageNav = new Paginator(
