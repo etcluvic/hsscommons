@@ -89,6 +89,7 @@ $this->css()
 						$qs  = ($this->filters['search'] ? '&search=' . $this->escape($this->filters['search']) : '');
 						$qs .= ($this->filters['category']   ? '&category=' . $this->escape($this->filters['category'])     : '');
 						$qs .= ($this->filters['tag']    ? '&tag=' . $this->escape($this->filters['tag'])       : '');
+						$qs .= ($this->filters['filter_primary_files'] ? '&filter_primary_files=' . $this->escape($this->filters['filter_primary_files']) : '');
 						?>
 						<ul class="entries-menu order-options">
 							<li><a<?php echo ($this->filters['sortby'] == 'title') ? ' class="active"' : ''; ?> href="<?php echo Route::url('index.php?option=' . $this->option . '&task=browse&sortby=title' . $qs); ?>" title="<?php echo Lang::txt('Sort by title'); ?>">&darr; <?php echo Lang::txt('Title'); ?></a></li>
@@ -111,7 +112,7 @@ $this->css()
 								<li>
 									<label for="filter-primary-files">
 										<?php echo Lang::txt('Only display publications with primary files'); ?>
-										<input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" >
+										<input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" <?php echo ($this->filters['filter_primary_files']) ? 'checked="checked"' : ''; ?>>
 									</label>
 								</li>
 							</ul>
@@ -131,6 +132,7 @@ $this->css()
 						$this->pageNav->setAdditionalUrlParam('tag', $this->filters['tag']);
 						$this->pageNav->setAdditionalUrlParam('category', $this->filters['category']);
 						$this->pageNav->setAdditionalUrlParam('sortby', $this->filters['sortby']);
+						$this->pageNav->setAdditionalUrlParam('filter_primary_files', $this->filters['filter_primary_files']);
 
 						echo $this->pageNav->render();
 
