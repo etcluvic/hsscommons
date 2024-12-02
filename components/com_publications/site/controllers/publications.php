@@ -476,24 +476,24 @@ class Publications extends SiteController
 		$results = $model->entries('list', $filters);
 
 		// Lee: Check that publication has an attachment
-		if ($filters['filter_primary_files']) 
+		if ($filters['filter_primary_files'])
 		{
 			$filteredResults = [];
-			foreach ($results as $result) 
+			foreach ($results as $result)
 			{
 				$attachments = $result->attachments();
-				if (isset($attachments[1]) && !empty($attachments[1][0])) 
+				if (isset($attachments[1]) && !empty($attachments[1][0]))
 				{
 					$filteredResults[] = $result;
-				} 
-				else 
+				}
+				else
 				{
 					$total--;
 				}
 			}
 			$results = new ItemList($filteredResults);
 		}
-		
+
 		// Initiate paging
 		$pageNav = new Paginator(
 			$total,
