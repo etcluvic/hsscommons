@@ -1003,7 +1003,7 @@ class plgMembersCollections extends \Hubzero\Plugin\Plugin
 		// Get model
 		$item = new \Components\Collections\Models\Item(intval($fields['id']));
 		$tmp = null;
-		if (substr($item->get('title'), 0, 3) == 'tmp')
+		if (substr($item->get('title', ''), 0, 3) == 'tmp')
 		{
 			$tmp = $item->get('title');
 		}
@@ -1013,6 +1013,11 @@ class plgMembersCollections extends \Hubzero\Plugin\Plugin
 		{
 			$this->setError($item->getError());
 			return $this->_edit($item);
+		}
+
+		// Update for PHP 8.2: id cannot by an emptry string. It has to be null.
+		if ($item->get("id") === "") {
+			$item->set("id", null);
 		}
 
 		// Add some data
