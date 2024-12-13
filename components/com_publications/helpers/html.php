@@ -357,7 +357,13 @@ class Html
 					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_ENDNOTE_FORMAT') . '">EndNote</a> <span>|</span> ' . "\n";
 
 				// Add the Copy to Clipboard button
-				$html .= "\t\t\t" . '<button id="copy-button-' . $pub->id . '" class="btn copy-citation" data-target="citation-content-' . $pub->id . '">Copy to Clipboard</button> ' . "\n";
+				$html .= "\t\t\t" . '<button id="copy-button-' . $pub->id . '" class="btn copy-citation" data-target="citation-content-' . $pub->id . '">Copy Citations</button> <span>|</span> ' . "\n";
+
+				// Add the Export to .JSON button
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn export-jsoncitation" data-target="citation-content-' . $pub->id . '">Citations .JSON</button> <span>|</span> ' . "\n";
+
+				// Add the Export to .CSV button
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn export-csvcitation" data-target="citation-content-' . $pub->id . '">Citations .CSV</button> ' . "\n";
 
 				$html .= "\t\t" . '</p>'."\n";
 			}
