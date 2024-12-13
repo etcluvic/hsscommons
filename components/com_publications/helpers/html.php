@@ -354,7 +354,11 @@ class Html
 				$html .= "\t\t\t" . '<a href="' . Route::url($pub->link('citation') . '&task=citation&type=bibtex&no_html=1') . '" title="'
 					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_BIBTEX_FORMAT') . '">BibTex</a> <span>|</span> ' . "\n";
 				$html .= "\t\t\t" . '<a href="' . Route::url($pub->link('citation') . '&task=citation&type=endnote&no_html=1') . '" title="'
-					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_ENDNOTE_FORMAT') . '">EndNote</a>' . "\n";
+					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_ENDNOTE_FORMAT') . '">EndNote</a> <span>|</span> ' . "\n";
+
+				// Add the Copy to Clipboard button
+				$html .= "\t\t\t" . '<button id="copy-button-' . $pub->id . '" class="btn copy-citation" data-target="citation-content-' . $pub->id . '">Copy to Clipboard</button> ' . "\n";
+
 				$html .= "\t\t" . '</p>'."\n";
 			}
 			$html .= "\t" . '</li>' . "\n";
