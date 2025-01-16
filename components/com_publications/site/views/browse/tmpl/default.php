@@ -111,7 +111,7 @@ $this->css()
 								</li>
 								<li>
 									<label for="filter-primary-files">
-										<?php echo Lang::txt('Only display publications with primary files'); ?>
+										<?php echo Lang::txt('Exclude metadata-only records'); ?>
 										<input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" <?php echo ($this->filters['filter_primary_files']) ? 'checked="checked"' : ''; ?>>
 									</label>
 								</li>
