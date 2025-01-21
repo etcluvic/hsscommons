@@ -85,6 +85,34 @@ jQuery(document).ready(function ($) {
 });
 
 //-----------------------------
+// Export citation to Ro-Crate
+//-----------------------------
+
+// Function to trigger download of Ro-Crate JSON-LD file
+function downloadRoCrateFile(jsonString, filename) {
+    const blob = new Blob([jsonString], { type: 'application/ld+json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+jQuery(document).ready(function ($) {
+    $('.export-rocratecitation').on('click', function () {
+
+        // Get the Ro-Crate metadata
+        const citation_rocrate = getMeta('rocrate');
+
+        // Download Ro-Crate file
+        downloadRoCrateFile(citation_rocrate, 'citation-rocrate.jsonld');
+    });
+});
+
+//-----------------------------
 // Parse Metadata
 //-----------------------------
 
@@ -97,17 +125,39 @@ function getMeta(format) {
         if (name && name.substring(0, 9) === 'citation_') {
             const key = name.substring(9);
             var content = metas[i].getAttribute('content');
-            content = content.replace(/[‘’]/g, "'"); // Wrong type of apostraphe in metadata
+            content = content.replace(/[‘’]/g, "'"); // Fix apostrophes
             citation[key] = content;
         }
     }
+
     if (format === 'json') {
         return JSON.stringify(citation, null, 2);
     } else if (format === 'csv') {
         return convertToCSV(citation);
+    } else if (format === 'rocrate') {
+        return convertToRoCrate(citation);
     }
 
     return "";
+}
+
+function convertToRoCrate(obj) {
+    const roCrate = {
+        "@context": "https://w3id.org/ro/crate/1.1/context",
+        "@graph": [
+            {
+                "@id": "./",
+                "@type": "Dataset",
+                "name": obj.title || "Citation",
+                "creator": obj.author || "Unknown",
+                "description": obj.abstract || "No description provided",
+                "keywords": obj.keywords ? obj.keywords.split(",") : [],
+                "datePublished": obj.year || "Unknown",
+                "identifier": obj.doi || "No DOI",
+            },
+        ],
+    };
+    return JSON.stringify(roCrate, null, 2);
 }
 
 function convertToCSV(obj) {
