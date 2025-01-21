@@ -5,6 +5,22 @@
  *
  */
 
+ /* Export button link styles */
+ .btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2774AE;
+  cursor: pointer;
+  font-style: italic;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: black;
+  text-decoration: underline;
+}
+
 .hide-text {
   font: 0/0 a;
   color: transparent;
