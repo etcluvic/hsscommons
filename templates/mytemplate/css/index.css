@@ -10,17 +10,20 @@
   background: none;
   border: none;
   padding: 0;
-  color: #2774AE;
+  color: #3181be;
   cursor: pointer;
   font-style: italic;
   text-decoration: none;
+  font-family: 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: inline;
+  vertical-align: baseline;
+  font-size: inherit;
+  line-height: inherit;
 }
-
 .btn-link:hover {
   color: black;
   text-decoration: underline;
 }
-
 .hide-text {
   font: 0/0 a;
   color: transparent;
