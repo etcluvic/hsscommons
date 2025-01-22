@@ -356,7 +356,7 @@ class Html
 				$html .= "\t\t\t" . '<button id="copy-button-' . $pub->id . '" class="btn copy-citation" data-target="citation-content-' . $pub->id . '">Copy Citation</button> <span>|</span> ' . "\n";
 				
 				// Add the "Export metadata as..." label
-				$html .= "\t\t\t" . '<span style="font-weight: normal; color: inherit; text-decoration: none;">Export metadata as... | </span> ' . "\n";
+				$html .= "\t\t\t" . '<span style="font-weight: normal; color: #666666; text-decoration: none;">Export metadata as... | </span> ' . "\n";
 
 				// Add the Export to .JSON button
 				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-jsoncitation" data-target="citation-content-' . $pub->id . '" title="Download in JSON format">JSON</button> <span>|</span> ' . "\n";
