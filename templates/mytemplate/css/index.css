@@ -10,7 +10,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: #3181be;
+  color: #2677b5;
   cursor: pointer;
   font-style: italic;
   text-decoration: none;
@@ -21,7 +21,7 @@
   line-height: inherit;
 }
 .btn-link:hover {
-  color: black;
+  color: #444;
   text-decoration: underline;
 }
 .hide-text {
