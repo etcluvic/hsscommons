@@ -276,7 +276,7 @@ class View
 		$out = '';
 		if (count($pageArray) > 0)
 		{
-			$out = '<ul>';
+			$out = '<ul class="child-pages" style="margin-left: 10px;">';
 			foreach ($pageArray as $key => $page)
 			{
 				// dont show page links if there isnt an approved version
@@ -295,11 +295,11 @@ class View
 				if (($pageAccess == 'registered' && User::isGuest()) ||
 				  ($pageAccess == 'members' && !in_array(User::get("id"), $group->get('members'))))
 				{
-					$out .= "<li class=\"protected\"><span class=\"page\">" . $page->get('title') . "</span></li>";
+					$out .= "<li class=\"protected child-page\"><span class=\"page\">" . $page->get('title') . "</span></li>";
 				}
 				else
 				{
-					$out .= '<li class="' . $cls . '">';
+					$out .= '<li class="' . $cls . ' child-page">';
 					$out .= '<a class="page" title="' . $page->get('title') . '" href="' . $page->url() . '">' . $page->get('title') . '</a>';
 				}
 
