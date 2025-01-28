@@ -55,7 +55,9 @@ HUBzero is a registered trademark of Purdue University.
 	<languages>  
     	<!-- Any language files included with the module -->  
         <language tag="en-GB">language/en-GB/en-GB.mod_featuredpublication.ini</language>  
-        <language tag="en-GB">language/en-GB/en-GB.mod_featuredpublication.sys.ini</language>  
+        <language tag="en-GB">language/en-GB/en-GB.mod_featuredpublication.sys.ini</language>
+		<language tag="es">language/es/es.mod_featuredpublication.sys.ini</language>
+		<language tag="fr">language/fr/fr.mod_featuredpublication.sys.ini</language> 
 	</languages> 
 
 	<config>

@@ -173,9 +173,7 @@ foreach ($this->results as $category)
 			$html .= call_user_func(array($obj, 'documents'));
 		}
 
-		// $ttl = ($total > 5) ? 5 : $total;
-		// $ttl = $total is a trivial way of making the contributions page open to all results
-		$ttl = $total;
+		$ttl = ($total > 5) ? 5 : $total;
 		if (!$dopaging)
 		{
 			$num = '1-' . $ttl . ' of ';

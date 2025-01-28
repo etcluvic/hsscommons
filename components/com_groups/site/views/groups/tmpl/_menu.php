@@ -37,6 +37,9 @@ defined('_HZEXEC_') or die();
 				$trueTab = strtolower(Request::getString('active', 'overview'));
 				$liClass = ($trueTab != $this->tab) ? '' : $liClass;
 
+				// Add overview-dropdown class if there are pages
+				$liClass .= ' overview-dropdown';
+
 				if (($access == 'registered' && User::isGuest()) || ($access == 'members' && !in_array(User::get("id"), $this->group->get('members'))))
 				{
 					$item  = "<li class=\"protected group-overview-tab\"><span data-icon=\"&#x{$section['icon']};\" class=\"disabled overview\">Overview</span>";
@@ -50,7 +53,9 @@ defined('_HZEXEC_') or die();
 				// append pages html
 				// only pass in the children of the root node
 				// basically skip the overview page here
+				$item .= '<ul class="child-pages-container" style="margin-left: 10px;">';
 				$item .= \Components\Groups\Helpers\View::buildRecursivePageMenu($this->group, $this->pages[0]->get('children'));
+				$item .= '</ul>';
 			}
 			else
 			{

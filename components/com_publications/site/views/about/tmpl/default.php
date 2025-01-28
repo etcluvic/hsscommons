@@ -12,7 +12,8 @@ $this->css('custom')
 	->css('jquery.dataTables.min.css')
 	->js('jquery.dataTables.min.js')
 	->js('csv_to_html_table')
-	->js('jquery.csv.min');
+	->js('jquery.csv.min')
+	->js('copy_citation.js');
 $webpath = $this->config->get('webpath');
 
 $authorized = $this->publication->access('view-all');
@@ -207,9 +208,9 @@ $schema = $metaElements->getSchema();
 	$citeinstruct  = \Components\Publications\Helpers\Html::citation($cite, $this->publication, $citations);
 	?>
 	<h4 id="citethis"><?php echo Lang::txt('COM_PUBLICATIONS_CITE_THIS'); ?></h4>
-	<div class="pub-content">
+	<div class="pub-content" id="citation-content-<?php echo $this->publication->id; ?>">
 		<?php echo $citeinstruct; ?>
-	</div>
+</div>
 <?php } ?>
 <?php if ($this->publication->params->get('show_submitter') && $this->publication->submitter()) { ?>
 	<h4><?php echo Lang::txt('COM_PUBLICATIONS_SUBMITTER'); ?></h4>
