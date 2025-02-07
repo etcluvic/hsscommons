@@ -6,7 +6,7 @@
  */
 
 /**
- * fr-FR localise class
+ * bn localise class
  */
 abstract class bnLocalise
 {
