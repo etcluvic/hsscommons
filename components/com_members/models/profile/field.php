@@ -8,6 +8,7 @@
 namespace Components\Members\Models\Profile;
 
 use Hubzero\Database\Relational;
+use Lang;
 
 include_once __DIR__ . DS . 'option.php';
 
@@ -256,6 +257,26 @@ class Field extends Relational
 
 		return $val;
 	}
+
+	/**
+     * Override the get method to translate the label
+     *
+     * @param   string  $key      The property to get
+     * @param   mixed   $default  The default value if the property does not exist
+     * @return  mixed   The property value
+     */
+    public function get($key, $default = null)
+    {
+        $value = parent::get($key, $default);
+
+        if ($key == 'label')
+        {
+            $translationKey = 'COM_MEMBERS_FILTER_OPTION_' . strtoupper(str_replace([' ', '/'], '_', $value));
+            return Lang::txt($translationKey);
+        }
+
+        return $value;
+    }
 
 	/**
 	 * Helper method to force dependent fields to be skipped
