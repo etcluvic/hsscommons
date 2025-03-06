@@ -411,4 +411,30 @@ class Section extends Relational
 
 		return $form;
 	}
+
+	/**
+	 * Override the get method to translate section titles while preserving aliases.
+	 *
+	 * This method ensures that only the `title` field is translated while keeping `alias` untouched.
+	 * Keeping `alias` unchanged prevents breaking URLs or other parts of the system that rely on it.
+	 *
+	 * @param   string  $key      The property to get (e.g., "title").
+	 * @param   mixed   $default  The default value to return if the property does not exist.
+	 * @return  mixed   The translated title if applicable, otherwise the original value.
+	 */
+	public function get($key, $default = null)
+	{
+		$value = parent::get($key, $default);
+
+		if ($key === 'title')
+		{
+			// Generate the translation key from the title
+			$translationKey = 'COM_FORUM_CATEGORIES_' . strtoupper(str_replace(['-', ' '], '_', $value));
+			$translatedValue = Lang::txt($translationKey);
+
+			// Return translated value if it exists, otherwise return original
+			return (!empty($translatedValue) && $translatedValue !== $translationKey) ? $translatedValue : $value;
+		}
+		return $value;
+	}
 }
