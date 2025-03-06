@@ -365,7 +365,7 @@ class Html
 				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-csvcitation" data-target="citation-content-' . $pub->id . '" title="Download in CSV format">CSV</button> <span>|</span> ' . "\n";
 
 				// Add the Export to Ro-Crate button
-				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-rocratecitation" data-target="citation-content-' . $pub->id . '" title="Download in Ro-Crate format">Ro-Crate</button> <span>|</span> ' . "\n";
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-rocratecitation" data-target="citation-content-' . $pub->id . '" title="Download in RO-Crate format">RO-Crate</button> <span>|</span> ' . "\n";
 
 				// Bibtext and Endnote exports
 				$html .= "\t\t\t" . '<a href="' . Route::url($pub->link('citation') . '&task=citation&type=bibtex&no_html=1') . '" title="'
