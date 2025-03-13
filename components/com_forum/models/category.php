@@ -479,4 +479,36 @@ class Category extends Relational
 
 		return $form;
 	}
+
+	/**
+	 * Override the get method to translate the title and description
+	 *
+	 * @param   string  $key      The property to get
+	 * @param   mixed   $default  The default value if the property does not exist
+	 * @return  mixed   The property value
+	 */
+	public function get($key, $default = null)
+	{
+		$value = parent::get($key, $default);
+
+		// Define which fields need translation
+		if (in_array($key, ['title', 'description']))
+		{
+			$categoryTitle = parent::get('title', '');
+
+			if (!$categoryTitle) {
+				return $value;
+			}
+			$translationKey = 'COM_FORUM_CATEGORIES_' . strtoupper(str_replace(['-', ' '], '_', $categoryTitle));
+			
+			if ($key === 'description') {
+				$translationKey .= '_DESC';
+			}
+
+			$translatedValue = Lang::txt($translationKey);
+			return (!empty($translatedValue) && $translatedValue !== $translationKey) ? $translatedValue : $value;
+		}
+
+		return $value;
+	}
 }
