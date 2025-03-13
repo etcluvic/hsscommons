@@ -94,7 +94,8 @@ class Option extends Relational
 
         if ($key == 'label')
         {
-            $translationKey = 'COM_MEMBERS_FILTER_OPTION_' . strtoupper(str_replace(' ', '_', $value));
+            $normalizedValue = preg_replace('/[^A-Za-z0-9]/', '_', $value);
+        	$translationKey = 'COM_MEMBERS_DYNAMIC_' . strtoupper($normalizedValue);
             return Lang::txt($translationKey);
         }
 
