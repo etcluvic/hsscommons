@@ -113,12 +113,12 @@ jQuery(document).ready(function ($) {
 });
 
 //-----------------------------
-// Parse Metadata
+// Parse metadata
 //-----------------------------
 
 function getMeta(format) {
     const metas = document.getElementsByTagName('meta');
-    let citation = { author: [], keywords: [], creator: []}; 
+    let citation = { author: [], keywords: [], creator: [] };
 
     function formatDate(dateString) {
         return dateString ? dateString.replace(/\//g, "-") : "Unknown";
@@ -126,67 +126,68 @@ function getMeta(format) {
 
     for (let i = 0; i < metas.length; i++) {
         const name = metas[i].getAttribute('name');
-        if (name && name.substring(0, 9) === 'citation_') {
+        if (name && name.startsWith('citation_')) {
             const key = name.substring(9);
-            let content = metas[i].getAttribute('content');
-            content = content.replace(/[‘’]/g, "'").trim();
+            let content = metas[i].getAttribute('content').replace(/[‘’]/g, "'").trim();
+
             if (key === 'pdf_url') {
                 citation['url'] = content;
                 const serveIndex = content.indexOf('serve') + 5;
                 const baseUrl = content.substring(0, serveIndex);
                 citation['hasPart'] = `${baseUrl}?render=archive`;
-            }
-            else if (key === 'author') {
+            } else if (key === 'author') {
                 citation.author.push(content);
-            }
-            else if (key === 'online_date' || key === 'publication_date') {
+            } else if (key === 'online_date' || key === 'publication_date') {
                 citation[key] = formatDate(content);
-            }
-            else {
+            } else {
                 citation[key] = content;
             }
         }
-        else if (name && name.substring(0, 8) === 'dcterms.') {
-            const key = name.substring(8);
-            let content = metas[i].getAttribute('content');
-            content = content.replace(/[‘’]/g, "'");
-            if (key === 'creator') {
-                citation.creator.push(content);
+    }
+    const jsonLdScripts = document.querySelectorAll('script[type="application/ld+json"]');
+
+    for (let script of jsonLdScripts) {
+        try {
+            const jsonLdData = JSON.parse(script.innerText);
+
+            if (jsonLdData["@type"] === "Dataset") {
+                citation.title = jsonLdData.name || citation.title || "No title";
+                citation.description = jsonLdData.description || citation.description || "No description provided";
+                citation.url = jsonLdData.url || citation.url || "No URL";
+                citation.datePublished = jsonLdData.datePublished || jsonLdData.dateCreated || citation.datePublished || "N/A";
+                citation.identifier = jsonLdData.identifier || jsonLdData["@id"] || citation.identifier || "N/A";
+
+                if (jsonLdData.license || jsonLdData.sdLicense) {
+                    citation.license = {
+                        "@id": jsonLdData.sdLicense || "N/A",
+                        "name": jsonLdData.license || "Unknown License"
+                    };
+                }
+                if (Array.isArray(jsonLdData.author)) {
+                    citation.author = jsonLdData.author.map(author => ({
+                        "@type": "Person",
+                        "givenName": author.givenName || "",
+                        "familyName": author.familyName || "",
+                        "url": author.url || ""
+                    }));
+                }
+                if (jsonLdData.publisher) {
+                    citation.publisher = jsonLdData.publisher.name || "Unknown";
+                    citation.publisherUrl = jsonLdData.publisher.url || "";
+                }
+                if (Array.isArray(jsonLdData.keywords)) {
+                    citation.keywords = jsonLdData.keywords.map(k => k.trim());
+                }
             }
-            else {
-                citation[key] = content;
-            }
-        }
-        else if (name && name.substring(0, 8) === 'dc.') {
-            const key = name.substring(8);
-            let content = metas[i].getAttribute('content');
-            content = content.replace(/[‘’]/g, "'");
-            citation[key] = content;
-        }
-        else if (name && name.substring(0, 8) === 'keywords') {
-            citation['keywords'] = metas[i].getAttribute('content')
-                .split(",")
-                .map(k => k.trim())
-                .filter(k => k.length > 0);
+        } catch (error) {
+            console.error("Error parsing JSON-LD:", error);
         }
     }
 
     if (format === 'json') {
-        const reorderedCitation = {};
-        Object.keys(citation)
-            .filter(key => key !== 'keywords' && key !== 'hasPart')
-            .forEach(key => {
-                reorderedCitation[key] = citation[key];
-            });
-        reorderedCitation["keywords"] = citation["keywords"];
-    
-        return JSON.stringify(reorderedCitation, null, 2);
+        return JSON.stringify(citation, null, 2);
     } else if (format === 'csv') {
-        const citationForCSV = Object.fromEntries(
-            Object.entries(citation).filter(([key]) => key !== 'hasPart')
-        );
-    
-        return convertToCSV(citationForCSV);
+        return convertToCSV(citation)
     } else if (format === 'rocrate') {
         return convertToRoCrate(citation);
     }
@@ -195,16 +196,11 @@ function getMeta(format) {
 }
 
 //-----------------------------
-// Conversion
+// Conversion for RO-Crate
 //-----------------------------
 
-function formatAuthors(authors) {
-    if (!Array.isArray(authors) || authors.length === 0) return [{ "name": "Unknown" }];
-    return authors.map(author => ({ "name": author.trim() }));
-}
-
 function convertToRoCrate(obj) {
-    let authorsFormatted = formatAuthors(obj.author);
+    let authorsFormatted = Array.isArray(obj.author) && obj.author.length > 0 ? obj.author : [{ "@type": "Person", "name": "Unknown" }];
 
     const roCrate = {
         "@context": "https://w3id.org/ro/crate/1.1/context",
@@ -221,23 +217,17 @@ function convertToRoCrate(obj) {
                 "@type": "Dataset",
                 "name": obj.title || "No title",
                 "description": obj.description || "No description provided",
-                "datePublished": obj.online_date || obj.publication_date || "N/A",
+                "datePublished": obj.datePublished || "N/A",
                 "author": authorsFormatted
             }
         ]
     };
-
-    if (obj.license) {
-        roCrate["@graph"][1]["license"] = { "@id": obj.license };
-
-        roCrate["@graph"].push({
-            "@id": obj.license,
-            "@type": "CreativeWork",
-            "name": obj.license,
-            "description": "N/A"
-        });
+    if (obj.license && obj.license["@id"] !== "N/A") {
+        roCrate["@graph"][1]["license"] = {
+            "@id": obj.license["@id"],
+            "name": obj.license["name"]
+        };
     }
-
     if (obj.hasPart) {
         roCrate["@graph"].push({
             "@id": obj.hasPart,
@@ -246,32 +236,42 @@ function convertToRoCrate(obj) {
             "url": obj.url || "No URL",
             "encodingFormat": "application/zip"
         });
-
         roCrate["@graph"][1]["hasPart"] = [{ "@id": obj.hasPart }];
     }
-
     if (Array.isArray(obj.keywords) && obj.keywords.length > 0) {
-        roCrate["@graph"].push({
-            "keywords": obj.keywords
-        });
+        roCrate["@graph"][1]["keywords"] = obj.keywords;
     }
 
     return JSON.stringify(roCrate, null, 2);
 }
 
+//-----------------------------
+// Conversion for CSV
+//-----------------------------
+
 function convertToCSV(obj) {
-    const keys = Object.keys(obj); 
+    const keys = Object.keys(obj);
     const values = keys.map(key => {
         let value = obj[key];
-
-        if (Array.isArray(value)) {
+        if (key === 'author' && Array.isArray(value)) {
+            value = value.map(author => {
+                let fullName = `${author.familyName}, ${author.givenName}`.trim();
+                return fullName.replace(/"/g, '""');
+            }).join("; ");
+        }
+        else if (Array.isArray(value)) {
             value = value.map(v => v.replace(/"/g, '""')).join("; ");
+        }
+        else if (typeof value === 'object' && value !== null) {
+            value = `"${value.name} (${value["@id"]})"`;
         }
         if (typeof value === 'string' && (value.includes(',') || value.includes(';'))) {
             return `"${value}"`;
         }
+
         return value;
     });
+
     const csv = keys.join(',') + '\n' + values.join(',');
     return csv;
 }
