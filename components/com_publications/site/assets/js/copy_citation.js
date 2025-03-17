@@ -152,7 +152,12 @@ function getMeta(format) {
 
             if (jsonLdData["@type"] === "Dataset") {
                 citation.title = jsonLdData.name || citation.title || "No title";
-                citation.description = jsonLdData.description || citation.description || "No description provided";
+
+                citation.description =  jsonLdData.description || 
+                                        citation.description || 
+                                        document.querySelector('meta[name="dcterms.description"]')?.content || 
+                                        "No description provided";
+
                 citation.url = jsonLdData.url || citation.url || "No URL";
                 citation.datePublished = jsonLdData.datePublished || jsonLdData.dateCreated || citation.datePublished || "N/A";
                 citation.identifier = jsonLdData.identifier || jsonLdData["@id"] || citation.identifier || "N/A";
