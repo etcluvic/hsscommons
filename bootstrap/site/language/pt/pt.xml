@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metafile version="2.0" client="site">
+	<name>Portuguese</name>
+	<version>1.0.0</version>
+	<creationDate>2023-09-15</creationDate>
+	<author>Lee Napthine</author>
+	<authorEmail>marmalade.ssu@gmail.com</authorEmail>
+	<authorUrl>hubzero.org</authorUrl>
+	<copyright>Copyright (c) 2005-2020 The Regents of the University of California.</copyright>
+	<license>http://opensource.org/licenses/MIT MIT</license>
+	<description>pt site language</description>
+	<files>
+		<filename>pt.ini</filename>
+		<filename>pt.lib_hubzero.ini</filename>
+		<filename>pt.lib_hubzero.sys.ini</filename>
+		<filename>pt.localise.php</filename>
+	</files>
+	<metadata>
+		<name>Portuguese</name>
+		<tag>pt</tag>
+		<rtl>0</rtl>
+		<locale>pt.utf8, pt.UTF-8, pt, pt, pt, portuguese, portuguese-pt, portugal</locale>
+		<firstDay>0</firstDay>
+	</metadata>
+	<params />
+</metafile>

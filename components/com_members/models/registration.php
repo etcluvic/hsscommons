@@ -939,7 +939,7 @@ class Registration
 		// check the general validity
 		if (!Helpers\Utility::validlogin($username))
 		{
-			$ret['message'] = 'Invalid login name. Please type between 2 and 32 characters and use only lowercase alphanumeric characters.';
+			$ret['message'] = Lang::txt("COM_MEMBERS_ERROR_INVALID_USERNAME");
 			return $ret;
 		}
 
