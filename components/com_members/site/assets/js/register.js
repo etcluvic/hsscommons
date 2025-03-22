@@ -69,12 +69,23 @@ HUB.Register = {
 			cache: false,
 			success: function(json) {
 				if (json.html.length > 0 && password !== '') {
-					rules.html(json.html);
+					let tempDiv = document.createElement("div");
+					tempDiv.innerHTML = json.html; // Convert API response into DOM elements
+			
+					// Replace each rule with its translation if available
+					tempDiv.querySelectorAll("li").forEach(li => {
+						let ruleText = li.textContent.trim();
+						if (typeof translatedRules !== 'undefined' && translatedRules[ruleText]) {
+							li.textContent = translatedRules[ruleText]; // Use translation
+						}
+					});
+			
+					rules.html(tempDiv.innerHTML); // Update the rules list with translated content
 				} else {
-					// Probably deleted password, so reset classes
 					rules.find('li').switchClass('error passed', 'empty', 200);
 				}
 			}
+			
 		});
 	}
 }
