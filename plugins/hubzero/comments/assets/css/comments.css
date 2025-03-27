@@ -1,0 +1,56 @@
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+/*
+
+	-- -- -- -- -- -- --
+	Comments CSS
+	-- -- -- -- -- -- --
+
+*/
+
+.sort-options button {
+	border: none;
+	background: transparent;
+	display: block;
+	cursor: pointer;
+	font-weight: normal;
+	line-height: 1em;
+	border: none;
+	margin: 0;
+	padding: 0.4em 0.75em;
+}
+
+.sort-options button:before {
+	content: "\2193";
+	font-family: "Fontcons";
+	margin-right: 0.2em;
+}
+
+/* Comments */
+	/* Header */
+	h3.comments-title {
+		position: relative;
+	}
+	h3.comments-title .feed {
+		display: block;
+		width: 1em;
+		height: 1em;
+		overflow: hidden;
+		text-indent: -55em;
+		position: absolute;
+		top: 5px;
+		right: 0;
+		margin: 0;
+		padding: 0;
+	}
+
+	ol.comments .marked>.comment-content {
+		border-color: #222;
+	}
+	ol.comments .marked>.comment-content:before {
+		border-color: transparent #222 transparent transparent;
+	}
