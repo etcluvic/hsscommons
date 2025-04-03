@@ -260,7 +260,7 @@ class Html
 	public static function tabs($option, $id, $cats, $active = 'about', $alias = '', $version = '')
 	{
 		$html  = '';
-		$html .= "\t" . '<ul class="sub-menu">' . "\n";
+		$html .= "\t" . '<ul class="sub-menu" style="min-width: 335px; width: 100%; max-width: 100%;">' . "\n";
 		$i = 1;
 		foreach ($cats as $cat)
 		{
