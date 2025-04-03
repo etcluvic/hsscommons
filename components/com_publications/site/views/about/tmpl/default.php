@@ -46,7 +46,7 @@ $metaElements = new \Components\Publications\Models\Elements($data, $customField
 $schema = $metaElements->getSchema();
 
 ?>
-<div class="pubabout">
+<div class="pubabout" style="min-width: 320px; width: 100%; max-width: 100%; margin: 0 auto;">
 <?php
 	// Show gallery images
 	$modelHandler = new \Components\Publications\Models\Handlers($this->database);
