@@ -16,13 +16,28 @@ defined('_HZEXEC_') or die;
 	}
 
 	// Get rid of duplicated entries on trail including home page when using multilanguage
-	for ($i = 0; $i < $count; $i ++)
-	{
-		if ($i == 1 && !empty($list[$i]->link) && !empty($list[$i-1]->link) && $list[$i]->link == $list[$i-1]->link)
-		{
-			unset($list[$i]);
+	$deduped = [];
+	$lastItem = null;
+
+	foreach ($list as $item) {
+		if ($lastItem) {
+			$sameName = $item->name === $lastItem->name;
+			$sameOrNestedLink =
+				!empty($item->link) && !empty($lastItem->link) &&
+				(strpos($item->link, $lastItem->link) === 0 || strpos($lastItem->link, $item->link) === 0);
+
+			if ($sameName && $sameOrNestedLink) {
+				continue; // Skip duplicate-ish breadcrumb
+			}
 		}
+
+		$deduped[] = $item;
+		$lastItem = $item;
 	}
+
+	$list = $deduped;
+
+
 
 	// Find last and penultimate items in breadcrumbs list
 	end($list);
