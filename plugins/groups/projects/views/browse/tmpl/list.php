@@ -57,7 +57,7 @@ switch ($this->which)
 				?>
 				<tr class="mline">
 					<td class="th_image">
-						<?php if ($row->access('member') || $row->access('readonly')) { ?>
+						<?php if ($row->isPublic() || $row->access('member') || $row->access('readonly')) { ?>
 							<a href="<?php echo Route::url($row->link()); ?>" title="<?php echo $this->escape($row->get('title')) . ' (' . $row->get('alias') . ')'; ?>">
 								<img src="<?php echo Route::url($row->link('thumb')); ?>" alt="<?php echo $this->escape($row->get('title')); ?>" class="project-image" />
 							</a>
@@ -72,7 +72,7 @@ switch ($this->which)
 						<?php if (!$row->isPublic()) { echo '<span class="privacy-icon">&nbsp;</span>'; } ?>
 					</td>
 					<td class="th_title">
-						<?php if ($row->access('member') || $row->access('readonly')) { ?>
+						<?php if ($row->isPublic() || $row->access('member') || $row->access('readonly')) { ?>
 							<a href="<?php echo Route::url($row->link()); ?>" title="<?php echo $this->escape($row->get('title')) . ' (' . $row->get('alias') . ')'; ?>">
 								<?php echo $this->escape($row->get('title')); ?>
 							</a>
@@ -86,6 +86,7 @@ switch ($this->which)
 					<td class="th_status">
 						<?php
 						$html = '';
+						$html .= '<span class="active"><a href="' . Route::url($row->link()) . '" title="' . Lang::txt('PLG_GROUPS_PROJECTS_GO_TO_PROJECT') . '">&raquo; ' . Lang::txt('PLG_GROUPS_PROJECTS_STATUS_ACTIVE') . '</a></span>';
 						if ($row->access('owner'))
 						{
 							if ($row->isActive())
