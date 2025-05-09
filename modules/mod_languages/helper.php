@@ -37,12 +37,12 @@ class Helper extends Module
 
 		$module = $this->module;
 
-		$headerText = trim($params->get('header_text'));
-		$footerText = trim($params->get('footer_text'));
+		$headerText = trim($params->get('header_text',''));
+		$footerText = trim($params->get('footer_text',''));
 
 		$list = self::getList($params);
 
-		$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+		$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''));
 
 		require $this->getLayoutPath($params->get('layout', 'default'));
 	}
@@ -55,7 +55,7 @@ class Helper extends Module
 	 */
 	public static function getList(&$params)
 	{
-		// require_once \Component::path('com_menus') . '/admin/helpers/menus.php';
+		require_once \Component::path('com_menus') . '/helpers/menus.php';
 
 		$lang = Lang::getRoot();
 		$menu = App::get('menu');
