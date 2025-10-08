@@ -71,7 +71,7 @@ class Terms extends Obj
 	 */
 	public function __construct($raw)
 	{
-		$this->raw = preg_replace('/^\s+|\s+$/', '', preg_replace('/\s+/', ' ', $raw));
+		$this->raw = preg_replace('/^\s+|\s+$/', '', preg_replace('/\s+/', ' ', $raw ?? '') ?? '');
 		if ($this->is_set())
 		{
 			$this->parse_searchable_chunks();
