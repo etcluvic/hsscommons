@@ -22,7 +22,7 @@ if (!function_exists('modifyLanguageLink')) {
 	{
 		// Create a new Uri and modify the language parameter
 		$uri = Hubzero\Utility\Uri::getInstance(Request::current());
-		$uri->setVar('lang', $language->sef);
+		$uri->setUriVar('lang', $language->sef);
 		$languageLink = $uri->toString(array('path', 'query', 'fragment'));
 
 		// Remove the lang query parameter
