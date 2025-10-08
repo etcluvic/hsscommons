@@ -32,6 +32,13 @@ class AssocScalar extends SearchResult
 	private $row;
 
 	/**
+	 * Description for 'link'
+	 *
+	 * @var unknown
+	 */
+	private $link;
+
+	/**
 	 * Short description for 'is_scalar'
 	 *
 	 * Long description (if any) ...

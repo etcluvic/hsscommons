@@ -16,6 +16,13 @@ use Exception;
 class Sql extends SearchResult
 {
 	/**
+	 * Description for 'sql'
+	 *
+	 * @var ?string
+	 */
+	private ?string $sql = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   string  $sql
