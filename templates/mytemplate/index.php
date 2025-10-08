@@ -158,7 +158,7 @@ $this->setTitle(Config::get('sitename') . ' - ' . $this->getTitle());
                   </li>
                 <?php } else { ?>
                   <li>
-                    <a class="icon-login" href="<?php echo Route::url('index.php?option=com_users&view=login'); ?>" title="<?php echo Lang::txt('TPL_MYTEMPLATE_LOGIN'); ?>"><?php echo Lang::txt('TPL_MYTEMPLATE_LOGIN'); ?></a>
+                    <a class="icon-login" href="<?php echo Route::url('index.php?option=com_users&view=login&return=' . base64_encode($_SERVER['REQUEST_URI'])); ?>" title="<?php echo Lang::txt('TPL_MYTEMPLATE_LOGIN'); ?>"><?php echo Lang::txt('TPL_MYTEMPLATE_LOGIN'); ?></a>
                   </li>
                   <?php if ($this->params->get('registerLink') && Component::params('com_users')->get('allowUserRegistration')) : ?>
                     <li>

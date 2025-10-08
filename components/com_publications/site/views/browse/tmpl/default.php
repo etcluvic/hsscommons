@@ -108,6 +108,12 @@ $this->css()
 										<?php } ?>
 									</select>
 								</li>
+								<li>
+									<label for="filter-primary-files">
+										<input type="checkbox" id="filter-primary-files" name="filter_primary_files" value="1" >
+										<?php echo Lang::txt('Only display publications with primary files'); ?>
+									</label>
+								</li>
 							</ul>
 						<?php } ?>
 					</nav>

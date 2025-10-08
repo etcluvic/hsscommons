@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metafile version="2.0" client="site">
+	<name>Bangla</name>
+	<version>1.0.0</version>
+	<creationDate>2025-02-05</creationDate>
+	<author>Graham Jensen</author>
+	<authorEmail>ghjensen@uvic.ca</authorEmail>
+	<authorUrl>hubzero.org</authorUrl>
+	<copyright>Copyright (c) 2005-2020 The Regents of the University of California.</copyright>
+	<license>http://opensource.org/licenses/MIT MIT</license>
+	<description>bn site language</description>
+	<files>
+		<filename>bn.ini</filename>
+		<filename>bn.lib_hubzero.ini</filename>
+		<filename>bn.lib_hubzero.sys.ini</filename>
+		<filename>bn.localise.php</filename>
+	</files>
+	<metadata>
+		<name>Bangla</name>
+		<tag>bn</tag>
+		<rtl>0</rtl>
+		<locale>bn.utf8, bn.UTF-8, bn, bn, bn, bangla, bangla-bn</locale>
+		<firstDay>0</firstDay>
+	</metadata>
+	<params />
+</metafile>

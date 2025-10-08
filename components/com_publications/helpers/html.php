@@ -260,7 +260,7 @@ class Html
 	public static function tabs($option, $id, $cats, $active = 'about', $alias = '', $version = '')
 	{
 		$html  = '';
-		$html .= "\t" . '<ul class="sub-menu">' . "\n";
+		$html .= "\t" . '<ul class="sub-menu" style="min-width: 335px; width: 100%; max-width: 100%;">' . "\n";
 		$i = 1;
 		foreach ($cats as $cat)
 		{
@@ -351,10 +351,28 @@ class Html
 			if (!$pub->isDev())
 			{
 				$html .= "\t\t" . '<p class="details">' . "\n";
+
+				// Add the Copy to Clipboard button
+				$html .= "\t\t\t" . '<button id="copy-button-' . $pub->id . '" class="btn copy-citation" data-target="citation-content-' . $pub->id . '">Copy Citation</button> <span>|</span> ' . "\n";
+				
+				// Add the "Export metadata as..." label
+				$html .= "\t\t\t" . '<span style="font-weight: normal; color: #666666; text-decoration: none;">Export metadata as... | </span> ' . "\n";
+
+				// Add the Export to .JSON button
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-jsoncitation" data-target="citation-content-' . $pub->id . '" title="Download in JSON format">JSON</button> <span>|</span> ' . "\n";
+
+				// Add the Export to .CSV button
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-csvcitation" data-target="citation-content-' . $pub->id . '" title="Download in CSV format">CSV</button> <span>|</span> ' . "\n";
+
+				// Add the Export to Ro-Crate button
+				$html .= "\t\t\t" . '<button id="export-button-' . $pub->id . '" class="btn-link export-rocratecitation" data-target="citation-content-' . $pub->id . '" title="Download in RO-Crate format">RO-Crate</button> <span>|</span> ' . "\n";
+
+				// Bibtext and Endnote exports
 				$html .= "\t\t\t" . '<a href="' . Route::url($pub->link('citation') . '&task=citation&type=bibtex&no_html=1') . '" title="'
 					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_BIBTEX_FORMAT') . '">BibTex</a> <span>|</span> ' . "\n";
 				$html .= "\t\t\t" . '<a href="' . Route::url($pub->link('citation') . '&task=citation&type=endnote&no_html=1') . '" title="'
 					. Lang::txt('COM_PUBLICATIONS_DOWNLOAD_ENDNOTE_FORMAT') . '">EndNote</a>' . "\n";
+
 				$html .= "\t\t" . '</p>'."\n";
 			}
 			$html .= "\t" . '</li>' . "\n";

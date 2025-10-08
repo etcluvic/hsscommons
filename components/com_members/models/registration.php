@@ -486,8 +486,8 @@ class Registration
 		{
 			if (empty($login))
 			{
-				$this->_missing['login'] = 'User Login';
-				$this->_invalid['login'] = 'Please provide a username';
+				$this->_missing['login'] = Lang::txt("COM_MEMBERS_USERNAME_LABEL");
+				$this->_invalid['login'] = Lang::txt("COM_MEMBERS_ENTER_USERNAME_AGAIN");
 			}
 		}
 
@@ -496,7 +496,7 @@ class Registration
 			$allowNumericFirstCharacter = ($task == 'update') ? true : false;
 			if (!empty($login) && !Helpers\Utility::validlogin($login, $allowNumericFirstCharacter))
 			{
-				$this->_invalid['login'] = 'Invalid login name. Please type at least 2 characters and use only lowercase alphanumeric characters.';
+				$this->_invalid['login'] = Lang::txt("COM_MEMBERS_ERROR_USERNAME_TOO_SHORT");
 			}
 		}
 
@@ -506,12 +506,12 @@ class Registration
 
 			if ($uid && $uid != $id)
 			{
-				$this->_invalid['login'] = 'The user login "'. htmlentities($login) .'" already exists. Please try another.';
+				$this->_invalid['login'] = Lang::txt("COM_MEMBERS_USERNAME_EXISTS_PREFIX"). htmlentities($login) .Lang::txt("COM_MEMBERS_USERNAME_EXISTS_SUFFIX");
 			}
 
 			if (\Hubzero\Utility\Validate::reserved('username', $login))
 			{
-				$this->_invalid['login'] = 'The user login "'. htmlentities($login) .'" already exists. Please try another.';
+				$this->_invalid['login'] = Lang::txt("COM_MEMBERS_USERNAME_EXISTS_PREFIX"). htmlentities($login) .Lang::txt("COM_MEMBERS_USERNAME_EXISTS_SUFFIX");
 			}
 
 			// system username check
@@ -520,7 +520,7 @@ class Registration
 			{
 				// log error and display error to user
 				\Log::error('System username/userid does not match DB username/password for user: ' . $uid);
-				$this->_invalid['login'] = 'Username mismatch error, please contact system administrator to fix your account.';
+				$this->_invalid['login'] = Lang::txt("COM_MEMBERS_USERNAME_MISMATCH");
 			}
 		}
 
@@ -528,8 +528,8 @@ class Registration
 		{
 			if (empty($registration['password']))
 			{
-				$this->_missing['password'] = 'Password';
-				$this->_invalid['password'] = 'Please provide a password.';
+				$this->_missing['password'] = Lang::txt("COM_MEMBERS_PASSWORD_LABEL");
+				$this->_invalid['password'] = Lang::txt("COM_MEMBERS_ENTER_PASSWORD");
 			}
 		}
 
@@ -550,8 +550,8 @@ class Registration
 		{
 			if (empty($registration['confirmPassword']))
 			{
-				$this->_missing['confirmPassword'] = 'Password Confirmation';
-				$this->_invalid['confirmPassword'] = 'Please provide the password again.';
+				$this->_missing['confirmPassword'] = Lang::txt("COM_MEMBERS_PASSWORD_CONFIRM_LABEL");
+				$this->_invalid['confirmPassword'] = Lang::txt("COM_MEMBERS_PASSWORD_CONFIRM_PROMPT");
 			}
 		}
 
@@ -559,7 +559,7 @@ class Registration
 		{
 			if ($registration['password'] != $registration['confirmPassword'])
 			{
-				$this->_invalid['confirmPassword'] = 'Passwords do not match. Please correct and try again.';
+				$this->_invalid['confirmPassword'] = Lang::txt("COM_MEMBERS_PASSWORD_MISMATCH");
 			}
 		}
 
@@ -568,7 +568,7 @@ class Registration
 			$score = $this->scorePassword($registration['password'], $registration['login']);
 			if ($score < PASS_SCORE_MEDIOCRE)
 			{
-				$this->_invalid['password'] = 'Password strength is too weak.';
+				$this->_invalid['password'] = Lang::txt("COM_MEMBERS_WEAK_PASSWORD");
 			}
 			else if ($score >= PASS_SCORE_MEDIOCRE && $score < PASS_SCORE_GOOD)
 			{
@@ -598,8 +598,8 @@ class Registration
 		{
 			if (empty($registration['name']))
 			{
-				$this->_missing['name'] = 'Full Name';
-				$this->_invalid['name'] = 'Please provide a name.';
+				$this->_missing['name'] = Lang::txt("COM_MEMBERS_FULL_NAME_LABEL");
+				$this->_invalid['name'] = Lang::txt("COM_MEMBERS_ENTER_NAME");
 			}
 			else
 			{
@@ -628,8 +628,8 @@ class Registration
 
 				if (!$givenName || !$surname)
 				{
-					$this->_missing['name'] = 'Full Name';
-					$this->_invalid['name'] = 'Please provide a name.';
+					$this->_missing['name'] = Lang::txt("COM_MEMBERS_FULL_NAME_LABEL");
+					$this->_invalid['name'] = Lang::txt("COM_MEMBERS_ENTER_NAME");
 				}
 			}
 		}
@@ -638,7 +638,7 @@ class Registration
 		{
 			if (!empty($registration['name']) && !Helpers\Utility::validname($registration['name']))
 			{
-				$this->_invalid['name'] = 'Invalid name. You may be using characters that are not allowed.';
+				$this->_invalid['name'] = Lang::txt("COM_MEMBERS_INVALID_NAME");
 			}
 		}
 
@@ -646,8 +646,8 @@ class Registration
 		{
 			if (empty($email))
 			{
-				$this->_missing['email'] = 'Valid Email';
-				$this->_invalid['email'] = 'Please provide a valid e-mail address.';
+				$this->_missing['email'] = Lang::txt("COM_MEMBERS_EMAIL_LABEL");
+				$this->_invalid['email'] = Lang::txt("COM_MEMBERS_INVALID_EMAIL");
 			}
 		}
 
@@ -655,11 +655,11 @@ class Registration
 		{
 			if (empty($email))
 			{
-				$this->_missing['email'] = 'Valid Email';
+				$this->_missing['email'] = Lang::txt("COM_MEMBERS_EMAIL_LABEL");
 			}
 			elseif (!Helpers\Utility::validemail($email))
 			{
-				$this->_invalid['email'] = 'Invalid email address. Please correct and try again.';
+				$this->_invalid['email'] = Lang::txt("COM_MEMBERS_EMAIL_INVALID_TRY_AGAIN");
 			}
 			else
 			{
@@ -681,7 +681,7 @@ class Registration
 				{
 					if ($allow_duplicate_emails == 0)
 					{
-						$this->_invalid['email'] = 'An existing account is already using this e-mail address.';
+						$this->_invalid['email'] = Lang::txt("COM_MEMBERS_EMAIL_EXISTS");
 					}
 					else if ($allow_duplicate_emails == 2)
 					{
@@ -689,7 +689,7 @@ class Registration
 						// then new accounts shouldn't be created with the same email.
 						if (($task == 'create' || $task == 'proxycreate'))
 						{
-							$this->_invalid['email'] = 'An existing account is already using this e-mail address.';
+							$this->_invalid['email'] = Lang::txt("COM_MEMBERS_EMAIL_EXISTS");
 						}
 						else
 						{
@@ -701,7 +701,7 @@ class Registration
 
 							if ($currentEmail != $email)
 							{
-								$this->_invalid['email'] = 'An existing account is already using this e-mail address.';
+								$this->_invalid['email'] = Lang::txt("COM_MEMBERS_EMAIL_EXISTS");
 							}
 						}
 					}
@@ -713,8 +713,8 @@ class Registration
 		{
 			if (empty($confirmEmail) && empty($this->_invalid['email']))
 			{
-				$this->_missing['confirmEmail'] = 'Valid Email Confirmation';
-				$this->_invalid['confirmEmail'] = 'Please provide a valid e-mail address again.';
+				$this->_missing['confirmEmail'] = Lang::txt("COM_MEMBERS_EMAIL_CONFIRM_LABEL");
+				$this->_invalid['confirmEmail'] = Lang::txt("COM_MEMBERS_EMAIL_CONFIRM_PROMPT");
 			}
 		}
 
@@ -724,8 +724,8 @@ class Registration
 			{
 				if (empty($this->_invalid['email']))
 				{
-					$this->_invalid['confirmEmail'] = 'Email addresses do not match. Please correct and try again.';
-					$this->_invalid['email'] = 'Email addresses do not match. Please correct and try again.';
+					$this->_invalid['confirmEmail'] = Lang::txt("COM_MEMBERS_EMAIL_MISMATCH");
+					$this->_invalid['email'] = Lang::txt("COM_MEMBERS_EMAIL_MISMATCH");
 				}
 			}
 		}
@@ -734,8 +734,8 @@ class Registration
 		{
 			if (is_null($registration['sendEmail']) || intval($registration['sendEmail']) < 0)
 			{
-				$this->_missing['sendEmail'] = 'Receive Email Updates';
-				$this->_invalid['sendEmail'] = 'Receive Email Updates has not been selected';
+				$this->_missing['sendEmail'] = Lang::txt("COM_MEMBERS_EMAIL_UPDATES_LABEL");
+				$this->_invalid['sendEmail'] = Lang::txt("COM_MEMBERS_EMAIL_UPDATES_NOT_SELECTED");
 			}
 		}
 
@@ -744,7 +744,7 @@ class Registration
 			$botcheck = Request::getString('botcheck', '');
 			if ($botcheck)
 			{
-				$this->_invalid['captcha'] = 'Error: Invalid CAPTCHA response.';
+				$this->_invalid['captcha'] = Lang::txt("COM_MEMBERS_INVALID_CAPTCHA");
 			}
 
 			$validcaptchas = Event::trigger('captcha.onCheckAnswer');
@@ -754,7 +754,7 @@ class Registration
 				{
 					if (!$validcaptcha)
 					{
-						$this->_invalid['captcha'] = 'Error: Invalid CAPTCHA response.';
+						$this->_invalid['captcha'] = Lang::txt("COM_MEMBERS_INVALID_CAPTCHA");
 					}
 				}
 			}
@@ -764,8 +764,8 @@ class Registration
 		{
 			if (empty($registration['usageAgreement']))
 			{
-				$this->_missing['usageAgreement'] = 'Usage Agreement';
-				$this->_invalid['usageAgreement'] = 'Registration requires acceptance of the usage agreement';
+				$this->_missing['usageAgreement'] = Lang::txt("COM_MEMBERS_USAGE_AGREEMENT_LABEL");
+				$this->_invalid['usageAgreement'] = Lang::txt("COM_MEMBERS_ACCEPT_USAGE_AGREEMENT");
 			}
 		}
 
@@ -932,14 +932,14 @@ class Registration
 		$ret['status'] = 'error';
 		if (empty($username))
 		{
-			$ret['message'] = 'Please enter a username.';
+			$ret['message'] = Lang::txt("COM_MEMBERS_ENTER_USERNAME");
 			return $ret;
 		}
 
 		// check the general validity
 		if (!Helpers\Utility::validlogin($username))
 		{
-			$ret['message'] = 'Invalid login name. Please type between 2 and 32 characters and use only lowercase alphanumeric characters.';
+			$ret['message'] = Lang::txt("COM_MEMBERS_ERROR_INVALID_USERNAME");
 			return $ret;
 		}
 
@@ -950,12 +950,12 @@ class Registration
 
 		if ($total > 0)
 		{
-			$ret['message'] = 'User login name is not available. Please select another one.';
+			$ret['message'] = Lang::txt("COM_MEMBERS_NAME_NOT_AVAILABLE");
 			return $ret;
 		}
 
 		$ret['status'] = 'ok';
-		$ret['message'] = 'User login name is available';
+		$ret['message'] = Lang::txt("COM_MEMBERS_NAME_IS_AVAILABLE");
 
 		return $ret;
 	}

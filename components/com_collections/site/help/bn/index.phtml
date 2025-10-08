@@ -1,0 +1,35 @@
+﻿<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>সংগ্রহ সহায়তা</h1>
+
+	<p class="tagline">সংগ্রহ হলো Canadian HSS Commons-এ তথ্য শেয়ার, প্রিয় হিসেবে সংরক্ষণ এবং সংগঠিত করার একটি দ্রুত এবং সহজ উপায়।</p>
+
+	<section class="about-odd posts">
+		<h2>পোস্ট</h2>
+		<p>একটি পোস্ট শুরু হয় একটি ছবি, লিঙ্ক, বা ফাইল দিয়ে যা আপনি শেয়ার করতে চান। আপনি সাইটে কনটেন্ট সংগ্রহ করে বা সরাসরি আপনার কম্পিউটার থেকে একটি ফাইল আপলোড করে একটি পোস্ট যোগ করতে পারেন। যেকোনো পোস্ট পুনরায় পোস্ট করা যেতে পারে, এবং সমস্ত পোস্ট তাদের মূল উৎসে সংযুক্ত থাকে।</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>">আরও জানুন</a></p>
+	</section>
+
+	<section class="about-even collections">
+		<h2>সংগ্রহ</h2>
+		<p>সংগ্রহ হলো যেখানে আপনি আপনার পোস্টগুলো বিষয়ভিত্তিকভাবে সাজিয়ে রাখেন। সংগ্রহ গোপন বা প্রকাশ্য হতে পারে, এবং আপনি একটি সংগ্রহ আরেকটির ভেতরেও রাখতে পারেন!</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>">আরও জানুন</a></p>
+	</section>
+
+	<section class="about-odd following">
+		<h2>অনুসরণ</h2>
+		<p>যখন আপনি কাউকে অনুসরণ করেন, তাদের পোস্টগুলো আপনার লাইভ ফিডে দেখায়। আপনি কারও সমস্ত সংগ্রহ বা কেবল যেগুলো আপনার পছন্দ সেগুলো অনুসরণ করতে পারেন। আপনি যাদের অনুসরণ করছেন তা পর্যালোচনা করতে, আপনার প্রোফাইলে যান, সংগ্রহ খুঁজুন এবং "অনুসরণ" ক্লিক করুন।</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>">আরও জানুন</a></p>
+	</section>
+</article>

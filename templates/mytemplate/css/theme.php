@@ -75,12 +75,12 @@ switch ($bground)
 		$opacity = request('o1', '0.75');
 		$styles .= '
 		#outer-wrap {
-			background: transparent url("' . $tmpl . '/img/delauney.svg") 0 0 no-repeat;
+			background: transparent url("' . $tmpl . '/img/delauney.svg") 0 0 repeat-y;
 			background-size: 100% auto;
 		}
-		@media (max-width: 1000px) {
+		@media (max-width: 2200px) {
 			#outer-wrap {
-				background-size: 1000px auto;
+				background-size: 2200px auto;
 				background-position: 50% 0;
 			}
 		}

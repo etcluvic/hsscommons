@@ -5,6 +5,25 @@
  *
  */
 
+ /* Export button link styles */
+ .btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2677b5;
+  cursor: pointer;
+  font-style: italic;
+  text-decoration: none;
+  font-family: 'OpenSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: inline;
+  vertical-align: baseline;
+  font-size: inherit;
+  line-height: inherit;
+}
+.btn-link:hover {
+  color: #444;
+  text-decoration: underline;
+}
 .hide-text {
   font: 0/0 a;
   color: transparent;
