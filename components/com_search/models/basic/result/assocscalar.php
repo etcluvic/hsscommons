@@ -36,7 +36,35 @@ class AssocScalar extends SearchResult
 	 *
 	 * @var unknown
 	 */
-	private $link;
+	public $link;
+
+	/**
+	 * Description for 'publication_id'
+	 *
+	 * @var unknown
+	 */
+	public $publication_id;
+
+	/**
+	 * Description for 'parents'
+	 *
+	 * @var unknown
+	 */
+	public $parents;
+
+	/**
+	 * Description for 'highlight_regex'
+	 *
+	 * @var unknown
+	 */
+	public $highlight_regex;
+
+	/**
+	 * Description for 'title_highlighted'
+	 *
+	 * @var unknown
+	 */
+	public $title_highlighted;
 
 	/**
 	 * Short description for 'is_scalar'
