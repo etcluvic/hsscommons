@@ -10,6 +10,19 @@ defined('_HZEXEC_') or die();
 
 use Components\Members\Models\Profile\Field;
 
+$translations = [
+    "Must not contain easily guessed words" => Lang::txt('COM_MEMBERS_RULE_NOT_GUESSABLE'),
+    "Must contain more than 4 unique characters" => Lang::txt('COM_MEMBERS_RULE_UNIQUE_CHARS'),
+    "Must be no longer than 16 characters" => Lang::txt('COM_MEMBERS_RULE_MAX_LENGTH'),
+    "Must be at least 8 characters long" => Lang::txt('COM_MEMBERS_RULE_MIN_LENGTH'),
+    "Must contain at least 1 number or punctuation mark" => Lang::txt('COM_MEMBERS_RULE_NUMBER_PUNCT'),
+    "Must contain at least 1 letter" => Lang::txt('COM_MEMBERS_RULE_LETTER')
+];
+
+$script = "var translatedRules = " . json_encode($translations) . ";";
+$doc = \JFactory::getDocument();
+$doc->addScriptDeclaration($script);
+
 $this->css('register')
      ->js('register');
 
@@ -131,11 +144,11 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 			{
 				?>
 				<div class="explaination">
-					<p class="info">You can choose to log in via one of these services, and we'll help you fill in the info below!</p>
-					<p>Already have an account? <a href="<?php echo Route::url('index.php?option=com_login'); ?>">Log in here.</a></p>
+					<p class="info"><?php echo Lang::txt('COM_MEMBERS_LOGIN_SERVICE'); ?></p>
+					<p><?php echo Lang::txt('COM_MEMBERS_LOGIN_HAVE_ACCOUNT'); ?> <a href="<?php echo Route::url('index.php?option=com_login'); ?>"><?php echo Lang::txt('COM_MEMBERS_LOGIN_HERE'); ?></a></p>
 				</div>
 				<fieldset>
-					<legend>Connect With</legend>
+					<legend><?php echo Lang::txt('COM_MEMBERS_LOGIN_CONNECT_WITH'); ?></legend>
 					<div id="providers" class="auth" style="margin-top: 20px;">
 						<?php
 							echo $provider_html;
@@ -153,22 +166,22 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 
 		if (($this->task == 'create' || $this->task == 'proxycreate') && $emailusers) { ?>
 			<div class="error">
-				<p>The email address "<?php echo $this->escape($this->registration['email']); ?>" is already registered. If you have lost or forgotten this <?php echo $this->sitename; ?> login information, we can help you recover it:</p>
-				<p class="submit"><a href="<?php echo Route::url('index.php?option=com_members&task=remind'); ?>" class="btn btn-danger">Email Existing Account Information</a>
-				<p>If you are aware you already have another account registered to this email address, and are requesting another account because you need more resources, <?php echo $this->sitename; ?> would be happy to work with you to raise your resource limits instead:</p>
-				<p class="submit"><a href="<?php echo Route::url('index.php?option=com_support&controller=tickets&task=new'); ?>" class="btn btn-danger">Submit Request to Raise Existing Limits</a></p>
+				<p><?php echo Lang::txt('COM_MEMBERS_THE_EMAIL_ADDRESS'); ?> "<?php echo $this->escape($this->registration['email']); ?>" <?php echo Lang::txt('COM_MEMBERS_IS_ALREADY_REGISTERED'); ?><?php echo $this->sitename; ?> <?php echo Lang::txt('COM_MEMBERS_RECOVER_IT'); ?></p>
+				<p class="submit"><a href="<?php echo Route::url('index.php?option=com_members&task=remind'); ?>" class="btn btn-danger"><?php echo Lang::txt('COM_MEMBERS_EXISTING_ACCOUNT'); ?></a>
+				<p><?php echo Lang::txt('COM_MEMBERS_IF_AWARE'); ?><?php echo $this->sitename; ?> <?php echo Lang::txt('COM_MEMBERS_WOULD_BE_HAPPY'); ?></p>
+				<p class="submit"><a href="<?php echo Route::url('index.php?option=com_support&controller=tickets&task=new'); ?>" class="btn btn-danger"><?php echo Lang::txt('COM_MEMBERS_RAISE_LIMITS'); ?></a></p>
 			</div>
 		<?php } ?>
 
 		<?php if (!empty($this->xregistration->_invalid) || !empty($this->xregistration->_missing)) : ?>
 			<div class="error">
-				Please correct the indicated invalid fields in the form below.
+				<?php echo Lang::txt('COM_MEMBERS_PLEASE_CORRECT'); ?>
 
 				<?php if ($this->showMissing && !empty($this->xregistration->_missing)) : ?>
 					<?php if ($this->task == 'update') : ?>
-						<br />We are missing some vital information regarding your account! Please confirm the information below so we can better serve you. Thank you!
+						<br /><?php echo Lang::txt('COM_MEMBERS_WE_ARE_MISSING'); ?>
 					<?php else : ?>
-						<br />Missing required information:
+						<br /><?php echo Lang::txt('COM_MEMBERS_MISSING_REQUIRED'); ?>
 					<?php endif; ?>
 					<ul>
 						<?php foreach ($this->xregistration->_missing as $miss) : ?>
@@ -286,6 +299,16 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 							<div class="grid">
 								<ul id="passrules">
 									<?php
+									
+									// $rule_translation_keys = [
+									// 	'Must not contain easily guessed words' => 'COM_MEMBERS_RULE_NOT_GUESSABLE',
+									// 	'Must contain more than 4 unique characters' => 'COM_MEMBERS_RULE_UNIQUE_CHARS',
+									// 	'Must be no longer than 16 characters' => 'COM_MEMBERS_RULE_MAX_LENGTH',
+									// 	'Must be at least 8 characters long' => 'COM_MEMBERS_RULE_MIN_LENGTH',
+									// 	'Must contain at least 1 number or punctuation mark' => 'COM_MEMBERS_RULE_NUMBER_PUNCT',
+									// 	'Must contain at least 1 letter' => 'COM_MEMBERS_RULE_LETTER'
+									// ];
+
 									foreach ($this->password_rules as $rule)
 									{
 										if (!empty($rule))
@@ -295,8 +318,10 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 											{
 												$err = in_array($rule, $this->xregistration->_invalid['password']);
 											}
+											$translation_key = isset($translations[$rule]) ? $translations[$rule] : null;
+											$translated_rule = $translation_key ? JText::_($translation_key) : $rule;
 
-											echo '<li' . ($err ? ' class="error"' : ' class="empty"') . '>' . $rule . '</li>' . "\n";
+											echo '<li' . ($err ? ' class="error"' : ' class="empty"') . '>' . htmlspecialchars($translated_rule) . '</li>' . "\n";
 										}
 									}
 									if (!empty($this->xregistration->_invalid['password']) && is_array($this->xregistration->_invalid['password']))

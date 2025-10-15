@@ -40,6 +40,9 @@ if (!function_exists('modifyLanguageLink')) {
 		// Rebuild the path
 		$languageLink = '/' . implode('/', array_filter($pathParts));
 
+		// Remove all instances of 'home' from the rebuilt path
+        $languageLink = preg_replace('/\/home/', '', $languageLink);
+
 		// Return the modified language link
 		return htmlspecialchars($languageLink);
 	}

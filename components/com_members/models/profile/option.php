@@ -8,6 +8,7 @@
 namespace Components\Members\Models\Profile;
 
 use Hubzero\Database\Relational;
+use Lang;
 
 /**
  * User profile field option model
@@ -79,6 +80,27 @@ class Option extends Relational
 
 		return $data['value'];
 	}
+
+	/**
+     * Override the get method to translate the label
+     *
+     * @param   string  $key      The property to get
+     * @param   mixed   $default  The default value if the property does not exist
+     * @return  mixed   The property value
+     */
+    public function get($key, $default = null)
+    {
+        $value = parent::get($key, $default);
+
+        if ($key == 'label')
+        {
+            $normalizedValue = preg_replace('/[^A-Za-z0-9]/', '_', $value);
+        	$translationKey = 'COM_MEMBERS_DYNAMIC_' . strtoupper($normalizedValue);
+            return Lang::txt($translationKey);
+        }
+
+        return $value;
+    }
 
 	/**
 	 * Generates automatic checked field value

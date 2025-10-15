@@ -333,6 +333,7 @@ class Batchcreate extends AdminController
 				$item['version']->description   = isset($node->abstract) ? trim($node->abstract) : '';
 				$item['version']->version_label = isset($node->version) ? trim($node->version) : '1.0';
 				$item['version']->release_notes = isset($node->notes) ? '<p>' . trim($node->notes) . '</p>' : '';
+				$item['version']->doi           = isset($node->doi) ? trim($node->doi) : '';
 
 				// Check license
 				$license = isset($node->license) ? $node->license : '';

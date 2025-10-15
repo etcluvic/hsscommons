@@ -105,7 +105,7 @@ endif;
 
 			<div class="form-group">
 				<label for="problem_long"<?php echo ($this->getError() && !$this->row->get('report')) ? ' class="fieldWithErrors"' : ''; ?>>
-					<?php echo Lang::txt('COM_SUPPORT_TROUBLE_DESCRIPTION'); ?> <span class="required"><?php echo Lang::txt('JREQUIRED'); ?></span>
+					<?php echo Lang::txt('COM_SUPPORT_TROUBLE_DESCRIPTION'); ?> <span class="required"><?php echo Lang::txt('COM_SUPPORT_REQUIRED'); ?></span>
 					<textarea name="problem[long]" cols="40" rows="10" class="form-control" id="problem_long"><?php echo $this->row->get('report'); ?></textarea>
 				</label>
 				<?php if ($this->getError() && !$this->row->get('report')): ?>
