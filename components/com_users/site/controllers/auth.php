@@ -157,7 +157,7 @@ class Auth extends SiteController
 		$defaultReturn = base64_encode($defaultReturn);
 
 		$uri = Uri::getInstance();
-		if ($rtrn = $uri->getVar('return'))
+		if ($rtrn = $uri->getUriVar('return'))
 		{
 			if (!$this->isBase64($rtrn))
 			{
