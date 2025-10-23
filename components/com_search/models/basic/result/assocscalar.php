@@ -67,6 +67,13 @@ class AssocScalar extends SearchResult
 	public $title_highlighted;
 
 	/**
+    * Description for 'img_href'
+    *
+    * @var unknown
+    */
+    public $img_href;
+
+	/**
 	 * Short description for 'is_scalar'
 	 *
 	 * Long description (if any) ...
