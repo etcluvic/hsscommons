@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metafile version="2.0" client="site">
-	<name>French (France)</name>
+	<name>Ukrainian</name>
 	<version>1.0.0</version>
-	<creationDate>2023-09-15</creationDate>
-	<author>Archie To</author>
-	<authorEmail>toanhminh0412@gmail.com</authorEmail>
+	<creationDate>2025-10-23</creationDate>
+	<author>Paurav Hosur Param</author>
+	<authorEmail>pauravhp2003@gmail.com</authorEmail>
 	<authorUrl>hubzero.org</authorUrl>
 	<copyright>Copyright (c) 2005-2020 The Regents of the University of California.</copyright>
 	<license>http://opensource.org/licenses/MIT MIT</license>
@@ -19,7 +19,7 @@
 		<name>French (France)</name>
 		<tag>uk</tag>
 		<rtl>0</rtl>
-		<locale>fr_FR.utf8, fr_FR.UTF-8, fr_FR, fr_FR, fr, french, french-fr, france</locale>
+		<locale>uk.utf8, uk.UTF-8, uk, uk, uk, ukrainian, ukrainian-uk, ukraine</locale>
 		<firstDay>0</firstDay>
 	</metadata>
 	<params />
