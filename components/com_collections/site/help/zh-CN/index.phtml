@@ -1,0 +1,35 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>合集帮助</h1>
+
+	<p class="tagline">合集是一种在加拿大 HSS Commons 上快速、便捷地分享、收藏和组织信息的方式。</p>
+
+	<section class="about-odd posts">
+		<h2>帖子</h2>
+		<p>帖子通常以您想要分享的图片、链接或文件为起点。您可以通过收藏站内内容来创建帖子，或直接从您的计算机上传文件。任何帖子都可以被再次转发，且所有帖子都会链接回其原始来源。</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>"> 了解更多</a></p>
+	</section>
+
+	<section class="about-even collections">
+		<h2>收藏</h2>
+		<p>合集用于按主题组织您的帖子。例如，您可以将与“学术交流导论”相关的资源汇集在一个合集之中。合集可以设为私密或公开，您甚至可以在一个合集内部再创建另一个合集。</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>"> 了解更多</a></p>
+	</section>
+
+	<section class="about-odd following">
+		<h2>关注</h2>
+		<p>当您关注某位用户时，他们发布的内容将显示在您的动态信息流中。您可以关注某位用户的所有合集，也可以只关注您最感兴趣的部分。如需管理您关注的对象，请前往您的个人资料页面，找到“合集”，并点击“正在关注”。</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>"> 了解更多</a></p>
+	</section>
+</article>
