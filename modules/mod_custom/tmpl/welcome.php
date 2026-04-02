@@ -20,10 +20,19 @@ if ($params->get('backgroundimage'))
 <div class="custom<?php echo $moduleclass_sfx ?>">
 	<?php echo $module->content; ?>
     <?php if (!User::isGuest()): ?>
-        <div></div>
+        <div id="welcome-button" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <a href="/about" class="btn">
+                <?php echo Lang::txt('MOD_LEARN_MORE_ABOUT_HSS') ?>
+            </a>
+        </div>
     <?php else: ?>
-        <div align="centre" id="welcome-button">
-            <a href="/register" class="btn"><?php echo Lang::txt('MOD_REGISTER') ?></a>
+        <div id="welcome-button" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <a href="/register" class="btn">
+                <?php echo Lang::txt('MOD_REGISTER') ?>
+            </a>
+            <a href="/about" class="btn">
+                <?php echo Lang::txt('MOD_LEARN_MORE_ABOUT_HSS') ?>
+            </a>
         </div>
     <?php endif; ?>
 </div>
