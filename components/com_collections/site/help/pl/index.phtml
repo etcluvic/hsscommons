@@ -1,0 +1,35 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>Kolekcje - pomoc</h1>
+
+	<p class="tagline">Kolekcje pozwalają w prosty sposób udostępniać i organizować informacje w serwisie Canadian HSS Commons lub oznaczać je jako ulubione.</p>
+
+	<section class="about-odd posts">
+		<h2>Wpisy</h2>
+		<p>Wpisy zawierają obrazy, linki lub pliki, które użytkownik chce udostępnić. Mogą zawierać materiał znaleziony w serwisie lub dodany bezpośrednio z dysku. Każdy wpis może być przekazany dalej, a linki zawarte we wpisach zachowują lokalizację źródła.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>">Więcej informacji</a></p>
+	</section>
+
+	<section class="about-even collections">
+		<h2>Kolekcje</h2>
+		<p>Kolekcje służą do organizowania wpisów według tematu - mogłaby zawierać, na przykład, materiały zebrane na potrzeby kursu dotyczącego komunikacji w środowisku naukowym. Kolekcje mogą być prywatne lub publiczne. Można też umieszczać kolekcje wewnątrz innych kolekcji.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>">Więcej informacji</a></p>
+	</section>
+
+	<section class="about-odd following">
+		<h2>Obserwowanie</h2>
+		<p>Wpisy obserwowanego użytkownika pojawiają się na stronie głównej. Można obserwować wszystkie lub wybrane kolekcje danego użytkownika. Listę obsewowanych użytkowników można sprawdzić lub zmodyfikować we własnym profilu, po kliknięciu opcji Kolekcje, a następnie: Obserwowanie.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>">Więcej informacji</a></p>
+	</section>
+</article>

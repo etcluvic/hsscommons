@@ -1,0 +1,42 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+?>
+<article>
+	<h1>Pomoc - kolekcje. Kolekcja</h1>
+	<p>Kolekcja to zbiór postów posortowanych według tematu. Może służyć na przykład do gromadzenia zasobów na potrzeby przekazywania wiedzy. Można też zagnieżdżać jedne kolekcje w drugich.</p>
+
+	<section>
+		<h2>Kolekcja domyślna</h2>
+		<p>Każdy nowy użytkownik otrzymuje własną kolekcję domyślną - tam można zacząć dodawać posty. Każda kolekcja domyślna ma początkowo status prywatny, można jednak zmienić ustawienia prywatności w razie potrzeby. Można też zmienić jej tytuł i opis.</p>
+	</section>
+
+	<section>
+		<h2>Tworzenie kolekcji</h2>
+		<p>Kolekcje można tworzyć podczas przeglądania listy kolekcji przy użyciu przycisku “Nowa kolekcja” lub na bieżąco, przeglądając posty.</p>
+
+		<h3>Przycisk “Nowa kolekcja”</h3>
+		<p>Po kliknięciu przycisku pojawi się formularz, umożliwiający dostosowanie kolekcji do potrzeb użytkownika i zamieszczenie opisu. Wymagane jest tylko podanie tytułu kolekcji, w opisie można jednak zawrzeć dodatkowe informacje.</p>
+
+		<h3>Na bieżąco</h3>
+		<p>Kolekcje można też tworzyć podczas przeglądania strony - zasobów, stron wii, i tak dalej. Na każdej stronie znajduje się przycisk “Dodaj do kolekcji”. Po jego kliknięciu można dodać element do istniejącej kolekcji lub utworzyć nową - w tym drugim przypadku należy wpisać tytuł.</p>
+	</section>
+
+	<section>
+		<h2>Utwórz kolekcję prywatną</h2>
+		<p>Użytkownik może też tworzyć kolekcje prywatne, których nie mogą przeglądać inni użytkownicy. W tym celu podczas tworzenia lub edycji kolekcji należy wybrać opcję “Prywatna” z rozwijanego menu “Prywatność” i zapisać zmiany. Kolekcje prywatne są oznaczone ikoną <span class="icon-private">kłódki</span> obok tytułu.</p>
+		<p><strong>Uwaga:</strong> kolekcje prywatne nie są widoczne w wyszukiwaniach ani na stronie z listą <a href="<?php echo Route::url('index.php?option=com_collections'); ?>">kolekcji</a> dostępną w serwisie.</p>
+	</section>
+
+	<section>
+		<h2>Usuwanie kolekcji</h2>
+		<p>Usunięcie kolekcji jest możliwe po zalogowaniu na konto i wybraniu właściwego elementu z listy “Kolekcje”. Po najechaniu kursorem na kolekcję lub jej wybraniu pojawia się przycisk “Usuń”. Po kliknięciu przycisku należy potwierdzić usunięcie kolekcji. Wybranie opcji “nie” powoduje przejście dalej bez zmian, opcja “tak” potwierdza usunięcie.</p>
+		<p><strong>Uwaga:</strong> Usunięcie kolekcji <em>nie</em> jest równoznaczne z usunięciem wszystkich postów w niej zawartych.</p>
+	</section>
+</article>
