@@ -308,12 +308,22 @@ class connections
             $creatorId = (int)$this->connection->get('owner_id');
         }
 
-        if (!isset($connection_params->path) && $currentUser != $creatorId)
+		if (!isset($connection_params->path))
         {
-			\Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_NOT_AUTHORIZED'), 'error', 'projects');
+            // If the creator ID and owner ID are both missing/0, it's an unconfigured legacy shared connection
+            if ($creatorId === 0)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_OUTDATED'), 'warning');
+                \App::redirect(\Route::url($this->model->link('files'), false));
+                return;
+            }
 
-            \App::redirect(\Route::url($this->model->link('files'), false));
-            return;
+            if ($currentUser != $creatorId)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_NOT_AUTHORIZED'), 'error', 'projects');
+                \App::redirect(\Route::url($this->model->link('files'), false));
+                return;
+            }
         }
 
 		// Set up view
@@ -459,9 +469,16 @@ class connections
 
         if ($currentUser != $creatorId)
         {
-			\Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_PREFIX_NOT_AUTHORIZED'), 'error', 'projects');
+			if ($creatorId === 0)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_OUTDATED'), 'warning');
+            }
+            else
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_PREFIX_NOT_AUTHORIZED'), 'error', 'projects');
+            }
 
-            \App::redirect(\Route::url($this->model->link('files'), false));
+			\App::redirect(\Route::url($this->model->link('files'), false));
             return;
         }
 
