@@ -48,16 +48,23 @@ $parentUrl = Route::url($this->model->link('files') . '&action=browse&connection
 					<?php endif; ?>
 						<li>
 							<?php
-							echo '<input type="radio" name="prefix" value="' . urlencode($this->current_dir->getPath()) . '" />';
+							echo '<input type="radio" name="prefix" value="' . urlencode($this->current_dir->getPath()) . '" required />';
 							echo \Components\Projects\Models\File::drawIcon($this->current_dir->getExtension());
+
+							// Check if the name is empty (meaning we are at the root)
+							$currentDirName = $this->current_dir->getDisplayName();
+							if (empty($currentDirName) || $this->subdir == '')
+							{
+								$currentDirName = Lang::txt('PLG_PROJECTS_FILES_HOME_DIRECTORY'); 
+							}
 							?>
-							<span><?php echo Lang::txt('PLG_PROJECTS_FILES_CONNECTED_CURRENT_DIRECTORY', $this->current_dir->getDisplayName()); ?></span>
+							<span><?php echo Lang::txt('PLG_PROJECTS_FILES_CONNECTED_CURRENT_DIRECTORY', $currentDirName); ?></span>
 						</li>
 					<?php
 					foreach ($this->items as $dir) : ?>
 						<li>
 							<?php 
-							echo '<input type="radio" name="prefix" value="' . urlencode($dir->getPath()) . '" />';
+							echo '<input type="radio" name="prefix" value="' . urlencode($dir->getPath()) . '" required />';
 							echo \Components\Projects\Models\File::drawIcon($dir->getExtension());
 							echo '<a href="'. Route::url($this->model->link('files') . '&action=browse&connection=' . $this->connection->id . '&subdir=' . $dir->getPath()) . '">' . $dir->getDisplayName() . '</a>'; ?>
 						</li>
