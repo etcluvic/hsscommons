@@ -14,6 +14,7 @@ include_once PATH_APP . DS . 'components' . DS. 'com_members' . DS . 'helpers' .
 
 use Hubzero\Component\SiteController;
 use Hubzero\Pagination\Paginator;
+use Hubzero\Base\ItemList;
 use Components\Projects\Tables\Project;
 use Components\Publications\Tables;
 use Components\Publications\Models\Bundle;
@@ -420,7 +421,8 @@ class Publications extends SiteController
 			'start'       => Request::getInt('limitstart', 0),
 			'search'      => Request::getString('search', ''),
 			'tag'         => trim(Request::getString('tag', '', 'request')),
-			'tag_ignored' => []
+			'tag_ignored' => [],
+			'filter_primary_files' => Request::getInt('filter_primary_files', 0)
 		];
 
 		if (!in_array($filters['sortby'], ['date', 'title', 'id', 'rating', 'ranking', 'popularity']))
@@ -461,6 +463,9 @@ class Publications extends SiteController
 			}
 		}
 
+		// Add filter_primary_files to the filters array
+		$filters['filter_primary_files'] = Request::getInt('filter_primary_files', 0);
+
 		// Instantiate a publication object
 		$model = new Models\Publication();
 
@@ -469,6 +474,25 @@ class Publications extends SiteController
 
 		// Run query with limit
 		$results = $model->entries('list', $filters);
+
+		// Lee: Check that publication has an attachment
+		if ($filters['filter_primary_files'])
+		{
+			$filteredResults = [];
+			foreach ($results as $result)
+			{
+				$attachments = $result->attachments();
+				if (isset($attachments[1]) && !empty($attachments[1][0]))
+				{
+					$filteredResults[] = $result;
+				}
+				else
+				{
+					$total--;
+				}
+			}
+			$results = new ItemList($filteredResults);
+		}
 
 		// Initiate paging
 		$pageNav = new Paginator(

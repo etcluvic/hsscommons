@@ -2235,7 +2235,6 @@ class Publication extends Obj
 				$results[$key] = new self($result);
 			}
 		}
-
 		return new ItemList($results);
 	}
 

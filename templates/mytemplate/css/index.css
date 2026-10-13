@@ -5059,6 +5059,25 @@ ol.comments .time {
 .container .entries-menu select {
   margin-bottom: 0.5em;
 }
+/* Publication browse filters */
+.container .filter-options label[for="filter-primary-files"] {
+  font-size: 14px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.container .filter-options #filter-primary-files {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  accent-color: #007BFF;
+}
+/* On big screens, make sure the label and checkbox are spaced enough, to the left of the search bar */
+@media (min-width: 1410px) {
+  .container .filter-options label[for="filter-primary-files"] {
+    margin-left: 10px;
+  }
+}
 .container .filter-options,
 .container .user-options {
   border: none;
