@@ -191,6 +191,9 @@ class connections
 		{
 			$connection_params = json_decode($connection->get('params'));
 			unset($connection_params->app_token);
+			if (isset($connection_params->path)) {
+                unset($connection_params->path);
+            }
 			$connection->set('params', json_encode($connection_params));
 			$connection->save();
 		}
@@ -228,12 +231,15 @@ class connections
 	public function saveconnection()
 	{
 		$data = Request::getArray('connect', array(), 'post');
+		$currentUser = \User::get('id');
 
-		$data['owner_id'] = User::get('id');
+		$data['owner_id'] = $currentUser;
 		if (Request::getInt('shareconnection', 0, 'post'))
 		{
 			$data['owner_id'] = 0;
 		}
+
+		$data['creator_id'] = $currentUser;
 
 		$connection = Connection::blank();
 		$connection->set($data);
@@ -287,16 +293,109 @@ class connections
 	 */
 	public function browse()
 	{
+		$params = $this->connection->get('params');
+        $connection_params = is_string($params) ? json_decode($params) : $params;
+
+		if (!$connection_params) {
+            $connection_params = new \stdClass();
+        }
+
+        // Security check
+        $currentUser = \User::get('id');
+        $creatorId = (int)$this->connection->get('creator_id');
+        if ($creatorId === 0)
+        {
+            $creatorId = (int)$this->connection->get('owner_id');
+        }
+
+		if (!isset($connection_params->path))
+        {
+            // If the creator ID and owner ID are both missing/0, it's an unconfigured legacy shared connection
+            if ($creatorId === 0)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_OUTDATED'), 'warning');
+                \App::redirect(\Route::url($this->model->link('files'), false));
+                return;
+            }
+
+            if ($currentUser != $creatorId)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_NOT_AUTHORIZED'), 'error', 'projects');
+                \App::redirect(\Route::url($this->model->link('files'), false));
+                return;
+            }
+        }
+
 		// Set up view
-		$connection_params = json_decode($this->connection->params);
-		if (!Request::getString('disclosure_confirmed', 0) && !$connection_params) {
-			return $this->disclosure();
-		}
+		if (!Request::getString('disclosure_confirmed', 0) && !isset($connection_params->app_token)) {
+            return $this->disclosure();
+        }
 
 		if (!isset($connection_params->path))
 		{
 			return $this->setup_base_dir();
 		}
+
+        $folderExists  = true;
+
+        // Verify that the Google Drive folder exists
+        if ($this->connection->provider->get('alias') === 'googledrive')
+        {
+            try {
+                $pparams = \Plugin::params('filesystem', 'googledrive');
+                $app_id = isset($connection_params->app_id) && $connection_params->app_id != '' ? $connection_params->app_id : $pparams->get('app_id');
+                $app_secret = isset($connection_params->app_secret) && $connection_params->app_secret != '' ? $connection_params->app_secret : $pparams->get('app_secret');
+
+                $client = new \Google_Client();
+                $client->setClientId($app_id);
+                $client->setClientSecret($app_secret);
+                
+                if (isset($connection_params->app_token)) {
+                    $client->setAccessToken((array)$connection_params->app_token);
+                    $service = new \Google_Service_Drive($client);
+                    
+                    // Extract the Google Drive Folder ID
+                    $pathParts = explode('/', urldecode($connection_params->path));
+                    $folderId  = end($pathParts);
+
+                    // Throws 404 if permanently deleted
+                    $fileMeta = $service->files->get($folderId, ['fields' => 'trashed']);
+                    
+                    // If it is sitting in the trash, treat it as deleted
+                    if ($fileMeta->getTrashed()) {
+                        $folderExists = false;
+                    }
+                }
+            } catch (\Exception $e) {
+                $folderExists = false;
+            }
+        }
+
+        if (!$folderExists)
+        {
+			// Wipe the path from the connection parameters
+            unset($connection_params->path);
+            $this->connection->set('params', json_encode($connection_params));
+            $this->connection->save();
+
+            // Security check
+            if ($currentUser == $creatorId)
+            {
+                // Notify the creator and render the folder-selection UI
+                \Notify::message(\Lang::txt('PLG_PROJECTS_FILES_ERROR_REMOTE_FOLDER_MISSING'), 'error', 'projects');
+
+                return $this->setup_base_dir();
+            }
+            else
+            {
+                // Deny access to everyone else
+                \Notify::message(\Lang::txt('PLG_PROJECTS_FILES_ERROR_REMOTE_FOLDER_MISSING'), 'error', 'projects');
+
+                \App::redirect(\Route::url($this->model->link('files'), false));
+                return;
+            }
+        }
+
 		$view = new \Hubzero\Plugin\View([
 			'folder'  => 'projects',
 			'element' => 'files',
@@ -357,6 +456,32 @@ class connections
 	 */
 	public function setup_base_dir()
 	{
+		// Security check
+        $currentUser = \User::get('id');
+        $connection_params = json_decode($this->connection->params) ?: new \stdClass();
+
+        // Check native column. If 0 (legacy data), fallback to owner_id
+        $creatorId = (int)$this->connection->get('creator_id');
+        if ($creatorId === 0)
+        {
+            $creatorId = (int)$this->connection->get('owner_id');
+        }
+
+        if ($currentUser != $creatorId)
+        {
+			if ($creatorId === 0)
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_CONNECTION_OUTDATED'), 'warning');
+            }
+            else
+            {
+                \Notify::message(Lang::txt('PLG_PROJECTS_FILES_ERROR_PREFIX_NOT_AUTHORIZED'), 'error', 'projects');
+            }
+
+			\App::redirect(\Route::url($this->model->link('files'), false));
+            return;
+        }
+
 		$view = new \Hubzero\Plugin\View([
 			'folder'	=> 'projects',
 			'element'	=> 'files',
@@ -394,6 +519,25 @@ class connections
 	 */
 	public function setprefix()
 	{
+		// Security check
+        $currentUser = \User::get('id');
+        $connection_params = json_decode($this->connection->params) ?: new \stdClass();
+
+        // Check native column. If 0 (legacy data), fallback to owner_id
+        $creatorId = (int)$this->connection->get('creator_id');
+        if ($creatorId === 0)
+        {
+            $creatorId = (int)$this->connection->get('owner_id');
+        }
+
+        if ($currentUser != $creatorId)
+        {
+            \Notify::message(\Lang::txt('COM_PROJECTS_ERROR_ACTION_NOT_AUTHORIZED'), 'error', 'projects');
+            
+            \App::redirect(\Route::url($this->model->link('files'), false));
+            return;
+        }
+
 		$prefix = urldecode(Request::getString('prefix', ''));
 		$connection_params = json_decode($this->connection->params);
 		// Attempt to prevent URL tampering
