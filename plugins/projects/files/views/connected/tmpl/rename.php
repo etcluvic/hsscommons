@@ -29,7 +29,7 @@ $lang  = $this->item->isDir() ? 'folder' : 'file';
 				<input type="hidden" name="oldname" value="<?php echo $this->item->getPath(); ?>" />
 				<h5><?php echo Lang::txt('PLG_PROJECTS_FILES_NEW_NAME'); ?></h5>
 				<label>
-					<input type="text" name="newname" maxlength="250" value="<?php echo $this->item->getFilename(); ?>" />
+					<input type="text" name="newname" maxlength="250" value="<?php echo $this->item->getName(); ?>" />
 				</label>
 				<input type="submit" class="btn" value="<?php echo Lang::txt('PLG_PROJECTS_FILES_SAVE'); ?>" />
 				<input type="reset" class="btn btn-cancel" id="cancel-action" value="<?php echo Lang::txt('JCANCEL'); ?>" />

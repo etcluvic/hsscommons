@@ -265,6 +265,7 @@ class plgMembersCollections extends \Hubzero\Plugin\Plugin
 					$arr['html'] = $this->_collections();
 					break;
 
+				case 'browsecollection':
 				case 'collection':
 					$arr['html'] = $this->_collection();
 					break;

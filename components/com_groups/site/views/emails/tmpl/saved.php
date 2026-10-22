@@ -168,7 +168,7 @@ $groupLink = $base . '/groups/' . $this->group->get('cn');
 							</tr>
 							<tr>
 								<td style="text-align: left;font-weight: bold;" align="left">
-									<?php echo Lang::txt('Public Description:'); ?>
+									<?php echo Lang::txt('COM_GROUPS_DETAILS_FIELD_PUBLIC') . ':'; ?>
 								</td>
 							</tr>
 							<tr>
@@ -186,7 +186,7 @@ $groupLink = $base . '/groups/' . $this->group->get('cn');
 							</tr>
 							<tr>
 								<td style="text-align: left;font-weight: bold;" align="left">
-									<?php echo Lang::txt('Private Description:'); ?>
+									<?php echo Lang::txt('COM_GROUPS_DETAILS_FIELD_PRIVATE') . ':'; ?>
 								</td>
 							</tr>
 							<tr>

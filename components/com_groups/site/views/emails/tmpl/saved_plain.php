@@ -29,8 +29,8 @@ $message .= "\t" . Lang::txt('Interests (Tags):') . ' ';
 
 	$message .= ($tags ? $tags : Lang::txt('[ Empty ]')) . "\n\n";
 
-$message .= "\t" . Lang::txt('Public Description:') . ' ' . strip_tags($this->group->get('public_desc', '[ Empty ]')) . "\n\n";
-$message .= "\t" . Lang::txt('Private Description:') . ' ' . strip_tags($this->group->get('private_desc', '[ Empty ]')) . "\n\n";
+$message .= "\t" . Lang::txt('COM_GROUPS_DETAILS_FIELD_PUBLIC') . ': ' . strip_tags($this->group->get('public_desc', '[ Empty ]')) . "\n\n";
+$message .= "\t" . Lang::txt('COM_GROUPS_DETAILS_FIELD_PRIVATE') . ': ' . strip_tags($this->group->get('private_desc', '[ Empty ]')) . "\n\n";
 $message .= "\t" . Lang::txt('Logo:') . ' ' . ($this->group->get('logo') ? $base . DS . ltrim($this->group->getLogo(), DS) : '[ Not set ]') . "\n\n";
 $message .= "\t" . Lang::txt('Membership Settings/Join Policy:') . ' ';
 	switch ($this->group->get('join_policy'))

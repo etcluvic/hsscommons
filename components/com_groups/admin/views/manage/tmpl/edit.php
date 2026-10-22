@@ -162,7 +162,7 @@ $this->js();
 
 								if (strtolower($formfield->type) != 'paragraph')
 								{
-									echo $formfield->label;
+									echo Lang::txt($formfield->label);
 								}
 
 								if ($field->type == 'textarea')

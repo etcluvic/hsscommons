@@ -1,0 +1,35 @@
+<?php
+/**
+ * @package    hubzero-cms
+ * @copyright  Copyright (c) 2005-2020 The Regents of the University of California.
+ * @license    http://opensource.org/licenses/MIT MIT
+ */
+
+// No direct access.
+defined('_HZEXEC_') or die();
+
+\Hubzero\Document\Assets::addComponentStylesheet('com_collections', 'help');
+?>
+<article>
+	<h1>Допомога з колекціями</h1>
+
+	<p class="tagline">Колекції — це швидкий і зручний спосіб ділитися, додавати у вибране та організовувати інформацію на Canadian HSS Commons.</p>
+
+	<section class="about-odd posts">
+		<h2>Публікація</h2>
+		<p>Публікація починається з зображення, посилання або файлу, яким ви хочете поділитися. Ви можете додати публікацію, збираючи контент на сайті, або завантажити файл безпосередньо зі свого комп’ютера. Будь-яку публікацію можна перепостити, і всі пости містять посилання на оригінальне джерело.</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=posts'); ?>">Дізнатися більше</a></p>
+	</section>
+
+	<section class="about-even collections">
+		<h2>Зібрати</h2>
+		<p>Колекція — це місце, де ви організовуєте свої публікації за темами. Наприклад, ви можете зібрати ресурси для створення вступу до наукової комунікації. Колекції можуть бути секретними або публічними, а також ви можете помістити одну колекцію всередину іншої!</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=collections'); ?>">Дізнатися більше</a></p>
+	</section>
+
+	<section class="about-odd following">
+		<h2>Підписатися</h2>
+		<p>Коли ви підписуєтесь на когось, їхні публікації з’являються у вашій стрічці в реальному часі. Ви можете підписатися на всі колекції цієї людини або лише на ті, які вам найбільше подобаються. Щоб керувати підписками, перейдіть до свого профілю, знайдіть розділ «Колекції» та натисніть «Підписки».</p>
+		<p><a href="<?php echo Route::url('index.php?option=com_help&component=collections&page=following'); ?>">Дізнатися більше</a></p>
+	</section>
+</article>
