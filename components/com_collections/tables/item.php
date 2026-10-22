@@ -39,7 +39,7 @@ class Item extends Table
 	{
 		$this->title       = trim($this->title);
 		$this->description = trim($this->description);
-		$this->url         = trim($this->url);
+		$this->url         = trim($this->url ? $this->url : "");
 
 		if ($this->type != 'image' && $this->type != 'file'
 		 && (!$this->title && !$this->description && !$this->url))

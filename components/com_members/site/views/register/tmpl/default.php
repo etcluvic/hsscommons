@@ -9,6 +9,7 @@
 defined('_HZEXEC_') or die();
 
 use Components\Members\Models\Profile\Field;
+use Joomla\CMS\Factory;
 
 $translations = [
     "Must not contain easily guessed words" => Lang::txt('COM_MEMBERS_RULE_NOT_GUESSABLE'),
@@ -20,7 +21,7 @@ $translations = [
 ];
 
 $script = "var translatedRules = " . json_encode($translations) . ";";
-$doc = \JFactory::getDocument();
+$doc = Factory::getDocument();
 $doc->addScriptDeclaration($script);
 
 $this->css('register')
