@@ -71,10 +71,11 @@ $ignoreDst = $params->get('ignore_dst', 0) == 1 ? true : false;
 	<div class="clear"></div>
 </div>
 
-<table class="group-event-details">
+<table class="group-event-details" role="presentation">
 	<tbody>
 		<?php
-			$timezone     = timezone_name_from_abbr('', $this->event->get('time_zone')*3600);
+			$ignoreDst    = false;
+			$timezone     = $this->event->get('time_zone') ? $this->event->get('time_zone') : \Config::get('offset');
 			$publish_up   = $this->event->get('publish_up');
 			$publish_down = $this->event->get('publish_down');
 			$allday_event = $this->event->get('allday');
