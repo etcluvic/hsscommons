@@ -184,7 +184,7 @@ class Auth extends SiteController
 				$decoded_return = base64_decode($return);
 
 				$dr = new Uri($decoded_return);
-				if ($dr->hasVar('authenticator'))
+				if ($dr->hasUriVar('authenticator'))
 				{
 					$auth = $dr->getVar('authenticator');
 				}
