@@ -1089,7 +1089,10 @@ class Tickets extends SiteController
 		$row->tag(Request::getString('tags', '', 'post'), User::get('id'));
 
 		// Get any set emails that should be notified of ticket submission
-		$defs = explode(',', $this->config->get('emails', '{config.mailfrom}'));
+		$defs = array_merge(
+			explode(',', $this->config->get('emails', '{config.mailfrom}')),
+			explode(',', Config::get('ticket_mails', ''))
+		);
 
 		if ($defs)
 		{
