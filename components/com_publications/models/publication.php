@@ -1008,6 +1008,29 @@ class Publication extends Obj
 	}
 
 	/**
+	 * Get publication attachments count
+	 *
+	 * @return  int
+	 */
+	public function attachmentsCount()
+	{
+		if (!$this->exists())
+		{
+			return array();
+		}
+		if (!isset($this->_tblContent))
+		{
+			$this->_tblContent = new Tables\Attachment($this->_db);
+		}
+		if (!isset($this->_attachmentsCount))
+		{
+			$this->_attachmentsCount = $this->_tblContent->getAttachmentsCount ($this->version->id);
+		}
+
+		return $this->_attachmentsCount;
+	}
+
+	/**
 	 * Get the attachment that is previewed. Return null if there is no attachment found for the publication.
 	 *
 	 * @return  mixed

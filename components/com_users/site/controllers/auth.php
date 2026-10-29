@@ -86,7 +86,7 @@ class Auth extends SiteController
 		$this->view->setLayout('login');
 
 		// Escape strings for HTML output
-		$pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx') ?? '');
 
 		$login = User::isGuest() ? true : false;
 		$title = null;
@@ -157,7 +157,7 @@ class Auth extends SiteController
 		$defaultReturn = base64_encode($defaultReturn);
 
 		$uri = Uri::getInstance();
-		if ($rtrn = $uri->getVar('return'))
+		if ($rtrn = $uri->getUriVar('return'))
 		{
 			if (!$this->isBase64($rtrn))
 			{
@@ -184,7 +184,7 @@ class Auth extends SiteController
 				$decoded_return = base64_decode($return);
 
 				$dr = new Uri($decoded_return);
-				if ($dr->hasVar('authenticator'))
+				if ($dr->hasUriVar('authenticator'))
 				{
 					$auth = $dr->getVar('authenticator');
 				}

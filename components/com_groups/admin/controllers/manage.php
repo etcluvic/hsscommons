@@ -357,7 +357,7 @@ class Manage extends AdminController
 				->setLayout('edit')
 				->set('group', $group)
 				->set('customFields', $customFields)
-				->set('customAnswers', $customFieldForm)
+				->set('customAnswers', $customFieldForms)
 				->display();
 			return;
 		}

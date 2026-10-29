@@ -20,7 +20,7 @@ $translations = [
 ];
 
 $script = "var translatedRules = " . json_encode($translations) . ";";
-$doc = \JFactory::getDocument();
+$doc = App::get('document');
 $doc->addScriptDeclaration($script);
 
 $this->css('register')
@@ -319,7 +319,7 @@ if (!$form_redirect && !in_array($current, array('/register/update', '/members/u
 												$err = in_array($rule, $this->xregistration->_invalid['password']);
 											}
 											$translation_key = isset($translations[$rule]) ? $translations[$rule] : null;
-											$translated_rule = $translation_key ? JText::_($translation_key) : $rule;
+											$translated_rule = $translation_key ? Lang::txt($translation_key) : $rule;
 
 											echo '<li' . ($err ? ' class="error"' : ' class="empty"') . '>' . htmlspecialchars($translated_rule) . '</li>' . "\n";
 										}

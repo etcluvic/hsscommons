@@ -89,7 +89,7 @@ class Helper extends Module
 			$row = $rows[$random_keys];
 		}
 
-		$this->cls = trim($this->params->get('moduleclass_sfx'));
+		$this->cls = trim($this->params->get('moduleclass_sfx', ''));
 
 		// Did we get any results?
 		if ($row)

@@ -2036,7 +2036,7 @@ class Profiles extends SiteController
 		// Add a following entry into the database
 		$query = new \Hubzero\Database\Query;
 		$query->insert('#__collections_following')
-				->values(['follower_type' => 'member', 'follower_id' => User::get('id'), 'following_type' => 'member', 'following_id' => $followingId, 'created' => date("Y-m-d H:M:s")])
+				->values(['follower_type' => 'member', 'follower_id' => User::get('id'), 'following_type' => 'member', 'following_id' => $followingId, 'created' => date("Y-m-d H:i:s")])
 				->execute();
 
 		// Notify the user that they are being followed

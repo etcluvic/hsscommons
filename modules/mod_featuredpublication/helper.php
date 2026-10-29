@@ -71,7 +71,7 @@ class Helper extends Module
 			'limit'      => (int)trim($this->params->get('top_number')),
 			'start'      => 0,
 			'sortby'     => 'popularity',
-			'tag'        => trim($this->params->get('tag')),
+			'tag'        => trim($this->params->get('tag', '')),
 			'access'     => 'public'
 		);
 
@@ -87,7 +87,7 @@ class Helper extends Module
 			$row = $rows[rand(0, count($rows) - 1)];
 		}
 
-		$this->cls = trim($this->params->get('moduleclass_sfx'));
+		$this->cls = trim($this->params->get('moduleclass_sfx', ''));
 		$this->thumb = '';
 
 		// Did we get any results?
