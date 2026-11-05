@@ -1014,6 +1014,14 @@ class Repo extends Obj
 				$tmp_name = $upload['tmp_name'][$i];
 				$size     = $upload['size'][$i];
 
+				// Reject the file for exceeding upload size limit
+				if (in_array($upload['error'][$i], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE]))
+				{
+					$this->setError(Lang::txt('COM_PROJECTS_FILES_ERROR_EXCEEDS_LIMIT') . ' ' . ini_get('upload_max_filesize') . '.');
+					$results['failed'][] = $file;
+					continue;
+				}
+
 				// Upload and pick up output
 				if ($item = $this->_upload($file, $tmp_name, $target, $size, $available, $params))
 				{
