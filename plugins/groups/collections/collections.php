@@ -149,7 +149,7 @@ class plgGroupsCollections extends \Hubzero\Plugin\Plugin
 	 * @param   array    $areas       Active area(s)
 	 * @return  array
 	 */
-	public function onGroup($group, $option, $authorized, $limit=0, $limitstart=0, $action='', $access, $areas=null)
+	public function onGroup($group, $option, $authorized, $limit, $limitstart, $action, $access, $areas=null)
 	{
 		$return = 'html';
 		$active = $this->_name;
@@ -1056,7 +1056,7 @@ class plgGroupsCollections extends \Hubzero\Plugin\Plugin
 		// Get model
 		$item = new \Components\Collections\Models\Item(intval($fields['id']));
 		$tmp = null;
-		if (substr($item->get('title'), 0, 3) == 'tmp')
+		if (substr($item->get('title', ''), 0, 3) == 'tmp')
 		{
 			$tmp = $item->get('title');
 		}

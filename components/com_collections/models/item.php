@@ -520,6 +520,11 @@ class Item extends Base
 	 */
 	public function store($check=true)
 	{
+		// id cannot be an empty string due to database constrain
+		if ($this->get('id') === "") {
+			$this->set('id', null);
+		}
+
 		if (!parent::store($check))
 		{
 			return false;
@@ -685,7 +690,7 @@ class Item extends Base
 
 			case 'raw':
 			default:
-				$content = stripslashes($this->get('description'));
+				$content = stripslashes($this->get('description', ''));
 				$content = preg_replace('/^(<!-- \{FORMAT:.*\} -->)/i', '', $content);
 			break;
 		}

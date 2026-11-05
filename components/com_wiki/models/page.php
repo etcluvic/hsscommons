@@ -145,7 +145,7 @@ class Page extends Relational
 	{
 		if (is_null($pagename))
 		{
-			$pagename = $this->get('pagename');
+			$pagename = $this->get('pagename', '');
 		}
 		if (strstr($pagename, ':'))
 		{
@@ -385,7 +385,7 @@ class Page extends Relational
 	 */
 	public static function oneByPath($path, $scope=null, $scope_id=null)
 	{
-		$path = explode('/', $path);
+		$path = explode('/', $path ? $path : '');
 		$pagename = array_pop($path);
 		$path = implode('/', $path);
 
@@ -638,6 +638,14 @@ class Page extends Relational
 			}
 
 			$this->set('path', implode('/', $path));
+		} else {
+			// Must set parent as 'parent' field requires an int in the database
+			$this->set('parent', 0);
+
+			// Must set a path as 'path' field doesn't have a default in the database
+			if (!$this->get('path')) {
+				$this->set('path', '');
+			}
 		}
 
 		// Save
@@ -945,7 +953,7 @@ class Page extends Relational
 	 */
 	public function splitPagename($page)
 	{
-		if (preg_match("/\s/", $page) || !$page)
+		if (!$page || preg_match("/\s/", $page))
 		{
 			// Already split --- don't split any more.
 			return $page;
@@ -1001,13 +1009,13 @@ class Page extends Relational
 			{
 				case 'fr':
 				case 'french':
-					$RE[] = "/(?<= |${sep}|^)([�])([[:upper:]][[:lower:]])/";
+					$RE[] = "/(?<= |{$sep}|^)([�])([[:upper:]][[:lower:]])/";
 				break;
 
 				case 'en':
 				case 'english':
 				default:
-					$RE[] = "/(?<= |${sep}|^)([AI])([[:upper:]][[:lower:]])/";
+					$RE[] = "/(?<= |{$sep}|^)([AI])([[:upper:]][[:lower:]])/";
 				break;
 			}
 
@@ -1015,8 +1023,8 @@ class Page extends Relational
 			$RE[] = '/(\d)([[:alpha:]])/';
 
 			// Split at subpage seperators.
-			$RE[] = "/([^${sep}]+)(${sep})/";
-			$RE[] = "/(${sep})([^${sep}]+)/";
+			$RE[] = "/([^{$sep}]+)({$sep})/";
+			$RE[] = "/({$sep})([^{$sep}]+)/";
 
 			foreach ($RE as $key)
 			{

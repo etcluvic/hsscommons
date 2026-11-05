@@ -520,6 +520,7 @@ class Pages extends SiteController
 
 		// Incoming page
 		$page = Request::getArray('page', array(), 'post');
+
 		if (!isset($page['protected']) || !$page['protected'])
 		{
 			$page['protected'] = 0;
@@ -659,7 +660,7 @@ class Pages extends SiteController
 
 		// Compare against previous revision
 		// We don't want to create a whole new revision if just the tags were changed
-		if (rtrim($old->get('pagetext')) != rtrim($revision->get('pagetext')))
+		if (rtrim($old->get('pagetext', '')) != rtrim($revision->get('pagetext', '')))
 		{
 			// Transform the wikitext to HTML
 			$revision->set('pagehtml', '');

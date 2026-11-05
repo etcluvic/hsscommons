@@ -235,7 +235,7 @@ class File extends Base
 				{
 					$where .= DS . $configs->bundleDirectory;
 				}
-				if ($configs->directory && strtolower($configs->bundleDirectory) != strtolower($configs->directory))
+				if ($configs->directory && strtolower($configs->bundleDirectory ? $configs->bundleDirectory : '') != strtolower($configs->directory))
 				{
 					$where .= $configs->directory != $pub->secret ? DS . $configs->directory : '';
 				}
@@ -316,7 +316,7 @@ class File extends Base
 				$fPath .= basename($filePath);
 
 				$where = '';
-				if ($configs->directory && strtolower($configs->bundleDirectory) != strtolower($configs->directory))
+				if ($configs->directory && strtolower($configs->bundleDirectory ? $configs->bundleDirectory : '') != strtolower($configs->directory))
 				{
 					$where .= $configs->directory != $pub->secret ? DS . $configs->directory : '';
 				}
@@ -537,7 +537,7 @@ class File extends Base
 		{
 			$options = array();
 
-			if (count($attachments) > 1)
+			if ($attachments && count($attachments) > 1)
 			{
 				$fpath = $this->bundle($attachments, $configs, false);
 				$title = $configs->bundleTitle;
@@ -1447,7 +1447,7 @@ class File extends Base
 		$role     = $element->role;
 		$params   = $element->typeParams;
 		$required = $element->required;
-		$counter  = count($attachments);
+		$counter  = $attachments ? count($attachments) : 0;
 
 		// Check for correct number of files
 		if ($min > 0 && $counter < $min)
