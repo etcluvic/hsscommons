@@ -102,7 +102,7 @@ class Author extends Table
 	 * @param   string   $lastName  Last name
 	 * @return  mixed    False if error, array of objects on success
 	 */
-	public function loadAssociationByFirstLastName($uid = null, $vid = null, $firstName, $lastName)
+	public function loadAssociationByFirstLastName($uid = null, $vid = null, $firstName = '', $lastName = '')
 	{
 		$query = new \Hubzero\Database\Query;
 		$authors = $query->select('*')

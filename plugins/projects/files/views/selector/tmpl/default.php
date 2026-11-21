@@ -122,6 +122,7 @@ if ($this->folders)
 			<label for="uploader">
 				<input name="upload[]" type="file" id="uploader" multiple="multiple" />
 			</label>
+			<p class="hint"><?php echo Lang::txt('PLG_PROJECTS_FILES_MAX_UPLOAD') . ' ' . ini_get('upload_max_filesize'); ?></p>
 
 			<?php if (count($subdirOptions) > 1) { ?>
 				<label for="subdir">

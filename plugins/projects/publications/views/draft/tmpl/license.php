@@ -105,8 +105,8 @@ echo $complete == 1 ? ' el-complete' : ' el-incomplete'; echo ($complete == 0 &&
 						</div>
 					<?php } else {
 						// Word replacements required?
-						preg_match_all('/\[([^\]]*)\]/', $this->license->text, $substitutes);
-						preg_match_all('/\[([^]]+)\]/', $this->pub->license_text, $matches);
+						preg_match_all('/\[([^\]]*)\]/', $this->license->text ? $this->license->text : "", $substitutes);
+						preg_match_all('/\[([^]]+)\]/', $this->pub->license_text ? $this->pub->license_text : "", $matches);
 						$i = 0;
 
 						if ($this->license->text && isset($substitutes[1]) && !empty($substitutes[1])) { ?>

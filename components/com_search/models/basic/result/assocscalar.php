@@ -32,6 +32,48 @@ class AssocScalar extends SearchResult
 	private $row;
 
 	/**
+	 * Description for 'link'
+	 *
+	 * @var unknown
+	 */
+	public $link;
+
+	/**
+	 * Description for 'publication_id'
+	 *
+	 * @var unknown
+	 */
+	public $publication_id;
+
+	/**
+	 * Description for 'parents'
+	 *
+	 * @var unknown
+	 */
+	public $parents;
+
+	/**
+	 * Description for 'highlight_regex'
+	 *
+	 * @var unknown
+	 */
+	public $highlight_regex;
+
+	/**
+	 * Description for 'title_highlighted'
+	 *
+	 * @var unknown
+	 */
+	public $title_highlighted;
+
+	/**
+    * Description for 'img_href'
+    *
+    * @var unknown
+    */
+    public $img_href;
+
+	/**
 	 * Short description for 'is_scalar'
 	 *
 	 * Long description (if any) ...
@@ -82,7 +124,7 @@ class AssocScalar extends SearchResult
 		self::assert_keys(array('title', 'description', 'link'), $row);
 		foreach ($row as $key => $val)
 		{
-			$this->$key = is_array($val) ? array_map('stripslashes', array_map('strip_tags', $val)) : stripslashes(strip_tags($val));
+			$this->$key = is_array($val) ? array_map('stripslashes', array_map('strip_tags', $val)) : stripslashes(strip_tags($val ?? ''));
 		}
 
 		if ($this->weight === null)

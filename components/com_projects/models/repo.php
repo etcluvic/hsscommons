@@ -107,7 +107,7 @@ class Repo extends Obj
 		{
 			// Use regex to avoid what might be a caching thing with Tables
 			$matches = array();
-			preg_match('/versionTracking=(\d)/', $this->get('project')->get('params'), $matches);
+			preg_match('/versionTracking=(\d)/', $this->get('project')->get('params', ''), $matches);
 			// Only use git adapter if project specifies it - otherwise assume we're not using git
 			if (isset($matches[1]) && $matches[1] == 1)
 			{
@@ -159,7 +159,7 @@ class Repo extends Obj
 			{
 				// Use regex to avoid what might be a caching thing with Tables
 				$matches = array();
-				preg_match('/versionTracking=(\d)/', $this->get('project')->get('params'), $matches);
+				preg_match('/versionTracking=(\d)/', $this->get('project')->get('params', ''), $matches);
 				// Only use git adapter if project specifies it - otherwise assume we're not using git
 				if (isset($matches[1]) && $matches[1] == 1)
 				{
@@ -1013,6 +1013,14 @@ class Repo extends Obj
 				$file     = $upload['name'][$i];
 				$tmp_name = $upload['tmp_name'][$i];
 				$size     = $upload['size'][$i];
+
+				// Reject the file for exceeding upload size limit
+				if (in_array($upload['error'][$i], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE]))
+				{
+					$this->setError(Lang::txt('COM_PROJECTS_FILES_ERROR_EXCEEDS_LIMIT') . ' ' . ini_get('upload_max_filesize') . '.');
+					$results['failed'][] = $file;
+					continue;
+				}
 
 				// Upload and pick up output
 				if ($item = $this->_upload($file, $tmp_name, $target, $size, $available, $params))

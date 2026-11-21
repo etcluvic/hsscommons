@@ -235,7 +235,7 @@ class Items extends AdminController
 
 		if (!$el)
 		{
-			$this->setError();
+			$this->setError('No Element Id');
 		}
 		else
 		{
@@ -829,6 +829,13 @@ class Items extends AdminController
 				}
 			}
 		}
+
+		// Incoming tags
+		$tags = Request::getString('tags', '', 'post');
+
+		// Save the tags
+		$rt = new Helpers\Tags($this->database);
+		$rt->tag_object(User::get('id'), $this->model->version->id, $tags, 1, true);
 
 		// Incoming tags
 		$tags = Request::getString('tags', '', 'post');

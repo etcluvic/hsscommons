@@ -472,7 +472,7 @@ abstract class Result
 	 */
 	public function set_plugin($plg, $skip_cleanup = false)
 	{
-		$this->plugin = $skip_cleanup ? $plg : strtolower(preg_replace('/^plgSearch/i', '', $plg));
+		$this->plugin = $skip_cleanup ? $plg : strtolower(preg_replace('/^plgSearch/i', '', $plg ?? ''));
 		foreach ($this->children as $child)
 		{
 			$child->set_plugin($this->plugin, true);
